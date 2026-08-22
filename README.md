@@ -37,3 +37,22 @@
 - TileLang-MACA 可用子空间：`(128,·) 单累加器 @th256/bk64/be128`
 - 手工 MMA / 内建函数路线在评测机不可行（ptx 未注册、模板缺失）
 - 常规参数/结构已穷尽，75 分为当前诚实上限
+
+## 给接手 AI 的快速开始
+
+1. **先读** `xpuoj_data/OPTIMIZATION_LOG.md`——里面记录了所有已尝试方向、分数、编译器 bug 地图，避免重复踩坑。
+2. **当前最优**：`xpuoj_data/submission.py`（75 分，submissionId 120451）。
+3. **改动后提交**：
+   ```bash
+   export XPUOJ_EMAIL="muxi2026C1050@example.com"
+   export XPUOJ_PASSWORD="<你的密码>"
+   python xpuoj_submit.py --code xpuoj_data/submission.py --status
+   ```
+   - 没有本地 GPU，完全靠评测平台返回分数/报错迭代。
+   - 每次提交都应在 `OPTIMIZATION_LOG.md` 追加记录。
+4. **评测机已知限制**（详细见日志）：
+   - 只有 `T.gemm` 是可用张量核入口；`ptx_mma`/`ptx_ldmatrix` 未注册。
+   - `th=256` 是唯一安全线程数；`th=128/512` 会 miscompile。
+   - 手工 MMA / 内建函数路线已验证不可行。
+   - 常规参数空间已穷尽，当前 75 分接近诚实上限。
+5. **凭据安全**：仓库不含密码/token，提交时通过环境变量或本地 `.xpuoj_credentials` 提供。
