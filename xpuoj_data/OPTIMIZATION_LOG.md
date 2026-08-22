@@ -546,3 +546,11 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v64 (122566)：仅 G/U `k_pack=2`，D 保持默认 1，Accepted 74.67；3.636/6.113/12.398ms。确认收益与 hidden 形状相关。
 - v65 (122574)：JIT 构建期按形状选择，`hidden>=7000` 时 G/U kPack=2，否则为1；D始终1。Accepted **75**；3.529/6.128/12.417ms。
 - v65 达到当前最高档但未明确超过 submissionId 120451，因此暂不覆盖 `submission.py`。下一方向是构造 `M=256,N=128,@512` 的正确 select-epilogue T.gemm 合并版。
+
+## v66-v67：正确 T.gemm 合并与现代化 G/U 融合（2026-08-22）
+- v66 (122596)：仅 Gate 使用相邻同专家 `M256xN128 @512` 合并，select epilogue；Gate single 用互斥 covered 谓词补余块，U/D 保持 v65。**Accepted 74**；3.736/6.325/12.755ms。
+- 结论：历史 M256 路线的 WA 可规避，但48KB shared导致单 block驻留，正确版本仍比稳定拆分结构慢；T.gemm 权重合并路线正式定性为负收益。
+- MACA `copy.h` 源码确认同步 global load/store 已提供32/64/128/256-bit向量宽度，普通 `T.copy` lowering 已具备向量搬运基础，重复封装同类 builtin 价值有限。
+- v67 (122610)：早期 v6 的 G/U 融合 `M128xN64 @256`，补入 FullRow、自适应 kPack、动态零 K-step padding skip。Accepted **72.33**；4.257/6.765/13.543ms。
+- 结论：32KB shared/双 block驻留虽满足，但N64的MMA效率和双累加器成本仍明显低于拆分N128；现代化后也未改变结论。
+- 当前最高仍为75分档（120451/v65），`submission.py` 继续保持120451稳定版本。
