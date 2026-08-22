@@ -3,8 +3,8 @@
 沐曦「揭榜挂帅」MoE 赛题（TileLang 算子优化 - Fused MoE GEMM）优化工作区。
 
 ## 当前状态
-- **当前最优：74.67 分**
-- 提交代码：`xpuoj_data/submission.py`（v12a 结构）
+- **当前最优：75 分**
+- 提交代码：`xpuoj_data/submission.py`（submissionId 120451，v21+skip padding 结构）
 - 完整优化过程：`xpuoj_data/OPTIMIZATION_LOG.md`
 - 目标：**冲榜**（诚实计算极限约 74-75，榜单前列 84+ 多为基线修复前/特殊手段）
 
@@ -37,4 +37,4 @@
 ## 关键结论
 - TileLang-MACA 可用子空间：`(128,·) 单累加器 @th256/bk64/be128`
 - 手工 MMA / 内建函数路线在评测机不可行（ptx 未注册、模板缺失）
-- 常规参数/结构已穷尽，74.67 为当前诚实上限
+- 常规参数/结构已穷尽，75 分为当前诚实上限

@@ -482,3 +482,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v45 (122119): v12a + 全 select + per-kernel swizzle，Pending（等待中）
 - v45 (122119): 全 select + per-kernel swizzle → Accepted 74.67（持平）
 - 盲试微调收敛：v40-v45 全部 74.67，v43 73；无服务器条件下已到极限
+
+## 2026-08-22 更新：最优提交修正为 75 分
+- 账号最高分 75 分（submissionId 120451，另一 AI 提交）
+- 代码文件：`xpuoj_data/other_ai_120451.py`（v21 + skip padding 结构）
+- 已设为当前最优提交 `xpuoj_data/submission.py`
