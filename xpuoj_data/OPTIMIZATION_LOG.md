@@ -572,3 +572,40 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - 注入源码的顺序约束：文本出现在 `gemm.h/copy.h/...` include 之前，不能依赖这些头内后定义的 `TL_DEVICE`、类型或宏；应使用编译器原生关键字/原生向量类型，或在注入文本中自包含所需声明。
 - 后续主线：参考官方 `fused_moe_i8_tn_kernel.h` 的同步 global→register staging、128-bit LDS、MFMA 与 barrier 交错方式，先实现单个 fp16 Gate tile 外部微内核，再逐步接入 Up/Down。禁用的 async/bsm load 不采用。
 - 当前最高仍为75，v73b只是通道验证且计时与稳定版同档，因此 `submission.py` 继续保持120451稳定版本。
+
+## v74-v80：原生 MFMA ABI、完整同步 tile 与寄存器软件流水（2026-08-23）
+- v74 (122829)：注入源码自包含 `tl_templates/maca/common.h`，同时编译未执行的
+  `float16x4/float32x4 + __builtin_mxc_mma_16x16x16f16` 指针 helper；**Accepted 74.67**，
+  3.553-3.578/6.134/12.398ms。证明 import_source 可自包含 MACA 公共头，原生向量类型
+  与 fp16 MFMA builtin 签名可用。
+- v75 (122834)：在已正确的 v59 合并 Gate 中，仅把 `T.tvm_mfma` 替换为
+  `T.call_extern + address_of(local)` 指针 helper；**Accepted 71.33**，
+  4.262-4.264/7.332/14.500ms，与 v59 同档。证明外部函数可真实读写 TileLang local
+  fragment，且强制内联后 ABI 本身几乎无额外代价。
+- v76 (122838)：首个完整原生 Gate `M128xN128xK64 @256`，使用同步128-bit
+  global→LDS、显式 XOR swizzle 和原生 MFMA；出现稀疏大误差而 WA。根因与 v51 同型：
+  每个 K16 重用同一 A/B fragment，MACA 指令尚未消费完就被覆盖。
+- v76b (122840)：A/B fragment 改为两槽 ring 后 **Accepted 71.67**，
+  4.252-4.267/7.014/14.244ms。完整外部 tile 数值链路正式打通，但朴素原生
+  shared→MFMA 调度明显不如评测版 `T.gemm`/CUTE。
+- v77 (122846)：原生合并 Gate `M256xN128xK32 @512`，24KB shared、每线程仍为
+  64 FP32 accum、权重跨两个 token block 复用；**Accepted 71.67**，
+  4.131-4.136/7.408/14.425ms。仅减少权重读取仍不足，LDS/MFMA 和同步延迟占主导。
+- v78 (122850)：在 v77 上加入合法的同步寄存器软件流水：普通128-bit global load
+  预取下一 K32 到线程寄存器，计算当前 MFMA 后 barrier，再写入 shared；不使用禁用的
+  async/bsm。**Accepted 72.67**，3.921-3.930/6.953/13.805ms。相对 v77 三个 case
+  均提升约0.2-0.6ms，首次实证同步 global→register→LDS 流水有效，但尚未超过稳定版。
+- v79 (122852)：尝试在相同寄存器流水中从外部函数实例化
+  `tl::gemm_ss<256,128,32,4,2,...>`，mxcc 编译失败；OJ 将真正模板错误的尾部诊断截断。
+- v80 (122855)：缩小到长期验证的稳定 `M128xN128xK64, 2x2 waves`，并严格匹配
+  CUTE K64 `Swizzle<4,2,4>` 的64-bit布局；仍在外部 `gemm.h/gemm_ss` 模板实例化阶段
+  mxcc失败。结论：注入源码可自包含 `common.h` 并调用原生 builtin，但不能复用高层
+  TileLang/CUTE wrapper；外部 CUTE 路线终止。
+- v81 (122858)：在 v78 上将普通向量全局读取替换为官方同步
+  `__builtin_mxc_ldg_b128`（无 `_bsm`、无 arrive/wait）；mxcc 编译失败且真实尾部诊断
+  同样被 OJ 截断。显式 ldg ABI 尚未打通，不继续盲猜；普通128-bit向量解引用已可用。
+- v82 (122860)：融合 Gate+Up `M128xN128xK32 @512`，两套 accumulator 合计
+  64 FP32/线程，在保留N128的同时共享X并消除Gate中间ws写回/回读。
+  **Accepted 70.67**，4.337-4.494/7.438/15.058ms；K迭代翻倍、双GEMM调度和512线程
+  代价远大于workspace流量收益。结合v67 N64/K64，G/U双累加融合路线正式闭环为负收益。
+- 当前最高仍为75（120451/v65分数档），`submission.py` 未被实验版本覆盖。

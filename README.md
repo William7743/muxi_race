@@ -43,8 +43,14 @@
 
 ## 关键结论
 - TileLang-MACA 可用子空间：`(128,·) 单累加器 @th256/bk64/be128`
-- 手工 MMA / 内建函数路线在评测机不可行（ptx 未注册、模板缺失）
-- 常规参数/结构已穷尽，75 分是我方当前上限；但 84+/90+ 均为官方验证真实分数，证明我们之前的硬件/编译器上限模型有误，存在重大未探索路径
+- `T.tvm_mfma` 的 C500 fp16 MFMA 已实证可用；K64 操作数至少需要两槽 fragment ring，
+  否则会出现稀疏大误差。
+- `T.import_source + T.call_extern` 可注入自包含 `common.h` 的原生 MACA device C++，
+  并真实读写 TileLang local/shared/global 指针；高层 `gemm.h/gemm_ss` 外部实例化不可用。
+- 合法的同步 global→register→LDS 软件流水已实证有效：v78 相对朴素 raw tile
+  提升约 0.2-0.6ms，但当前仍未胜过稳定 `T.gemm`。
+- 当前75分不是已知真实上限；84+/90+ 均经官方验证，仍需寻找更成熟的LDS/MFMA
+  调度、persistent/权重复用或其他重大结构路径。
 
 ## 给接手 AI 的快速开始
 
@@ -59,8 +65,10 @@
    - 没有本地 GPU，完全靠评测平台返回分数/报错迭代。
    - 每次提交都应在 `OPTIMIZATION_LOG.md` 追加记录。
 4. **评测机已知限制**（详细见日志）：
-   - 只有 `T.gemm` 是可用张量核入口；`ptx_mma`/`ptx_ldmatrix` 未注册。
-   - `th=256` 是唯一安全线程数；`th=128/512` 会 miscompile。
-   - 手工 MMA / 内建函数路线已验证不可行。
-   - 常规参数空间已穷尽，当前 75 分接近诚实上限。
+   - CUDA PTX MMA/ldmatrix 入口不适用；MACA `T.tvm_mfma` 与原生
+     `__builtin_mxc_mma_16x16x16f16` 可用。
+   - `th=512` 并非一律错误：若每线程 accumulator 保持约64 FP32可正确运行，
+     但多数已测组合仍比稳定 `th=256` 慢。
+   - 禁止 async/bsm copy；普通同步向量 load/store、barrier、MFMA 和寄存器预取可研究。
+   - `xpuoj_data/submission.py` 始终保持120451的75分稳定版，实验文件单独提交。
 5. **凭据安全**：仓库不含密码/token，提交时通过环境变量或本地 `.xpuoj_credentials` 提供。
