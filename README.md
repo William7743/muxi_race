@@ -33,6 +33,7 @@
 | 用途 | 链接 |
 |---|---|
 | XPUOJ 竞赛页 | https://xpuoj.com/contest/5/problem/1 |
+| 竞赛官方仓库（GitLink） | https://www.gitlink.org.cn/metax-maca/op_optimization |
 | 沐曦开发者网站 | https://developer.metax-tech.com |
 | **沐曦内建函数文档** | https://developer.metax-tech.com/api/client/document/preview/1395/index.html |
 | TileLang MetaX 源码（race 分支） | https://github.com/tile-ai/tilelang-metax |
