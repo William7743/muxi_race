@@ -512,3 +512,15 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - 同事不知道 GPT 具体怎么做的，只是让 GPT 自主跑了 4 个多小时，最终达到 84+
 - 说明：优化空间真实存在，且可通过“长时间自主尝试 + 评测反馈迭代”发现
 - 启示：我们不应过早断言“穷尽”；需要更系统、更大量、更持久的探索
+
+## v47-v57：classless 手写 MFMA 路线（2026-08-22）
+- 纠正 v39 结论：submissionId 121837 实际被沙箱以 `Class definitions are not allowed` 拒绝，MFMA 当时并未执行。
+- v47 (122416)：仍含 class，语法拒绝。
+- v48 (122419)：helper 名称笔误；v48b (122420) 首次真正执行 `T.tvm_mfma`，因共享内存阶段缺同步而 WA。
+- v49 (122428)：每个 K32 tile 的 load/MFMA 后加入 `T.sync_threads()`，**Accepted 66.67**；耗时 5.839/8.681/17.424ms。证明 classless `T.tvm_mfma`、lane 映射、256x128 合并结构均正确。
+- v50 (122433)：256 threads + 每线程 128 FP32 accum，Accepted 52.33，寄存器压力严重。
+- v51 (122438)：K64，4.323ms 但 WA；v52-v54 只保留 down MFMA 仍出现随机单点大误差，确认 K64/barrier 减半方案不稳定。
+- v55 (122466)：G/U 回退 `T.gemm`、down 使用 K32 MFMA，4.632ms 但随机单点大误差；说明同一 PrimFunc 中混排两套 GEMM lowering 存在阶段边界不稳定性。
+- v56 (122473/122475)：G/U MFMA、down 回退的对称隔离，触发 TileLang eager builder `Immutable variable active is used outside its defining region`，未进入执行。
+- v57 (122478)：256x64 @256 threads，Accepted **66**；5.571/9.484/18.189ms。提高驻留不足以抵消列 tile 减半的重复读取。
+- 当前结论：手写 MFMA 合法且可用，但显式 block barrier 与 scalar fragment load 使其暂未胜过 `T.gemm`；当前最高仍为 submissionId 120451 的 75 分，`submission.py` 未覆盖。
