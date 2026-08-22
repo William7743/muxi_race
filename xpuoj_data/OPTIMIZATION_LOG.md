@@ -609,3 +609,17 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   **Accepted 70.67**，4.337-4.494/7.438/15.058ms；K迭代翻倍、双GEMM调度和512线程
   代价远大于workspace流量收益。结合v67 N64/K64，G/U双累加融合路线正式闭环为负收益。
 - 当前最高仍为75（120451/v65分数档），`submission.py` 未被实验版本覆盖。
+
+## v83-v85：Down-only 正确权重合并与 eligibility（2026-08-23）
+- v83 (122865)：Gate/Up保持稳定路径，只对Down的相邻同专家block做
+  `M256xN128xK64 @512` 合并；shared routed weights + select epilogue安全处理raw/padding。
+  **Accepted 74**，3.709-3.725/6.448/12.758ms。证明历史v12局部WA不是M256 Down
+  本体不可用，正确epilogue可实现；但约49KB shared单驻留和M256调度抵消权重减半。
+- v84 (122881)：Down合并改为K32，shared约25KB恢复双驻留；**Accepted 73.33**，
+  4.089-4.104/6.397/12.952ms。Case2仅微幅改善，Case1/3因K循环与barrier翻倍明显回归；
+  K64仍是Down合并中较优选择。
+- v85 (122886)：修正合并资格，只在pair实际有效行数>128时合并，避免“恰好128有效
+  + 同专家纯padding block”被升级成M256；**Accepted 74**，3.704-3.715/6.431/12.777ms。
+  与v83基本同档，说明主要损失不是该padding特例，而是M256/512线程本身。
+- 正确T.gemm合并现在已完成Gate(v66/v68)与Down(v83-v85)的K64/K32、驻留和padding
+  eligibility闭环，均未超过拆分M128稳定版。当前最高继续为75，`submission.py`不变。
