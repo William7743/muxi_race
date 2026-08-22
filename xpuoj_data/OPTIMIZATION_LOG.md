@@ -524,3 +524,17 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v56 (122473/122475)：G/U MFMA、down 回退的对称隔离，触发 TileLang eager builder `Immutable variable active is used outside its defining region`，未进入执行。
 - v57 (122478)：256x64 @256 threads，Accepted **66**；5.571/9.484/18.189ms。提高驻留不足以抵消列 tile 减半的重复读取。
 - 当前结论：手写 MFMA 合法且可用，但显式 block barrier 与 scalar fragment load 使其暂未胜过 `T.gemm`；当前最高仍为 submissionId 120451 的 75 分，`submission.py` 未覆盖。
+
+## 内建函数信息与实证汇总（2026-08-22）
+- 第一手资料：沐曦开发者网站《MXMACA 编译器内建函数编程指南 CN_V01》（文档 preview 1395）；第二手可执行参考：官方赛题仓库 `benchmark/standalone/` 的 C500/XCORE1000 kernel；第三手实现依据：`tilelang-metax/src/target/codegen_maca.cc`。
+- 已实证：`T.call_extern` 可透传 MACA builtin；v38 的 `readfirstlane(0) * 0` 探针 Accepted。`T.tvm_mfma` 会由 MACA codegen 直接生成 `__builtin_mxc_mma_*`，v49/v57 已 Accepted。
+- C500 可用核心：`__builtin_mxc_mma_16x16x16f16(v4f16, v4f16, v4f32)`；官方 int8 参考也以 `__MACA_ARCH__ == 1000 || 1089` 为目标。
+- 限制：`load_shared_trans` 需要 xcore1500+；官方参考的 `__builtin_mxc_ldg_*_bsm` + `__builtin_mxc_arrive(64+n)` 属 global→LDS 异步流水，而赛题官方明确禁止异步拷贝，不能采用。
+- 可继续合法研究：同步向量 LDS/global load-store、`bsm_permute`/shuffle、barrier 与 MFMA fragment 生命周期；任何新 builtin 都先做最小正确性探针，再进入主 kernel。
+
+## v58-v61：MFMA 操作数生命周期与 K tile（2026-08-22）
+- v58 (122501)：K64 的每个 `ki` 使用独立 A/B local fragment，**Accepted 71.33**；4.320/7.344/14.513ms。修复 v51 随机错误，证明根因是 MFMA 操作数寄存器被过早覆盖，而非 K64 swizzle。
+- v59 (122510)：K64 两槽 fragment ring，Accepted **71.33**；4.267/7.372/14.496ms。两槽已足够隔离生命周期，四槽额外寄存器无收益。
+- v60 (122520)：K128 + 两槽 ring，编译成功但启动失败；请求 98304B dynamic shared，C500 设备上限明确为 65536B。
+- v61 (122526)：K128 只缓存权重 B（约 32KB shared），A 直接 global/L2 → fragment，Accepted 55.67；8.636/14.607/28.537ms。说明 A 必须通过 shared/LDS 合并读取，直接 global fragment load 极慢。
+- 当前手写 MFMA 最优是 v58/v59 的 71.33；稳定总榜最优仍为 submissionId 120451 的 75 分，尚未覆盖 `submission.py`。
