@@ -538,3 +538,11 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v60 (122520)：K128 + 两槽 ring，编译成功但启动失败；请求 98304B dynamic shared，C500 设备上限明确为 65536B。
 - v61 (122526)：K128 只缓存权重 B（约 32KB shared），A 直接 global/L2 → fragment，Accepted 55.67；8.636/14.607/28.537ms。说明 A 必须通过 shared/LDS 合并读取，直接 global fragment load 极慢。
 - 当前手写 MFMA 最优是 v58/v59 的 71.33；稳定总榜最优仍为 submissionId 120451 的 75 分，尚未覆盖 `submission.py`。
+
+## v62-v65：fragment 调度与 T.gemm kPack（2026-08-22）
+- v62 (122538)：K64 先预取全部四组 fragment、再集中 MFMA，Accepted 70.67；4.458/7.533/14.849ms。比 v59 的 load/compute 交错更慢，否定“全预取隐藏 LDS 延迟”。
+- 从评测版本源码确认 `T.gemm(..., k_pack=2)` 是正式支持入口，会让生成器成组装载两个 K16 fragment。
+- v63 (122544)：稳定 v21 三阶段全部 `k_pack=2`，Accepted 74.67；3.635/6.131/12.389ms。总分持平，Case 1 变慢、Case 3 略快。
+- v64 (122566)：仅 G/U `k_pack=2`，D 保持默认 1，Accepted 74.67；3.636/6.113/12.398ms。确认收益与 hidden 形状相关。
+- v65 (122574)：JIT 构建期按形状选择，`hidden>=7000` 时 G/U kPack=2，否则为1；D始终1。Accepted **75**；3.529/6.128/12.417ms。
+- v65 达到当前最高档但未明确超过 submissionId 120451，因此暂不覆盖 `submission.py`。下一方向是构造 `M=256,N=128,@512` 的正确 select-epilogue T.gemm 合并版。
