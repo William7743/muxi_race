@@ -554,3 +554,21 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v67 (122610)：早期 v6 的 G/U 融合 `M128xN64 @256`，补入 FullRow、自适应 kPack、动态零 K-step padding skip。Accepted **72.33**；4.257/6.765/13.543ms。
 - 结论：32KB shared/双 block驻留虽满足，但N64的MMA效率和双累加器成本仍明显低于拆分N128；现代化后也未改变结论。
 - 当前最高仍为75分档（120451/v65），`submission.py` 继续保持120451稳定版本。
+
+## v68-v72：K32 驻留补扫、M192 与组合特化（2026-08-23）
+- v68 (122641)：Gate 合并改为 `M256xN128xK32 @256`，shared 从48KB降到24KB，保留 U/D 稳定路径。**Accepted 74**；3.634/6.394/13.036ms。
+- v68 结论：恢复双 block shared 驻留仍未救活 M256；主要代价是每线程128个 FP32 accumulator 与 MMA 调度，而非 shared 容量。M256 合并至此完成 K64/K32、256/512线程闭环。
+- v69 (122648)：expert-centric `M192xN128xK32 @384`，仅对 group_size>128 启动，尝试让129-192行专家只读一遍权重。编译期失败：LayoutInference `no available layout found`；评测版自动布局不支持 M192/6-warp 自由形状，未进入执行。
+- 源码复核修正：评测版本 f549117c 的 `src/tl_templates/maca/gemm.h` 虽接收模板参数 `kPack`，但 `GemmTensorOp::body/body_rs` 实际没有使用它；v63-v65 的微小计时变化应视为 OJ 噪声，后续不再调 kPack。
+- v70 (122658)：组合 v65 自适应 kPack 与 Case1 swizzle16。Case1 计时3.516ms，但局部误编译（首个明显误差 `(1846,769)`），WrongAnswer。动态形状常量版 swizzle16 不安全，不能替代历史独立 per-shape JIT 函数。
+- v71 (122665)：Gate/Up `M128xN256xK32 @512`（24KB shared）；WrongAnswer，Case1 3.806-4.033ms量级且局部大误差。
+- v72 (122671)：仅 Gate 使用同一 N256/K32 组合，Up/Down稳定回退；仍 WrongAnswer（首个明显误差 `(678,1795)`），证明问题在 N256/K32 GEMM codegen 本体，不是 Up 复杂 epilogue；性能也不优于稳定版。
+- 当前最高继续为75（120451/v65分数档），`submission.py` 保持120451字节一致；下一合法前沿是验证 `T.import_source + T.call_extern` 后，以同步 global→register→LDS 与 MFMA 手排软件流水，而不是继续自动 T.gemm 形状微调。
+
+## v73-v73b：`T.import_source` 原生设备函数通道打通（2026-08-23）
+- v73 (122704)：稳定版注入 `TL_DEVICE float identity(float)`，Down epilogue 通过 `T.call_extern` 使用返回值。mxcc 编译失败；生成源码显示注入文本位于 TileLang 模板 `#include` 之前，故此处 `TL_DEVICE` 宏尚未定义。注入动作本身已经成功，不是沙箱拒绝。
+- v73b (122724)：改用编译器原生 `__device__ __forceinline__` 声明。**Accepted 75**；3.588/6.154/12.475ms（另一次 Case1 sample 3.552ms）。
+- 关键结论：评测环境允许 `T.import_source` 注入原生 MACA device C++，并允许 `T.call_extern` 让其参与真实 epilogue；这比 v38 的单 builtin 探针更进一步，完整同步微内核通道已经实证可用。
+- 注入源码的顺序约束：文本出现在 `gemm.h/copy.h/...` include 之前，不能依赖这些头内后定义的 `TL_DEVICE`、类型或宏；应使用编译器原生关键字/原生向量类型，或在注入文本中自包含所需声明。
+- 后续主线：参考官方 `fused_moe_i8_tn_kernel.h` 的同步 global→register staging、128-bit LDS、MFMA 与 barrier 交错方式，先实现单个 fp16 Gate tile 外部微内核，再逐步接入 Up/Down。禁用的 async/bsm load 不采用。
+- 当前最高仍为75，v73b只是通道验证且计时与稳定版同档，因此 `submission.py` 继续保持120451稳定版本。
