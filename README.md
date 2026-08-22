@@ -37,6 +37,9 @@
 | **沐曦内建函数文档** | https://developer.metax-tech.com/api/client/document/preview/1395/index.html |
 | TileLang MetaX 源码（race 分支） | https://github.com/tile-ai/tilelang-metax |
 
+> **官方提示**：官方提供的 built-in 内建函数文档介绍了沐曦硬件的专用指令。使用好这些指令会对性能提升有很大帮助，建议重点研究这份文档。
+> 文档地址：https://developer.metax-tech.com/api/client/document/preview/1395/index.html
+
 ## 关键结论
 - TileLang-MACA 可用子空间：`(128,·) 单累加器 @th256/bk64/be128`
 - 手工 MMA / 内建函数路线在评测机不可行（ptx 未注册、模板缺失）
