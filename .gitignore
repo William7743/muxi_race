@@ -1,0 +1,8 @@
+# 敏感信息
+xpuoj_data/HANDOVER.md
+xpuoj_data/submit*.py
+xpuoj_data/xpuoj_submit.py
+xpuoj_data/.xpuoj_credentials
+*.log
+__pycache__/
+.DS_Store
