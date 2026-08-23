@@ -772,4 +772,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   Gate恢复默认；若一侧独占收益，可避免另一侧的潜在过度约束。
 - v124 (123328，Pending)：组合当前最佳v114的双weight `coalesced_width=4`与v116的
   单次有效行SwiGLU写回，验证两个独立小收益能否叠加。
+- v125 (123330，Pending)：以v114为基线，仅给Down weight global→shared copy增加
+  `coalesced_width=4`；stage1双weight继续保持4，隔离第三段权重搬运是否同样受益。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
