@@ -884,5 +884,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   三个编译期字面调用`column1/row4/column4`。目标是保留v151逐shape收益，同时绕开其
   把panel/order存入闭包变量导致的非确定lowering；本版不叠加v167的stage1快路径，便于
   隔离正确性。
+- v169 (123426，Pending)：以v163为基线对`actual_rows==0`的stage1空block作统一早期
+  跳过。评测网格是`ceil(valid/128)+experts`安全上界，尾部可能有少量空block；旧实现虽
+  将其K循环置零，仍会清零两个大FP32 fragment。本版跳过空block的fragment clear与
+  epilogue，有效block的GEMM和数值顺序完全不变。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
