@@ -880,5 +880,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v166 (123418，Pending)：v163精确代码原样复提交，确认新76分稳定版的可重复正确性。
 - v167 (123420，Pending)：在v163上叠加v165的stage1完整块无谓词快路径；两个已独立
   Accepted的控制流优化首次组合，观察是否进一步压低case2/3。
+- v168 (123424，Pending)：以v163为可靠基线，将16/32/64-expert的stage1调度分别写成
+  三个编译期字面调用`column1/row4/column4`。目标是保留v151逐shape收益，同时绕开其
+  把panel/order存入闭包变量导致的非确定lowering；本版不叠加v167的stage1快路径，便于
+  隔离正确性。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
