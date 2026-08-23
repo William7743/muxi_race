@@ -838,4 +838,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v149 (123378，Pending)：编译期逐shape组合：16/64-expert使用v138最佳column4，
   32-expert保持v124最佳row4并仅对该shape指定`min_blocks_per_sm(2)`；目标让case2从
   5.884ms附近跨过约5.877ms的76分阈值，同时保留case1/3刷新。
+- v150 (123379，Pending)：v149的纯调度对照，16/64-expert使用column4、32-expert
+  使用row4，但不加min-block提示；理论直接组合v138的case1/3与v124的case2最佳值。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
