@@ -797,4 +797,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v134 (123345，Pending)：以v114为基线启用正式`TL_ENABLE_FAST_MATH`；评测分支会对
   MACA传`mxcc -use-fast-math`，区别于旧日志无效的CUDA/ptxas参数，测试其对
   `exp2`、倒数和通用标量数学的整体收益及容差。
+- v135 (123349，Pending)：以当前最快v124为基线，仅给单次SwiGLU写回的`T.Parallel`
+  指定`coalesced_width=4`，测试加载端的显式向量宽度收益能否延伸到workspace存储。
+- v136 (123350，Pending)：与v135对称，仅给Down最终乘路由权重/写out的`T.Parallel`
+  指定`coalesced_width=4`。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
