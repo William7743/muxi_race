@@ -912,11 +912,12 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v176 (123444，Pending)：将融合stage1对同形状`gate_local/up_local`的两次独立
   `T.clear`合成一个`T.Parallel`循环，同时写零两个FP32 accumulator；数学与后续GEMM
   顺序不变，测试能否减少一次fragment遍历/循环控制。
-- v177 (123448，Pending)：v163第三次精确原样提交。若再次WA，则把主稳定版回退到已由
-  v130/v138/v162多轮支撑的固定column4无快路径版本，v163仅作为不稳定高分历史记录。
-- v178 (123450，Pending)：v165精确代码原样复验；其只在可靠v138上加入stage1完整块
-  无谓词快路径，若可重复Accepted，可作为Down快路径不稳定时的76分替代候选。精确代码
-  已保存为`submission_v165_column4_stage1_full_fast.py`（SHA256 `8082d4b...`）。
+- v177 (123448)：v163第三次精确原样提交，样例**WrongAnswer**，首个明显误差约0.136。
+  结合123407/123418两次Accepted，确认Down完整块控制流是低概率调度竞态，不是可靠优化。
+  主`submission.py`立即回退为v138字节一致版本；v163只保留历史最高76记录。
+- v178 (123450)：v165精确代码原样复验，样例**WrongAnswer**，首个明显误差约0.0894。
+  stage1完整块控制流同样首次Accepted、复验失败；两类完整块分支均关闭。精确代码保留为
+  `submission_v165_column4_stage1_full_fast.py`（SHA256 `8082d4b...`），不提升主版本。
 - v179 (123451，Pending)：把v173的“仅FP16 `exp2`、其余FP32”原样移植到已多轮稳定的
   v138，不带任何stage1/Down完整块控制流快路径；目标是获得不依赖疑似竞态的可靠76候选。
 - v180 (123454，Pending)：基于可靠v138，用FP16 `hexp2`与FP16初始倒数，再做一次

@@ -3,9 +3,9 @@
 沐曦「揭榜挂帅」MoE 赛题（TileLang 算子优化 - Fused MoE GEMM）优化工作区。
 
 ## 当前状态
-- **当前最高：76 分**（同一代码原样复验为 75.67，属于评分阈值附近波动）
-- 提交代码：`xpuoj_data/submission.py`（submissionId 123407，v163）
-- 核心结构：融合 Gate/Up、共享 A、复用单个权重 shared buffer、两段权重搬运启用 `coalesced_width=4`、单次有效行 SwiGLU 写回、融合阶段固定 column4 block swizzle，并为 Down 完整行块使用无谓词写回快路径
+- **历史最高：76 分；当前可靠最优：75.67 分**
+- 提交代码：`xpuoj_data/submission.py`（submissionId 123355，v138；精确复验 123401 也 Accepted）
+- 核心结构：融合 Gate/Up、共享 A、复用单个权重 shared buffer、两段权重搬运启用 `coalesced_width=4`、单次有效行 SwiGLU 写回，并对融合阶段使用固定 column4 block swizzle
 - 完整优化过程：`xpuoj_data/OPTIMIZATION_LOG.md`
 - 目标：**冲榜**（当前我方最优 76；同事已实现 84+，90+ 也经官方检验，说明存在我们完全未掌握的重大优化路径）
 
@@ -56,7 +56,7 @@
 ## 给接手 AI 的快速开始
 
 1. **先读** `xpuoj_data/OPTIMIZATION_LOG.md`——里面记录了所有已尝试方向、分数、编译器 bug 地图，避免重复踩坑。
-2. **当前可靠最优代码**：`xpuoj_data/submission.py`（最高 76 分，submissionId 123407；三档约 3.246/5.843/11.651ms；原样复验 123418 为 75.67）。v163 在已复验的固定 column4 基线上，仅增加 Down 完整行块无谓词写回快路径；v151 动态 swizzle 原样复提交 WA，仍仅作不稳定历史候选。
+2. **当前可靠最优代码**：`xpuoj_data/submission.py`（75.67 分，submissionId 123355；三档约 3.245/5.907/11.694ms；原样复验 123401 也 Accepted）。v163/v165 曾各得到 76，但随后精确原样提交均出现稀疏 WA，已降级为不稳定历史候选并回退到 v138。
 3. **改动后提交**：
    ```bash
    export XPUOJ_EMAIL="muxi2026C1050@example.com"
