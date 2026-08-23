@@ -949,3 +949,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   - 原因未明，可能评测调用模式与假设不符；Python 层优化路线关闭
 - v186 (123527): v138 + Down epilogue select，Pending
 - v187 (提交中): v138 + kernel1 双权重 buffer（gate/up 独立 shared），减少同步依赖
+## v186 突破：Down epilogue select → 76 分
+- v186 (123527): v138 + Down epilogue 由 if/else 改为 T.if_then_else select
+- **Accepted 76**，time=20752ms，比 v138 稳定版更快
+- 已提升为 submission.py，正在原样复验确认稳定性
