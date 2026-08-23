@@ -852,4 +852,5 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   微调扫描；该调度逐单行panel改变N/M tile发射局部性。
 - v155 (123387，Pending)：以当前最快v151为基线，仅将Down固定row panel从4降至2；
   旧结构总体偏好4，但本次重点判断它能否为临界case2节省十几微秒。
+- v156 (123388，Pending)：同一Down row panel扫描补1，完成1/2/4与已测16的关键点对照。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
