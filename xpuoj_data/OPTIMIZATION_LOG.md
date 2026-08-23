@@ -901,28 +901,35 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   reciprocal仍在FP32完成；**Accepted 76**，约 **3.268/5.876/11.691ms**。相较v172
   证明半精度指数本身可满足容差，半精度除法才越界；但本版仍继承v163可疑Down快路径，
   先迁移到v138可靠基线复验，不提升稳定版。
-- v174 (123439，Pending)：保持Down GEMM为FP32累加，只在写回前把`out_local`与FP32
+- v174 (123439)：保持Down GEMM为FP32累加，只在写回前把`out_local`与FP32
   routed weight转成FP16执行最终乘法；结果本就写入FP16，测试半精度epilogue是否能降低
-  完整块的逐元素写回开销。
+  完整块的逐元素写回开销。**Accepted 76**，约 **3.248/5.862/11.675ms**；但继承v163
+  已证实不稳定的Down完整块分支，仅把FP16乘法独立迁移到v138复验。
 - v175 (123441)：不改GPU IR；利用每个testcase独立进程且warmup/计时重复同一
   shape的约定，在首次warmup后用单槽全局变量直接复用compiled callable与workspace，
   避免每个计时迭代重复做shape转int、长tuple构造和两次dict查询。输入/权重/输出仍按本轮
   参数传给kernel，不缓存任何计算结果；样例**WrongAnswer**。GPU IR与v163相同却出现
   稀疏大误差，提示v163 Down快路径可能仍有低概率调度竞态，立即增加原样复验。
-- v176 (123444，Pending)：将融合stage1对同形状`gate_local/up_local`的两次独立
+- v176 (123444)：将融合stage1对同形状`gate_local/up_local`的两次独立
   `T.clear`合成一个`T.Parallel`循环，同时写零两个FP32 accumulator；数学与后续GEMM
-  顺序不变，测试能否减少一次fragment遍历/循环控制。
+  顺序不变；**Accepted 76**，约 **3.244/5.862/11.693ms**。同样继承不稳定Down分支，
+  只把fused-clear因素迁移到v138复验。
 - v177 (123448)：v163第三次精确原样提交，样例**WrongAnswer**，首个明显误差约0.136。
   结合123407/123418两次Accepted，确认Down完整块控制流是低概率调度竞态，不是可靠优化。
   主`submission.py`立即回退为v138字节一致版本；v163只保留历史最高76记录。
 - v178 (123450)：v165精确代码原样复验，样例**WrongAnswer**，首个明显误差约0.0894。
   stage1完整块控制流同样首次Accepted、复验失败；两类完整块分支均关闭。精确代码保留为
   `submission_v165_column4_stage1_full_fast.py`（SHA256 `8082d4b...`），不提升主版本。
-- v179 (123451，Pending)：把v173的“仅FP16 `exp2`、其余FP32”原样移植到已多轮稳定的
-  v138，不带任何stage1/Down完整块控制流快路径；目标是获得不依赖疑似竞态的可靠76候选。
-- v180 (123454，Pending)：基于可靠v138，用FP16 `hexp2`与FP16初始倒数，再做一次
+- v179 (123451)：把v173的“仅FP16 `exp2`、其余FP32”移植到v138；样例
+  **WrongAnswer**，首个明显误差约0.1257。半精度指数在随机输入上处于容差边缘，不能因
+  v173单次Accepted采纳，FP16数学路线关闭。
+- v180 (123454)：基于可靠v138，用FP16 `hexp2`与FP16初始倒数，再做一次
   FP32 Newton-Raphson `r=r0*(2-denom*r0)`修正，Gate/Up乘法仍为FP32。v173已验证半精度
-  指数可过容差；本版探索用几个FP32 FMA替代昂贵FP32除法，同时把半精度倒数误差压回
-  约平方量级。
+  指数可过容差；样例仍**WrongAnswer**，首个明显误差约0.102。Newton只修正倒数，无法
+  消除半精度指数输入/输出误差，关闭。
+- v181 (123456，Pending)：仅把v176的融合双accumulator清零移植到稳定v138，不含任何
+  完整块控制流快路径，隔离其真实收益与可靠性。
+- v182 (123457，Pending)：仅把v174的FP16 Down最终路由乘法移植到稳定v138，仍使用原
+  单一谓词epilogue，隔离半精度写回乘法的真实收益与可靠性。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
