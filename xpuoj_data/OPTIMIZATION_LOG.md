@@ -814,4 +814,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   column维度需要独立验证正确性与更长权重局部性窗口。
 - v141 (123358，Pending)：补齐融合stage1的`column,panel=1`；它逐bx扫完整N方向，
   主要复用同一token block的X，而panel2理论更贴近每expert常见的1–2个bx权重复用窗口。
+- v142 (123360，Pending)：在v138（v124+stage1 column4）上继续叠加stage1
+  `min_blocks_per_sm(2)`；v132单独时case2略有收益，组合目标是帮助5.884ms附近的case2
+  跨过约5.88ms的76分阈值，同时监控case3寄存器压缩回归。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
