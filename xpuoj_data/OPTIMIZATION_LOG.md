@@ -897,8 +897,10 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   `exp2 + reciprocal`显式转为FP16后再升回FP32。MACA intrinsic lowering会为FP16
   `exp2`生成`hexp2`；样例**WrongAnswer**。多数采样误差仅1e-4–1e-3，但仍出现越过
   容差的稀疏点，半精度sigmoid不采用。
-- v173 (123434，Pending)：v172的保守对照，只将`exp2`输入/输出降为FP16，分母加法与
-  reciprocal仍在FP32完成；用于区分半精度指数函数收益与半精度除法的数值/性能影响。
+- v173 (123434)：v172的保守对照，只将`exp2`输入/输出降为FP16，分母加法与
+  reciprocal仍在FP32完成；**Accepted 76**，约 **3.268/5.876/11.691ms**。相较v172
+  证明半精度指数本身可满足容差，半精度除法才越界；但本版仍继承v163可疑Down快路径，
+  先迁移到v138可靠基线复验，不提升稳定版。
 - v174 (123439，Pending)：保持Down GEMM为FP32累加，只在写回前把`out_local`与FP32
   routed weight转成FP16执行最终乘法；结果本就写入FP16，测试半精度epilogue是否能降低
   完整块的逐元素写回开销。
@@ -915,5 +917,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v178 (123450，Pending)：v165精确代码原样复验；其只在可靠v138上加入stage1完整块
   无谓词快路径，若可重复Accepted，可作为Down快路径不稳定时的76分替代候选。精确代码
   已保存为`submission_v165_column4_stage1_full_fast.py`（SHA256 `8082d4b...`）。
+- v179 (123451，Pending)：把v173的“仅FP16 `exp2`、其余FP32”原样移植到已多轮稳定的
+  v138，不带任何stage1/Down完整块控制流快路径；目标是获得不依赖疑似竞态的可靠76候选。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
