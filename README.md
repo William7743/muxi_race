@@ -3,7 +3,7 @@
 沐曦「揭榜挂帅」MoE 赛题（TileLang 算子优化 - Fused MoE GEMM）优化工作区。
 
 ## 当前状态
-- **当前最优：76 分**
+- **当前最高：76 分**（同一代码原样复验为 75.67，属于评分阈值附近波动）
 - 提交代码：`xpuoj_data/submission.py`（submissionId 123407，v163）
 - 核心结构：融合 Gate/Up、共享 A、复用单个权重 shared buffer、两段权重搬运启用 `coalesced_width=4`、单次有效行 SwiGLU 写回、融合阶段固定 column4 block swizzle，并为 Down 完整行块使用无谓词写回快路径
 - 完整优化过程：`xpuoj_data/OPTIMIZATION_LOG.md`
@@ -56,7 +56,7 @@
 ## 给接手 AI 的快速开始
 
 1. **先读** `xpuoj_data/OPTIMIZATION_LOG.md`——里面记录了所有已尝试方向、分数、编译器 bug 地图，避免重复踩坑。
-2. **当前稳定最优**：`xpuoj_data/submission.py`（76 分，submissionId 123407；三档约 3.246/5.843/11.651ms）。v163 在已复验的固定 column4 基线上，仅增加 Down 完整行块无谓词写回快路径并首次跨过 76 分档；v151 动态 swizzle 原样复提交 WA，仍仅作不稳定历史候选。
+2. **当前可靠最优代码**：`xpuoj_data/submission.py`（最高 76 分，submissionId 123407；三档约 3.246/5.843/11.651ms；原样复验 123418 为 75.67）。v163 在已复验的固定 column4 基线上，仅增加 Down 完整行块无谓词写回快路径；v151 动态 swizzle 原样复提交 WA，仍仅作不稳定历史候选。
 3. **改动后提交**：
    ```bash
    export XPUOJ_EMAIL="muxi2026C1050@example.com"

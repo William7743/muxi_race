@@ -877,16 +877,23 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v165 (123411)：固定column4 v138仅移植stage1完整block无谓词SwiGLU快路径；
   **Accepted 76**，约 **3.243/5.858/11.670ms**，三档显示分77/76/75。说明stage1与
   Down的完整块无谓词快路径各自均可在可靠基线上跨到76；但本轮总耗时略高于v163。
-- v166 (123418，Pending)：v163精确代码原样复提交，确认新76分稳定版的可重复正确性。
-- v167 (123420，Pending)：在v163上叠加v165的stage1完整块无谓词快路径；两个已独立
-  Accepted的控制流优化首次组合，观察是否进一步压低case2/3。
-- v168 (123424，Pending)：以v163为可靠基线，将16/32/64-expert的stage1调度分别写成
-  三个编译期字面调用`column1/row4/column4`。目标是保留v151逐shape收益，同时绕开其
-  把panel/order存入闭包变量导致的非确定lowering；本版不叠加v167的stage1快路径，便于
-  隔离正确性。
+- v166 (123418)：v163精确代码原样复提交；再次**Accepted 75.67**，约
+  **3.261/5.890/11.630ms**。确认v163正确性可重复，但case2本轮显示75，首次76是性能
+  阈值波动而非稳定整档提升；v163仍是总耗时最快的可靠结构。
+- v167 (123420)：在v163上叠加v165的stage1完整块无谓词快路径；样例
+  **WrongAnswer**。两个分别Accepted的uniform控制流同时存在会再次扰动融合lowering，
+  不组合，稳定版只保留收益更高的Down快路径。
+- v168 (123424)：以v163为可靠基线，将16/32/64-expert的stage1调度分别写成三个编译期
+  字面调用`column1/row4/column4`；样例**WrongAnswer**，首个明显误差约0.1245。
+  即便不用闭包字符串，逐shape调度与Down快路径组合仍不稳定；主线坚持单一column4。
 - v169 (123426，Pending)：以v163为基线对`actual_rows==0`的stage1空block作统一早期
   跳过。评测网格是`ceil(valid/128)+experts`安全上界，尾部可能有少量空block；旧实现虽
   将其K循环置零，仍会清零两个大FP32 fragment。本版跳过空block的fragment clear与
   epilogue，有效block的GEMM和数值顺序完全不变。
+- v170 (123430，Pending)：OJ样例已确认`group_idx_for_bx.shape[0] == padded_rows/128`
+  （case1均为24），即每个启动block至少含一个有效行。基于v163仅把stage1动态
+  `active_k_steps`改为编译期完整K循环，删除冗余动态loop bound。
+- v171 (123431，Pending)：同一不变量独立应用于Down K循环，不改stage1，隔离两阶段
+  静态loop bound的正确性与性能影响。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
