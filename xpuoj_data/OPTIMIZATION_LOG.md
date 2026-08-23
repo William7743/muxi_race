@@ -784,11 +784,13 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v128 (123334)：以v114为基线仅把hidden=7168两档的融合Gate/Up `k_pack`从2增至4；
   case1未改动且Accepted 77，但case2/3均**WrongAnswer**，账号25.67。K64上的k_pack4
   MACA lowering数值不安全，hidden=7168继续保持已验证的k_pack2。
-- v129 (123336，Pending)：以v114为基线，仅在64-expert/case3的Down GEMM设置
-  `k_pack=2`；历史拆分版该变化约在噪声边缘，本次验证它能否与更快stage1叠加并压低最长档。
-- v130 (123340，Pending)：首次扫描swizzle的另一公开维度；仅将v114融合Gate/Up从
-  `row,panel=4`改为`column,panel=4`，尝试让相邻bx的同expert权重获得更强L2复用。
-- v131 (123341，Pending)：与v130对称，仅将Down改为`column,panel=4`，融合阶段保持row4。
+- v129 (123336)：以v114为基线仅在case3的Down设置`k_pack=2`；**Accepted 75.33**，
+  约 **3.348/5.951/11.956ms**，case3反而比v114慢，Down保持默认k_pack1。
+- v130 (123340)：仅将v114融合Gate/Up从`row,panel=4`改为`column,panel=4`；
+  **Accepted 75.67**，约 **3.310/5.901/11.703ms**，三档均快于v114，case3快约1.75%。
+  column顺序确实改善同expert权重局部性，继续与v124组合。
+- v131 (123341)：仅将Down改为`column,panel=4`，样例**WrongAnswer**；Down保持row4，
+  column只用于已验证安全的融合stage1。
 - v132 (123343，Pending)：评测提交f549源码确认MACA默认生成`__launch_bounds__(256,1)`；
   仅在v114融合stage1加入`T.annotate_min_blocks_per_sm(2)`，尝试强制其32KiB shared结构
   达到双block驻留，代价可能是寄存器压缩/溢出。
@@ -803,4 +805,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   指定`coalesced_width=4`。
 - v137 (123351，Pending)：以v124为基线，仅用评测版公开`T.sigmoid(gate)`替换手写
   `1/(1+exp2(-gate*log2e))`，检验TVM/MACA原生sigmoid lowering是否更紧凑且满足容差。
+- v138 (123355，Pending)：组合v124单次SwiGLU epilogue与v130融合stage1 column4调度；
+  两个独立收益若能叠加，预期刷新当前最快的3.318/5.884/11.856ms。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
