@@ -823,4 +823,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   顺序不变，测试显式硬件倒数是否优于编译器自动除法。
 - v144 (123364，Pending)：以v124为基线，仅把SwiGLU FP32乘法结合顺序从
   `up*(gate*sigmoid)`改为`(up*gate)*sigmoid`，测试寄存器/指令调度差异并验证容差。
+- v145 (123369，Pending)：以v124为基线，仅把融合stage1单weight复用的普通K循环改为
+  `T.Pipelined(..., num_stages=1)`，显式barrier与所有copy/GEMM顺序保持不变，验证单级
+  pipeline pass能否在复用shared结构上优化循环控制而不触发覆盖hazard。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
