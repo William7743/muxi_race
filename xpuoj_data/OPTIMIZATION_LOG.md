@@ -953,3 +953,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v186 (123527): v138 + Down epilogue 由 if/else 改为 T.if_then_else select
 - **Accepted 76**，time=20752ms，比 v138 稳定版更快
 - 已提升为 submission.py，正在原样复验确认稳定性
+- v187 (123531): 双权重 buffer → WrongAnswer
+- v186 复验 (123538): **WrongAnswer** —— v186 首次 76 为不稳定调度竞态，与 v163 同类
+- 回退 submission.py 到稳定 v138（75.67）
+- 结论：TileLang-MACA 存在 lowering 非确定性，单次 Accepted 不能作为稳定依据；76 分不稳定

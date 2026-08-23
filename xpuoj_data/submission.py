@@ -169,12 +169,13 @@ def _moe_forward_kernel(
                 T.gemm(up_shared, down_shared, out_local, transpose_B=True)
 
             for i, j in T.Parallel(bt1, bh2):
-                # routed_expert_weights 按真实 token 顺序索引（raw 坐标）
-                out[block_start + i, by * bh2 + j] = T.if_then_else(
-                    i < actual_rows,
-                    out_local[i, j] * routed_expert_weights[raw_start + token_offset + i],
-                    T.cast(0, dtype),
-                )
+                if i < actual_rows:
+                    # routed_expert_weights 按真实 token 顺序索引（raw 坐标）
+                    out[block_start + i, by * bh2 + j] = (
+                        out_local[i, j] * routed_expert_weights[raw_start + token_offset + i]
+                    )
+                else:
+                    out[block_start + i, by * bh2 + j] = 0
 
     return kernel
 
