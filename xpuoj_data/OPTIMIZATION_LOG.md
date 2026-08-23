@@ -750,17 +750,18 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   **77/75/75**。相对v106的3.375/6.090/12.236全面提升，尤其case3快约2.65%，成功
   跨过第三档75分阈值。它是当前最快稳定版，精确代码另存
   `submission_v114_fused_gu_weight_coalesced4.py`并已提升为`submission.py`。
-- v115 (123290，Pending)：v106仅把Down block swizzle从row4改为同源MoE复盘建议的
-  row16；融合stage1保持已验证安全的row4。
-- v116 (123295，Pending)：v106把两轮SwiGLU fragment改写合并成单次有效行写回表达式，
-  数学括号保持 `up * (gate * sigmoid(gate))`，尝试缩短双acc epilogue与寄存器生命周期。
-- v117 (123299，Pending)：v106仅在`actual_rows>0`时执行两轮SwiGLU epilogue，纯padding
-  block继续保持0步K循环但不再白跑整块`exp2`；有效block路径逐字不变。
+- v115 (123290)：v106仅把Down block swizzle从row4改为row16；**Accepted 75**，约
+  **3.378/6.096/12.246ms**，与v106接近但略慢，保持row4。
+- v116 (123295)：v106把两轮SwiGLU fragment改写合并成单次有效行写回表达式；
+  **Accepted 75.33**，约 **3.349/6.062/12.200ms**。有小幅普遍收益，且与v114的
+  weight copy优化作用域独立，继续组合验证。
+- v117 (123299)：v106仅在`actual_rows>0`时执行两轮SwiGLU epilogue；**Accepted 75**，
+  约 **3.396/6.127/12.340ms**，分支成本高于纯padding节省，关闭。
 - v118 (123310，Pending)：v106仅把Down的`T.Pipelined(..., num_stages=1)`改为普通
   `range(active_k_steps)`，隔离单级流水lowering与串行循环在case3长K路径上的成本。
-- v119 (123317，Pending)：评测分支源码确认公开`T.__exp`会直接lower为MACA快速数学
-  `__expf`；v106仅将`exp2(-x*log2e)`替换为`T.__exp(-x)`，测试真实快速内建激活的
-  正确性与收益，区别于v104的普通`T.exp/expf`。
+- v119 (123317)：评测分支源码确认公开`T.__exp`会直接lower为MACA快速数学`__expf`；
+  v106仅替换SwiGLU指数入口，样例**WrongAnswer**。与v104一致，直接自然指数路径在
+  C500上不满足本题数值容差，保留已验证的`exp2(-x*log2e)`。
 - v120 (123322，Pending)：以新最佳v114为基线，将Gate/Up两段weight copy的
   `coalesced_width`从4增至8，扫描更宽同步向量搬运。
 - v121 (123323，Pending)：以新最佳v114为基线，将相同两段`coalesced_width`从4降至2，
@@ -769,4 +770,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   Up恢复默认，隔离两次覆盖搬运中的收益来源。
 - v123 (123326，Pending)：与v122对称，仅保留Up weight copy的`coalesced_width=4`，
   Gate恢复默认；若一侧独占收益，可避免另一侧的潜在过度约束。
+- v124 (123328，Pending)：组合当前最佳v114的双weight `coalesced_width=4`与v116的
+  单次有效行SwiGLU写回，验证两个独立小收益能否叠加。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
