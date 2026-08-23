@@ -689,3 +689,37 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   也慢于稳定版约6.14ms：现场转换开销完全抵消int8计算收益，即使调scale也无性能前景。
 - 两个实验共同证明int8 lowering本身可编译、case1可过精度，但“跨调用缓存权重”与“现场
   转换权重”分别被输入语义和性能否决；不扩展Up/Down。v65工作副本已完整恢复。
+
+## v98-v104：N256 拼接、路由权重位置与数学/LDG 探针（2026-08-23）
+- v98 (123195)：把 Gate/Up 权重拼成 shared `N256` 后以一次 `T.gemm` 计算并分别写回；
+  LayoutInference `InternalError`，未进入执行。v99 (123202) 改为同一 shared buffer、单次
+  `T.Parallel` 内用条件选择写 Gate/Up，仍是相同 LayoutInference 错误；评测版不能自动推导
+  这种 N256 拼接布局。
+- v100 (123212)：在 Up 写 workspace 时提前乘 routed weight、Down 末尾取消乘法，样例
+  **WrongAnswer**；首个明显误差约0.14。多数采样误差虽仅1e-4，但 routed weight 在FP16
+  workspace处提前舍入会被后续Down GEMM放大，不能改变乘法位置。
+- v101 (123215)：仅把 routed weight 先安全预载到Down的shared，再在原FP32 epilogue位置
+  相乘。**Accepted 71.67**；约 **4.301/7.237/14.544ms**，三个case都比稳定版明显慢。
+  路由权重的标量广播不是主瓶颈，额外shared与同步反而降低性能。
+- v102 (123221)：以单个BufferStore条件表达式填充拼接N256 buffer后做一次GEMM；仍在
+  LayoutInference阶段失败，N256自动融合路线关闭。
+- v103 (123228)：修正原生 `__builtin_mxc_ldg_b128` 的指针类型为官方使用的
+  `const int8_t*` 后仍在mxcc阶段失败。评测版公开的 `T.ldg128` 源码本质是普通128-bit
+  指针解引用，与v78已有实现等价；不继续猜私有builtin ABI。
+- v104 (123243)：仅把SwiGLU中的 `exp2(-x*log2e)` 改为直接 `T.exp(-x)`；样例
+  **WrongAnswer**，3.644ms，在 `(2678,111)` 出现约0.159稀疏大误差。该数学替换在C500
+  lowering下不满足本题容差，保留稳定exp2路径。
+
+## v105-v106：C500公开复盘启发的访存与单权重缓冲（2026-08-23）
+- 公开的C500 TileLang GEMM实测复盘给出两个可迁移线索：A侧global→shared copy设置
+  `coalesced_width=4` 曾提升约2.33%；另一份同源Routed MoE复盘指出，融合Gate/Up时
+  依次覆盖同一块weight shared buffer是其最大单项收益，并最终采用128 tile/256线程。
+- 已逐项核对评测版TileLang提交 `f549117c`：`T.copy(..., coalesced_width=4)`、
+  `T.use_swizzle(panel_size, order, enable)`均真实存在；不是仅新版API。
+- v105 (123251，Pending)：在75分拆分基线中，只给Gate/Up/Down三段A侧读取添加
+  `coalesced_width=4`，不改变权重、GEMM或数值路径。
+- v106 (123257，Pending)：融合Gate/Up `M128xN128xK64 @256`，shared-A与Gate/Up共用
+  单一weight shared buffer，总shared约32KiB；普通串行K循环配显式barrier保护覆盖。
+  目标是在保持N128 MMA效率和两block驻留的同时，只读一次X。历史只测过N64双权重
+  buffer或非该组合，不能替代本次验证。
+- 所有瞬态实验载体提交后均已恢复；`submission.py`继续保持120451的75分稳定版本。
