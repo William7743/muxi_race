@@ -771,14 +771,16 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v123 (123326)：仅保留Up weight copy的`coalesced_width=4`则**Accepted 75**，约
   **3.405/6.061/12.185ms**；略优于v106但不及两侧均为4的v114，证实成对设置既保证
   稳定布局又提供最大收益。
-- v124 (123328，Pending)：组合当前最佳v114的双weight `coalesced_width=4`与v116的
-  单次有效行SwiGLU写回，验证两个独立小收益能否叠加。
-- v125 (123330，Pending)：以v114为基线，仅给Down weight global→shared copy增加
-  `coalesced_width=4`；stage1双weight继续保持4，隔离第三段权重搬运是否同样受益。
-- v126 (123331，Pending)：以v114为基线，仅给融合stage1的X→shared copy增加
-  `coalesced_width=4`；该X tile供Gate/Up复用，验证复用后A侧搬运是否与v105旧拆分结构不同。
-- v127 (123332，Pending)：以v114为基线，仅给Down的up_logits→shared copy增加
-  `coalesced_width=4`，与v125的Down weight侧形成A/B独立对照。
+- v124 (123328)：组合v114的双weight `coalesced_width=4`与v116单次有效行SwiGLU写回；
+  **Accepted 75.67**，约 **3.318/5.884/11.856ms**。三档均快于v114，成为当前最快
+  稳定版；精确代码另存`submission_v124_fused_coalesced_single_epilogue.py`并提升为
+  `submission.py`。
+- v125 (123330)：仅给Down weight copy增加`coalesced_width=4`；**Accepted 75**，约
+  **3.401/5.975/12.053ms**，反而回退，Down权重保持默认。
+- v126 (123331)：仅给融合stage1的X→shared copy增加`coalesced_width=4`；
+  **Accepted 75.33**，约 **3.351/5.952/11.930ms**，不及v114，stage1 X保持默认。
+- v127 (123332)：仅给Down的up_logits→shared copy增加`coalesced_width=4`；
+  **Accepted 75**，约 **3.380/5.995/12.044ms**，不及v114，Down A侧保持默认。
 - v128 (123334，Pending)：以v114为基线，仅把hidden=7168两档的融合Gate/Up `k_pack`
   从2增至4；K64恰好容纳四个K16 MFMA，测试更大分组装载能否继续减少指令调度开销。
 - v129 (123336，Pending)：以v114为基线，仅在64-expert/case3的Down GEMM设置
