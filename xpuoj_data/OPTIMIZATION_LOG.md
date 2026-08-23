@@ -961,3 +961,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - 来源：外部生成，基于稳定 v138
 - 已加入仓库并设为 submission.py
 - 已提交 OJ，待结果
+## v189 (2026-08-23)：case2 direct SiLU division
+- 基于 v188，case2 使用直接除法形式
+- 已加入仓库并设为 submission.py，已提交 OJ
