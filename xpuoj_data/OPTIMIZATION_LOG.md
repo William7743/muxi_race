@@ -826,4 +826,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v145 (123369，Pending)：以v124为基线，仅把融合stage1单weight复用的普通K循环改为
   `T.Pipelined(..., num_stages=1)`，显式barrier与所有copy/GEMM顺序保持不变，验证单级
   pipeline pass能否在复用shared结构上优化循环控制而不触发覆盖hazard。
+- v146 (123371，Pending)：以v124为基线，仅把融合Gate/Up两次GEMM policy从FullRow
+  同步切为Square；旧拆分单累加器的policy结论不能完全代表当前双累加/单buffer lowering。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
