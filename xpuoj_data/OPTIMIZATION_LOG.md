@@ -957,3 +957,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v186 复验 (123538): **WrongAnswer** —— v186 首次 76 为不稳定调度竞态，与 v163 同类
 - 回退 submission.py 到稳定 v138（75.67）
 - 结论：TileLang-MACA 存在 lowering 非确定性，单次 Accepted 不能作为稳定依据；76 分不稳定
+## v188 (2026-08-23)：hard-static per-shape swizzle
+- 来源：外部生成，基于稳定 v138
+- 已加入仓库并设为 submission.py
+- 已提交 OJ，待结果
