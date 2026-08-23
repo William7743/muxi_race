@@ -858,4 +858,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v159 (123391，Pending)：以v151为基线，将偶数stage1 K steps改为外层`steps//2`加
   内层`T.unroll(2)`，每个展开步的copy/GEMM/barrier完全不变；测试减少循环控制与地址
   计算能否帮助临界case2。
+- v160 (123393，Pending)：以v151为基线，为`actual_rows==128`的完整block增加无谓词
+  单次SwiGLU写回快路径，尾块保留原`i<actual_rows`；以一次block-uniform分支换取完整块
+  每元素谓词消除。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
