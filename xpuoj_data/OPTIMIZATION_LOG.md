@@ -843,15 +843,13 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   v138/v124对应值，成为当前最快稳定版。精确代码另存
   `submission_v151_per_shape_swizzle.py`并提升为`submission.py`。
 - 当前显示最高仍为75.67；case2只差约14–20us即可跨到76显示分，是下一轮微调重点。
-- v152 (123383，Pending)：固定字面row4的v124仅叠加stage1字面
-  `min_blocks_per_sm(2)`，区别于v149的动态swizzle组合；v132表明它对case2约有19us
-  潜在收益，足以尝试跨越当前仅差约30us的76分阈值。
-- v153 (123385，Pending)：以v124为基线，仅将融合stage1固定row panel从4降至2；
-  旧拆分结构中row2对小shape有过收益，本次重点观察case2能否低于5.877ms阈值。
-- v154 (123386，Pending)：补齐融合stage1固定`row,panel=1`，与row2/4形成case2专属
-  微调扫描；该调度逐单行panel改变N/M tile发射局部性。
-- v155 (123387，Pending)：以当前最快v151为基线，仅将Down固定row panel从4降至2；
-  旧结构总体偏好4，但本次重点判断它能否为临界case2节省十几微秒。
+- v152 (123383)：固定row4的v124叠加stage1 `min_blocks_per_sm(2)`；样例
+  **WrongAnswer**。v132两轮epilogue虽正确，但单次epilogue改变寄存器分配后该提示不再安全。
+- v153 (123385)：融合stage1固定row panel从4降至2；样例**WrongAnswer**。
+- v154 (123386)：融合stage1固定row panel降至1；样例**WrongAnswer**。融合stage1的
+  row调度仅panel4安全；column目前panel1/4安全、2/8不安全。
+- v155 (123387)：v151的Down固定row panel从4降至2；样例**WrongAnswer**。Down row4
+  继续作为唯一当前最佳结构验证安全的短panel。
 - v156 (123388，Pending)：同一Down row panel扫描补1，完成1/2/4与已测16的关键点对照。
 - v157 (123389，Pending)：同一Down row panel扫描补8；stage1的row8不安全不代表单累加
   Down路径，v115已证明Down row16正确但略慢。
