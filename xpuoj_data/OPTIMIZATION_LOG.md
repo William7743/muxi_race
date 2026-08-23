@@ -895,5 +895,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   `active_k_steps`改为编译期完整K循环，删除冗余动态loop bound。
 - v171 (123431，Pending)：同一不变量独立应用于Down K循环，不改stage1，隔离两阶段
   静态loop bound的正确性与性能影响。
+- v172 (123433，Pending)：保持Gate/Up GEMM FP32累加与最终FP32乘法，只把sigmoid内部
+  `exp2 + reciprocal`显式转为FP16后再升回FP32。MACA intrinsic lowering会为FP16
+  `exp2`生成`hexp2`；相较已WA的全局fast-math，本版只在最终本就写回FP16的激活处
+  引入一次可控舍入，探索专用半精度数学路径。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
