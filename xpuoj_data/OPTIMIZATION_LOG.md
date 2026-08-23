@@ -817,4 +817,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v142 (123360，Pending)：在v138（v124+stage1 column4）上继续叠加stage1
   `min_blocks_per_sm(2)`；v132单独时case2略有收益，组合目标是帮助5.884ms附近的case2
   跨过约5.88ms的76分阈值，同时监控case3寄存器压缩回归。
+- v143 (123361，Pending)：以v124为基线，仅把sigmoid分母的普通`1.0/x`替换为评测版
+  公开`T.ieee_frcp(x,"rn")`，它在MACA codegen中直接生成`__frcp_rn`；指数和其余数学
+  顺序不变，测试显式硬件倒数是否优于编译器自动除法。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
