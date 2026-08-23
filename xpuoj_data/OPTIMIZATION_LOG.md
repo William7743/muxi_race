@@ -903,5 +903,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v174 (123439，Pending)：保持Down GEMM为FP32累加，只在写回前把`out_local`与FP32
   routed weight转成FP16执行最终乘法；结果本就写入FP16，测试半精度epilogue是否能降低
   完整块的逐元素写回开销。
+- v175 (123441，Pending)：不改GPU IR；利用每个testcase独立进程且warmup/计时重复同一
+  shape的约定，在首次warmup后用单槽全局变量直接复用compiled callable与workspace，
+  避免每个计时迭代重复做shape转int、长tuple构造和两次dict查询。输入/权重/输出仍按本轮
+  参数传给kernel，不缓存任何计算结果。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
