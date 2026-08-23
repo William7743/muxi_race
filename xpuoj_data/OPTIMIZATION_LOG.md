@@ -733,7 +733,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v108 (123273)：在v106上只把融合Gate/Up的block swizzle从row4改为公开复盘
   推荐的row8；Down仍为row4。样例**WrongAnswer**，在 `(1350,1251)` 出现约0.111
   稀疏大误差；row8在dense单累加结构可用，但在本题融合双累加lowering中不安全。
-- v109 (123275，Pending)：在v106上只给Down `T.gemm`增加`FullRow` policy；其余不变。
+- v109 (123275)：在v106上只给Down `T.gemm`增加`FullRow` policy；**Accepted 75**，约
+  **3.405/6.190/12.429ms**，三个case均慢于v106；Down保留默认policy。
 - v110 (123277)：v106只启用评测版默认关闭的 `TL_ENABLE_LOWER_LDGSTG` 非谓词改写；
   样例**WrongAnswer**，在 `(1126,725)` 出现约0.124稀疏大误差。该pass虽由f549117公开
   暴露且dense复盘使用，但对当前MACA融合代码生成不安全，关闭。
@@ -747,4 +748,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   `coalesced_width=4`，验证dense复盘的B侧向量搬运线索；A/Down不变。
 - v115 (123290，Pending)：v106仅把Down block swizzle从row4改为同源MoE复盘建议的
   row16；融合stage1保持已验证安全的row4。
+- v116 (123295，Pending)：v106把两轮SwiGLU fragment改写合并成单次有效行写回表达式，
+  数学括号保持 `up * (gate * sigmoid(gate))`，尝试缩短双acc epilogue与寄存器生命周期。
+- v117 (123299，Pending)：v106仅在`actual_rows>0`时执行两轮SwiGLU epilogue，纯padding
+  block继续保持0步K循环但不再白跑整块`exp2`；有效block路径逐字不变。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`继续保持120451的75分稳定版本。
