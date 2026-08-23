@@ -857,12 +857,10 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v158 (123390)：v151精确代码原样复提交，样例**WrongAnswer**。这证明v151的
   动态panel/order闭包存在调度相关非确定性，首次Accepted不足以作为稳定依据。主提交立即
   回退到固定字面column4的v138；v151仅保留为不稳定历史候选，不再组合扩展。
-- v159 (123391，Pending)：以v151为基线，将偶数stage1 K steps改为外层`steps//2`加
-  内层`T.unroll(2)`，每个展开步的copy/GEMM/barrier完全不变；测试减少循环控制与地址
-  计算能否帮助临界case2。
-- v160 (123393，Pending)：以v151为基线，为`actual_rows==128`的完整block增加无谓词
-  单次SwiGLU写回快路径，尾块保留原`i<actual_rows`；以一次block-uniform分支换取完整块
-  每元素谓词消除。
+- v159 (123391)：以v151为基线做stage1 K循环factor-2展开；样例**WrongAnswer**。
+  v151本身复提交不稳定，且展开会进一步改变同步调度，不迁移到稳定版。
+- v160 (123393)：以v151为基线增加完整block无谓词SwiGLU写回；样例
+  **WrongAnswer**。动态swizzle基线已不可靠，该控制流组合关闭。
 - v161 (123394，Pending)：与v160对称，为Down完整block增加无谓词乘路由权重/写out
   快路径；尾块仍逐元素选择有效输出或0。
 - v162 (123401，Pending)：固定字面column4稳定版v138原样复提交，确认其重复运行
