@@ -3,11 +3,11 @@
 沐曦「揭榜挂帅」MoE 赛题（TileLang 算子优化 - Fused MoE GEMM）优化工作区。
 
 ## 当前状态
-- **当前最优：75.67 分**
-- 提交代码：`xpuoj_data/submission.py`（submissionId 123355，v138，固定字面 column4）
-- 核心结构：融合 Gate/Up、共享 A、复用单个权重 shared buffer、两段权重搬运启用 `coalesced_width=4`、单次有效行 SwiGLU 写回，并对融合阶段使用固定 column4 block swizzle
+- **当前最优：76 分**
+- 提交代码：`xpuoj_data/submission.py`（submissionId 123407，v163）
+- 核心结构：融合 Gate/Up、共享 A、复用单个权重 shared buffer、两段权重搬运启用 `coalesced_width=4`、单次有效行 SwiGLU 写回、融合阶段固定 column4 block swizzle，并为 Down 完整行块使用无谓词写回快路径
 - 完整优化过程：`xpuoj_data/OPTIMIZATION_LOG.md`
-- 目标：**冲榜**（当前我方最优 75；同事已实现 84+，90+ 也经官方检验，说明存在我们完全未掌握的重大优化路径）
+- 目标：**冲榜**（当前我方最优 76；同事已实现 84+，90+ 也经官方检验，说明存在我们完全未掌握的重大优化路径）
 
 ## 无 GPU 工作流（重要约束）
 
@@ -50,13 +50,13 @@
   并真实读写 TileLang local/shared/global 指针；高层 `gemm.h/gemm_ss` 外部实例化不可用。
 - 合法的同步 global→register→LDS 软件流水已实证有效：v78 相对朴素 raw tile
   提升约 0.2-0.6ms，但当前仍未胜过稳定 `T.gemm`。
-- 当前75.67分不是已知真实上限；84+/90+ 均经官方验证，仍需寻找更成熟的LDS/MFMA
+- 当前76分不是已知真实上限；84+/90+ 均经官方验证，仍需寻找更成熟的LDS/MFMA
   调度、persistent/权重复用或其他重大结构路径。
 
 ## 给接手 AI 的快速开始
 
 1. **先读** `xpuoj_data/OPTIMIZATION_LOG.md`——里面记录了所有已尝试方向、分数、编译器 bug 地图，避免重复踩坑。
-2. **当前稳定最优**：`xpuoj_data/submission.py`（75.67 分，submissionId 123355；三档约 3.245/5.907/11.694ms）。v151 首次更快但原样复提交 WA，已降级为不稳定历史候选。
+2. **当前稳定最优**：`xpuoj_data/submission.py`（76 分，submissionId 123407；三档约 3.246/5.843/11.651ms）。v163 在已复验的固定 column4 基线上，仅增加 Down 完整行块无谓词写回快路径并首次跨过 76 分档；v151 动态 swizzle 原样复提交 WA，仍仅作不稳定历史候选。
 3. **改动后提交**：
    ```bash
    export XPUOJ_EMAIL="muxi2026C1050@example.com"
