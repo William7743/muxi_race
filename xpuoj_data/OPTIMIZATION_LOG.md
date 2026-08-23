@@ -786,4 +786,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v130 (123340，Pending)：首次扫描swizzle的另一公开维度；仅将v114融合Gate/Up从
   `row,panel=4`改为`column,panel=4`，尝试让相邻bx的同expert权重获得更强L2复用。
 - v131 (123341，Pending)：与v130对称，仅将Down改为`column,panel=4`，融合阶段保持row4。
+- v132 (123343，Pending)：评测提交f549源码确认MACA默认生成`__launch_bounds__(256,1)`；
+  仅在v114融合stage1加入`T.annotate_min_blocks_per_sm(2)`，尝试强制其32KiB shared结构
+  达到双block驻留，代价可能是寄存器压缩/溢出。
+- v133 (123344，Pending)：与v132对称，仅给32KiB shared的Down kernel指定
+  `min_blocks_per_sm(2)`，判断默认寄存器配置是否限制Down占用率。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
