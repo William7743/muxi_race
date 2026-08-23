@@ -791,16 +791,17 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   column顺序确实改善同expert权重局部性，继续与v124组合。
 - v131 (123341)：仅将Down改为`column,panel=4`，样例**WrongAnswer**；Down保持row4，
   column只用于已验证安全的融合stage1。
-- v132 (123343，Pending)：评测提交f549源码确认MACA默认生成`__launch_bounds__(256,1)`；
-  仅在v114融合stage1加入`T.annotate_min_blocks_per_sm(2)`，尝试强制其32KiB shared结构
-  达到双block驻留，代价可能是寄存器压缩/溢出。
+- v132 (123343)：评测提交f549源码确认MACA默认生成`__launch_bounds__(256,1)`；仅在
+  v114融合stage1加入`min_blocks_per_sm(2)`；**Accepted 75.67**，约
+  **3.356/5.909/11.920ms**。与v114相比case2略快、case3略慢，没有稳定整体收益。
 - v133 (123344，Pending)：与v132对称，仅给32KiB shared的Down kernel指定
   `min_blocks_per_sm(2)`，判断默认寄存器配置是否限制Down占用率。
 - v134 (123345，Pending)：以v114为基线启用正式`TL_ENABLE_FAST_MATH`；评测分支会对
   MACA传`mxcc -use-fast-math`，区别于旧日志无效的CUDA/ptxas参数，测试其对
   `exp2`、倒数和通用标量数学的整体收益及容差。
-- v135 (123349，Pending)：以当前最快v124为基线，仅给单次SwiGLU写回的`T.Parallel`
-  指定`coalesced_width=4`，测试加载端的显式向量宽度收益能否延伸到workspace存储。
+- v135 (123349)：以v124为基线给单次SwiGLU写回`T.Parallel`指定`coalesced_width=4`；
+  **Accepted 75.67**，约 **3.296/5.923/11.889ms**。case1小幅快但case2/3均慢，
+  workspace写回保持默认布局。
 - v136 (123350，Pending)：与v135对称，仅给Down最终乘路由权重/写out的`T.Parallel`
   指定`coalesced_width=4`。
 - v137 (123351，Pending)：以v124为基线，仅用评测版公开`T.sigmoid(gate)`替换手写
