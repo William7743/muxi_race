@@ -886,10 +886,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v168 (123424)：以v163为可靠基线，将16/32/64-expert的stage1调度分别写成三个编译期
   字面调用`column1/row4/column4`；样例**WrongAnswer**，首个明显误差约0.1245。
   即便不用闭包字符串，逐shape调度与Down快路径组合仍不稳定；主线坚持单一column4。
-- v169 (123426，Pending)：以v163为基线对`actual_rows==0`的stage1空block作统一早期
-  跳过。评测网格是`ceil(valid/128)+experts`安全上界，尾部可能有少量空block；旧实现虽
-  将其K循环置零，仍会清零两个大FP32 fragment。本版跳过空block的fragment clear与
-  epilogue，有效block的GEMM和数值顺序完全不变。
+- v169 (123426)：以v163为基线对`actual_rows==0`的stage1空block作统一早期跳过；
+  **Accepted 75.67**，约 **3.292/5.925/11.768ms**，三档均明显慢于v163。OJ实际网格
+  已紧缩为padded block数，统一分支没有空block收益且扰动调度，撤销。
 - v170 (123430，Pending)：OJ样例已确认`group_idx_for_bx.shape[0] == padded_rows/128`
   （case1均为24），即每个启动block至少含一个有效行。基于v163仅把stage1动态
   `active_k_steps`改为编译期完整K循环，删除冗余动态loop bound。
@@ -901,5 +900,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   引入一次可控舍入，探索专用半精度数学路径。
 - v173 (123434，Pending)：v172的保守对照，只将`exp2`输入/输出降为FP16，分母加法与
   reciprocal仍在FP32完成；用于区分半精度指数函数收益与半精度除法的数值/性能影响。
+- v174 (123439，Pending)：保持Down GEMM为FP32累加，只在写回前把`out_local`与FP32
+  routed weight转成FP16执行最终乘法；结果本就写入FP16，测试半精度epilogue是否能降低
+  完整块的逐元素写回开销。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
