@@ -796,9 +796,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   **3.356/5.909/11.920ms**。与v114相比case2略快、case3略慢，没有稳定整体收益。
 - v133 (123344)：仅给Down kernel指定`min_blocks_per_sm(2)`；样例**WrongAnswer**。
   强制寄存器上限会破坏Down数值稳定性，Down保留MACA默认`launch_bounds(...,1)`。
-- v134 (123345，Pending)：以v114为基线启用正式`TL_ENABLE_FAST_MATH`；评测分支会对
-  MACA传`mxcc -use-fast-math`，区别于旧日志无效的CUDA/ptxas参数，测试其对
-  `exp2`、倒数和通用标量数学的整体收益及容差。
+- v134 (123345)：以v114为基线启用正式`TL_ENABLE_FAST_MATH`（MACA
+  `mxcc -use-fast-math`）；样例**WrongAnswer**。该编译开关会越过本题数值安全边界，关闭。
 - v135 (123349)：以v124为基线给单次SwiGLU写回`T.Parallel`指定`coalesced_width=4`；
   **Accepted 75.67**，约 **3.296/5.923/11.889ms**。case1小幅快但case2/3均慢，
   workspace写回保持默认布局。
@@ -808,13 +807,14 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v137 (123351)：以v124为基线用评测版公开`T.sigmoid(gate)`替换手写exp2表达式；
   **Accepted 75.67**，约 **3.318/5.913/11.895ms**，正确但case2/3略慢，保留手写
   `1/(1+exp2(-gate*log2e))`。
-- v138 (123355，Pending)：组合v124单次SwiGLU epilogue与v130融合stage1 column4调度；
-  两个独立收益若能叠加，预期刷新当前最快的3.318/5.884/11.856ms。
+- v138 (123355)：组合v124单次SwiGLU epilogue与融合stage1 column4；
+  **Accepted 75.67**，约 **3.245/5.907/11.694ms**。case1/3显著刷新，case2比v124
+  row4的5.884ms略慢；转为编译期per-shape调度。
 - v139 (123356)：融合stage1使用`column,panel=2`；样例**WrongAnswer**。与row8、
   Down-column类似，swizzle映射会触发当前双累加lowering的稀疏错误；column4是目前唯一
   已验证正确且提速的column组合。
-- v140 (123357，Pending)：同一column扫描取`panel=8`；row8曾在双累加lowering中WA，
-  column维度需要独立验证正确性与更长权重局部性窗口。
+- v140 (123357)：融合stage1使用`column,panel=8`；样例**WrongAnswer**。column4继续是
+  唯一安全的column panel，1仍在排队。
 - v141 (123358，Pending)：补齐融合stage1的`column,panel=1`；它逐bx扫完整N方向，
   主要复用同一token block的X，而panel2理论更贴近每expert常见的1–2个bx权重复用窗口。
 - v142 (123360，Pending)：在v138（v124+stage1 column4）上继续叠加stage1
@@ -835,4 +835,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   4–16KiB整幂，测试L2/显存分区冲突。
 - v148 (123376，Pending)：同一workspace stride padding取+64列（额外128B/row），
   对照更明显的cache-line错位；不做v11那种昂贵转置。
+- v149 (123378，Pending)：编译期逐shape组合：16/64-expert使用v138最佳column4，
+  32-expert保持v124最佳row4并仅对该shape指定`min_blocks_per_sm(2)`；目标让case2从
+  5.884ms附近跨过约5.877ms的76分阈值，同时保留case1/3刷新。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
