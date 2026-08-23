@@ -664,5 +664,28 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - 公开资料检索找到MetaX官方 `TileKernels-Metax`，其当前MoE目录主要覆盖routing、
   expand/reduce与量化辅助，没有可直接复用的routed grouped GEMM；因此没有隐藏的
   高层persistent入口。实验工作副本v68/v78均已恢复到提交前内容。
-- `submission.py` 继续保持120451的75分稳定版本；N64实验暂在
-  `submission_v68_gate_merge_m256_k32.py` 工作副本上进行，终态后恢复原v68内容。
+- `submission.py` 继续保持120451的75分稳定版本；N64实验工作副本v68/v78均已恢复，
+  当前工作树中的稳定/历史版本没有被瞬态实验覆盖。
+
+## v95：原生 Gate/Up split-wave 融合（2026-08-23）
+- v95在v67工作副本中实现原生 `M128xN64xK32 @256`：wave0/1负责Gate，wave2/3
+  负责Up，共享X以及16KB scratch；K循环使用合法的同步global→register→LDS流水，
+  Gate完成后经shared交给Up waves执行SwiGLU，不使用禁用的async/bsm。
+- submissionId **123155**：**Accepted 65.33**，约 **5.97/8.80/17.95ms**。
+  正确性证明split-wave同步和共享交接成立，但原生MMA、额外barrier及标量`exp2f`的综合
+  开销显著高于TileLang GEMM；K64还会由4-block/SM降至2-block/SM，故不再盲测。
+- v67实验载体已用补丁恢复并经`git diff --exit-code`确认；稳定75分版本保持不变。
+- 下一前沿转向**静态模型权重预量化**：只缓存权重的int8表示，不缓存输入或最终结果；
+  每次调用仍对新输入完整计算。先以Gate-only探针验证int8 GEMM lowering与精度，再逐层扩展。
+
+## v96-v97：int8 Gate 与权重轮换语义（2026-08-23）
+- v96将Gate权重在首次warmup用TileLang量化为int8并按shape缓存，输入每次现场量化，
+  `T.gemm(int8,int8→int32)`后按固定scale反量化；Up/Down保持fp16。submissionId
+  **123177**：编译成功但样例**WrongAnswer 0分**，出现随机符号级大误差。结合v89/v91
+  代理身份不复用，确认同一shape的评测轮次会轮换不同权重；shape级量化权重缓存不符合契约。
+- v97取消缓存，Gate每个K tile都从当前fp16输入/权重现场量化再做int8 GEMM。submissionId
+  **123182**：case1 **Accepted 72分、4.33ms**；case2/3分别在约0.113/0.111绝对误差处
+  WA，账号显示24分。更关键的是case1已比稳定版约3.55ms慢，case2失败前计时约7.73ms
+  也慢于稳定版约6.14ms：现场转换开销完全抵消int8计算收益，即使调scale也无性能前景。
+- 两个实验共同证明int8 lowering本身可编译、case1可过精度，但“跨调用缓存权重”与“现场
+  转换权重”分别被输入语义和性能否决；不扩展Up/Down。v65工作副本已完整恢复。
