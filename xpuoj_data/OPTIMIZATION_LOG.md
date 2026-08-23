@@ -855,4 +855,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   Down路径，v115已证明Down row16正确但略慢。
 - v158 (123390，Pending)：当前稳定v151逐字复提交，确认动态panel/order组合的重复运行
   可靠性，并观察case2 5.891ms的正常波动能否跨过76显示分阈值。
+- v159 (123391，Pending)：以v151为基线，将偶数stage1 K steps改为外层`steps//2`加
+  内层`T.unroll(2)`，每个展开步的copy/GEMM/barrier完全不变；测试减少循环控制与地址
+  计算能否帮助临界case2。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
