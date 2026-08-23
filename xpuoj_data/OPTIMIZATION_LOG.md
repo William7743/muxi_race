@@ -757,19 +757,20 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   weight copy优化作用域独立，继续组合验证。
 - v117 (123299)：v106仅在`actual_rows>0`时执行两轮SwiGLU epilogue；**Accepted 75**，
   约 **3.396/6.127/12.340ms**，分支成本高于纯padding节省，关闭。
-- v118 (123310，Pending)：v106仅把Down的`T.Pipelined(..., num_stages=1)`改为普通
-  `range(active_k_steps)`，隔离单级流水lowering与串行循环在case3长K路径上的成本。
+- v118 (123310)：v106仅把Down的单级`T.Pipelined`改为普通`range`；**Accepted 75**，
+  约 **3.418/6.190/12.423ms**，全面慢于原单级流水，保留`T.Pipelined(...,1)`。
 - v119 (123317)：评测分支源码确认公开`T.__exp`会直接lower为MACA快速数学`__expf`；
   v106仅替换SwiGLU指数入口，样例**WrongAnswer**。与v104一致，直接自然指数路径在
   C500上不满足本题数值容差，保留已验证的`exp2(-x*log2e)`。
-- v120 (123322，Pending)：以新最佳v114为基线，将Gate/Up两段weight copy的
-  `coalesced_width`从4增至8，扫描更宽同步向量搬运。
+- v120 (123322)：以v114为基线将两段weight copy的`coalesced_width`从4增至8；
+  **Accepted 75**，约 **3.382/6.119/12.328ms**，明显回退，宽度4保持最优。
 - v121 (123323，Pending)：以新最佳v114为基线，将相同两段`coalesced_width`从4降至2，
   与默认、4、8形成受控宽度扫描。
-- v122 (123324，Pending)：以v114为基线，仅保留Gate weight copy的`coalesced_width=4`，
-  Up恢复默认，隔离两次覆盖搬运中的收益来源。
-- v123 (123326，Pending)：与v122对称，仅保留Up weight copy的`coalesced_width=4`，
-  Gate恢复默认；若一侧独占收益，可避免另一侧的潜在过度约束。
+- v122 (123324)：以v114为基线仅保留Gate weight copy的`coalesced_width=4`，Up恢复
+  默认；样例**WrongAnswer**。复用同一shared buffer时两次copy lowering必须保持一致。
+- v123 (123326)：仅保留Up weight copy的`coalesced_width=4`则**Accepted 75**，约
+  **3.405/6.061/12.185ms**；略优于v106但不及两侧均为4的v114，证实成对设置既保证
+  稳定布局又提供最大收益。
 - v124 (123328，Pending)：组合当前最佳v114的双weight `coalesced_width=4`与v116的
   单次有效行SwiGLU写回，验证两个独立小收益能否叠加。
 - v125 (123330，Pending)：以v114为基线，仅给Down weight global→shared copy增加
