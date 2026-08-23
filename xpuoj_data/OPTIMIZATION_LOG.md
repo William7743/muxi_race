@@ -848,4 +848,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   潜在收益，足以尝试跨越当前仅差约30us的76分阈值。
 - v153 (123385，Pending)：以v124为基线，仅将融合stage1固定row panel从4降至2；
   旧拆分结构中row2对小shape有过收益，本次重点观察case2能否低于5.877ms阈值。
+- v154 (123386，Pending)：补齐融合stage1固定`row,panel=1`，与row2/4形成case2专属
+  微调扫描；该调度逐单行panel改变N/M tile发射局部性。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
