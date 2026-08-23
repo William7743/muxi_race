@@ -907,5 +907,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   shape的约定，在首次warmup后用单槽全局变量直接复用compiled callable与workspace，
   避免每个计时迭代重复做shape转int、长tuple构造和两次dict查询。输入/权重/输出仍按本轮
   参数传给kernel，不缓存任何计算结果。
+- v176 (123444，Pending)：将融合stage1对同形状`gate_local/up_local`的两次独立
+  `T.clear`合成一个`T.Parallel`循环，同时写零两个FP32 accumulator；数学与后续GEMM
+  顺序不变，测试能否减少一次fragment遍历/循环控制。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
