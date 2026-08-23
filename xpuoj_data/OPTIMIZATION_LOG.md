@@ -934,5 +934,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v183 (123459，Pending)：在稳定v138上重新测试逐shape字面swizzle分支，不含v168的
   不稳定Down快路径：16/32/64-expert分别调用`column1/row4/column4`。三个固定配置均有
   独立Accepted记录，目标是判断v168的WA究竟来自Down分支还是多分支IR。
+- v184 (123464，Pending)：基于稳定v138，将SwiGLU从
+  `gate * (1 / (1 + exp2(...)))`代数等价改写为`gate / (1 + exp2(...))`，其余顺序不变。
+  FP32舍入差异极小，理论上每个激活元素少一次乘法，测试编译器是否保留这一指令收益。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
