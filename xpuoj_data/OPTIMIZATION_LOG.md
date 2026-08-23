@@ -846,4 +846,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v152 (123383，Pending)：固定字面row4的v124仅叠加stage1字面
   `min_blocks_per_sm(2)`，区别于v149的动态swizzle组合；v132表明它对case2约有19us
   潜在收益，足以尝试跨越当前仅差约30us的76分阈值。
+- v153 (123385，Pending)：以v124为基线，仅将融合stage1固定row panel从4降至2；
+  旧拆分结构中row2对小shape有过收益，本次重点观察case2能否低于5.877ms阈值。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
