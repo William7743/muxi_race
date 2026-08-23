@@ -864,8 +864,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v161 (123394)：以不稳定v151为基线增加Down完整block无谓词快路径；本轮
   **Accepted 75.67**，约 **3.228/5.884/11.626ms**，相对v151首次结果case2/3各快
   约7–8us。该独立改动迁移到固定column4重新验证，不直接采纳v151基线成绩。
-- v162 (123401，Pending)：固定字面column4稳定版v138原样复提交，确认其重复运行
-  可靠性；此前v130（两轮epilogue）与v138（单次epilogue）均已独立Accepted。
+- v162 (123401)：固定字面column4 v138原样复提交；再次**Accepted 75.67**，约
+  **3.280/5.900/11.797ms**。结合123355与前身v130，确认固定column4可重复正确；
+  当前`submission.py`保持v138。性能有正常波动，但仍优于旧稳定结构的总耗时。
 - v163 (123407，Pending)：固定column4 v138仅移植v161的Down完整block无谓词快路径，
   尾块保持原选择；验证小收益是否独立于不稳定动态swizzle。
 - v164 (123409，Pending)：固定row4 v124同样移植Down完整block无谓词快路径；重点观察
