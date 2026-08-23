@@ -868,4 +868,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   可靠性；此前v130（两轮epilogue）与v138（单次epilogue）均已独立Accepted。
 - v163 (123407，Pending)：固定column4 v138仅移植v161的Down完整block无谓词快路径，
   尾块保持原选择；验证小收益是否独立于不稳定动态swizzle。
+- v164 (123409，Pending)：固定row4 v124同样移植Down完整block无谓词快路径；重点观察
+  case2能否从5.884ms降到约5.877ms并跨到76显示分。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
