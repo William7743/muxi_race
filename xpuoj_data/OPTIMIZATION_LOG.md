@@ -794,8 +794,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v132 (123343)：评测提交f549源码确认MACA默认生成`__launch_bounds__(256,1)`；仅在
   v114融合stage1加入`min_blocks_per_sm(2)`；**Accepted 75.67**，约
   **3.356/5.909/11.920ms**。与v114相比case2略快、case3略慢，没有稳定整体收益。
-- v133 (123344，Pending)：与v132对称，仅给32KiB shared的Down kernel指定
-  `min_blocks_per_sm(2)`，判断默认寄存器配置是否限制Down占用率。
+- v133 (123344)：仅给Down kernel指定`min_blocks_per_sm(2)`；样例**WrongAnswer**。
+  强制寄存器上限会破坏Down数值稳定性，Down保留MACA默认`launch_bounds(...,1)`。
 - v134 (123345，Pending)：以v114为基线启用正式`TL_ENABLE_FAST_MATH`；评测分支会对
   MACA传`mxcc -use-fast-math`，区别于旧日志无效的CUDA/ptxas参数，测试其对
   `exp2`、倒数和通用标量数学的整体收益及容差。
@@ -810,8 +810,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   `1/(1+exp2(-gate*log2e))`。
 - v138 (123355，Pending)：组合v124单次SwiGLU epilogue与v130融合stage1 column4调度；
   两个独立收益若能叠加，预期刷新当前最快的3.318/5.884/11.856ms。
-- v139 (123356，Pending)：以v124为基线，融合stage1使用`column,panel=2`，与已验证
-  有效的column4对照更短同expert调度窗口。
+- v139 (123356)：融合stage1使用`column,panel=2`；样例**WrongAnswer**。与row8、
+  Down-column类似，swizzle映射会触发当前双累加lowering的稀疏错误；column4是目前唯一
+  已验证正确且提速的column组合。
 - v140 (123357，Pending)：同一column扫描取`panel=8`；row8曾在双累加lowering中WA，
   column维度需要独立验证正确性与更长权重局部性窗口。
 - v141 (123358，Pending)：补齐融合stage1的`column,panel=1`；它逐bx扫完整N方向，
