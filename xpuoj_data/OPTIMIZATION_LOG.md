@@ -829,4 +829,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   pipeline pass能否在复用shared结构上优化循环控制而不触发覆盖hazard。
 - v146 (123371，Pending)：以v124为基线，仅把融合Gate/Up两次GEMM policy从FullRow
   同步切为Square；旧拆分单累加器的policy结论不能完全代表当前双累加/单buffer lowering。
+- v147 (123375，Pending)：以v124为基线，仅将up_logits workspace物理行跨度从
+  `intermediate`改为`intermediate+8`（逻辑读写列不变），打破2048/8192 fp16行跨度的
+  4–16KiB整幂，测试L2/显存分区冲突。
+- v148 (123376，Pending)：同一workspace stride padding取+64列（额外128B/row），
+  对照更明显的cache-line错位；不做v11那种昂贵转置。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
