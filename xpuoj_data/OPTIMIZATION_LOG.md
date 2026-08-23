@@ -861,8 +861,11 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   v151本身复提交不稳定，且展开会进一步改变同步调度，不迁移到稳定版。
 - v160 (123393)：以v151为基线增加完整block无谓词SwiGLU写回；样例
   **WrongAnswer**。动态swizzle基线已不可靠，该控制流组合关闭。
-- v161 (123394，Pending)：与v160对称，为Down完整block增加无谓词乘路由权重/写out
-  快路径；尾块仍逐元素选择有效输出或0。
+- v161 (123394)：以不稳定v151为基线增加Down完整block无谓词快路径；本轮
+  **Accepted 75.67**，约 **3.228/5.884/11.626ms**，相对v151首次结果case2/3各快
+  约7–8us。该独立改动迁移到固定column4重新验证，不直接采纳v151基线成绩。
 - v162 (123401，Pending)：固定字面column4稳定版v138原样复提交，确认其重复运行
   可靠性；此前v130（两轮epilogue）与v138（单次epilogue）均已独立Accepted。
+- v163 (123407，Pending)：固定column4 v138仅移植v161的Down完整block无谓词快路径，
+  尾块保持原选择；验证小收益是否独立于不稳定动态swizzle。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
