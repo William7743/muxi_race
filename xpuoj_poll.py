@@ -31,7 +31,10 @@ while pending and time.time() < deadline:
             tr = d.get("progress", {}).get("testcaseResult", {})
             times = []
             for k, v in tr.items():
-                ue = v.get("userError", "") or ""
+                ue = v.get("userError", "")
+                if isinstance(ue, dict):
+                    ue = ue.get("data") or json.dumps(ue, ensure_ascii=False)
+                ue = ue or ""
                 import re
                 m = re.search(r'\{[^{}]*"time_ms"[^{}]*\}', ue)
                 tc = v.get("input", "?")

@@ -15,7 +15,10 @@ for sid in sys.argv[1:]:
     tr = d.get("progress", {}).get("testcaseResult", {})
     print(f"== {sid} {meta.get('status')} score={meta.get('displayScore')}")
     for k, v in sorted(tr.items()):
-        ue = v.get("userError", "") or ""
+        ue = v.get("userError", "")
+        if isinstance(ue, dict):
+            ue = ue.get("data") or json.dumps(ue, ensure_ascii=False)
+        ue = ue or ""
         m = re.search(r'\{[^{}]*"time_ms"[^{}]*\}', ue)
         if m:
             j = json.loads(m.group(0))

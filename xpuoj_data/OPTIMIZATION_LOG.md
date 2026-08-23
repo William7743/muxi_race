@@ -998,3 +998,17 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   - v196 (123789): down-only 拆分探针——kernel1 grid 压缩为 1x1 空转，kernel2 完整运行；必 WA，用 tk_time 反推 kernel2 在 3.29ms 中的占比
   - v197 (123790): v138 + kernel2 Pipelined num_stages=1→2（smem 32KB 双缓冲仍 ≤64KB），测 down GEMM 双缓冲收益
 - 新增 `MACHINE_INFO.md`：评测机硬件档案（4 台 C500 机器，宿主 Intel Xeon Gold 6530 @64x4GHz / ~2TB RAM / Linux 5.15.0-58-generic，含 CPU flags 与缓存层级）；多机调度可能是复验漂移的候选解释之一
+- **v192 L2 探针 (123766) 结果：所有块强制读 expert-0 权重，case1 tk=2.864ms（对比 v138 分布式读 3.291ms，快 ~13%）**。全卡尺度下同区域并发读确实受益于 L2 复用/带宽；旧“L2 复用有害”结论（25% 切片时代）被推翻。注意 judge 在 case1 WA 后即停，未测 case2/3
+- v198 (123804): kernel1 swizzle order column→row，测块调度顺序对权重 L2 局部性的真实收益（结果正确，纯性能实验）
+- 后续方向：若 v198 有收益 → 权重驻留重构（每 (expert, by-slice) 一个超级块，内层循环 M-blocks，权重流量降到 1×）
+- **v193 fp16 累加探针 (123767): warmup 阶段 RuntimeError，栈止于 `target.build.tilelang_maca` codegen——评测机 T.gemm 不支持 fp16-C（与 v34 时代结论一致，f549117c 未新增 <half,half,half> 特化）。fp16 累加路线彻底关闭，v195（fp16acc+be256）作废，fp16-acc 解锁 M256 寄存器压力的设想同步关闭**
+- 历史对照：M256 合并路线已闭环（v22/v66/v68/v83-v88：48KB shared 单驻留 + 每线程 128 FP32 累加器惩罚 > 权重流量减半收益）；persistent 原子工作窃取已闭环（5-20× 慢）；coalesced_width/policy/swizzle/k_pack/launch_bounds/fast-math 各旋钮均已在 v114-v138 扫描完毕。剩余未闭环方向：块调度顺序（v198 排队）、kernel2 流水深度（v197 排队；历史 v6 时代 ns=2 曾 23.5ms+，预期负收益）、k1/k2 占比拆分（v196 排队）
+- 探针批次结果（2026-08-23 18:16-18:22）：
+  - v138 二次复验 (123771): **Accepted 75.67**（3.272/5.930/11.719ms）→ 123761 的 WA 判定为偶发（评测机非确定性/多机调度），v138 仍为稳定基线（累计 3 Accepted / 1 WA）
+  - v186 复测 (123779): **Accepted 75.67**（3.256/5.888/11.709ms）→ Down-select 无增益，历史 76 为波动；结构保留但不采纳
+  - v194 cw2 (123769): Accepted 73（3.748/6.752/13.553ms）→ 权重拷贝宽度扫描闭环：2/4/8 中 4 严格最优，case3 对宽度敏感（13.55ms）
+  - v196 down-only (123789): WA tk=**1.345ms**（仅 case1，judge 早停）→ **kernel2 ≈ 1.35ms / 3.29ms ≈ 41%，kernel1 ≈ 59%**；两 kernel 均含 ~2× 权重流量，优化需双管齐下但 kernel1 优先权略高；注意 probe 修改了 kernel1 grid，kernel2 的 L2 环境与正常态有差异，数值为近似
+  - v197 stages2 (123790): WA tk=4.048ms → 回退 23%（与历史 v6 时代 ns=2 23.5ms+ 一致，MACA 无异步拷贝，双缓冲只剩同步开销）；**且出现数值误差——纯流水深度理论上不改数值，疑 Pipelined(2) lowering 非确定性，已提交复测采样**
+  - v198 swizzle-row (123804): **Accepted 75.67**（3.339/5.964/11.954ms，三档均慢于 v138 的 3.245/5.907/11.694）→ column 顺序确实优于 row（v130 结论复核成立），块调度顺序旋钮关闭
+- v201 (123832)：v138 + kernel1 双权重 shared buffer（gate/up 独立），每 k-step barrier 2→1，gate/up copy 可并发发射；smem 总量不变 48KB。硬件依据：barrier 减半降低同步开销，双 buffer 解除写-读依赖以改善延迟隐藏。v187 同思路曾单样本 WA，按非确定性纪律在 v138 字节基线上重测采样，待结果
+- v197 复测 (123833)：同代码原样再提交一次，采样 Pipelined(2) 的 WA 是否为 lowering 非确定性（预期仍 WA 且 ~4ms；若 Accepted 则揭示评测新不稳定面）
