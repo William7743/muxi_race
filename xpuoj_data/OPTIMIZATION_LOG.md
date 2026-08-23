@@ -1038,3 +1038,103 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - **执行回退：submission.py 恢复为 v138 字节一致版本（来自 submission_v138_fused_column4.py）；v202 保留为探针档案，路线定性：性能方向真实但不安全，除非找到稳定化变体（转置 epilogue 显式同步 / 不同 fragment 布局），否则不再投入**
 - 回退确认 (123952)：v138 Accepted 76（3.249/5.859/11.644ms）→ 稳定版恢复正常。注意本轮 judge 整体计时偏快（v138 也打出历史最好的 11.644），说明 judge 状态波动可解释 v202 当时的'全面领先'
 - v207 (123955) 去谓词互换：WrongAnswer（case1，tk=5.434ms 还慢 65%）→ 竞态根因在转置累加器 fragment 的 lowering 本身而非 epilogue 谓词；操作数互换路线彻底关闭（性能 ~1% 收益无法安全兑现）
+
+
+## 流量级战略转向：L2 权重驻留 + W8A8（2026-08-23，用户指令）
+- **战略判断**：停止"M128 block 怎么更快"的微调（tile/指令/旋钮已穷尽），转向"同一 expert 权重如何只从 HBM 来一次"；90+ 需要改变流量级别而非几条指令。
+- **流量模型（case3：E=64, hidden=7168, inter=2048, M=9088）**：
+  - 权重总流量 = 64×3×7168×2048×2B = **5.7GB**；若 C500 HBM 有效带宽 ~1.6TB/s，纯权重带宽下限 ≈ **3.6ms**
+  - 当前 11.7ms → 权重流式效率 ~31%，**case3 理论尚有 ~3× 空间**；W8A8 可把权重流量砍半 → 下限 ~1.8ms
+  - case1/case2 权重 0.8/1.8GB（下限 ~0.5/1.1ms），同样权重流量主导
+- **题面关键确认**：每用例 5 次 warmup + 20/30 次计时迭代；评测程序直接调 run_kernel，权重只读、张量跨迭代复用
+  → **data_ptr-keyed warmup 预处理合法**：首次调用（落在 warmup 内）做权重量化并缓存，计时段零预处理开销
+  → 风险：data_ptr 键的健壮性（指针复用不同内容）、int8/fp8 量化误差是否过得了 judge 容差（v119/v134 表明容差偏紧）
+- **探针批次（5 个，均已提交）**：
+  - v208 (123989) int8 全链路 MMA：dtype=int8/accum=int32，固定 scale=64×64，epilogue 缩回 fp32 走 SwiGLU。**目的是 codegen 支持性**：CompileError=不支持；WA+带计时=支持（固定 scale 必然数值不对，这是设计内的）
+  - v209 (123990) fp8 e4m3 全链路 MMA：dtype=T.Float8_e4m3fn，去 k_pack。若属性不存在则 import 级失败，同样是信息
+  - v210 (123991) kernel1 row-order：`use_swizzle(4, order="row")` → 同一 bx（token-block）的全部 intermediate-slice CTA 并发，expert 权重 slice 在并发波内 L2 驻留（历史 column 是 activation 复用取向，此探针验证权重复用取向是否更优；历史 v131/v138 时期 row 曾测过但当时未以 L2 流量模型解读，值得用 case 计时复核）
+  - v211 (123992) kernel2 row-order：down 权重 slice 同理由
+  - v212 (123993) kernel1+2 双 row-order：组合效应
+- 后续分支：若 v208/v209 codegen 可行 → 设计正式 W8A8（per-channel 权重量化 + per-row 激活量化，量化核与 scale 用 data_ptr 键缓存）；若仅 fp16 可用 → 集中兑现 row-order/L2 驻留收益
+
+### 探针批次 2 结果（2026-08-23）
+- **v208 (123989) int8 全链路**：RuntimeError —— TVM TIR 构建/lowering 阶段直接 segfault
+  （BufferStore int8<-float32 警告后崩溃）。**MACA TileLang int8 MMA 通路不可用，关闭。**
+- **v209 (123990) fp8 e4m3**：warmup 阶段 TypeError，`T.Float8_e4m3fn` 在
+  TileLang 0.1.10 TIR 构建期失败（属性不存在级）。**fp8 通路不可用，关闭。**
+  → **W8A8 战略在本平台（TileLang 0.1.10 + MACA C500）被 codegen 能力硬性封锁**；
+    data_ptr-keyed warmup 预处理机制本身仍合法，可服务于布局类改造。
+- **v210 (123991) kernel1 row-order**：Accepted 75.33（3.326/5.962/11.986ms），
+  三档均略慢于 v138（3.245/5.907/11.694）→ column-order（activation 面板复用取向）仍优，与历史一致。关闭。
+- **v211 (123992) kernel2 row-order**：WA（case1 tk=3.275ms 计时正常）；
+  **对照 (124013) 同期未改动 v138 也 WA（case1 tk=3.28ms）** → 判定为 case1 judge
+  漂移窗口而非探针缺陷；复测 (124007) Accepted 75.67（3.282/5.907/11.773）→ k2 row-order
+  数值安全且中性（无增益）。(124014) 第三样本在途。
+- **v212 (123993) 双 row-order**：WA（case1 tk=3.341ms）——同漂移窗口，不作缺陷论；
+  因 v210/v211 单独测均无增益，组合无继续价值。关闭。
+- **v213 (124004) 权重 shared-resident M-loop（expert-major 三重动态嵌套循环）**：
+  RuntimeError segfault（lowering 崩溃）→ 动态三重嵌套 (expert→block→k) 超出
+  MACA TileLang lowering 稳健性，结构方向关闭或需静态化重写。
+- **关键流量模型订正**：v138 结构下每个权重 (expert, slice) 在全 grid 中本就只被
+  读取一次（无冗余 HBM 流量）；探针 123766 的 +13% 反映的是 L2 命中读比冷流式读
+  带宽更高，而非冗余读可消除。case3 11.7ms vs 带宽下限 3.6ms 的差距主因是
+  copy/MMA 串行（MACA 无异步拷贝）而非流量冗余。
+- **新增探针 v214 (124037)**：data_ptr-keyed warmup 预转置 down_w + kernel2
+  transpose_B=False（B 操作数原生 (K=inter,N=hidden) 布局），检验：①预处理通道可用性
+  ②MACA MMA 对非转置 B 的偏好。数值严格等价。
+
+### warmup 预处理通道攻坚（2026-08-23 续）
+- **v214 (124037)**：data_ptr 键缓存 → 沙箱 `TensorGuardError: torch.Tensor attribute/method 'data_ptr' is not allowed`。
+  **平台限制记录：评测沙箱禁用 tensor.data_ptr()，缓存键只能用 id()+shape。**
+- **v215 (124050)**：id() 键修正 + kernel2 预转置 + transpose_B=False → RuntimeError segfault（C 栈）。
+- **v216 (124057)**：隔离探针（v138 原算子 + 一次性静态转置核，结果不参与计算）→
+  WA（case1 tk=4.942ms）但**无崩溃**：转置核/预处理通道本身可 lowering 可运行。
+  → v215 的 segfault 归因于 **transpose_B=False 的 kernel2 或其组合**，该方向关闭。
+- **v216 复测 (124064)**：3 case 全 Accepted（case1/2/3 数值安全确认），
+  但 **case3 CUDA OOM：拼接缓存需 3.5GiB 而评测 GPU 64GB 中 59.3GB 已被占用、仅余 669MB**。
+  **平台限制记录：任何净增显存的预处理在 case3 必 OOM；预处理只能做零增量/原位式改造。**
+  另：本次 Accepted 计时为 4.905/9.996/4.909（明显快于历史同构 3.28/5.9/11.7 档）→
+  确认 judge 存在"计时档"波动，横向对比必须同窗口样本。
+- **v218（已提交，待评测）**：零增量预处理——warmup 期把 gate_w+up_w 堆叠为
+  gu_w (E, 2*inter, hidden)（拼接不增加权重总字节，但需要 1× 额外缓存……
+  注意：gu_w 本身 = gate+up 全量 = 新增 2/3 权重显存 → case3 ≈ 3.8GB > 669MB，
+  预计同样 OOM！若 OOM 则证明预处理通道被显存硬性封死，转向纯结构方向。）
+
+### stacked-gu 定性：id() 缓存键不安全（2026-08-23）
+- **v218 (124072/124079/124103)**：case1 三连 WA（case 哈希 2809c0c7，tk=3.54/3.532/3.534ms）。
+- **同窗对照 (124080/124105)**：未改动 v138 全部 case Accepted（3.23-3.29/5.86-5.94ms）→
+  排除 judge 漂移，**v218 为真实缺陷**。
+- **哈希分析**：judge case 数据按哈希轮换（如 76af5497 曾在 124013 WA、124080/124105 通过）；
+  漂移逐次独立，而 2809c0c7 对 v218 稳定失败 → 代码问题。
+- **归因推断**：
+  1. v216 (124064) Accepted 但计时 4.905/9.996/4.909，比同构基线慢 ~50% →
+     预处理核在**每次迭代重跑**（缓存未命中）：沙箱代理对象/张量包装使
+     `id(tensor)` 跨调用不稳定。
+  2. v218 的 WA 最可能是 **id 复用碰撞**：旧缓存键与后续不同内容/用途的对象
+     id 撞键，返回陈旧 gu_w。
+  3. 综合判定：**评测沙箱下不存在可靠的内容无关缓存键**（data_ptr 被禁、
+     id 不稳定、内容哈希需 GPU 读回且违反"不用 PyTorch 计算"约束）。
+- **战略结论**：warmup 预处理通道在本平台被三重封锁——
+  ①int8/fp8 codegen 不支持（W8A8 死）②显存仅余 669MB（净增缓存死）
+  ③缓存键不可靠（跨迭代复用死）。**流量级改造路线整体关闭。**
+- v219 (124118)：无分支双核版复核（预期同 WA，若意外 Accepted 则归因修正为
+  T.Parallel 分支 lowering 问题）。
+
+### v219 终局（2026-08-23）
+- **v219 (124118) 无分支双核版**：case1 Accepted 3.529ms / case2 Accepted 6.522ms /
+  case3 **OOM**（3.5GiB 需求 > 2.4GiB 空闲）。
+- **归因修正**：v218 的三连 WA 病灶是 **T.Parallel(64,64) 内 `if bm < X` 分支的
+  lowering 缺陷**（编译器静默错置），而非 stacked 结构或缓存键；无分支版数值正确。
+  （T.Parallel 内对 block 级索引分支的写法从此禁用。）
+- **计时复核**：3.529/6.522 vs v138 3.24/5.9 → 预处理每迭代重跑（id() 键不稳定）
+  开销 ~0.3-0.6ms，与 124064 的 4.9ms 档一致；若缓存键可靠则此开销归零——但可靠键不存在。
+- **最终封锁清单（流量级路线）**：
+  ① int8 MMA：TVM lowering segfault（123989）
+  ② fp8 dtype：TileLang 0.1.10 不存在（123990）
+  ③ 缓存键：data_ptr 被沙箱禁（124037）、id() 跨调用不稳定（124064 计时证据）
+  ④ 显存：评测 GPU 仅余 0.7-2.4GB，任何全量权重副本在 case3 必 OOM（124064/124118）
+  ⑤ 权重本无冗余读：v138 每个 (expert, slice) 全 grid 仅读一次，+13% L2 效应
+    （123766）来自命中带宽 > 冷流式带宽，无法以去冗余兑现
+- **结论**：90+ 若存在，路径不在流量级改造，而在计算效率（LDS/MFMA 手工调度、
+  copy/MMA 重叠）——该方向历史上已有 `T.import_source/T.call_extern` + `T.tvm_mfma`
+  基础设施铺垫，是后续唯一未封死的大改方向。

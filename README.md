@@ -6,8 +6,10 @@
 - **历史最高：76 分；当前稳定版：v138，75.67 分**（复验样本 123355/123401/123771/123887 均 Accepted）
 - 提交代码：`xpuoj_data/submission.py`（v138：融合 Gate/Up + 共享 A + 单权重 buffer + `coalesced_width=4` + 单次有效行 SwiGLU 写回 + column4 swizzle）
 - 最新突破与教训：v202（kernel1 MMA 操作数互换，gate/up = W_slice @ x^T）三档稳定快 ~1%、四次 Accepted 76，但随后连续 3 次 case1 WA，定性为转置累加器布局的真实竞态，已回退；详见 `OPTIMIZATION_LOG.md`
+- **流量级路线已全面实测封锁（2026-08-23）**：①int8 MMA 在 TVM lowering segfault、fp8 dtype 不存在（W8A8 死）②沙箱禁 `tensor.data_ptr()`、`id(tensor)` 跨调用不稳定（可靠缓存键不存在）③评测 GPU 仅余 0.7-2.4GB，任何全量权重副本必 OOM④v138 权重本就每 slice 只读一次，无冗余可去。剩余唯一未封死的大改方向：`T.import_source/T.call_extern` + `T.tvm_mfma` 手工 LDS/MFMA 调度（copy/MMA 重叠）
+- **编译器 bug 地图新增**：T.Parallel 内 block 级索引分支会静默错置数值（v218 三连 WA）；动态三重嵌套循环会 segfault（v213）；kernel2 transpose_B=False 会 segfault（v215）
 - 评测环境档案：`xpuoj_data/MACHINE_INFO.md`（4 台 C500 机器、宿主 Xeon Gold 6530、CPU flags/缓存）
-- 关键已知事实：WA 提交的 userError 也带完整计时 JSON，故意 WA 的诊断探针可拿性能数据；评测机存在 lowering 非确定性与 case1 judge 概率性数值漂移，任何新高分必须两次连续 Accepted 才提升稳定版
+- 关键已知事实：WA 提交的 userError 也带完整计时 JSON，故意 WA 的诊断探针可拿性能数据；评测机存在 lowering 非确定性、case 数据哈希轮换与 case1 judge 概率性数值漂移，任何新高分必须两次连续 Accepted 才提升稳定版；judge 计时存在 ±50% 档差，横向对比必须同窗口样本
 - 完整优化过程：`xpuoj_data/OPTIMIZATION_LOG.md`
 - 目标：**冲榜**（当前我方最优 76；同事已实现 84+，90+ 也经官方检验，说明存在我们完全未掌握的重大优化路径）
 

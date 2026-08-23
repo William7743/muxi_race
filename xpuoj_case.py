@@ -11,8 +11,8 @@ email, password = load_credentials(A())
 client = XPUOJClient(email, password)
 for sid in sys.argv[1:]:
     d = client.get_submission_detail(int(sid))
-    meta = d.get("meta", {})
-    tr = d.get("progress", {}).get("testcaseResult", {})
+    meta = d.get("meta", {}) or {}
+    tr = (d.get("progress") or {}).get("testcaseResult", {}) or {}
     print(f"== {sid} {meta.get('status')} score={meta.get('displayScore')}")
     for k, v in sorted(tr.items()):
         ue = v.get("userError", "")
