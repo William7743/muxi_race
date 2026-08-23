@@ -755,4 +755,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   block继续保持0步K循环但不再白跑整块`exp2`；有效block路径逐字不变。
 - v118 (123310，Pending)：v106仅把Down的`T.Pipelined(..., num_stages=1)`改为普通
   `range(active_k_steps)`，隔离单级流水lowering与串行循环在case3长K路径上的成本。
+- v119 (123317，Pending)：评测分支源码确认公开`T.__exp`会直接lower为MACA快速数学
+  `__expf`；v106仅将`exp2(-x*log2e)`替换为`T.__exp(-x)`，测试真实快速内建激活的
+  正确性与收益，区别于v104的普通`T.exp/expf`。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`继续保持120451的75分稳定版本。
