@@ -791,4 +791,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   达到双block驻留，代价可能是寄存器压缩/溢出。
 - v133 (123344，Pending)：与v132对称，仅给32KiB shared的Down kernel指定
   `min_blocks_per_sm(2)`，判断默认寄存器配置是否限制Down占用率。
+- v134 (123345，Pending)：以v114为基线启用正式`TL_ENABLE_FAST_MATH`；评测分支会对
+  MACA传`mxcc -use-fast-math`，区别于旧日志无效的CUDA/ptxas参数，测试其对
+  `exp2`、倒数和通用标量数学的整体收益及容差。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
