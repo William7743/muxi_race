@@ -805,8 +805,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v136 (123350)：仅给Down最终乘路由权重/写out的`T.Parallel`指定
   `coalesced_width=4`；**Accepted 75.67**，约 **3.309/5.917/11.905ms**，三档均不及
   v124，最终写回保持默认布局。
-- v137 (123351，Pending)：以v124为基线，仅用评测版公开`T.sigmoid(gate)`替换手写
-  `1/(1+exp2(-gate*log2e))`，检验TVM/MACA原生sigmoid lowering是否更紧凑且满足容差。
+- v137 (123351)：以v124为基线用评测版公开`T.sigmoid(gate)`替换手写exp2表达式；
+  **Accepted 75.67**，约 **3.318/5.913/11.895ms**，正确但case2/3略慢，保留手写
+  `1/(1+exp2(-gate*log2e))`。
 - v138 (123355，Pending)：组合v124单次SwiGLU epilogue与v130融合stage1 column4调度；
   两个独立收益若能叠加，预期刷新当前最快的3.318/5.884/11.856ms。
 - v139 (123356，Pending)：以v124为基线，融合stage1使用`column,panel=2`，与已验证
