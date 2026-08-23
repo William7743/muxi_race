@@ -945,3 +945,5 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - 不缓存计算结果，仅缓存编译对象与 workspace，安全性高
 - 目标：降低评测 100 次迭代中的 Python 开销
 - 已提交，待结果
+- v185 (123521): Python 端到端快速路径（单槽缓存 kernel/workspace）→ WrongAnswer
+  - 原因未明，可能评测调用模式与假设不符；Python 层优化路线关闭
