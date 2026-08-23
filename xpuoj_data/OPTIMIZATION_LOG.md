@@ -899,5 +899,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   `exp2 + reciprocal`显式转为FP16后再升回FP32。MACA intrinsic lowering会为FP16
   `exp2`生成`hexp2`；相较已WA的全局fast-math，本版只在最终本就写回FP16的激活处
   引入一次可控舍入，探索专用半精度数学路径。
+- v173 (123434，Pending)：v172的保守对照，只将`exp2`输入/输出降为FP16，分母加法与
+  reciprocal仍在FP32完成；用于区分半精度指数函数收益与半精度除法的数值/性能影响。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
