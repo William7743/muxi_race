@@ -781,4 +781,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   `coalesced_width=4`，与v125的Down weight侧形成A/B独立对照。
 - v128 (123334，Pending)：以v114为基线，仅把hidden=7168两档的融合Gate/Up `k_pack`
   从2增至4；K64恰好容纳四个K16 MFMA，测试更大分组装载能否继续减少指令调度开销。
+- v129 (123336，Pending)：以v114为基线，仅在64-expert/case3的Down GEMM设置
+  `k_pack=2`；历史拆分版该变化约在噪声边缘，本次验证它能否与更快stage1叠加并压低最长档。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
