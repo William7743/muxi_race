@@ -993,3 +993,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   - v192 (123766): L2 权重复用探针——所有块强制读 expert 0 权重（行计数不变，必 WA），用计时对比分布式访问，判断全卡 L2 对同区域并发读的行为（旧结论“L2 复用有害”是 25% 切片实测，全卡未验）
   - v193 (123767): fp16 累加器探针——Gate/Up fragment 改 fp16，测评测机 gemm.h 是否已有 <half,half,half> 特化（v34 时代缺失）；编译成功则 be=256@th256 减半 x 流量路线重开
   - v194 (123769): v138 + stage1 权重拷贝 coalesced_width=2（宽度扫描唯一未测档位）
+- v186 复测 (123779): Down-select 结构重测（原 123527 Accepted 76 → 123538 WA），再采样一次判断是否纯竞态
+- 追加诊断探针：
+  - v196 (123789): down-only 拆分探针——kernel1 grid 压缩为 1x1 空转，kernel2 完整运行；必 WA，用 tk_time 反推 kernel2 在 3.29ms 中的占比
+  - v197 (123790): v138 + kernel2 Pipelined num_stages=1→2（smem 32KB 双缓冲仍 ≤64KB），测 down GEMM 双缓冲收益
+- 新增 `MACHINE_INFO.md`：评测机硬件档案（4 台 C500 机器，宿主 Intel Xeon Gold 6530 @64x4GHz / ~2TB RAM / Linux 5.15.0-58-generic，含 CPU flags 与缓存层级）；多机调度可能是复验漂移的候选解释之一
