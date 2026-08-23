@@ -931,5 +931,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   完整块控制流快路径，隔离其真实收益与可靠性。
 - v182 (123457，Pending)：仅把v174的FP16 Down最终路由乘法移植到稳定v138，仍使用原
   单一谓词epilogue，隔离半精度写回乘法的真实收益与可靠性。
+- v183 (123459，Pending)：在稳定v138上重新测试逐shape字面swizzle分支，不含v168的
+  不稳定Down快路径：16/32/64-expert分别调用`column1/row4/column4`。三个固定配置均有
+  独立Accepted记录，目标是判断v168的WA究竟来自Down分支还是多分支IR。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
