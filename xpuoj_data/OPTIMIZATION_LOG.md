@@ -774,4 +774,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   单次有效行SwiGLU写回，验证两个独立小收益能否叠加。
 - v125 (123330，Pending)：以v114为基线，仅给Down weight global→shared copy增加
   `coalesced_width=4`；stage1双weight继续保持4，隔离第三段权重搬运是否同样受益。
+- v126 (123331，Pending)：以v114为基线，仅给融合stage1的X→shared copy增加
+  `coalesced_width=4`；该X tile供Gate/Up复用，验证复用后A侧搬运是否与v105旧拆分结构不同。
+- v127 (123332，Pending)：以v114为基线，仅给Down的up_logits→shared copy增加
+  `coalesced_width=4`，与v125的Down weight侧形成A/B独立对照。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
