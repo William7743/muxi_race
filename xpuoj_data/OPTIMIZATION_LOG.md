@@ -807,4 +807,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   `1/(1+exp2(-gate*log2e))`，检验TVM/MACA原生sigmoid lowering是否更紧凑且满足容差。
 - v138 (123355，Pending)：组合v124单次SwiGLU epilogue与v130融合stage1 column4调度；
   两个独立收益若能叠加，预期刷新当前最快的3.318/5.884/11.856ms。
+- v139 (123356，Pending)：以v124为基线，融合stage1使用`column,panel=2`，与已验证
+  有效的column4对照更短同expert调度窗口。
+- v140 (123357，Pending)：同一column扫描取`panel=8`；row8曾在双累加lowering中WA，
+  column维度需要独立验证正确性与更长权重局部性窗口。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
