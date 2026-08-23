@@ -821,13 +821,14 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   显式占用率提示不能与column调度安全叠加，关闭组合。
 - v143 (123361)：显式`T.ieee_frcp/__frcp_rn`替换sigmoid普通倒数；样例
   **WrongAnswer**。普通除法lowering是当前唯一验证安全路径。
-- v144 (123364，Pending)：以v124为基线，仅把SwiGLU FP32乘法结合顺序从
-  `up*(gate*sigmoid)`改为`(up*gate)*sigmoid`，测试寄存器/指令调度差异并验证容差。
+- v144 (123364)：SwiGLU FP32乘法结合顺序改为`(up*gate)*sigmoid`；
+  **Accepted 75.67**，约 **3.300/5.892/11.861ms**。case1略快但case2/3略慢，差异
+  接近噪声，保持与参考语义更直接的原括号。
 - v145 (123369)：仅把融合stage1普通K循环改为单级`T.Pipelined`；样例
   **WrongAnswer**。即使显式barrier保留，pipeline pass仍不能安全处理同一weight shared
   buffer的两次覆盖；继续使用普通`range`。
-- v146 (123371，Pending)：以v124为基线，仅把融合Gate/Up两次GEMM policy从FullRow
-  同步切为Square；旧拆分单累加器的policy结论不能完全代表当前双累加/单buffer lowering。
+- v146 (123371)：融合Gate/Up两次GEMM policy同步切为Square；样例
+  **WrongAnswer**。双累加/单buffer仍只能使用已验证的FullRow。
 - v147 (123375，Pending)：以v124为基线，仅将up_logits workspace物理行跨度从
   `intermediate`改为`intermediate+8`（逻辑读写列不变），打破2048/8192 fp16行跨度的
   4–16KiB整幂，测试L2/显存分区冲突。
@@ -835,8 +836,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   对照更明显的cache-line错位；不做v11那种昂贵转置。
 - v149 (123378)：编译期逐shape swizzle并对32-expert指定min-block提示；样例
   **WrongAnswer**。与v142共同否决column与显式launch-bounds组合，纯swizzle对照v150继续。
-- v150 (123379，Pending)：v149的纯调度对照，16/64-expert使用column4、32-expert
-  使用row4，但不加min-block提示；理论直接组合v138的case1/3与v124的case2最佳值。
+- v150 (123379)：通过闭包字符串变量逐shape选择column4/row4、不加占用率提示；样例
+  **WrongAnswer**。评测版swizzle注解对非字面`order=`不安全，即便两个字面版本分别正确；
+  后续仅提交固定字面调度。
 - v151 (123381，Pending)：纯静态逐shape最佳组合：16-expert=column1（v141）、
   32-expert=row4（v124）、64-expert=column4（v138）；不含任何占用率提示。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
