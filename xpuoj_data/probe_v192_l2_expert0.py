@@ -1,3 +1,7 @@
+# XPU-OJ probe v192: L2 weight-reuse diagnostic (v138 base).
+# 所有 block 的三组权重都强制读 expert 0 的区域（行计数/路由仍用真实 expert_id），
+# 计算量与 v138 完全一致，结果必然 WA；仅用 SPJ 回传的 tk_time_ms 对比
+# 分布式权重访问，判断评测机全卡 L2 对同区域并发读的复用/竞争行为。
 # XPU-OJ v114: v106 with coalesced_width=4 on fused weight copies
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
@@ -97,7 +101,7 @@ def _moe_forward_kernel(
                 )
                 T.copy(
                     gate_w[
-                        expert_id,
+                        0,
                         by * be1 : (by + 1) * be1,
                         k * bh1 : (k + 1) * bh1,
                     ],
@@ -108,7 +112,7 @@ def _moe_forward_kernel(
                 T.sync_threads()
                 T.copy(
                     up_w[
-                        expert_id,
+                        0,
                         by * be1 : (by + 1) * be1,
                         k * bh1 : (k + 1) * bh1,
                     ],
@@ -160,7 +164,7 @@ def _moe_forward_kernel(
                 )
                 T.copy(
                     down_w[
-                        expert_id,
+                        0,
                         by * bh2 : (by + 1) * bh2,
                         k * be2 : (k + 1) * be2,
                     ],

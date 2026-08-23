@@ -1,3 +1,7 @@
+# XPU-OJ probe v193: fp16 accumulator template probe (v138 base).
+# 把 Gate/Up 累加器改为 fp16 fragment，测试评测机 gemm.h 是否已提供
+# <half_t,half_t,half_t> 特化（v34 时代缺失）。编译失败=环境未变；
+# 编译成功（即使 WA）=fp16-C GEMM 可用，be=256@th256 减半 x 流量路线重开。
 # XPU-OJ v114: v106 with coalesced_width=4 on fused weight copies
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
@@ -68,8 +72,8 @@ def _moe_forward_kernel(
         with T.Kernel(num_blocks_m, T.ceildiv(intermediate, be1), threads=th1) as (bx, by):
             input_shared = T.alloc_shared((bt1, bh1), dtype=dtype)
             weight_shared = T.alloc_shared((be1, bh1), dtype=dtype)
-            gate_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
-            up_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
+            gate_local = T.alloc_fragment((bt1, be1), dtype=dtype)
+            up_local = T.alloc_fragment((bt1, be1), dtype=dtype)
 
             # swizzle(4)：OJ 三用例实测比默认 swizzle(10) 稳定快 ~0.7%
             T.use_swizzle(4, order="column")
@@ -122,11 +126,13 @@ def _moe_forward_kernel(
                 # 仅写有效行：padding 行的 stacked 输入是任意值，写出来也无意义，
                 # kernel2 会用 else 分支把 padding 行输出清 0；跳过实测快 14%
                 if i < actual_rows:
+                    g = T.Cast(T.float32, gate_local[i, j])
+                    u = T.Cast(T.float32, up_local[i, j])
                     up_logits[block_start + i, by * be1 + j] = (
-                        up_local[i, j]
+                        u
                         * (
-                            gate_local[i, j]
-                            * (1.0 / (1.0 + T.exp2(-gate_local[i, j] * scale)))
+                            g
+                            * (1.0 / (1.0 + T.exp2(-g * scale)))
                         )
                     )
 

@@ -90,7 +90,6 @@ class XPUOJClient:
             "locale": "zh_CN",
             "contestId": contest_id,
             "problemOrder": problem_order,
-            "submitter": "self",
             "takeCount": take_count,
         }
         return self.post("contest/play/querySubmissions", body)

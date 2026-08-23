@@ -3,6 +3,7 @@ xpuoj_data/HANDOVER.md
 xpuoj_data/submit*.py
 xpuoj_data/xpuoj_submit.py
 xpuoj_data/.xpuoj_credentials
+.xpuoj_credentials
 *.log
 __pycache__/
 .DS_Store

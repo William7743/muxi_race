@@ -1,4 +1,5 @@
-# XPU-OJ v114: v106 with coalesced_width=4 on fused weight copies
+# XPU-OJ probe v194: v138 + stage1 权重拷贝 coalesced_width=2（受控宽度扫描：默认/2/4/8，4 已证最优，2 未测）
+# XPU-OJ v114: v106 with coalesced_width=2 on fused weight copies
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
 #   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
@@ -102,7 +103,7 @@ def _moe_forward_kernel(
                         k * bh1 : (k + 1) * bh1,
                     ],
                     weight_shared,
-                    coalesced_width=4,
+                    coalesced_width=2,
                 )
                 T.gemm(input_shared, weight_shared, gate_local, transpose_B=True, policy=T.GemmWarpPolicy.FullRow, k_pack=gu_k_pack)
                 T.sync_threads()
@@ -113,7 +114,7 @@ def _moe_forward_kernel(
                         k * bh1 : (k + 1) * bh1,
                     ],
                     weight_shared,
-                    coalesced_width=4,
+                    coalesced_width=2,
                 )
                 T.gemm(input_shared, weight_shared, up_local, transpose_B=True, policy=T.GemmWarpPolicy.FullRow, k_pack=gu_k_pack)
                 T.sync_threads()

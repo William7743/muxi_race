@@ -971,3 +971,25 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v189 (123720): case2 direct SiLU division → WrongAnswer
   - case1 稀疏误差 0.127，数值不稳定，与 v184 同类，路线关闭
 - v190 (提交中): v188 + case2(row4) 权重复制 coalesced_width=2
+
+## 2026-08-23 续：v181-v191 结果回填（查询 API 补齐，querySubmissions 不能带 submitter 字段）
+- v181 (123456): v138 + 融合双 accumulator 清零 → **WrongAnswer**。fused-clear 与稳定基线组合仍不安全（v176 的 76 来自不稳定 v163 基线）
+- v182 (123457): v138 + FP16 Down 最终路由乘法 → **WrongAnswer**。半精度写回乘法路线关闭
+- v183 (123459): 逐 shape 字面 swizzle（16=column1/32=row4/64=column4，不带 Down 快路径）→ **Accepted 75.67**。与 v138 持平；v168 的 WA 根因确认为 Down 快路径而非多分支 IR 本身
+- v184 (123464): SiLU 改直接除法 `gate/(1+exp2)` → **WrongAnswer**，与 v189 同类，直接除法路线关闭
+- v186 (123527): Down epilogue if/else → T.if_then_else select → **Accepted 76**；复验 (123538) **WrongAnswer** —— 与 v163 同类调度竞态，不稳定，不采纳
+- v187 (123531): kernel1 双权重 buffer → **WrongAnswer**
+- v188 (123712): hard-static per-shape swizzle 三 builder → **Accepted 75.67**（各点 77/75/75），与 v138 持平，无提升；逐 shape 分派价值确认耗尽
+- v190: 未见对应提交记录（疑未实际提交，直接被 v191 取代）
+- v191 (123744): v188 + case2(row4) fused accumulator clear → **WrongAnswer**。fused-clear 在任何分支上均无法稳定通过，方向彻底关闭
+- **结论**：submission.py 回退为 v138（从 123355 拉取评测机代码，与本地快照 submission_v138_fused_column4.py 字节一致）
+- 纪律再确认：TileLang-MACA lowering 非确定性实锤 —— v163/v165/v173/v174/v176/v186/v191 全部“首次 Accepted、复验 WA”；任何新高分必须两次独立 Accepted 才可提升稳定版
+
+## 2026-08-23 新一轮接手（凭据已配置，查询/提交通道打通）
+- 工程修复：querySubmissions 请求体不能带 `submitter:"self"`（会返回 NO_SUCH_USER），已从 xpuoj_submit.py 移除；新增只读查询脚本 xpuoj_query.py
+- **关键事实：WA 提交的 userError 里也带完整计时 JSON（tk_time_ms/tb_time_ms/speedup）——故意 WA 的诊断探针也能拿性能数据**
+- **v138 复验 (123761): WrongAnswer！** 稀疏误差 (2438,1617) abs=0.1128，但 tk_time 3.291ms 与历史一致。这是 v138 首次复验失败（历史 123355/123401 双 Accepted）——评测机非确定性比预期更严重，或机器状态变化；已提交第二次复验 (123771) 采样
+- 诊断探针已提交：
+  - v192 (123766): L2 权重复用探针——所有块强制读 expert 0 权重（行计数不变，必 WA），用计时对比分布式访问，判断全卡 L2 对同区域并发读的行为（旧结论“L2 复用有害”是 25% 切片实测，全卡未验）
+  - v193 (123767): fp16 累加器探针——Gate/Up fragment 改 fp16，测评测机 gemm.h 是否已有 <half,half,half> 特化（v34 时代缺失）；编译成功则 be=256@th256 减半 x 流量路线重开
+  - v194 (123769): v138 + stage1 权重拷贝 coalesced_width=2（宽度扫描唯一未测档位）
