@@ -853,4 +853,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v156 (123388，Pending)：同一Down row panel扫描补1，完成1/2/4与已测16的关键点对照。
 - v157 (123389，Pending)：同一Down row panel扫描补8；stage1的row8不安全不代表单累加
   Down路径，v115已证明Down row16正确但略慢。
+- v158 (123390，Pending)：当前稳定v151逐字复提交，确认动态panel/order组合的重复运行
+  可靠性，并观察case2 5.891ms的正常波动能否跨过76显示分阈值。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
