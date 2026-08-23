@@ -861,4 +861,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v160 (123393，Pending)：以v151为基线，为`actual_rows==128`的完整block增加无谓词
   单次SwiGLU写回快路径，尾块保留原`i<actual_rows`；以一次block-uniform分支换取完整块
   每元素谓词消除。
+- v161 (123394，Pending)：与v160对称，为Down完整block增加无谓词乘路由权重/写out
+  快路径；尾块仍逐元素选择有效输出或0。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
