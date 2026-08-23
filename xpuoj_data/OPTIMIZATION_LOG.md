@@ -841,4 +841,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   后续仅提交固定字面调度。
 - v151 (123381，Pending)：纯静态逐shape最佳组合：16-expert=column1（v141）、
   32-expert=row4（v124）、64-expert=column4（v138）；不含任何占用率提示。
+- 当前按三档总耗时计，v138比v124约快1.0%，精确代码已另存
+  `submission_v138_fused_column4.py`并提升为`submission.py`；显示最高仍为75.67。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
