@@ -829,20 +829,20 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   buffer的两次覆盖；继续使用普通`range`。
 - v146 (123371)：融合Gate/Up两次GEMM policy同步切为Square；样例
   **WrongAnswer**。双累加/单buffer仍只能使用已验证的FullRow。
-- v147 (123375，Pending)：以v124为基线，仅将up_logits workspace物理行跨度从
-  `intermediate`改为`intermediate+8`（逻辑读写列不变），打破2048/8192 fp16行跨度的
-  4–16KiB整幂，测试L2/显存分区冲突。
-- v148 (123376，Pending)：同一workspace stride padding取+64列（额外128B/row），
-  对照更明显的cache-line错位；不做v11那种昂贵转置。
+- v147 (123375)：up_logits workspace物理行跨度+8列；**Accepted 75**，约
+  **3.398/5.996/12.351ms**，大幅回退，原整幂stride并无冲突收益，保持紧凑布局。
+- v148 (123376)：workspace stride padding取+64列；样例**WrongAnswer**。padding stride
+  路线关闭，不做更多宽度扫描。
 - v149 (123378)：编译期逐shape swizzle并对32-expert指定min-block提示；样例
   **WrongAnswer**。与v142共同否决column与显式launch-bounds组合，纯swizzle对照v150继续。
 - v150 (123379)：通过闭包字符串变量逐shape选择column4/row4、不加占用率提示；样例
   **WrongAnswer**。评测版swizzle注解对非字面`order=`不安全，即便两个字面版本分别正确；
   后续仅提交固定字面调度。
-- v151 (123381，Pending)：纯静态逐shape最佳组合：16-expert=column1（v141）、
-  32-expert=row4（v124）、64-expert=column4（v138）；不含任何占用率提示。
-- 当前按三档总耗时计，v138比v124约快1.0%，精确代码已另存
-  `submission_v138_fused_column4.py`并提升为`submission.py`；显示最高仍为75.67。
+- v151 (123381)：逐shape最佳组合：16-expert=column1、32-expert=row4、
+  64-expert=column4；**Accepted 75.67**，约 **3.223/5.891/11.634ms**，三档均刷新
+  v138/v124对应值，成为当前最快稳定版。精确代码另存
+  `submission_v151_per_shape_swizzle.py`并提升为`submission.py`。
+- 当前显示最高仍为75.67；case2只差约14–20us即可跨到76显示分，是下一轮微调重点。
 - v152 (123383，Pending)：固定字面row4的v124仅叠加stage1字面
   `min_blocks_per_sm(2)`，区别于v149的动态swizzle组合；v132表明它对case2约有19us
   潜在收益，足以尝试跨越当前仅差约30us的76分阈值。
