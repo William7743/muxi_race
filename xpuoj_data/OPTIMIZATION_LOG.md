@@ -761,4 +761,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v119 (123317，Pending)：评测分支源码确认公开`T.__exp`会直接lower为MACA快速数学
   `__expf`；v106仅将`exp2(-x*log2e)`替换为`T.__exp(-x)`，测试真实快速内建激活的
   正确性与收益，区别于v104的普通`T.exp/expf`。
+- v120 (123322，Pending)：以新最佳v114为基线，将Gate/Up两段weight copy的
+  `coalesced_width`从4增至8，扫描更宽同步向量搬运。
+- v121 (123323，Pending)：以新最佳v114为基线，将相同两段`coalesced_width`从4降至2，
+  与默认、4、8形成受控宽度扫描。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
