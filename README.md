@@ -2,8 +2,10 @@
 
 沐曦「揭榜挂帅」MoE 赛题（TileLang 算子优化 - Fused MoE GEMM）优化工作区。
 
-## 当前状态（2026-08-23 更新）
-- **历史最高：76 分；当前稳定版：v138，75.67 分**（复验样本 123355/123401/123771/123887 均 Accepted）
+## 当前状态（2026-08-23 最新）
+- **榜单账号最高：76 分（submissionId 123407，排名 29）**；当前稳定版：v138，75.67 分
+- 76 分为 v163（Down 完整块无谓词快路径），但复验不稳定（低概率调度竞态），已回退稳定版 v138
+- 历史最高瞬时：v163/v165/v186/v202 均曾单次 76，但都无法连续 Accepted
 - 提交代码：`xpuoj_data/submission.py`（v138：融合 Gate/Up + 共享 A + 单权重 buffer + `coalesced_width=4` + 单次有效行 SwiGLU 写回 + column4 swizzle）
 - 最新突破与教训：v202（kernel1 MMA 操作数互换，gate/up = W_slice @ x^T）三档稳定快 ~1%、四次 Accepted 76，但随后连续 3 次 case1 WA，定性为转置累加器布局的真实竞态，已回退；详见 `OPTIMIZATION_LOG.md`
 - **流量级路线已全面实测封锁（2026-08-23）**：①int8 MMA 在 TVM lowering segfault、fp8 dtype 不存在（W8A8 死）②沙箱禁 `tensor.data_ptr()`、`id(tensor)` 跨调用不稳定（可靠缓存键不存在）③评测 GPU 仅余 0.7-2.4GB，任何全量权重副本必 OOM④v138 权重本就每 slice 只读一次，无冗余可去。剩余唯一未封死的大改方向：`T.import_source/T.call_extern` + `T.tvm_mfma` 手工 LDS/MFMA 调度（copy/MMA 重叠）

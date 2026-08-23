@@ -1138,3 +1138,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - **结论**：90+ 若存在，路径不在流量级改造，而在计算效率（LDS/MFMA 手工调度、
   copy/MMA 重叠）——该方向历史上已有 `T.import_source/T.call_extern` + `T.tvm_mfma`
   基础设施铺垫，是后续唯一未封死的大改方向。
+
+## 项目进展总结（2026-08-23）
+- **榜单账号最高 76 分（submissionId 123407 = v163），排名 29**
+- 稳定版仍为 v138（75.67），76 分版本复验不稳定（低概率调度竞态）
+- 流量级改造路线全面封锁：int8/fp8 codegen 不可用、可靠缓存键不存在、显存不足、权重无冗余读
+- 唯一开放方向：`T.import_source/T.call_extern` + `T.tvm_mfma` 手工 LDS/MFMA 调度（copy/MMA 重叠）
