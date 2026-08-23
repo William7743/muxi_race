@@ -781,8 +781,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   **Accepted 75.33**，约 **3.351/5.952/11.930ms**，不及v114，stage1 X保持默认。
 - v127 (123332)：仅给Down的up_logits→shared copy增加`coalesced_width=4`；
   **Accepted 75**，约 **3.380/5.995/12.044ms**，不及v114，Down A侧保持默认。
-- v128 (123334，Pending)：以v114为基线，仅把hidden=7168两档的融合Gate/Up `k_pack`
-  从2增至4；K64恰好容纳四个K16 MFMA，测试更大分组装载能否继续减少指令调度开销。
+- v128 (123334)：以v114为基线仅把hidden=7168两档的融合Gate/Up `k_pack`从2增至4；
+  case1未改动且Accepted 77，但case2/3均**WrongAnswer**，账号25.67。K64上的k_pack4
+  MACA lowering数值不安全，hidden=7168继续保持已验证的k_pack2。
 - v129 (123336，Pending)：以v114为基线，仅在64-expert/case3的Down GEMM设置
   `k_pack=2`；历史拆分版该变化约在噪声边缘，本次验证它能否与更快stage1叠加并压低最长档。
 - v130 (123340，Pending)：首次扫描swizzle的另一公开维度；仅将v114融合Gate/Up从
