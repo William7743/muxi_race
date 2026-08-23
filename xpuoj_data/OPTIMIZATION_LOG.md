@@ -812,4 +812,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   有效的column4对照更短同expert调度窗口。
 - v140 (123357，Pending)：同一column扫描取`panel=8`；row8曾在双累加lowering中WA，
   column维度需要独立验证正确性与更长权重局部性窗口。
+- v141 (123358，Pending)：补齐融合stage1的`column,panel=1`；它逐bx扫完整N方向，
+  主要复用同一token block的X，而panel2理论更贴近每expert常见的1–2个bx权重复用窗口。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
