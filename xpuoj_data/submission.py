@@ -39,8 +39,6 @@ def _moe_forward_kernel(
     weights_dtype,
 ):
     gu_k_pack = 2 if hidden >= 7000 else 1
-    gu_swizzle_order = "row" if num_experts == 32 else "column"
-    gu_swizzle_panel = 1 if num_experts == 16 else 4
     scale = 1.44269504
     dtype = T.float16
     accum_dtype = T.float32
@@ -74,7 +72,7 @@ def _moe_forward_kernel(
             up_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
 
             # swizzle(4)：OJ 三用例实测比默认 swizzle(10) 稳定快 ~0.7%
-            T.use_swizzle(gu_swizzle_panel, order=gu_swizzle_order)
+            T.use_swizzle(4, order="column")
 
             expert_id = group_idx_for_bx[bx]
             block_start = bx * bt1

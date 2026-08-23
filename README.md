@@ -4,8 +4,8 @@
 
 ## 当前状态
 - **当前最优：75.67 分**
-- 提交代码：`xpuoj_data/submission.py`（submissionId 123381，v151）
-- 核心结构：融合 Gate/Up、共享 A、复用单个权重 shared buffer、两段权重搬运启用 `coalesced_width=4`、单次有效行 SwiGLU 写回，并按 shape 选择 column1/row4/column4 block swizzle
+- 提交代码：`xpuoj_data/submission.py`（submissionId 123355，v138，固定字面 column4）
+- 核心结构：融合 Gate/Up、共享 A、复用单个权重 shared buffer、两段权重搬运启用 `coalesced_width=4`、单次有效行 SwiGLU 写回，并对融合阶段使用固定 column4 block swizzle
 - 完整优化过程：`xpuoj_data/OPTIMIZATION_LOG.md`
 - 目标：**冲榜**（当前我方最优 75；同事已实现 84+，90+ 也经官方检验，说明存在我们完全未掌握的重大优化路径）
 
@@ -56,7 +56,7 @@
 ## 给接手 AI 的快速开始
 
 1. **先读** `xpuoj_data/OPTIMIZATION_LOG.md`——里面记录了所有已尝试方向、分数、编译器 bug 地图，避免重复踩坑。
-2. **当前最优**：`xpuoj_data/submission.py`（75.67 分，submissionId 123381；三档约 3.223/5.891/11.634ms）。
+2. **当前稳定最优**：`xpuoj_data/submission.py`（75.67 分，submissionId 123355；三档约 3.245/5.907/11.694ms）。v151 首次更快但原样复提交 WA，已降级为不稳定历史候选。
 3. **改动后提交**：
    ```bash
    export XPUOJ_EMAIL="muxi2026C1050@example.com"

@@ -842,7 +842,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   64-expert=column4；**Accepted 75.67**，约 **3.223/5.891/11.634ms**，三档均刷新
   v138/v124对应值，成为当前最快稳定版。精确代码另存
   `submission_v151_per_shape_swizzle.py`并提升为`submission.py`。
-- 当前显示最高仍为75.67；case2只差约14–20us即可跨到76显示分，是下一轮微调重点。
+- 当前可靠显示最高仍为75.67；固定字面column4 v138由v130/v138两个独立Accepted结构
+  支撑，恢复为`submission.py`。动态swizzle的更快数据不计入稳定最佳。
 - v152 (123383)：固定row4的v124叠加stage1 `min_blocks_per_sm(2)`；样例
   **WrongAnswer**。v132两轮epilogue虽正确，但单次epilogue改变寄存器分配后该提示不再安全。
 - v153 (123385)：融合stage1固定row panel从4降至2；样例**WrongAnswer**。
@@ -850,11 +851,12 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   row调度仅panel4安全；column目前panel1/4安全、2/8不安全。
 - v155 (123387)：v151的Down固定row panel从4降至2；样例**WrongAnswer**。Down row4
   继续作为唯一当前最佳结构验证安全的短panel。
-- v156 (123388，Pending)：同一Down row panel扫描补1，完成1/2/4与已测16的关键点对照。
-- v157 (123389，Pending)：同一Down row panel扫描补8；stage1的row8不安全不代表单累加
-  Down路径，v115已证明Down row16正确但略慢。
-- v158 (123390，Pending)：当前稳定v151逐字复提交，确认动态panel/order组合的重复运行
-  可靠性，并观察case2 5.891ms的正常波动能否跨过76显示分阈值。
+- v156 (123388)：Down row panel=1，样例**WrongAnswer**。
+- v157 (123389)：Down row panel=8，样例**WrongAnswer**。结合v155，当前v151类寄存器
+  分配下Down只保留row4；row1/2/8均不安全，row16虽正确但已知略慢。
+- v158 (123390)：v151精确代码原样复提交，样例**WrongAnswer**。这证明v151的
+  动态panel/order闭包存在调度相关非确定性，首次Accepted不足以作为稳定依据。主提交立即
+  回退到固定字面column4的v138；v151仅保留为不稳定历史候选，不再组合扩展。
 - v159 (123391，Pending)：以v151为基线，将偶数stage1 K steps改为外层`steps//2`加
   内层`T.unroll(2)`，每个展开步的copy/GEMM/barrier完全不变；测试减少循环控制与地址
   计算能否帮助临界case2。
