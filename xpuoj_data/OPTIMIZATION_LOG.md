@@ -919,5 +919,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   已保存为`submission_v165_column4_stage1_full_fast.py`（SHA256 `8082d4b...`）。
 - v179 (123451，Pending)：把v173的“仅FP16 `exp2`、其余FP32”原样移植到已多轮稳定的
   v138，不带任何stage1/Down完整块控制流快路径；目标是获得不依赖疑似竞态的可靠76候选。
+- v180 (123454，Pending)：基于可靠v138，用FP16 `hexp2`与FP16初始倒数，再做一次
+  FP32 Newton-Raphson `r=r0*(2-denom*r0)`修正，Gate/Up乘法仍为FP32。v173已验证半精度
+  指数可过容差；本版探索用几个FP32 FMA替代昂贵FP32除法，同时把半精度倒数误差压回
+  约平方量级。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
