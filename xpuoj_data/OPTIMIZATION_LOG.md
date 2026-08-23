@@ -865,4 +865,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   每元素谓词消除。
 - v161 (123394，Pending)：与v160对称，为Down完整block增加无谓词乘路由权重/写out
   快路径；尾块仍逐元素选择有效输出或0。
+- v162 (123401，Pending)：固定字面column4稳定版v138原样复提交，确认其重复运行
+  可靠性；此前v130（两轮epilogue）与v138（单次epilogue）均已独立Accepted。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
