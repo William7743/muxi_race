@@ -8,14 +8,14 @@
 ```bash
 # 方式一：设置环境变量（推荐）
 export XPUOJ_EMAIL="muxi2026C1050@example.com"
-export XPUOJ_PASSWORD="uMf4iFsJZy6EDPx3"
+export XPUOJ_PASSWORD="<你的密码>"
 
 python xpuoj_submit.py --code solution.py
 ```
 
 ```bash
 # 方式二：凭据文件（与脚本同目录，格式 email:password）
-echo "muxi2026C1050@example.com:uMf4iFsJZy6EDPx3" > .xpuoj_credentials
+echo "muxi2026C1050@example.com:<你的密码>" > .xpuoj_credentials
 
 python xpuoj_submit.py --code solution.py --status
 ```

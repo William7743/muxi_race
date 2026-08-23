@@ -741,12 +741,15 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v111 (123283)：v106删除Gate/Up GEMM后的两个显式`T.sync_threads()`；**Accepted 75**，
   约 **3.410/6.153/12.429ms**，三档均慢于v106。自动shared hazard同步足以保证正确，
   但没有降低实际同步成本；保留显式barrier的v106。
-- v112 (123285，Pending)：v106仅把融合stage1的K tile从64增至128，循环与显式barrier
-  减半，但shared从约32KiB增至64KiB；隔离循环成本和驻留率的权衡。
-- v113 (123287，Pending)：v106的融合stage1从256改为512线程；K64与单weight buffer保持，
-  双累加器平均寄存器降至约64/线程，区别于历史K32/双buffer的v82。
-- v114 (123289，Pending)：v106仅给Gate/Up两段weight global→shared copy添加
-  `coalesced_width=4`，验证dense复盘的B侧向量搬运线索；A/Down不变。
+- v112 (123285)：v106仅把融合stage1的K tile从64增至128，shared增至约64KiB；样例
+  **WrongAnswer**，运行约55秒后失败。K128的单weight覆盖/同步路径不安全，关闭。
+- v113 (123287)：v106的融合stage1从256改为512线程；**Accepted 67.67**，约
+  **4.897/8.993/17.294ms**，线程翻倍造成严重退化，保持256线程。
+- v114 (123289)：v106仅给Gate/Up两段weight global→shared copy添加
+  `coalesced_width=4`；**Accepted 75.67**，约 **3.357/5.928/11.912ms**，三档显示
+  **77/75/75**。相对v106的3.375/6.090/12.236全面提升，尤其case3快约2.65%，成功
+  跨过第三档75分阈值。它是当前最快稳定版，精确代码另存
+  `submission_v114_fused_gu_weight_coalesced4.py`并已提升为`submission.py`。
 - v115 (123290，Pending)：v106仅把Down block swizzle从row4改为同源MoE复盘建议的
   row16；融合stage1保持已验证安全的row4。
 - v116 (123295，Pending)：v106把两轮SwiGLU fragment改写合并成单次有效行写回表达式，
@@ -758,4 +761,4 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v119 (123317，Pending)：评测分支源码确认公开`T.__exp`会直接lower为MACA快速数学
   `__expf`；v106仅将`exp2(-x*log2e)`替换为`T.__exp(-x)`，测试真实快速内建激活的
   正确性与收益，区别于v104的普通`T.exp/expf`。
-- 所有瞬态实验载体提交后均已恢复；`submission.py`继续保持120451的75分稳定版本。
+- 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。

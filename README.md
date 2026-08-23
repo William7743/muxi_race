@@ -3,8 +3,9 @@
 沐曦「揭榜挂帅」MoE 赛题（TileLang 算子优化 - Fused MoE GEMM）优化工作区。
 
 ## 当前状态
-- **当前最优：75 分**
-- 提交代码：`xpuoj_data/submission.py`（submissionId 120451，v21+skip padding 结构）
+- **当前最优：75.67 分**
+- 提交代码：`xpuoj_data/submission.py`（submissionId 123289，v114）
+- 核心结构：融合 Gate/Up、共享 A、复用单个权重 shared buffer，并对两段权重搬运启用 `coalesced_width=4`
 - 完整优化过程：`xpuoj_data/OPTIMIZATION_LOG.md`
 - 目标：**冲榜**（当前我方最优 75；同事已实现 84+，90+ 也经官方检验，说明存在我们完全未掌握的重大优化路径）
 
@@ -49,13 +50,13 @@
   并真实读写 TileLang local/shared/global 指针；高层 `gemm.h/gemm_ss` 外部实例化不可用。
 - 合法的同步 global→register→LDS 软件流水已实证有效：v78 相对朴素 raw tile
   提升约 0.2-0.6ms，但当前仍未胜过稳定 `T.gemm`。
-- 当前75分不是已知真实上限；84+/90+ 均经官方验证，仍需寻找更成熟的LDS/MFMA
+- 当前75.67分不是已知真实上限；84+/90+ 均经官方验证，仍需寻找更成熟的LDS/MFMA
   调度、persistent/权重复用或其他重大结构路径。
 
 ## 给接手 AI 的快速开始
 
 1. **先读** `xpuoj_data/OPTIMIZATION_LOG.md`——里面记录了所有已尝试方向、分数、编译器 bug 地图，避免重复踩坑。
-2. **当前最优**：`xpuoj_data/submission.py`（75 分，submissionId 120451）。
+2. **当前最优**：`xpuoj_data/submission.py`（75.67 分，submissionId 123289）。
 3. **改动后提交**：
    ```bash
    export XPUOJ_EMAIL="muxi2026C1050@example.com"
@@ -70,5 +71,5 @@
    - `th=512` 并非一律错误：若每线程 accumulator 保持约64 FP32可正确运行，
      但多数已测组合仍比稳定 `th=256` 慢。
    - 禁止 async/bsm copy；普通同步向量 load/store、barrier、MFMA 和寄存器预取可研究。
-   - `xpuoj_data/submission.py` 始终保持120451的75分稳定版，实验文件单独提交。
+   - `xpuoj_data/submission.py` 始终保持当前最高Accepted稳定版，实验文件单独提交。
 5. **凭据安全**：仓库不含密码/token，提交时通过环境变量或本地 `.xpuoj_credentials` 提供。
