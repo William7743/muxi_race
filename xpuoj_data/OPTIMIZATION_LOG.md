@@ -801,4 +801,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   指定`coalesced_width=4`，测试加载端的显式向量宽度收益能否延伸到workspace存储。
 - v136 (123350，Pending)：与v135对称，仅给Down最终乘路由权重/写out的`T.Parallel`
   指定`coalesced_width=4`。
+- v137 (123351，Pending)：以v124为基线，仅用评测版公开`T.sigmoid(gate)`替换手写
+  `1/(1+exp2(-gate*log2e))`，检验TVM/MACA原生sigmoid lowering是否更紧凑且满足容差。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
