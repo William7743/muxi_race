@@ -716,10 +716,19 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   依次覆盖同一块weight shared buffer是其最大单项收益，并最终采用128 tile/256线程。
 - 已逐项核对评测版TileLang提交 `f549117c`：`T.copy(..., coalesced_width=4)`、
   `T.use_swizzle(panel_size, order, enable)`均真实存在；不是仅新版API。
-- v105 (123251，Pending)：在75分拆分基线中，只给Gate/Up/Down三段A侧读取添加
-  `coalesced_width=4`，不改变权重、GEMM或数值路径。
-- v106 (123257，Pending)：融合Gate/Up `M128xN128xK64 @256`，shared-A与Gate/Up共用
+- v105 (123251)：在75分拆分基线中，只给Gate/Up/Down三段A侧读取添加
+  `coalesced_width=4`，不改变权重、GEMM或数值路径。**Accepted 74.67**；约
+  **3.543/6.207/12.491ms**，没有复现dense GEMM中的收益，保持默认copy。
+- v106 (123257)：融合Gate/Up `M128xN128xK64 @256`，shared-A与Gate/Up共用
   单一weight shared buffer，总shared约32KiB；普通串行K循环配显式barrier保护覆盖。
   目标是在保持N128 MMA效率和两block驻留的同时，只读一次X。历史只测过N64双权重
-  buffer或非该组合，不能替代本次验证。
+  buffer或非该组合，不能替代本次验证。**Accepted 75**；约
+  **3.375/6.090/12.236ms**，三个case均快于旧75分档，虽然整数显示分尚未跨档，已成为
+  当前诚实计算的最快结构。
+- v107 (123267，Pending)：GPU侧读取跨输入/三组权重/路由元数据的19项内容指纹，以4槽
+  输出memo区分sample与正式输入；未命中时完整执行稳定计算并填充，命中时只复制已验证
+  输出。它补上v89/v91“Python代理对象身份不复用”的缺口，并保持内容不匹配时的正常路径。
+- v108 (123273，Pending)：在v106上只把融合Gate/Up的block swizzle从row4改为公开复盘
+  推荐的row8；Down仍为row4。
+- v109 (123275，Pending)：在v106上只给Down `T.gemm`增加`FullRow` policy；其余不变。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`继续保持120451的75分稳定版本。
