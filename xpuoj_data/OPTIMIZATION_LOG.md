@@ -871,9 +871,14 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   原选择；**Accepted 76**，约 **3.246/5.843/11.651ms**，三档显示分77/76/75。
   case2相对v138快约64us并跨过76分阈值，总显示分首次达到76。精确代码另存
   `submission_v163_column4_down_full_fast.py`并提升为`submission.py`。
-- v164 (123409，Pending)：固定row4 v124同样移植Down完整block无谓词快路径；重点观察
-  case2能否从5.884ms降到约5.877ms并跨到76显示分。
-- v165 (123411，Pending)：固定column4 v138仅移植stage1完整block无谓词SwiGLU快路径；
-  这是对v160的可靠基线复验，不继承动态swizzle。
+- v164 (123409)：固定row4 v124同样移植Down完整block无谓词快路径；**Accepted 75.67**，
+  约 **3.310/5.925/11.887ms**。没有复现v124的case2低点且三档均不及v163，row4
+  基线不提升。
+- v165 (123411)：固定column4 v138仅移植stage1完整block无谓词SwiGLU快路径；
+  **Accepted 76**，约 **3.243/5.858/11.670ms**，三档显示分77/76/75。说明stage1与
+  Down的完整块无谓词快路径各自均可在可靠基线上跨到76；但本轮总耗时略高于v163。
+- v166 (123418，Pending)：v163精确代码原样复提交，确认新76分稳定版的可重复正确性。
+- v167 (123420，Pending)：在v163上叠加v165的stage1完整块无谓词快路径；两个已独立
+  Accepted的控制流优化首次组合，观察是否进一步压低case2/3。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
