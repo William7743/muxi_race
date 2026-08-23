@@ -2,10 +2,12 @@
 
 沐曦「揭榜挂帅」MoE 赛题（TileLang 算子优化 - Fused MoE GEMM）优化工作区。
 
-## 当前状态
-- **历史最高：76 分；当前可靠最优：75.67 分**
-- 提交代码：`xpuoj_data/submission.py`（submissionId 123355，v138；精确复验 123401 也 Accepted）
-- 核心结构：融合 Gate/Up、共享 A、复用单个权重 shared buffer、两段权重搬运启用 `coalesced_width=4`、单次有效行 SwiGLU 写回，并对融合阶段使用固定 column4 block swizzle
+## 当前状态（2026-08-23 更新）
+- **历史最高：76 分；当前稳定版：v138，75.67 分**（复验样本 123355/123401/123771/123887 均 Accepted）
+- 提交代码：`xpuoj_data/submission.py`（v138：融合 Gate/Up + 共享 A + 单权重 buffer + `coalesced_width=4` + 单次有效行 SwiGLU 写回 + column4 swizzle）
+- 最新突破与教训：v202（kernel1 MMA 操作数互换，gate/up = W_slice @ x^T）三档稳定快 ~1%、四次 Accepted 76，但随后连续 3 次 case1 WA，定性为转置累加器布局的真实竞态，已回退；详见 `OPTIMIZATION_LOG.md`
+- 评测环境档案：`xpuoj_data/MACHINE_INFO.md`（4 台 C500 机器、宿主 Xeon Gold 6530、CPU flags/缓存）
+- 关键已知事实：WA 提交的 userError 也带完整计时 JSON，故意 WA 的诊断探针可拿性能数据；评测机存在 lowering 非确定性与 case1 judge 概率性数值漂移，任何新高分必须两次连续 Accepted 才提升稳定版
 - 完整优化过程：`xpuoj_data/OPTIMIZATION_LOG.md`
 - 目标：**冲榜**（当前我方最优 76；同事已实现 84+，90+ 也经官方检验，说明存在我们完全未掌握的重大优化路径）
 
