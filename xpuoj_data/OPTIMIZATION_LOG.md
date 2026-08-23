@@ -970,3 +970,4 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   （API testcaseResult.score=100 仅为通过标志，非最终 pts）
 - v189 (123720): case2 direct SiLU division → WrongAnswer
   - case1 稀疏误差 0.127，数值不稳定，与 v184 同类，路线关闭
+- v190 (提交中): v188 + case2(row4) 权重复制 coalesced_width=2
