@@ -1011,4 +1011,15 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   - v197 stages2 (123790): WA tk=4.048ms → 回退 23%（与历史 v6 时代 ns=2 23.5ms+ 一致，MACA 无异步拷贝，双缓冲只剩同步开销）；**且出现数值误差——纯流水深度理论上不改数值，疑 Pipelined(2) lowering 非确定性，已提交复测采样**
   - v198 swizzle-row (123804): **Accepted 75.67**（3.339/5.964/11.954ms，三档均慢于 v138 的 3.245/5.907/11.694）→ column 顺序确实优于 row（v130 结论复核成立），块调度顺序旋钮关闭
 - v201 (123832)：v138 + kernel1 双权重 shared buffer（gate/up 独立），每 k-step barrier 2→1，gate/up copy 可并发发射；smem 总量不变 48KB。硬件依据：barrier 减半降低同步开销，双 buffer 解除写-读依赖以改善延迟隐藏。v187 同思路曾单样本 WA，按非确定性纪律在 v138 字节基线上重测采样，待结果
-- v197 复测 (123833)：同代码原样再提交一次，采样 Pipelined(2) 的 WA 是否为 lowering 非确定性（预期仍 WA 且 ~4ms；若 Accepted 则揭示评测新不稳定面）
+- v197 复测 (123833)：同代码原样再提交，仍 **WrongAnswer**（case1 tk=4.052ms，与首次 4.048ms 一致）→ Pipelined(2) 的 WA 与回退均可复现，非偶发；kernel2 双缓冲路线正式关闭（慢 23% + 数值不安全）
+- v201 (123832)：双权重 buffer → **WrongAnswer**（case1 tk=4.901ms，比单 buffer 慢 49% 且数值错）→ 与 v187 同结构两次独立 WA，定性为真实缺陷（非非确定性）：双 buffer 解除依赖后 lowering 产生竞态/错误调度。双权重 buffer 路线关闭，保留单 buffer 串行 gate→barrier→up→barrier 结构
+- v202 (123845) PROBE：kernel1 MMA 操作数互换（gate/up = W_slice @ x^T，累加器转置 (be1, bt1)，epilogue 读 fragment[j, i]）；硬件依据：MACA MMA 对 A/B 操作数的 warp-feed 路径可能不对称，唯一未测的 MMA 形状轴，待结果
+- v203 (123846) PROBE：全 shape gu_k_pack=2（hidden=2048 档由 1→2，空白档位）；k_pack 提高送数 MMA 的 K 向量化宽度，历史仅 7168 档测过 2→4（WA），待结果
+- **v202 (123845) 操作数互换：Accepted 76！3.233/5.839/11.672ms，三档均快于 v138（3.245/5.907/11.694），case2 提升最明显（-1.2%）。这是自 v138 以来首次三档全面领先的结构性变更**
+- 纪律执行：已原样复验两次（123858/123859）。历史教训（v163/v186 首 Accepted 复验 WA）要求两次独立 Accepted 才提升稳定版
+- v203 (123846) k_pack2 全 shape：Accepted 75.67（3.272/5.918/11.731ms）与 v138 持平，k_pack 对 2048 档无收益，关闭
+- v202 复验批次：123858 Accepted 76（3.246/5.827/11.629ms），123859 WrongAnswer（case1 tk=3.257ms 计时正常，数值偶发）→ v202 三样本 = 76/76/WA（2A1W）。性能真实（三档稳定快于 v138），但稳定性不达标，按纪律不提升为稳定版
+- 策略：性能方向确认有效，继续在互换子空间内寻找更稳变体——提交 v204（kernel2 同步互换，完全不同的 lowering 路径，可能规避 kernel1 互换的偶发竞态）
+- v204 (123871) 双互换：Accepted 75.33（低于 v138 的 75.67）→ kernel2 互换为负收益，关闭；互换收益仅存在于 kernel1
+- v202 第四样本 (123873)：WrongAnswer，case1 稀疏误差 (1350,1161) abs=0.154，与 123859（(1094,257) abs=0.120）、v138 的 123761（(2438,1617) abs=0.113）同为 case1 偶发小误差族 → 疑为评测机 case1 judge 概率性数值漂移，而非代码缺陷
+- 对照实验：再提交一次纯 v138，采样其 WA 率基线（当前 v138 = 3A/1W，v202 = 2A/2W）
