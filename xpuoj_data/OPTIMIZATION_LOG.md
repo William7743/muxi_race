@@ -968,3 +968,5 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v189 (123720): case2 direct SiLU division，Pending
 - v188 各测试点实际得分（网页为准）：#1=77 pts / #2=75 pts / #3=75 pts，总 75.67
   （API testcaseResult.score=100 仅为通过标志，非最终 pts）
+- v189 (123720): case2 direct SiLU division → WrongAnswer
+  - case1 稀疏误差 0.127，数值不稳定，与 v184 同类，路线关闭
