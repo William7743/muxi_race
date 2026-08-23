@@ -815,19 +815,17 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   已验证正确且提速的column组合。
 - v140 (123357)：融合stage1使用`column,panel=8`；样例**WrongAnswer**。column4继续是
   唯一安全的column panel，1仍在排队。
-- v141 (123358，Pending)：补齐融合stage1的`column,panel=1`；它逐bx扫完整N方向，
-  主要复用同一token block的X，而panel2理论更贴近每expert常见的1–2个bx权重复用窗口。
-- v142 (123360，Pending)：在v138（v124+stage1 column4）上继续叠加stage1
-  `min_blocks_per_sm(2)`；v132单独时case2略有收益，组合目标是帮助5.884ms附近的case2
-  跨过约5.88ms的76分阈值，同时监控case3寄存器压缩回归。
-- v143 (123361，Pending)：以v124为基线，仅把sigmoid分母的普通`1.0/x`替换为评测版
-  公开`T.ieee_frcp(x,"rn")`，它在MACA codegen中直接生成`__frcp_rn`；指数和其余数学
-  顺序不变，测试显式硬件倒数是否优于编译器自动除法。
+- v141 (123358)：融合stage1使用`column,panel=1`；**Accepted 75.67**，约
+  **3.225/5.908/11.805ms**。case1继续刷新、case3不及column4；用于16-expert shape。
+- v142 (123360)：v124+stage1 column4+`min_blocks_per_sm(2)`；样例**WrongAnswer**。
+  显式占用率提示不能与column调度安全叠加，关闭组合。
+- v143 (123361)：显式`T.ieee_frcp/__frcp_rn`替换sigmoid普通倒数；样例
+  **WrongAnswer**。普通除法lowering是当前唯一验证安全路径。
 - v144 (123364，Pending)：以v124为基线，仅把SwiGLU FP32乘法结合顺序从
   `up*(gate*sigmoid)`改为`(up*gate)*sigmoid`，测试寄存器/指令调度差异并验证容差。
-- v145 (123369，Pending)：以v124为基线，仅把融合stage1单weight复用的普通K循环改为
-  `T.Pipelined(..., num_stages=1)`，显式barrier与所有copy/GEMM顺序保持不变，验证单级
-  pipeline pass能否在复用shared结构上优化循环控制而不触发覆盖hazard。
+- v145 (123369)：仅把融合stage1普通K循环改为单级`T.Pipelined`；样例
+  **WrongAnswer**。即使显式barrier保留，pipeline pass仍不能安全处理同一weight shared
+  buffer的两次覆盖；继续使用普通`range`。
 - v146 (123371，Pending)：以v124为基线，仅把融合Gate/Up两次GEMM policy从FullRow
   同步切为Square；旧拆分单累加器的policy结论不能完全代表当前双累加/单buffer lowering。
 - v147 (123375，Pending)：以v124为基线，仅将up_logits workspace物理行跨度从
@@ -835,9 +833,10 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   4–16KiB整幂，测试L2/显存分区冲突。
 - v148 (123376，Pending)：同一workspace stride padding取+64列（额外128B/row），
   对照更明显的cache-line错位；不做v11那种昂贵转置。
-- v149 (123378，Pending)：编译期逐shape组合：16/64-expert使用v138最佳column4，
-  32-expert保持v124最佳row4并仅对该shape指定`min_blocks_per_sm(2)`；目标让case2从
-  5.884ms附近跨过约5.877ms的76分阈值，同时保留case1/3刷新。
+- v149 (123378)：编译期逐shape swizzle并对32-expert指定min-block提示；样例
+  **WrongAnswer**。与v142共同否决column与显式launch-bounds组合，纯swizzle对照v150继续。
 - v150 (123379，Pending)：v149的纯调度对照，16/64-expert使用column4、32-expert
   使用row4，但不加min-block提示；理论直接组合v138的case1/3与v124的case2最佳值。
+- v151 (123381，Pending)：纯静态逐shape最佳组合：16-expert=column1（v141）、
+  32-expert=row4（v124）、64-expert=column4（v138）；不含任何占用率提示。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
