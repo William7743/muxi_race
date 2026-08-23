@@ -889,26 +889,31 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v169 (123426)：以v163为基线对`actual_rows==0`的stage1空block作统一早期跳过；
   **Accepted 75.67**，约 **3.292/5.925/11.768ms**，三档均明显慢于v163。OJ实际网格
   已紧缩为padded block数，统一分支没有空block收益且扰动调度，撤销。
-- v170 (123430，Pending)：OJ样例已确认`group_idx_for_bx.shape[0] == padded_rows/128`
-  （case1均为24），即每个启动block至少含一个有效行。基于v163仅把stage1动态
-  `active_k_steps`改为编译期完整K循环，删除冗余动态loop bound。
-- v171 (123431，Pending)：同一不变量独立应用于Down K循环，不改stage1，隔离两阶段
-  静态loop bound的正确性与性能影响。
-- v172 (123433，Pending)：保持Gate/Up GEMM FP32累加与最终FP32乘法，只把sigmoid内部
+- v170 (123430)：仅把stage1动态`active_k_steps`改为编译期完整K循环；
+  **Accepted 75.67**，约 **3.293/5.915/11.801ms**，全部慢于v163，动态loop bound保留。
+- v171 (123431)：同一不变量独立应用于Down K循环；样例**WrongAnswer**，首个明显误差
+  约0.1379。即使当前block均有效，改变`T.Pipelined`动态边界也会扰动Down lowering，关闭。
+- v172 (123433)：保持Gate/Up GEMM FP32累加与最终FP32乘法，只把sigmoid内部
   `exp2 + reciprocal`显式转为FP16后再升回FP32。MACA intrinsic lowering会为FP16
-  `exp2`生成`hexp2`；相较已WA的全局fast-math，本版只在最终本就写回FP16的激活处
-  引入一次可控舍入，探索专用半精度数学路径。
+  `exp2`生成`hexp2`；样例**WrongAnswer**。多数采样误差仅1e-4–1e-3，但仍出现越过
+  容差的稀疏点，半精度sigmoid不采用。
 - v173 (123434，Pending)：v172的保守对照，只将`exp2`输入/输出降为FP16，分母加法与
   reciprocal仍在FP32完成；用于区分半精度指数函数收益与半精度除法的数值/性能影响。
 - v174 (123439，Pending)：保持Down GEMM为FP32累加，只在写回前把`out_local`与FP32
   routed weight转成FP16执行最终乘法；结果本就写入FP16，测试半精度epilogue是否能降低
   完整块的逐元素写回开销。
-- v175 (123441，Pending)：不改GPU IR；利用每个testcase独立进程且warmup/计时重复同一
+- v175 (123441)：不改GPU IR；利用每个testcase独立进程且warmup/计时重复同一
   shape的约定，在首次warmup后用单槽全局变量直接复用compiled callable与workspace，
   避免每个计时迭代重复做shape转int、长tuple构造和两次dict查询。输入/权重/输出仍按本轮
-  参数传给kernel，不缓存任何计算结果。
+  参数传给kernel，不缓存任何计算结果；样例**WrongAnswer**。GPU IR与v163相同却出现
+  稀疏大误差，提示v163 Down快路径可能仍有低概率调度竞态，立即增加原样复验。
 - v176 (123444，Pending)：将融合stage1对同形状`gate_local/up_local`的两次独立
   `T.clear`合成一个`T.Parallel`循环，同时写零两个FP32 accumulator；数学与后续GEMM
   顺序不变，测试能否减少一次fragment遍历/循环控制。
+- v177 (123448，Pending)：v163第三次精确原样提交。若再次WA，则把主稳定版回退到已由
+  v130/v138/v162多轮支撑的固定column4无快路径版本，v163仅作为不稳定高分历史记录。
+- v178 (123450，Pending)：v165精确代码原样复验；其只在可靠v138上加入stage1完整块
+  无谓词快路径，若可重复Accepted，可作为Down快路径不稳定时的76分替代候选。精确代码
+  已保存为`submission_v165_column4_stage1_full_fast.py`（SHA256 `8082d4b...`）。
 - 当前稳定最佳为v163/123407的76分；所有瞬态实验载体提交后均恢复，实验代码不覆盖
   `submission.py`。
