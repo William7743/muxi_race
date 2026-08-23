@@ -765,4 +765,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   `coalesced_width`从4增至8，扫描更宽同步向量搬运。
 - v121 (123323，Pending)：以新最佳v114为基线，将相同两段`coalesced_width`从4降至2，
   与默认、4、8形成受控宽度扫描。
+- v122 (123324，Pending)：以v114为基线，仅保留Gate weight copy的`coalesced_width=4`，
+  Up恢复默认，隔离两次覆盖搬运中的收益来源。
+- v123 (123326，Pending)：与v122对称，仅保留Up weight copy的`coalesced_width=4`，
+  Gate恢复默认；若一侧独占收益，可避免另一侧的潜在过度约束。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
