@@ -802,8 +802,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v135 (123349)：以v124为基线给单次SwiGLU写回`T.Parallel`指定`coalesced_width=4`；
   **Accepted 75.67**，约 **3.296/5.923/11.889ms**。case1小幅快但case2/3均慢，
   workspace写回保持默认布局。
-- v136 (123350，Pending)：与v135对称，仅给Down最终乘路由权重/写out的`T.Parallel`
-  指定`coalesced_width=4`。
+- v136 (123350)：仅给Down最终乘路由权重/写out的`T.Parallel`指定
+  `coalesced_width=4`；**Accepted 75.67**，约 **3.309/5.917/11.905ms**，三档均不及
+  v124，最终写回保持默认布局。
 - v137 (123351，Pending)：以v124为基线，仅用评测版公开`T.sigmoid(gate)`替换手写
   `1/(1+exp2(-gate*log2e))`，检验TVM/MACA原生sigmoid lowering是否更紧凑且满足容差。
 - v138 (123355，Pending)：组合v124单次SwiGLU epilogue与v130融合stage1 column4调度；
@@ -820,4 +821,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v143 (123361，Pending)：以v124为基线，仅把sigmoid分母的普通`1.0/x`替换为评测版
   公开`T.ieee_frcp(x,"rn")`，它在MACA codegen中直接生成`__frcp_rn`；指数和其余数学
   顺序不变，测试显式硬件倒数是否优于编译器自动除法。
+- v144 (123364，Pending)：以v124为基线，仅把SwiGLU FP32乘法结合顺序从
+  `up*(gate*sigmoid)`改为`(up*gate)*sigmoid`，测试寄存器/指令调度差异并验证容差。
 - 所有瞬态实验载体提交后均已恢复；`submission.py`已提升为123289的75.67分稳定版本。
