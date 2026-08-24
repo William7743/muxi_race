@@ -1399,3 +1399,6 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v262: v226 + kernel2 也用 Square policy——v226 只改了 kernel1，kernel2 未试
 - v260 (125571): v226+Down完整块快路径 → Accepted 76（20381ms）
 - v261 (125578): bh1=32 → Accepted 69.67（大幅变慢，关闭）
+- v261: bh1=32 → 69.67 关闭
+- v262 (125590): kernel2 Square → Accepted 76（20366ms，微正）
+- v263: v260+kernel2 Square combo 提交中
