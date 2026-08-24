@@ -184,7 +184,7 @@ def _pick_tiles(intermediate):
     # group_idx_for_bx 按 128 token/block 预计算，block_token 必须保持 128。
     # kernel1 首选 be=128/bh=64/threads=512（OJ 三用例实测最优）；
     # intermediate 不能整除 128 时退回 be=64/bh=64。
-    return 128, 64, 128, 256
+    return 64, 64, 128, 256
 
 
 def _get_kernel(

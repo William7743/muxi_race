@@ -38,7 +38,7 @@ def _moe_forward_kernel(
     th2,
     weights_dtype,
 ):
-    gu_k_pack = 2 if hidden >= 7000 else 1
+    gu_k_pack = 2
     scale = 1.44269504
     dtype = T.float16
     accum_dtype = T.float32

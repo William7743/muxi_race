@@ -166,7 +166,7 @@ def _moe_forward_kernel(
                     ],
                     down_shared,
                 )
-                T.gemm(up_shared, down_shared, out_local, transpose_B=True)
+                T.gemm(up_shared, down_shared, out_local, transpose_B=True, policy=T.GemmWarpPolicy.Square)
 
             for i, j in T.Parallel(bt1, bh2):
                 if i < actual_rows:

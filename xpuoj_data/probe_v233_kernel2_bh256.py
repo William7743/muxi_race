@@ -197,7 +197,7 @@ def _get_kernel(
     weights_dtype,
 ):
     bt1, bh1, be1, th1 = _pick_tiles(intermediate)
-    bh2, be2, th2 = 128, 64, 256
+    bh2, be2, th2 = 256, 64, 256
     key = (
         int(hidden),
         int(intermediate),

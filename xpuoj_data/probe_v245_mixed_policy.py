@@ -104,7 +104,7 @@ def _moe_forward_kernel(
                     weight_shared,
                     coalesced_width=4,
                 )
-                T.gemm(input_shared, weight_shared, gate_local, transpose_B=True, policy=T.GemmWarpPolicy.Square, k_pack=gu_k_pack)
+                T.gemm(input_shared, weight_shared, gate_local, transpose_B=True, policy=T.GemmWarpPolicy.FullRow, k_pack=gu_k_pack)
                 T.sync_threads()
                 T.copy(
                     up_w[
@@ -115,7 +115,7 @@ def _moe_forward_kernel(
                     weight_shared,
                     coalesced_width=4,
                 )
-                T.gemm(input_shared, weight_shared, up_local, transpose_B=True, policy=T.GemmWarpPolicy.Square, k_pack=gu_k_pack)
+                T.gemm(input_shared, weight_shared, up_local, transpose_B=True, policy=T.GemmWarpPolicy.FullRow, k_pack=gu_k_pack)
                 T.sync_threads()
 
             for i, j in T.Parallel(bt1, be1):

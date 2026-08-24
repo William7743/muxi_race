@@ -87,7 +87,7 @@ def _moe_forward_kernel(
             # A normal serial loop permits the Gate and Up tiles to reuse one
             # shared allocation.  Explicit barriers protect the overwrite
             # while the other waves may still be consuming the prior tile.
-            for k in range(active_k_steps):
+            for k in T.Pipelined(active_k_steps, num_stages=1):
                 T.copy(
                     stacked_expert_tokens[
                         block_start : block_start + bt1,

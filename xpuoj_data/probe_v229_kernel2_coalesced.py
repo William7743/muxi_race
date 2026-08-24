@@ -165,6 +165,7 @@ def _moe_forward_kernel(
                         k * be2 : (k + 1) * be2,
                     ],
                     down_shared,
+                    coalesced_width=4,
                 )
                 T.gemm(up_shared, down_shared, out_local, transpose_B=True)
 

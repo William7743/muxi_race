@@ -72,7 +72,7 @@ def _moe_forward_kernel(
             up_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
 
             # swizzle(4)：OJ 三用例实测比默认 swizzle(10) 稳定快 ~0.7%
-            T.use_swizzle(4, order="column")
+            T.use_swizzle(8, order="column")
 
             expert_id = group_idx_for_bx[bx]
             block_start = bx * bt1

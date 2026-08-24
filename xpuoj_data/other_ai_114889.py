@@ -1,4 +1,4 @@
-# XPU-OJ v114: v106 with coalesced_width=4 on fused weight copies
+# XPU-OJ 比赛#5 题目1: TileLang 算子优化 - Fused MoE GEMM
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
 #   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
@@ -38,7 +38,6 @@ def _moe_forward_kernel(
     th2,
     weights_dtype,
 ):
-    gu_k_pack = 2 if hidden >= 7000 else 1
     scale = 1.44269504
     dtype = T.float16
     accum_dtype = T.float32
@@ -67,27 +66,24 @@ def _moe_forward_kernel(
         # smem: A(bt1*bh1) + gate(be1*bh1) + up(be1*bh1) = (128+256)*64*2B = 48KB
         with T.Kernel(num_blocks_m, T.ceildiv(intermediate, be1), threads=th1) as (bx, by):
             input_shared = T.alloc_shared((bt1, bh1), dtype=dtype)
-            weight_shared = T.alloc_shared((be1, bh1), dtype=dtype)
+            gate_shared = T.alloc_shared((be1, bh1), dtype=dtype)
+            up_shared = T.alloc_shared((be1, bh1), dtype=dtype)
             gate_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
             up_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
 
             # swizzle(4)：OJ 三用例实测比默认 swizzle(10) 稳定快 ~0.7%
-            T.use_swizzle(4, order="column")
+            T.use_swizzle(4)
 
             expert_id = group_idx_for_bx[bx]
             block_start = bx * bt1
             group_size = group_sizes[expert_id]
             padded_start = group_padded_offsets[expert_id]
             actual_rows = T.max(0, T.min(bt1, group_size - (block_start - padded_start)))
-            active_k_steps = T.if_then_else(actual_rows > 0, T.ceildiv(hidden, bh1), 0)
 
             T.clear(gate_local)
             T.clear(up_local)
 
-            # A normal serial loop permits the Gate and Up tiles to reuse one
-            # shared allocation.  Explicit barriers protect the overwrite
-            # while the other waves may still be consuming the prior tile.
-            for k in range(active_k_steps):
+            for k in T.Pipelined(T.ceildiv(hidden, bh1), num_stages=1):
                 T.copy(
                     stacked_expert_tokens[
                         block_start : block_start + bt1,
@@ -101,34 +97,28 @@ def _moe_forward_kernel(
                         by * be1 : (by + 1) * be1,
                         k * bh1 : (k + 1) * bh1,
                     ],
-                    weight_shared,
-                    coalesced_width=4,
+                    gate_shared,
                 )
-                T.gemm(input_shared, weight_shared, gate_local, transpose_B=True, policy=T.GemmWarpPolicy.Square, k_pack=gu_k_pack)
-                T.sync_threads()
+                T.gemm(input_shared, gate_shared, gate_local, transpose_B=True)
                 T.copy(
                     up_w[
                         expert_id,
                         by * be1 : (by + 1) * be1,
                         k * bh1 : (k + 1) * bh1,
                     ],
-                    weight_shared,
-                    coalesced_width=4,
+                    up_shared,
                 )
-                T.gemm(input_shared, weight_shared, up_local, transpose_B=True, policy=T.GemmWarpPolicy.Square, k_pack=gu_k_pack)
-                T.sync_threads()
+                T.gemm(input_shared, up_shared, up_local, transpose_B=True)
+
+            for i, j in T.Parallel(bt1, be1):
+                gate_local[i, j] = gate_local[i, j] * (1.0 / (1.0 + T.exp2(-gate_local[i, j] * scale)))
+                up_local[i, j] = up_local[i, j] * gate_local[i, j]
 
             for i, j in T.Parallel(bt1, be1):
                 # 仅写有效行：padding 行的 stacked 输入是任意值，写出来也无意义，
                 # kernel2 会用 else 分支把 padding 行输出清 0；跳过实测快 14%
                 if i < actual_rows:
-                    up_logits[block_start + i, by * be1 + j] = (
-                        up_local[i, j]
-                        * (
-                            gate_local[i, j]
-                            * (1.0 / (1.0 + T.exp2(-gate_local[i, j] * scale)))
-                        )
-                    )
+                    up_logits[block_start + i, by * be1 + j] = up_local[i, j]
 
         # ---- Kernel 2: down GEMM × routed_weight -> out（padding 行写 0）----
         # smem: A(bt1*be2) + down(bh2*be2) = (128+128)*64*2B = 32KB
@@ -146,11 +136,10 @@ def _moe_forward_kernel(
             padded_start = group_padded_offsets[expert_id]
             token_offset = block_start - padded_start
             actual_rows = T.max(0, T.min(bt1, group_size - token_offset))
-            active_k_steps = T.if_then_else(actual_rows > 0, T.ceildiv(intermediate, be2), 0)
 
             T.clear(out_local)
 
-            for k in T.Pipelined(active_k_steps, num_stages=1):
+            for k in T.Pipelined(T.ceildiv(intermediate, be2), num_stages=1):
                 T.copy(
                     up_logits[
                         block_start : block_start + bt1,
@@ -184,7 +173,9 @@ def _pick_tiles(intermediate):
     # group_idx_for_bx 按 128 token/block 预计算，block_token 必须保持 128。
     # kernel1 首选 be=128/bh=64/threads=512（OJ 三用例实测最优）；
     # intermediate 不能整除 128 时退回 be=64/bh=64。
-    return 128, 64, 128, 256
+    if intermediate % 128 == 0:
+        return 128, 64, 128, 512
+    return 128, 64, 64, 512
 
 
 def _get_kernel(
@@ -197,7 +188,7 @@ def _get_kernel(
     weights_dtype,
 ):
     bt1, bh1, be1, th1 = _pick_tiles(intermediate)
-    bh2, be2, th2 = 128, 64, 256
+    bh2, be2, th2 = 128, 64, 512
     key = (
         int(hidden),
         int(intermediate),
