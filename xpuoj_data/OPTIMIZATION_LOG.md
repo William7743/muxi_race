@@ -1397,3 +1397,4 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v260: v226(Square) + Down 完整块无谓词快路径（v163 风格移植到新基线）
 - v261: v226 + bh1=32（K chunk 减半）——Square policy 下 tile 参数可能重新洗牌
 - v262: v226 + kernel2 也用 Square policy——v226 只改了 kernel1，kernel2 未试
+- v260 (125571): v226+Down完整块快路径 → Accepted 76（20381ms）
