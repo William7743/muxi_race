@@ -1392,3 +1392,8 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - 性能：3.181/5.719/11.439ms（**76分**）
 - 提交ID：124645
 - WA 率：约 50%（case1 偶发数值漂移）
+
+## 冒险优化轮（2026-08-24）
+- v260: v226(Square) + Down 完整块无谓词快路径（v163 风格移植到新基线）
+- v261: v226 + bh1=32（K chunk 减半）——Square policy 下 tile 参数可能重新洗牌
+- v262: v226 + kernel2 也用 Square policy——v226 只改了 kernel1，kernel2 未试
