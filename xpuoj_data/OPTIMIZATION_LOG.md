@@ -1426,3 +1426,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - **两次连续 Accepted：76.33 / 20316ms + 76.33 / 20251ms**
 - 已提升为 submission.py
 - v279 (126360): cw=16 → WA（越界）
+
+## v282 稳定突破：76.67 分
+- v282 (126390/126398): v278 + kernel2 column swizzle
+- **两次连续 Accepted：76.67 / 19913ms + 76.67 / 19945ms**
+- 已提升为 submission.py
+- 组合演进：v226(Square) → +Down快路径(v260) → +k2 Square(v262) → +cw8(v278) → +k2 column(v282)
