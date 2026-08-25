@@ -1416,3 +1416,7 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v275 (126333): kernel1 grid 维度交换（x-resident-L2）→ WA 且更慢(3.26ms)
 - **结论：column swizzle 已实现最优 L2 复用；剩余差距 = copy/MMA 串行（无 async copy 硬伤）**
 - case1 kernel1 理论下限 ~1.5ms（流量1.8GB），实测 2.5ms，效率 60%
+- v276 (126344): 分离gate/up buffer + Pipelined ns=2 + bh1=32 → Accepted 64.67
+  **重要：Pipelined+分离buffer首次数值安全！但bh1=32 MMA效率损失过大**
+- v277 (126350): 同结构 bh1=64 → WA（smem 96KB超64KB上限）
+- 结论：Pipelined路线需要bh1=32才能装下双缓冲，但MMA效率损失不可接受，关闭
