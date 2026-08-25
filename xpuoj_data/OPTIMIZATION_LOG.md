@@ -1408,3 +1408,11 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v274 (126036): 权重寄存器预取软件流水 → WA（buffer 覆盖时序无法在 TileLang 高层安全表达）
 - 结论：call_extern 通道稳定可用（rcpf 正确执行），但 epilogue 计算非瓶颈；
   copy/MMA 重叠需要比 TileLang 高层更底层的控制（v78 手工 MMA 才能做对）
+
+## 探针驱动的瓶颈分解（2026-08-24 冒险轮）
+- PROBE-C (126322): down 输出清零 → case1 2.868ms
+- PROBE-D (126325): stage1 输出清零 → case1 2.528ms
+- **分解：stage1 ≈ 2.5ms(78%) / stage2 ≈ 0.7ms(22%)**
+- v275 (126333): kernel1 grid 维度交换（x-resident-L2）→ WA 且更慢(3.26ms)
+- **结论：column swizzle 已实现最优 L2 复用；剩余差距 = copy/MMA 串行（无 async copy 硬伤）**
+- case1 kernel1 理论下限 ~1.5ms（流量1.8GB），实测 2.5ms，效率 60%
