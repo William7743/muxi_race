@@ -1402,3 +1402,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v261: bh1=32 → 69.67 关闭
 - v262 (125590): kernel2 Square → Accepted 76（20366ms，微正）
 - v263: v260+kernel2 Square combo 提交中
+
+## 内建函数深挖轮（2026-08-24）
+- v273 (126034): __builtin_mxc_rcpf SiLU → Accepted 76（20503ms，中性，epilogue 非瓶颈）
+- v274 (126036): 权重寄存器预取软件流水 → WA（buffer 覆盖时序无法在 TileLang 高层安全表达）
+- 结论：call_extern 通道稳定可用（rcpf 正确执行），但 epilogue 计算非瓶颈；
+  copy/MMA 重叠需要比 TileLang 高层更底层的控制（v78 手工 MMA 才能做对）
