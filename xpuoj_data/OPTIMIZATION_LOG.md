@@ -1432,3 +1432,10 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - **两次连续 Accepted：76.67 / 19913ms + 76.67 / 19945ms**
 - 已提升为 submission.py
 - 组合演进：v226(Square) → +Down快路径(v260) → +k2 Square(v262) → +cw8(v278) → +k2 column(v282)
+
+## 冒险轮二总结（v273-v286，2026-08-24）
+- **当前最优：v282 = 76.67 分 / 19913ms（两次连续 Accepted：126390/126398）**
+- 组合演进：v226(Square) → v260(+Down快路径) → v262(+k2 Square) → v278(+cw8) → v282(+k2 column swizzle)
+- 失败关闭：bh1=32/128、th512、be256、Pipelined 全形态、k2 参数交换、panel=8、rcpf、预取流水
+- 探针数据：stage1 占 78%，瓶颈为 copy/MMA 串行
+- submission.py 已更新为 v282
