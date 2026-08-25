@@ -1,4 +1,4 @@
-# XPU-OJ v278: coalesced_width=8
+# XPU-OJ v279: coalesced_width=16
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
 #   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
@@ -102,7 +102,7 @@ def _moe_forward_kernel(
                         k * bh1 : (k + 1) * bh1,
                     ],
                     weight_shared,
-                    coalesced_width=8,
+                    coalesced_width=16,
                 )
                 T.gemm(input_shared, weight_shared, gate_local, transpose_B=True, policy=T.GemmWarpPolicy.Square, k_pack=gu_k_pack)
                 T.sync_threads()
@@ -113,7 +113,7 @@ def _moe_forward_kernel(
                         k * bh1 : (k + 1) * bh1,
                     ],
                     weight_shared,
-                    coalesced_width=8,
+                    coalesced_width=16,
                 )
                 T.gemm(input_shared, weight_shared, up_local, transpose_B=True, policy=T.GemmWarpPolicy.Square, k_pack=gu_k_pack)
                 T.sync_threads()

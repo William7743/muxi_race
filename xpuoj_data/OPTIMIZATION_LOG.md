@@ -1420,3 +1420,9 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
   **重要：Pipelined+分离buffer首次数值安全！但bh1=32 MMA效率损失过大**
 - v277 (126350): 同结构 bh1=64 → WA（smem 96KB超64KB上限）
 - 结论：Pipelined路线需要bh1=32才能装下双缓冲，但MMA效率损失不可接受，关闭
+
+## v278 稳定突破：coalesced_width=8 → 76.33 分
+- v278 (126355/126363): 全部权重 copy coalesced_width 4→8
+- **两次连续 Accepted：76.33 / 20316ms + 76.33 / 20251ms**
+- 已提升为 submission.py
+- v279 (126360): cw=16 → WA（越界）
