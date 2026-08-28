@@ -1,4 +1,8 @@
-# XPU-OJ v293: v291 + panel_size=2（干净基线细扫）
+# XPU-OJ v66: v293 + kernel1 be1 128→64（2 CTA/SM 占用率隐藏 copy 延迟）
+# smem (128+128)*64*2B = 24KB → 每 SM 可驻 2 CTA：一个 CTA 的 MMA 期间，
+# 另一个 CTA 的 T.copy 占用总线——不依赖异步拷贝的硬件级 copy/MMA 重叠。
+# 累加器减半（gate+up 2×128×64 fp32 = 64 regs/thr@256），寄存器不再顶死占用率。
+# be1=64 无 Pipelined 的单变量探针在 v226+ 基线上从未测过（closed 列表仅 bh/be 其他值）。
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
 #   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
@@ -191,7 +195,7 @@ def _pick_tiles(intermediate):
     # group_idx_for_bx 按 128 token/block 预计算，block_token 必须保持 128。
     # kernel1 首选 be=128/bh=64/threads=512（OJ 三用例实测最优）；
     # intermediate 不能整除 128 时退回 be=64/bh=64。
-    return 128, 64, 128, 256  #冒险: Square policy 下重试 th=512 保持但看 be=128 是否仍最优
+    return 128, 64, 64, 256  # v66: be1 128→64（smem 24KB，2 CTA/SM）
 
 
 def _get_kernel(

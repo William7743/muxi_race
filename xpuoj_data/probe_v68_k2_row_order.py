@@ -1,4 +1,9 @@
-# XPU-OJ v293: v291 + panel_size=2（干净基线细扫）
+# XPU-OJ v68: v293 + kernel2 swizzle order column→row（kernel1 保持 column）
+# 流量账：kernel2 纯带宽瓶颈（case3 A+W≈4.3GB/实测2.46ms≈100%带宽），
+# A(up_logits) 被 16-56 个 by-CTA 复读：column 序下散落全 DRAM（case3 2.05GB）；
+# row 序令同一 bx 的全部 by-CTA 并发 → A 进 L2 一次共享，省 ~2GB（kernel2 近半，
+# case3 整体 -11%）。kernel1 的 A 仅占 9%（v210 已证 row 略负）故不动。
+# v211/v212 当年因 case1 漂移双 WA，此为首次干净性能检验；数值与 v293 逐位一致。
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
 #   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
@@ -139,7 +144,8 @@ def _moe_forward_kernel(
             down_shared = T.alloc_shared((bh2, be2), dtype=dtype)
             out_local = T.alloc_fragment((bt1, bh2), dtype=accum_dtype)
 
-            T.use_swizzle(2, order="column")
+            # v68: kernel2 row-order——同一 bx 的全部 by-CTA 并发，A(up_logits) L2 一次共享
+            T.use_swizzle(2, order="row")
 
             expert_id = group_idx_for_bx[bx]
             block_start = bx * bt1

@@ -1,4 +1,6 @@
-# XPU-OJ v293: v291 + panel_size=2（干净基线细扫）
+# XPU-OJ v61: v293 + kernel2 Pipelined num_stages=2
+# kernel2 当前 num_stages=1（等于不流水线），改为 2 让 copy[iter+1] 与 gemm[iter] 重叠
+# 注意 smem (128+128)*64*2B = 32KB（base），加 stage=2 加倍 = 64KB 临界（单 block 限制）
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
 #   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
@@ -152,7 +154,7 @@ def _moe_forward_kernel(
 
             T.clear(out_local)
 
-            for k in T.Pipelined(active_k_steps, num_stages=1):
+            for k in T.Pipelined(active_k_steps, num_stages=2):
                 T.copy(
                     up_logits[
                         block_start : block_start + bt1,

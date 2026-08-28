@@ -1,19 +1,13 @@
-# XPU-OJ v293: v291 + panel_size=2（干净基线细扫）
+# XPU-OJ v64: v293 + 双流分块跨 kernel 重叠（two-stream chunk pipelining）
 #
-# 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
-#   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
-#      实测纯 GEMM 吞吐 26.8 -> 87 TFLOPS（3.2x）：fragment 操作数走寄存器
-#      搬运路径，严重拖累 MMA；shared 操作数是硬件 GEMM 单元的原生路径。
-#   2. kernel1 权重 tile be=128 / K 分块 bh=64 / threads=512：在 OJ 三个
-#      真实用例（hidden=2048/7168）上均为实测最优；A tile 每个 k 迭代被
-#      gate/up 两个 GEMM 复用，shared A 避免重复寄存器搬运。
-#   3. kernel2 同样 A-shared（be=64/bh=128/threads=512）；两 kernel 的
-#      smem 均 ≤ 64KB 上限（(128+256)*64*2=48KB / (128+128)*64*2=32KB）。
-#   4. kernel2 Pipelined ns=2 + Down full-block fast path：流水线隐藏拷贝延迟，
-#      满块 epilogue 去掉 predication 分支预测开销。
-#
-# 接口按题目页约定：stacked/out 用 padded 坐标，routed_expert_weights 用
-# raw 坐标；out 为唯一 INOUT 参数，padding 行写 0。
+# 动机：MACA 禁异步拷贝，kernel 内 copy/MMA 串行无解（v197/v239/v254/v276/v278 全闭环）；
+# 但 kernel 级并发不需要 async copy——把 M 维切成 C 个 chunk：
+#   s1: k1(c0) k1(c1) ...          （一条 stream 顺序）
+#   s2: k2(c0) k2(c1) ...          （k2(c) 经 event 依赖 k1(c)，与 k1(c+1) 并发）
+# kernel2 的时间（case1 占 41%，v196 探针实测）被藏进 kernel1；预期 total ≈ k1 + k2/C。
+# chunk 间内存不相交：up_logits/out 按行分块，权重只读——无真依赖。
+# 每 block 数学与 v293 逐位一致（tile/k_pack/swizzle/policy/epilogue 全保留）。
+# bx_start/bx_count 为编译期参数 → 每 shape 4 个编译变体（C=2）。
 import torch
 import tilelang
 import tilelang.language as T
@@ -21,24 +15,24 @@ import tilelang.language as T
 
 _KERNEL_CACHE = {}
 _WORKSPACE_CACHE = {}
+_STREAM_CACHE = {}
+
+CHUNKS = 2  # M 维分块数；C=2: total ≈ k1 + k2/2
 
 
 @tilelang.jit(pass_configs={tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True})
-def _moe_forward_kernel(
+def _moe_stage1_kernel(
     hidden,
     intermediate,
     num_experts,
     total_padded_tokens,
-    total_valid_tokens,
     num_blocks_m,
+    bx_start,
+    bx_count,
     bt1,
     bh1,
     be1,
     th1,
-    bh2,
-    be2,
-    th2,
-    weights_dtype,
 ):
     gu_k_pack = 2 if hidden >= 7000 else 1
     scale = 1.44269504
@@ -48,36 +42,30 @@ def _moe_forward_kernel(
     input_shape = (total_padded_tokens, hidden)
     intermediate_shape = (total_padded_tokens, intermediate)
     gate_shape = (num_experts, intermediate, hidden)
-    up_shape = (num_experts, intermediate, hidden)
-    down_shape = (num_experts, hidden, intermediate)
 
     @T.prim_func
     def kernel(
         stacked_expert_tokens: T.Tensor(input_shape, dtype),
         gate_w: T.Tensor(gate_shape, dtype),
-        up_w: T.Tensor(up_shape, dtype),
-        down_w: T.Tensor(down_shape, dtype),
-        routed_expert_weights: T.Tensor((total_valid_tokens,), weights_dtype),
+        up_w: T.Tensor(gate_shape, dtype),
         group_sizes: T.Tensor((num_experts,), T.int32),
-        group_offsets: T.Tensor((num_experts + 1,), T.int32),
         group_padded_offsets: T.Tensor((num_experts + 1,), T.int32),
         group_idx_for_bx: T.Tensor((num_blocks_m,), T.int32),
         up_logits: T.Tensor(intermediate_shape, dtype),
-        out: T.Tensor(input_shape, dtype),
     ):
-        # ---- Kernel 1: gate/up GEMM + silu(gate)*up -> workspace ----
+        # ---- Stage1: gate/up GEMM + silu(gate)*up -> workspace（本 chunk 的 M 块）----
         # smem: A(bt1*bh1) + gate(be1*bh1) + up(be1*bh1) = (128+256)*64*2B = 48KB
-        with T.Kernel(num_blocks_m, T.ceildiv(intermediate, be1), threads=th1) as (bx, by):
+        with T.Kernel(bx_count, T.ceildiv(intermediate, be1), threads=th1) as (bx, by):
             input_shared = T.alloc_shared((bt1, bh1), dtype=dtype)
             weight_shared = T.alloc_shared((be1, bh1), dtype=dtype)
             gate_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
             up_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
 
-            # swizzle(4)：OJ 三用例实测比默认 swizzle(10) 稳定快 ~0.7%
             T.use_swizzle(2, order="column")
 
-            expert_id = group_idx_for_bx[bx]
-            block_start = bx * bt1
+            mbx = bx + bx_start
+            expert_id = group_idx_for_bx[mbx]
+            block_start = mbx * bt1
             group_size = group_sizes[expert_id]
             padded_start = group_padded_offsets[expert_id]
             actual_rows = T.max(0, T.min(bt1, group_size - (block_start - padded_start)))
@@ -86,9 +74,6 @@ def _moe_forward_kernel(
             T.clear(gate_local)
             T.clear(up_local)
 
-            # A normal serial loop permits the Gate and Up tiles to reuse one
-            # shared allocation.  Explicit barriers protect the overwrite
-            # while the other waves may still be consuming the prior tile.
             for k in range(active_k_steps):
                 T.copy(
                     stacked_expert_tokens[
@@ -121,8 +106,6 @@ def _moe_forward_kernel(
                 T.sync_threads()
 
             for i, j in T.Parallel(bt1, be1):
-                # 仅写有效行：padding 行的 stacked 输入是任意值，写出来也无意义，
-                # kernel2 会用 else 分支把 padding 行输出清 0；跳过实测快 14%
                 if i < actual_rows:
                     up_logits[block_start + i, by * be1 + j] = (
                         up_local[i, j]
@@ -132,17 +115,55 @@ def _moe_forward_kernel(
                         )
                     )
 
-        # ---- Kernel 2: down GEMM × routed_weight -> out（padding 行写 0）----
+    return kernel
+
+
+@tilelang.jit(pass_configs={tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True})
+def _moe_stage2_kernel(
+    hidden,
+    intermediate,
+    num_experts,
+    total_padded_tokens,
+    total_valid_tokens,
+    num_blocks_m,
+    bx_start,
+    bx_count,
+    bt1,
+    bh2,
+    be2,
+    th2,
+    weights_dtype,
+):
+    dtype = T.float16
+    accum_dtype = T.float32
+
+    input_shape = (total_padded_tokens, hidden)
+    intermediate_shape = (total_padded_tokens, intermediate)
+    down_shape = (num_experts, hidden, intermediate)
+
+    @T.prim_func
+    def kernel(
+        down_w: T.Tensor(down_shape, dtype),
+        routed_expert_weights: T.Tensor((total_valid_tokens,), weights_dtype),
+        group_sizes: T.Tensor((num_experts,), T.int32),
+        group_offsets: T.Tensor((num_experts + 1,), T.int32),
+        group_padded_offsets: T.Tensor((num_experts + 1,), T.int32),
+        group_idx_for_bx: T.Tensor((num_blocks_m,), T.int32),
+        up_logits: T.Tensor(intermediate_shape, dtype),
+        out: T.Tensor(input_shape, dtype),
+    ):
+        # ---- Stage2: down GEMM × routed_weight -> out（本 chunk 的 M 块，padding 行写 0）----
         # smem: A(bt1*be2) + down(bh2*be2) = (128+128)*64*2B = 32KB
-        with T.Kernel(num_blocks_m, T.ceildiv(hidden, bh2), threads=th2) as (bx, by):
+        with T.Kernel(bx_count, T.ceildiv(hidden, bh2), threads=th2) as (bx, by):
             up_shared = T.alloc_shared((bt1, be2), dtype=dtype)
             down_shared = T.alloc_shared((bh2, be2), dtype=dtype)
             out_local = T.alloc_fragment((bt1, bh2), dtype=accum_dtype)
 
             T.use_swizzle(2, order="column")
 
-            expert_id = group_idx_for_bx[bx]
-            block_start = bx * bt1
+            mbx = bx + bx_start
+            expert_id = group_idx_for_bx[mbx]
+            block_start = mbx * bt1
             group_size = group_sizes[expert_id]
             raw_start = group_offsets[expert_id]
             padded_start = group_padded_offsets[expert_id]
@@ -188,13 +209,10 @@ def _moe_forward_kernel(
 
 
 def _pick_tiles(intermediate):
-    # group_idx_for_bx 按 128 token/block 预计算，block_token 必须保持 128。
-    # kernel1 首选 be=128/bh=64/threads=512（OJ 三用例实测最优）；
-    # intermediate 不能整除 128 时退回 be=64/bh=64。
-    return 128, 64, 128, 256  #冒险: Square policy 下重试 th=512 保持但看 be=128 是否仍最优
+    return 128, 64, 128, 256
 
 
-def _get_kernel(
+def _stage_kernels(
     hidden,
     intermediate,
     num_experts,
@@ -203,32 +221,38 @@ def _get_kernel(
     num_blocks_m,
     weights_dtype,
 ):
+    """编译（缓存）全部 chunk 变体：返回 [(k1_c, k2_c, bx_start, bx_count), ...]"""
     bt1, bh1, be1, th1 = _pick_tiles(intermediate)
     bh2, be2, th2 = 128, 64, 256
-    key = (
-        int(hidden),
-        int(intermediate),
-        int(num_experts),
-        int(total_padded_tokens),
-        int(total_valid_tokens),
-        int(num_blocks_m),
-        bt1,
-        bh1,
-        be1,
-        th1,
-        bh2,
-        be2,
-        th2,
-        str(weights_dtype),
-    )
-    kernel = _KERNEL_CACHE.get(key)
-    if kernel is None:
-        kernel = _moe_forward_kernel(*key)
-        _KERNEL_CACHE[key] = kernel
-    return kernel
+    chunks = min(CHUNKS, num_blocks_m)
+    chunk = (num_blocks_m + chunks - 1) // chunks
+
+    variants = []
+    for c in range(chunks):
+        bx_start = c * chunk
+        bx_count = min(chunk, num_blocks_m - bx_start)
+        if bx_count <= 0:
+            continue
+        k1 = _KERNEL_CACHE.get(("k1", hidden, intermediate, num_experts, total_padded_tokens, bx_start, bx_count, bt1, bh1, be1, th1))
+        if k1 is None:
+            k1 = _moe_stage1_kernel(
+                hidden, intermediate, num_experts, total_padded_tokens,
+                num_blocks_m, bx_start, bx_count, bt1, bh1, be1, th1,
+            )
+            _KERNEL_CACHE[("k1", hidden, intermediate, num_experts, total_padded_tokens, bx_start, bx_count, bt1, bh1, be1, th1)] = k1
+        k2 = _KERNEL_CACHE.get(("k2", hidden, intermediate, num_experts, total_padded_tokens, total_valid_tokens, bx_start, bx_count, bt1, bh2, be2, th2, str(weights_dtype)))
+        if k2 is None:
+            k2 = _moe_stage2_kernel(
+                hidden, intermediate, num_experts, total_padded_tokens,
+                total_valid_tokens, num_blocks_m, bx_start, bx_count,
+                bt1, bh2, be2, th2, weights_dtype,
+            )
+            _KERNEL_CACHE[("k2", hidden, intermediate, num_experts, total_padded_tokens, total_valid_tokens, bx_start, bx_count, bt1, bh2, be2, th2, str(weights_dtype))] = k2
+        variants.append((k1, k2, bx_start, bx_count))
+    return variants
+
 
 def _get_workspace(stacked_expert_tokens, intermediate):
-    # up_logits workspace：按 padded 行数 × intermediate 缓存复用
     key = (
         int(stacked_expert_tokens.shape[0]),
         int(intermediate),
@@ -242,6 +266,17 @@ def _get_workspace(stacked_expert_tokens, intermediate):
         )
         _WORKSPACE_CACHE[key] = up_logits
     return up_logits
+
+
+def _get_streams(chunks):
+    entry = _STREAM_CACHE.get(chunks)
+    if entry is None:
+        s1 = torch.cuda.Stream()
+        s2 = torch.cuda.Stream()
+        evs = [torch.cuda.Event() for _ in range(chunks)]
+        entry = (s1, s2, evs)
+        _STREAM_CACHE[chunks] = entry
+    return entry
 
 
 def run_kernel(
@@ -264,13 +299,12 @@ def run_kernel(
     num_blocks_m = int(group_idx_for_bx.shape[0])
 
     up_logits = _get_workspace(stacked_expert_tokens, intermediate)
-    # routed_expert_weights 的 dtype 题面写 fp16 但参考实现存在 fp32 声明，
-    # 这里按实际传入 dtype 编译，两种都兼容
     if routed_expert_weights.dtype == torch.float32:
         weights_dtype = T.float32
     else:
         weights_dtype = T.float16
-    kernel = _get_kernel(
+
+    variants = _stage_kernels(
         hidden,
         intermediate,
         num_experts,
@@ -279,16 +313,45 @@ def run_kernel(
         num_blocks_m,
         weights_dtype,
     )
-    kernel(
-        stacked_expert_tokens,
-        gate_w,
-        up_w,
-        down_w,
-        routed_expert_weights,
-        group_sizes,
-        group_offsets,
-        group_padded_offsets,
-        group_idx_for_bx,
-        up_logits,
-        out,
-    )
+
+    if len(variants) == 1:
+        # 单 chunk 退化为顺序双 kernel（等价 v293）
+        k1, k2, _, _ = variants[0]
+        k1(
+            stacked_expert_tokens, gate_w, up_w,
+            group_sizes, group_padded_offsets, group_idx_for_bx,
+            up_logits,
+        )
+        k2(
+            down_w, routed_expert_weights,
+            group_sizes, group_offsets, group_padded_offsets, group_idx_for_bx,
+            up_logits, out,
+        )
+        return
+
+    s1, s2, evs = _get_streams(len(variants))
+    cur = torch.cuda.current_stream()
+    # 输入张量由 cur 上的前序工作产生；s1 全部 launch 以此为序
+    s1.wait_stream(cur)
+
+    for c, (k1, _, _, _) in enumerate(variants):
+        with torch.cuda.stream(s1):
+            k1(
+                stacked_expert_tokens, gate_w, up_w,
+                group_sizes, group_padded_offsets, group_idx_for_bx,
+                up_logits,
+            )
+        evs[c].record(s1)
+
+    for c, (_, k2, _, _) in enumerate(variants):
+        s2.wait_event(evs[c])
+        with torch.cuda.stream(s2):
+            k2(
+                down_w, routed_expert_weights,
+                group_sizes, group_offsets, group_padded_offsets, group_idx_for_bx,
+                up_logits, out,
+            )
+
+    # join：cur 上后续工作（含评测计时终点）等两流全部完成
+    cur.wait_stream(s1)
+    cur.wait_stream(s2)

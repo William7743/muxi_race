@@ -1,4 +1,6 @@
-# XPU-OJ v293: v291 + panel_size=2（干净基线细扫）
+# XPU-OJ v67: v293 + A/up_logits copy 加 coalesced_width=8（单变量）
+# v278 只给权重 copy 加了 cw=8（+0.33 分）；A tile 与 kernel2 的 up_logits
+# copy 行宽同为 64fp16=128B，粒度相同，cw8 安全（cw16 越界已证）。
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
 #   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
@@ -96,6 +98,7 @@ def _moe_forward_kernel(
                         k * bh1 : (k + 1) * bh1,
                     ],
                     input_shared,
+                    coalesced_width=8,
                 )
                 T.copy(
                     gate_w[
@@ -159,6 +162,7 @@ def _moe_forward_kernel(
                         k * be2 : (k + 1) * be2,
                     ],
                     up_shared,
+                    coalesced_width=8,
                 )
                 T.copy(
                     down_w[
