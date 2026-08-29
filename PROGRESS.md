@@ -8,7 +8,8 @@
 | 项目 | 值 |
 |---|---|
 | 当前最高分 | **76.67**（v282，连续两次 Accepted：126390/126398） |
-| 最优提交文件 | `xpuoj_data/submission.py`（已与上述两次评测端代码逐字节核验） |
+| 历史最高代码 | v282，提交 `b13b7dd` 中的 `xpuoj_data/submission.py`（已与评测端逐字节核验） |
+| 当前主文件 | v352：v282 + Square/cw8 Gate/Up 完整操作数互换，已三连 Accepted |
 | 三 case 用时（好天气） | 3.11 / 5.64 / 11.19 ms（case 内得分 78/76/76） |
 | 评测机 | MACA C500：104 SM、64KB shared/block、64-lane warp、无 cp.async、禁异步拷贝内置 |
 | 用例维度 | case1: E16/hid2048/inter4096/pad3072/nbm24；case3: E64/hid7168/inter2048/pad9088/nbm71 |
@@ -23,6 +24,10 @@
 > 事实校正：远端整理时曾把 126390/126398 标成 v293。通过 OJ API 回读两次提交代码并与
 > 历史提交 `b13b7dd` 对比，二者均为 v282；panel2 + 满块 epilogue 的 v293 是后续候选，
 > 不能作为 76.67 的归属版本。
+
+> 2026-08-30 续：v345/v348 的完整操作数互换在 Square policy + cw8 组合下已由
+> 132094/132109/132112 三连 Accepted，慢资源档三档均优于同档 v282，现提升为 v352 主文件；
+> 132140 正等待快资源档验证，显式布局/同步与自然轴 epilogue 变体也在排队。
 5. 接口约束：**bt=128 被评测方 group_idx_for_bx 预计算锁死**；out 唯一 INOUT，padding 行写 0
 
 ## 3. 评测环境三大特性（本轮新发现）

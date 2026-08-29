@@ -9,15 +9,17 @@
 
 - **可靠最高：76.67（v282，两连 Accepted：126390/126398，timeUsed 19913/19945ms）**；
   两个 submissionId 的评测端代码均已核验为 v282，不是带 panel2/满块分支的 v293。
-- 提交代码：`xpuoj_data/submission.py` = v282（融合 Gate/Up、共享 A、单权重 buffer、
-  Stage1 权重 `coalesced_width=8`、Square policy、两个 kernel 均 column4 swizzle）。
+- 当前提交代码：`xpuoj_data/submission.py` = v352（v282 上将 Stage1 Gate/Up 同时改为
+  `weight @ input.T`；132094/132109/132112 已三连 Accepted）。历史最高 76.67 的精确
+  v282 仍可从提交 `b13b7dd` 恢复。
 - 当前窗口原样复验 132087 也 Accepted 75.67，约 3.24/5.89/11.64ms；另有慢资源档
   约 4.33/8.64/17.78ms，所有候选必须按同资源档比较。
-- v343 关闭 `clear_accum` 拆首轮；v344 证明 OJ 实际包仍缺
+- v343 的 `clear_accum` 拆首轮在同资源档仅属噪声级变化，没有形成可确认收益；v344 证明 OJ 实际包仍缺
   `maca_mma_macro_generator`。v318-v324 又证明现有 int8 global I/O/归约写法会
   Segfault/WA，不能把旧 v71 阶段的“int8 待翻案”当成当前开放路线。
-- 最新候选 v345/v348（Square+cw8 的 Gate/Up 完整操作数互换）已连续 2 次 Accepted，
-  且在慢资源档三档均快于 v282；第三样本与显式布局/同步稳定化版本仍在排队。
+- v345/v348（Square+cw8 的 Gate/Up 完整操作数互换）已连续 3 次 Accepted，且在慢资源档
+  三档均快于 v282，已作为 v352 提升到主文件；132140 继续等待快资源档，显式布局/同步和
+  自然轴 epilogue 版本 132116/132121/132142 仍在排队。
 - 参考同事已达 **84+，90+ 亦经官方检验**，仍需寻找尚未复现的重大合法路径。
 
 ## 评测环境三大特性（决定一切实验方法论）
@@ -84,9 +86,10 @@
 
 1. **先读** `PROGRESS.md` → `xpuoj_data/OPTIMIZATION_LOG.md`——里面记录了总体进度、
    所有已尝试方向、分数和编译器 bug 地图，避免重复踩坑。
-2. **当前可靠最优代码**：`xpuoj_data/submission.py`（v282，76.67 分，submissionId 126390/126398；三档最佳约 3.12/5.64/11.15ms；当前窗口复验 132087 也 Accepted）。实验候选必须单独提交并至少连续复验后才能提升主版本。
-3. **当前高价值候选**：v345/v348 的 Gate/Up 完整操作数互换已连续两次 Accepted，
-   且在慢资源档三档均快于 v282；继续等待第三样本和显式布局稳定化版本，不能只凭跨档分数提升主版本。
+2. **历史最高代码**：v282（76.67 分，submissionId 126390/126398；三档最佳约
+   3.12/5.64/11.15ms），精确版本位于提交 `b13b7dd`。
+3. **当前主文件**：v352；其核心互换结构已由 132094/132109/132112 三连 Accepted，
+   慢资源档约 3.86-3.90/8.41-8.47/17.11-17.19ms。继续复提等待快档后再判断是否刷新最高分。
 4. **改动后提交**：
    ```bash
    export XPUOJ_EMAIL="muxi2026C1050@example.com"
