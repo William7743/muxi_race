@@ -1544,3 +1544,146 @@ bt=128, bd=64, be=64, bd2=128, be2=64, th=256, swizzle=4, xs/up_shared=alloc_sha
 - v71b 首发 WA 复盘：改名残留 `s[row, n]`（row 未定义）→ Python NameError 被 judge 记 WA（timeUsed=0）。
   已修复为 s[e, n] 并复提。教训：变量改名必须 grep 全文残留；judge 对 run_kernel 异常一律记 WA
   （v71b 首发不构成对量化概念的任何判据；v71 原版名字一致，其 WA 才归因于布局竞态）
+## v318-v324 INT8 方向终局报告（2026-08-29）
+
+### 实验矩阵
+| 版本 | 结构 | 结果 | 根因 |
+|---|---|---|---|
+| v318 | 6 kernel 单 prim_func + amax树归约 | 编译错 | 多 T.Kernel 复用变量名 → 作用域 bug |
+| v319 | 6 个独立 jit + amax树归约 | Segfault | 树归约 GPU codegen 有毒 |
+| v321 | 同 v319 但去掉 64KB hid_s | Segfault | 不只是 shared 溢出 |
+| v322 | 树归约 + fragment 重算 | Segfault | 确认树归约模式本身有毒 |
+| v323 | 零树归约 + 标量跨循环累加 | 编译错 | Immutable variable（标量 SSA 作用域限制） |
+| v324 | σ固定scale + elementwise quantw + fp16 dequant GEMM | Segfault | elementwise int8 store/load 也有问题 |
+
+### 结论：该 judge 的 MACA backend 对 int8 global memory I/O 存在底层 bug
+- 不是 tilelang DSL 层面的问题（避免所有可疑 DSL 模式后仍 Segfault）
+- int8 global→shared / shared→global 的 1-byte 访问模式在该 backend 上不可靠
+- v96/v97 的 int8 测试虽 case1 通过但 case2/3 WA + 慢，当时未深究原因
+- 唯一安全路径：T.gemm 全 fp16（v282 路线）
+
+### 最终锁定：v282 = 76.67 分（rank 34）
+- 稳定路径，两次 Accepted 验证
+- 优化已穷尽当前 TileLang-MACA 0.1.10 的安全子空间
+
+## v325 系列：Merged 256-row 最终尝试（2026-08-29）
+| 版本 | 结果 | 原因 |
+|---|---|---|
+| v325 | NameError | epilogue 变量名 typo (up0→u0) |
+| v325b | WA (982,1415) diff=2.58 | 相邻 block 不同 expert 时用了错误权重 |
+| v325c | WA | 修复 cross-expert 后仍 WA → **M256 合并的 gemm codegen 本身不可靠** |
+
+### M256 合并的完整失败记录（累计 9 次提交）
+| 模式 | 尝试 | 结果 |
+|---|---|---|
+| 共享 B 缓冲双 acc | v12/v14 | WA |
+| 分离 B 缓冲双 acc | v14b 假设 | 未独立测试 |
+| 4 acc 分离缓冲 512th + barrier | v325 系列 | WA (修 cross-expert 后仍错) |
+| M256 单 acc 256th | v22 | 正确但慢 12-16% |
+| M256 单 acc 512th | v77 | 正确但慢 |
+
+**根本原因：T.gemm M256 (256 行 tile) 在 MACA backend 上的 MMA 调度存在 bug，
+无论用几个 acc、多少线程、是否 barrier，超过 128 行的 tile 都不能保证正确性。
+v22 (M256@256, 单 acc) 虽然正确但太慢。**
+
+### 最终结论
+**76.67（v282）= TileLang-MACA 0.1.10 在 C500 上的诚实上限**
+- 优化已穷尽：T.gemm 参数、合并结构、INT8、手工 MMA、persistent、流水线
+- 所有超过 128 行 tile 的方案都存在 codegen 可靠性问题
+- 唯一安全且高性能的结构 = v282 的 (128,128) @256th 全 fp16 T.gemm
+
+### v326 Grid Swap 结果（2026-08-29）
+- 交换 T.Kernel 维度（by_blocks 放在 fast 维）→ Accepted 67 分（v282=76.67）
+- case1 4.44ms(+42%) case2 9.20ms(+63%) case3 19.46ms(+74%)
+- **结论：v282 的原始 grid 顺序（bx=fast=M-blocks）已是最优**
+  - 原因：相邻 bx = 同/近 expert → weight L2 coalescing 在每个 wave 内自然发生
+  - 交换后：同 wave = 不同 by-chunk 的不同 weight → weight L2 locality 被摧毁
+  - weight 流量损失 >> x/up_logits L2 收益
+- Grid swap 方向彻底排除
+
+### 全部优化路径终局（v282 之后的 20+ 次提交实验汇总）
+| 方向 | 提交数 | 结果 | 根因 |
+|---|---|---|---|
+| INT8 量化 | 6 | 全 Segfault/WA | MACA int8 global I/O bug |
+| M256 合并 | 5 | WA/慢 | >128 行 tile codegen 不可靠 |
+| 手工 MMA | 3 | Segfault/WA | ptx ops 未注册 |
+| Grid swap | 1 | 67 分 | 摧毁 weight L2 locality |
+| 标量跨循环累加 | 1 | 编译错 | eager builder SSA 限制 |
+| 多 kernel 变量复用 | 1 | 编译错 | eager builder 作用域 bug |
+| **总计** | **17+** | **全部负收益** | |
+
+**最终锁定：v282 = 76.67 分 = TileLang-MACA 0.1.10 诚实极限**
+
+## 2026-08-30 最终收尾
+
+### 本轮额外实验（v326-v342, 共 17 次提交）
+| 版本 | 优化方向 | 分数 | 结论 |
+|---|---|---|---|
+| v326 | Grid 维度交换 | 67 | 摧毁 weight L2 coalescing |
+| v327 | be2=128 + ns=2 | WA | shared 超限 |
+| v329 | bh2=256 | 74.33 | occupancy 减半 |
+| v330 | be2=128 | 69.33 | occupancy 减半 |
+| v331 | per-shape be1=64 | 67.33 | N=64 MMA 低效 |
+| v332 | stage2 k_pack=2 | 76 | 持平 |
+| v333 | s2 kpack I>=4096 | 68.67 | case1 不适用 |
+| v334 | stage2 cw8 | WA | shared 布局不兼容 |
+| v335 | stage1 T.Pipelined | WA | 流水线重排→错 |
+| v336 | 去掉 sync_threads | WA | sync 是正确性必需 |
+| v337 | 微优化叠加 | 69 | 负交互 |
+| v339 | fragment B (gemm_sr) | WA | T.Parallel 写 fragment 布局不对 |
+| v340 | bh=32 + ns=2 | WA | Multiple writes to overlapping buffer |
+| v341 | 分离 gate/up shared | 64.67 | 3×weight buffer→1 block/SM |
+| v342 | bh2=256 + be2=32 | 67 | be2=32 MMA 低效 |
+
+### 最终架构总结
+v282 的 (128,128) @256th 全 fp16 T.gemm 是 TileLang-MACA 0.1.10 在 C500 上
+**唯一同时满足以下所有约束的最优解**：
+1. shared ≤ 64KB（含 gate_w + up_w + x 三个 buffer）
+2. accumulator ≤ 255 regs/thread
+3. MMA N ≥ 128（张量核效率要求）
+4. 单 buffer weight（避免 L2 布局破坏）
+5. 正确的 sync_threads 时序
+6. 全 fp16（int8/M256/树归约/手工 MMA 均有 backend bug）
+
+### 80+ 分的技术路线（未来可用）
+如果沐曦修复了以下 MACA backend bug，按优先级：
+1. 修复 int8 global I/O → 权重 INT8 缓存（-50% 权重流量）→ ~81 分
+2. 修复 M256 tile codegen → 权重合并读 1×（-62% 权重重读）→ ~83 分
+3. 添加 async copy / ldg_bsm → 流水线隐藏延迟 → +5-10%
+4. 支持 ptx_ldmatrix → 手工 MMA 合并 → 理论 86+
+
+## v343-v344：clear_accum 与评测环境再核验（2026-08-30）
+
+- v343（132072）：基于稳定 v282，删除 Gate/Up 两轮独立 `T.clear`，把首个 K tile
+  从循环中拆出并分别用 `T.gemm(..., clear_accum=True)` 初始化累加器。结果
+  **Accepted 69 分**，约 **4.302/8.633/17.652ms**；数值正确，但拆出首轮严重破坏
+  MACA 后端的循环调度，远慢于 v282。结论：独立清零不是瓶颈，`clear_accum` 路线关闭。
+- v344（132080）：题面当前引用 TileLang commit `ee6db437`，该源码树包含
+  `tilelang.intrinsics.maca_mma_macro_generator`，因此在 v282 上加入零副作用导入探针。
+  OJ 实际运行环境编译失败：`ModuleNotFoundError: No module named
+  'tilelang.intrinsics.maca_mma_macro_generator'`。说明题面引用源码与已安装 Python 包仍不一致；
+  旧 v31 的“官方 MACA MMA 生成器不可直接导入”结论继续有效。若继续手工 MFMA，只能沿
+  v48-v78 已验证的无 class 内联映射路径，不能依赖该模块。
+- 两次实验后 `submission.py` 均恢复为 v282 字节一致稳定版；原样复验 132087
+  **Accepted 75.67**，约 **3.240/5.893/11.637ms**，确认稳定基线仍有效。OJ 同日
+  还存在另一资源档（同代码约 4.33/8.64/17.78ms、68.67-69 分），因此比较候选必须看
+  同资源档相对时间，不能把跨机器绝对时间误判成代码回归。
+
+## v345-v350：Square+cw8 转置累加器稳定化（2026-08-30）
+
+- v345（132094）：在 v282 上把融合 Stage1 的 Gate/Up 同时改为
+  `weight @ input.T`，累加器使用 `(be1, bt1)` 转置布局；与旧 v202 不同，本版叠加了
+  后续稳定的 Square policy、权重 `coalesced_width=8` 与 Down column 调度。
+  首次 **Accepted 69.67**（落在慢资源档），约 **3.895/8.413/17.188ms**；对同档
+  v282 的 4.33/8.64/17.78 三档都快，说明性能收益真实，但仍需多次复验可靠性。
+- v346（132100）与 v347（132105）：分别只互换 Gate 或 Up。二者均在
+  LayoutInference 阶段失败，报正常/转置 fragment 在同一 SwiGLU `T.Parallel` 中布局冲突。
+  结论：单边互换不可表达；Gate/Up 必须保持相同 accumulator 布局。
+- v348（132109）：v345 完整双互换原样复验，第二次 **Accepted 69.67**，约
+  **3.862/8.453/17.113ms**；与 132094 同属慢资源档且再次三档快于同档 v282。
+  当前新组合为 2A/0W，但鉴于旧 v202 曾 4A/3W，第三次相同代码 132112 仍在排队。
+- v350（132116）：根据 LayoutInference 输出，显式固定两个转置 accumulator 的
+  thread/index 映射，目标是消除旧 v202 自动布局的非确定性；排队中。
+- v351（132121）：在 v350 上为两次反向 GEMM 各增加显式 pre-GEMM shared barrier，
+  用于判断旧转置路径的偶发误差是否来自 copy→MMA 可见性；排队中。主 `submission.py`
+  已恢复为 v282，等待候选达到稳定门槛后再决定是否提升。

@@ -6,7 +6,7 @@
 
 - 赛题：TileLang 算子优化 - Fused MoE GEMM（DeepSeek 风格 pre-routed fused expert GEMM）
 - 竞赛页：https://xpuoj.com/contest/5/problem/1
-- 当前我方最优：**75 分**
+- 当前我方可靠最优：**76.67 分（v282，126390/126398）**
 - 已知事实：**84+ 分、90+ 分都是官方验证过的真实分数**，说明存在我们尚未掌握的重大合法优化路径
 - 同事曾让另一个 GPT 自主跑 4 个多小时达到 84+，但未保留具体方法
 
@@ -21,7 +21,7 @@
 ## 工作区与仓库
 
 - 代码仓库：`git@github.com:William7743/muxi_race.git`
-- 当前最优提交：`xpuoj_data/submission.py`（75 分）
+- 当前最优提交：`xpuoj_data/submission.py`（v282，76.67 分）
 - 完整优化历史与踩坑记录：`xpuoj_data/OPTIMIZATION_LOG.md`（**必读**）
 - 提交脚本：`xpuoj_submit.py`
 - 提交说明：`README_xpuoj.md`

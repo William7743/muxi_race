@@ -5,15 +5,20 @@
 > **新接手先读 [`PROGRESS.md`](PROGRESS.md)**（进度总结 + 已关闭路线总表 + 开放方向），
 > 逐版本细节见 [`xpuoj_data/OPTIMIZATION_LOG.md`](xpuoj_data/OPTIMIZATION_LOG.md)。
 
-## 当前状态（2026-08-28 最新）
+## 当前状态（2026-08-30 最新）
 
-- **最高分：76.67（v293，两连 Accepted：126390/126398，timeUsed 19913/19945ms）**
-- 提交代码：`xpuoj_data/submission.py` = v293
-  （A 走 shared / kernel1 融合 gate+up (128,64,128)@256 / kernel2 (128,64)@256 +
-  满块快路径 / swizzle panel=2 column / 权重 copy coalesced_width=8 / policy=Square /
-  k_pack 自适应 hidden≥7000→2）
-- 参考同事已达 **84+，90+ 亦经官方检验** → 存在未复现的重大路径；当前头号怀疑：
-  **int8 W8A8 全量化**（流量减半 + i8 MMA 1.5×，数学上恰可支撑 88-91 分档）
+- **可靠最高：76.67（v282，两连 Accepted：126390/126398，timeUsed 19913/19945ms）**；
+  两个 submissionId 的评测端代码均已核验为 v282，不是带 panel2/满块分支的 v293。
+- 提交代码：`xpuoj_data/submission.py` = v282（融合 Gate/Up、共享 A、单权重 buffer、
+  Stage1 权重 `coalesced_width=8`、Square policy、两个 kernel 均 column4 swizzle）。
+- 当前窗口原样复验 132087 也 Accepted 75.67，约 3.24/5.89/11.64ms；另有慢资源档
+  约 4.33/8.64/17.78ms，所有候选必须按同资源档比较。
+- v343 关闭 `clear_accum` 拆首轮；v344 证明 OJ 实际包仍缺
+  `maca_mma_macro_generator`。v318-v324 又证明现有 int8 global I/O/归约写法会
+  Segfault/WA，不能把旧 v71 阶段的“int8 待翻案”当成当前开放路线。
+- 最新候选 v345/v348（Square+cw8 的 Gate/Up 完整操作数互换）已连续 2 次 Accepted，
+  且在慢资源档三档均快于 v282；第三样本与显式布局/同步稳定化版本仍在排队。
+- 参考同事已达 **84+，90+ 亦经官方检验**，仍需寻找尚未复现的重大合法路径。
 
 ## 评测环境三大特性（决定一切实验方法论）
 
@@ -77,9 +82,24 @@
 
 ## 给接手 AI 的快速开始
 
-1. **先读** `PROGRESS.md` → `xpuoj_data/OPTIMIZATION_LOG.md`（已关闭路线总表，勿重复试错）
-2. **当前可靠最优**：`xpuoj_data/submission.py`（v293，76.67 两连 Accepted）
-3. **下一个高价值实验**：v71e = int8 原地量化去掉 `data_ptr()` 键（见 PROGRESS.md §6）
-4. **评测机已知限制**：禁 async/bsm copy；跨流 event 不可靠（v64）；`T.reduce_max`/
-   4D 切片 lowering 未完全验证（v71 系列崩溃候选，需隔离实验）；th=512 多数组合更慢
-5. **凭据安全**：仓库不含密码/token，提交时通过环境变量或本地 `.xpuoj_credentials` 提供
+1. **先读** `PROGRESS.md` → `xpuoj_data/OPTIMIZATION_LOG.md`——里面记录了总体进度、
+   所有已尝试方向、分数和编译器 bug 地图，避免重复踩坑。
+2. **当前可靠最优代码**：`xpuoj_data/submission.py`（v282，76.67 分，submissionId 126390/126398；三档最佳约 3.12/5.64/11.15ms；当前窗口复验 132087 也 Accepted）。实验候选必须单独提交并至少连续复验后才能提升主版本。
+3. **当前高价值候选**：v345/v348 的 Gate/Up 完整操作数互换已连续两次 Accepted，
+   且在慢资源档三档均快于 v282；继续等待第三样本和显式布局稳定化版本，不能只凭跨档分数提升主版本。
+4. **改动后提交**：
+   ```bash
+   export XPUOJ_EMAIL="muxi2026C1050@example.com"
+   export XPUOJ_PASSWORD="<你的密码>"
+   python xpuoj_submit.py --code xpuoj_data/submission.py --status
+   ```
+   - 没有本地 GPU，完全靠评测平台返回分数/报错迭代。
+   - 每次提交都应在 `OPTIMIZATION_LOG.md` 追加记录。
+5. **评测机已知限制**（详细见日志）：
+   - CUDA PTX MMA/ldmatrix 入口不适用；MACA `T.tvm_mfma` 与原生
+     `__builtin_mxc_mma_16x16x16f16` 可用。
+   - `th=512` 并非一律错误：若每线程 accumulator 保持约64 FP32可正确运行，
+     但多数已测组合仍比稳定 `th=256` 慢。
+   - 禁止 async/bsm copy；普通同步向量 load/store、barrier、MFMA 和寄存器预取可研究。
+   - `xpuoj_data/submission.py` 始终保持当前最高Accepted稳定版，实验文件单独提交。
+6. **凭据安全**：仓库不含密码/token，提交时通过环境变量或本地 `.xpuoj_credentials` 提供。

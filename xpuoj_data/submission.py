@@ -1,4 +1,4 @@
-# XPU-OJ v293: v291 + panel_size=2（干净基线细扫）
+# XPU-OJ v282: v278 + kernel2 column swizzle
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
 #   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
@@ -9,8 +9,6 @@
 #      gate/up 两个 GEMM 复用，shared A 避免重复寄存器搬运。
 #   3. kernel2 同样 A-shared（be=64/bh=128/threads=512）；两 kernel 的
 #      smem 均 ≤ 64KB 上限（(128+256)*64*2=48KB / (128+128)*64*2=32KB）。
-#   4. kernel2 Pipelined ns=2 + Down full-block fast path：流水线隐藏拷贝延迟，
-#      满块 epilogue 去掉 predication 分支预测开销。
 #
 # 接口按题目页约定：stacked/out 用 padded 坐标，routed_expert_weights 用
 # raw 坐标；out 为唯一 INOUT 参数，padding 行写 0。
@@ -74,7 +72,7 @@ def _moe_forward_kernel(
             up_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
 
             # swizzle(4)：OJ 三用例实测比默认 swizzle(10) 稳定快 ~0.7%
-            T.use_swizzle(2, order="column")
+            T.use_swizzle(4, order="column")
 
             expert_id = group_idx_for_bx[bx]
             block_start = bx * bt1
@@ -139,7 +137,7 @@ def _moe_forward_kernel(
             down_shared = T.alloc_shared((bh2, be2), dtype=dtype)
             out_local = T.alloc_fragment((bt1, bh2), dtype=accum_dtype)
 
-            T.use_swizzle(2, order="column")
+            T.use_swizzle(4, order="column")
 
             expert_id = group_idx_for_bx[bx]
             block_start = bx * bt1
@@ -170,19 +168,14 @@ def _moe_forward_kernel(
                 )
                 T.gemm(up_shared, down_shared, out_local, transpose_B=True, policy=T.GemmWarpPolicy.Square)
 
-            if actual_rows == bt1:
-                for i, j in T.Parallel(bt1, bh2):
+            for i, j in T.Parallel(bt1, bh2):
+                if i < actual_rows:
+                    # routed_expert_weights 按真实 token 顺序索引（raw 坐标）
                     out[block_start + i, by * bh2 + j] = (
                         out_local[i, j] * routed_expert_weights[raw_start + token_offset + i]
                     )
-            else:
-                for i, j in T.Parallel(bt1, bh2):
-                    if i < actual_rows:
-                        out[block_start + i, by * bh2 + j] = (
-                            out_local[i, j] * routed_expert_weights[raw_start + token_offset + i]
-                        )
-                    else:
-                        out[block_start + i, by * bh2 + j] = 0
+                else:
+                    out[block_start + i, by * bh2 + j] = 0
 
     return kernel
 
