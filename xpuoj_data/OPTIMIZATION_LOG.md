@@ -1787,3 +1787,31 @@ v282 的 (128,128) @256th 全 fp16 T.gemm 是 TileLang-MACA 0.1.10 在 C500 上
   数据流；本版用于判断元数据冗余读取是否仍是残余开销，已排队。
 - 所有瞬态版本提交后，`submission.py` 均恢复为与 126390/126398 字节一致的 v282；待
   v368 原样复验通过后，才会把单一 pass 开关提升为新稳定基线。
+
+### 编译筛选结果更新
+
+- 纯 safe-memory 关闭版：132534 **Accepted 70.33**（慢档
+  4.201/7.847/15.897），132546 case1 **WrongAnswer**（稀疏误差0.1559），第三样本
+  132574 **Accepted 77**（快档 **3.043/5.494/10.783ms**）。累计2A/1W；性能收益已被
+  快慢两种资源档共同确认，并首次把本账号可靠通过样本推到77分，但单开关仍需稳定化。
+- v369 / 132540（只关256-bit vectorize）**Accepted 69**，慢档
+  4.353/8.674/17.619，与同档 v282 持平；它本身没有性能收益。
+- v370 / 132541（只 force-let-inline）与 v372 / 132545（safe + let-inline）均在 case1
+  **WrongAnswer**，误差约0.130/0.099；let-inline 会改变 fragment lowering，关闭。
+- v371 / 132544 与原样复验132586（safe + disable-vectorize256）均 **Accepted 70.33**，
+  约4.20/7.85/15.85–15.90ms，形成2A/0W。关闭256-bit本身中性，但当前样本显示它可作为
+  safe 路线的稳定化扰动；还需在快资源档确认分数。
+- v374 / 132548（safe + lane0条件读 + `readfirstlane` 元数据广播）**Accepted 70.33**，
+  约4.224/7.852/15.849ms，与 safe 基线相同。metadata 已被缓存，真实 builtin 广播无收益，
+  不叠加。
+- v375 / 132554（只关闭 loop-unswitching）**Accepted 69**，与同档 v282 持平；v376 /
+  132555（safe + 关闭 loop-unswitching）case1 **WrongAnswer**。该 pass 无收益且会扰动
+  safe 路线稳定性，关闭。
+- v378 / 132580：不关闭任何全局安全 pass，只对 expert id、group size、raw/padded offset
+  注入题面保证的 `T.assume` 范围约束，**Accepted 77**，快档
+  **3.034/5.556/10.790ms**。这证明真正收益来自让编译器消掉无法证明的冗余边界谓词，
+  不是依赖关闭所有保护；原样复验133009已排队，并追加“仅 expert-id assume”消融133011。
+- v379 / 132583：case1用原装decorator、hidden7168用safe decorator的双JIT shape隔离，
+  case1仍 **WrongAnswer**。仅改变 builder 装饰方式也会扰动该后端布局，不采用。
+- 新式 `T.Persistent` 与历史原子抢任务不同，Stage1 固定104个CTA的确定性版本133001已开始
+  评测；case1首个计时约5.194ms，早期信号明显慢于普通网格，待完整结果后闭环。
