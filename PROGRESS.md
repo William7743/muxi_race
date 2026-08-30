@@ -149,3 +149,5 @@
 - v383 / 133016的强化`tl.Simplify`已 **Accepted 69**，慢档约
   **4.246/8.505/17.263ms**，与普通完整assume等价，无法进一步取代
   `disable_safe_memory_legalize`；增强证明器路线关闭。
+- v382 / 133019的紧block区间assume在case1 **WrongAnswer**（明显误差约0.1827，
+  约4.257ms），无性能信号且扰动fragment lowering；继续堆显式范围约束的路线关闭。
