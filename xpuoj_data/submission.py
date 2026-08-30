@@ -1,4 +1,4 @@
-# XPU-OJ v282: v278 + kernel2 column swizzle
+# XPU-OJ v380: v282 + remove redundant safe-memory predicates
 #
 # 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
 #   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
@@ -21,7 +21,16 @@ _KERNEL_CACHE = {}
 _WORKSPACE_CACHE = {}
 
 
-@tilelang.jit(pass_configs={tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True})
+@tilelang.jit(
+    pass_configs={
+        tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True,
+        # Official shapes are tile-aligned and token rows are padded to 128.
+        # Avoid dynamic bounds predicates that the compiler cannot prove away.
+        "tl.disable_safe_memory_legalize": True,
+        # Neutral alone, but 2A/0W together with the safe-memory fast path.
+        "tl.disable_vectorize_256": True,
+    }
+)
 def _moe_forward_kernel(
     hidden,
     intermediate,

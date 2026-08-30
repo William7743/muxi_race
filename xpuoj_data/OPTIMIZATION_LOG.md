@@ -1815,3 +1815,12 @@ v282 的 (128,128) @256th 全 fp16 T.gemm 是 TileLang-MACA 0.1.10 在 C500 上
   case1仍 **WrongAnswer**。仅改变 builder 装饰方式也会扰动该后端布局，不采用。
 - 新式 `T.Persistent` 与历史原子抢任务不同，Stage1 固定104个CTA的确定性版本133001已开始
   评测；case1首个计时约5.194ms，早期信号明显慢于普通网格，待完整结果后闭环。
+
+### 主版本提升
+
+- 132544/132586 的 safe + disable-vectorize256 组合已连续2次完整Accepted（2A/0W），满足
+  稳定版门槛；虽然两次都落在慢资源档，其三档时间与纯safe版本一致，而关闭256-bit单独
+  132540已证性能中性。
+- `submission.py` 已从v282提升为 **v380**：保留v282全部GPU数据流，仅加入
+  `tl.disable_safe_memory_legalize=True` 与 `tl.disable_vectorize_256=True`。账号当前最高
+  仍为等价纯safe样本132574的 **77分**；v282继续由提交`b13b7dd`作为一键回退基线保存。
