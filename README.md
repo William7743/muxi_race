@@ -17,8 +17,9 @@
   Segfault/WA，不能把旧 v71 阶段的“int8 待翻案”当成当前开放路线。
 - v345/v348（Square+cw8 的 Gate/Up 完整操作数互换）前三次 Accepted 后，v352 原样第4次
   132140 在 case1 出现稀疏误差，复现旧 v202 的不稳定模式，已立即回退。显式布局 132116
-  首次 Accepted，但加 barrier 与自然轴 epilogue 均 WA，现正做重复采样；另新增“case1 保持
-  v282、仅 hidden7168 互换”的形状特化，主动隔离已知数值风险。
+  加两次复验均 Accepted，但快档与 v282 基本持平；加 barrier 与自然轴 epilogue 均 WA。
+  “case1 保持 v282、仅 hidden7168 互换”的形状特化也已 Accepted，但仍无可复现净收益。
+  当前继续验证 M-first/FullCol warp 分配与 Gate-only/Up-only 两阶段写回。
 - 参考同事已达 **84+，90+ 亦经官方检验**，仍需寻找尚未复现的重大合法路径。
 
 ## 评测环境三大特性（决定一切实验方法论）
