@@ -223,3 +223,7 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
 - XPUOJ 8/31为登录和提交启用SHA-256 PoW，提交另需官方Turnstile；`xpuoj_submit.py`已按
   官网`issueChallenge` + `X-Proof-Of-Work`协议适配，查询恢复，并支持通过短时
   `XPUOJ_TURNSTILE_TOKEN`传入官网取得的验证码token。后续复提须先完成官方验证码。
+- v404已在远端分支`codex/v404-stage2-prefetch`准备：保持v399的case1两个JIT完全不变，
+  仅为hidden7168增加独立Stage2函数；Down的下一K块先同步global→fragment，在当前MMA前
+  发出，再于下一轮fragment→shared消费，以期复制Stage1预取的5–8%收益。该实现没有
+  async/bsm，额外寄存器不改变32KB shared带来的2 CTA/SM上限；静态语法检查已通过，待验证码后首测。

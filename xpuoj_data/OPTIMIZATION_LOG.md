@@ -2049,6 +2049,16 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   官网Turnstile，客户端支持短时环境变量`XPUOJ_TURNSTILE_TOKEN`，但token只能通过官方页面
   的正常验证码流程取得；截至本记录，查询已恢复，新的复提仍等待完成验证码。
 
+### v404候选：hidden7168-only Stage2 Down同步预取
+- 历史日志只独立验证过Stage1 Up半预取，没有对Stage2 Down做数学正确的下一K预取。
+  v404在独立分支`codex/v404-stage2-prefetch`实现：case1继续调用v399原Stage2函数；
+  case2/3才选择新JIT。新函数用一个`(128,64)` FP16 fragment保存Down tile，prologue装入k0；
+  主循环把当前fragment写shared后，先发出k+1的global→fragment同步load，再执行当前MMA，
+  利用寄存器依赖延迟把访存等待与MMA重叠。
+- 无`Pipelined(ns>=2)`、无`ldg_bsm`、无arrive/wait异步内建；shared仍为32KB，额外约
+  16–32 regs/thread，不应降低2 CTA/SM驻留。代码已通过Python静态语法与diff检查并推送，
+  等官方Turnstile授权后与v400复验一起提交。
+
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在
   133218/133232/133234三次字节一致提交中保持3A/0W，已将跟踪的
