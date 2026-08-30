@@ -1854,3 +1854,9 @@ v282 的 (128,128) @256th 全 fp16 T.gemm 是 TileLang-MACA 0.1.10 在 C500 上
   叠加并减少SwiGLU逐元素分支，排队中。
 - v386 / 133078：v380只为Stage2增加同类完整块无谓词epilogue，tail继续负责padding清零；
   与v385形成Stage1/Stage2独立消融，排队中。
+- v387 / 133085：重新审计v274后发现其所谓“寄存器预取WA”来自状态机逻辑错误：奇数K轮
+  会把上一轮Up权重误作当前Gate权重，偶数轮还重复读取Up，因此旧结果不能关闭该路线。
+  本版基于v380实现数学严格等价的单级同步预取：Gate权重仍直接global→shared，Up权重先
+  global→fragment，在随后的Gate MMA期间保留独立未决访存，再fragment→shared供Up MMA。
+  额外约32个32-bit寄存器/线程，按C500的128K regs/SM仍可维持2 CTA；不使用async/bsm，
+  排队中。
