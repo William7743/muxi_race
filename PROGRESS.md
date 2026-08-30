@@ -199,3 +199,4 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
   Stage2 expert-id assume都会扰动敏感lowering，两条写法关闭。
 - v399 / 133517改为真正函数级隔离：原v388 Stage1函数体完全不变，新建独立
   prefetch Stage1 JIT，host只为hidden=7168选新builder；case1仍编译原v388函数。排队中。
+  已同窗提交v388精确对照 **133525**，同时扩展其稳定性样本。
