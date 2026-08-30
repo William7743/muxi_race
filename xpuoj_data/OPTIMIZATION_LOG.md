@@ -1974,7 +1974,17 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
 - v388相对v380的约2.5%差距来自Stage2恢复完整safe-memory pass；历史133011已证明
   仅expert-id范围假设可Accepted。本版只在Stage2加入`0 <= expert_id < num_experts`，
   不关闭safe pass，也不改动raw routed-weight与tail访问保护；用于检验能否安全回收
-  up/down/out的部分边界证明开销。已提交 **133508**，排队中；主文件已恢复v388。
+  up/down/out的部分边界证明开销。结果case1 **WrongAnswer**，计时约4.257ms；
+  Stage2额外assume仍会扰动敏感lowering，路线关闭。
+
+### v397结果与v399 / 133517：真正独立JIT形状隔离
+- v397 / 133501在case1 **WrongAnswer**，计时约4.252ms。虽然hidden=2048时条件逻辑选择
+  v388路径，但把预取分支写入同一Stage1 prim_func仍改变了case1 lowering；形状隔离
+  必须做到函数级，不能依赖IR内常量分支。
+- v399保留v388的`_moe_stage1`Python函数体完全不变，另建独立
+  `_moe_stage1_prefetch` JIT；`_get_stage1` 仅在host端按hidden>=7000选择builder。
+  因此case1仍编译原v388函数，case2/3才编译v387预取函数；Stage2保持safe-on。
+  已提交 **133517**，排队中；主文件全程保持v388 SHA。
 
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在

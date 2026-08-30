@@ -195,7 +195,7 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
 - v386原样复验133469 Accepted，累计2A/0W。v387原样复验133470也Accepted，
   累计2A/0W，慢档 **4.203/7.654/15.432ms**，case2/3的2–3%收益复现；
   后续133489 Accepted、133488/133490 case1 WA，最终 **3A/2W**，全形状版不提升。
-- v397 / 133501基于稳定v388做编译期形状隔离：case1完全保留v388，
-  仅hidden=7168的case2/3启用v387半预取，Stage2始终safe-on；排队中。
-- v398 / 133508只v388 Stage2增加expert-id合法范围假设，保留safe pass与raw tail保护，
-  用于安全回收部分Stage2谓词开销；排队中。
+- v397 / 133501与v398 / 133508均case1 WA（约4.252/4.257ms）；IR内常量形状分支和
+  Stage2 expert-id assume都会扰动敏感lowering，两条写法关闭。
+- v399 / 133517改为真正函数级隔离：原v388 Stage1函数体完全不变，新建独立
+  prefetch Stage1 JIT，host只为hidden=7168选新builder；case1仍编译原v388函数。排队中。
