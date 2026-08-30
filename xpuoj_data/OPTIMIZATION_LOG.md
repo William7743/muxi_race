@@ -1724,3 +1724,30 @@ v282 的 (128,128) @256th 全 fp16 T.gemm 是 TileLang-MACA 0.1.10 在 C500 上
   转置 warp mapping；v363=正常 v282 操作数方向的 M-first mapping；v364/v365=分别只互换
   Up/Gate，并用两个独立 epilogue 循环绕开混合 fragment 布局冲突；v366=转置方向 FullCol
   policy；v367=两个固定128×64加载循环重试 M256×N128 拼接。主文件始终保持 v282。
+
+## v360-v367：转置子空间最终闭环（2026-08-30）
+
+- v360（132494）：v358 hidden7168 特化 + 显式转置布局，**Accepted 75.67**，约
+  **3.246/5.892/11.636ms**；与 v282/无显式布局 v358 完全同档，无收益。
+- v361（132495）：v360 + hidden7168 cw4，case1 **WrongAnswer**，首个明显误差约0.1987。
+  即使该次可能包含 case1 哈希漂移，它也没有任何性能证据值得继续复验。
+- v362（132502）：把转置 accumulator 的 warp 高位次序改成 emitter 中另一种 M-first
+  排列；编译运行但 case1 出现约 **1.9404** 大误差。仅改输出 layout 不会自动得到匹配的
+  operand feed 映射，此写法数值无效。
+- v363（132504）：在正常 v282 操作数方向显式套同一 M-first mapping，case1 约
+  **2.1479** 大误差；再次确认该 mapping 不能只靠 `annotate_layout` 单独替换。
+- v364/v365（132506/132507）：分别只互换 Up 或 Gate，用两个独立 epilogue 循环与一次
+  FP16 workspace 中转绕开混合 fragment LayoutInference 冲突；二者均 case1 WA，首个明显
+  误差约 **0.1093/0.0926**。额外 FP16 中转破坏数值余量，单边互换关闭。
+- v366（132514）：转置方向 Stage1 改 FullCol，让物理 warp 分配近似正常方向的 FullRow；
+  **Accepted 69.67**，慢档约 **3.921/8.587/17.312ms**，三档均慢于 Square 转置版本，关闭。
+- v367（132515）：M256×N128 拼接改为两个固定 `(128,64)` `T.Parallel` 加载循环，仍在
+  LayoutInference/ParallelOp 阶段失败。结合 v355 子视图 copy、v357 单个条件 loop，三种
+  表达均失败，说明评测版无法为这个组合 shared/GEMM/epilogue 推导一致布局，路线关闭。
+
+### 本轮定论
+
+1. 自动转置布局的慢档表观提升由机器档位污染；快档 A/B 显示真实收益约为0。
+2. 显式默认 mapping 可把转置版做到3A/0W，却不能带来比 v282 更快的同档时间。
+3. shape隔离、cw4、barrier、轴序、M-first、FullCol、单边互换与M256拼接均无进一步价值。
+4. `submission.py` 保持与 126390/126398 字节一致的 v282，转置子空间不再继续消耗评测额度。
