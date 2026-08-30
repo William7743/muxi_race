@@ -9,19 +9,21 @@
 |---|---|
 | 当前最高分 | **77.33**（v399候选，133517；3.077/5.315/10.243ms，复验中） |
 | 上一稳定基线 | v282，提交 `b13b7dd` 中的 `xpuoj_data/submission.py`（126390/126398） |
-| 当前主文件 | **v388**：Stage1 safe-off + vec256-off，Stage2保留safe pass；精确复验统计3A/1W |
-| 三 case 用时（v388快档） | 3.090 / 5.629 / 11.085 ms（76.67分） |
+| 当前主文件 | **v399**：v388稳定函数 + hidden7168独立半预取JIT；133517/133531已2A/0W |
+| 三 case 用时（v399快档） | 3.077 / 5.315 / 10.243 ms（77.33分） |
 | 评测机 | MACA C500：104 SM、64KB shared/block、64-lane warp、无 cp.async、禁异步拷贝内置 |
 | 用例维度 | case1: E16/hid2048/inter4096/pad3072/nbm24；case3: E64/hid7168/inter2048/pad9088/nbm71 |
 
-## 2. 基线架构（v282骨架 / v388分阶段编译配置）核心要点
+## 2. 基线架构（v282骨架 / v399形状隔离编译配置）核心要点
 
 1. **A 操作数走 shared**（非 fragment）：纯 GEMM 吞吐 26.8 → 87 TFLOPS（3.2×）
 2. kernel1 融合 gate+up 双累加器：tile (bt1=128, bh1=64, be1=128, th=256)，串行 k 循环 + gate/up 共享 weight buffer（sync_threads 保护）
 3. kernel2：tile (bh2=128, be2=64, th=256)，`T.Pipelined(ns=1)` + 正常谓词 epilogue
 4. 旋钮最优值：swizzle panel=4 column、coalesced_width=8（仅权重 copy）、policy=Square、k_pack 自适应（hidden≥7000 → 2）
 5. v388将两阶段拆为独立JIT：Stage1关闭冗余safe-memory谓词与256-bit自动向量化；
-   Stage2保留默认safe-memory legalize，以3A/0W换取可直接提交的稳定性。
+   Stage2保留默认safe-memory legalize，精确复验统计3A/1W，仍是当前最保守的快速回退骨架。
+6. v399保留v388原Stage1函数供hidden2048使用，另建hidden7168-only的Up寄存器半预取
+   JIT；通过host builder选择实现真正函数级隔离，避免常量IR分支扰动case1 lowering。
 
 > 事实校正：远端整理时曾把 126390/126398 标成 v293。通过 OJ API 回读两次提交代码并与
 > 历史提交 `b13b7dd` 对比，二者均为 v282；panel2 + 满块 epilogue 的 v293 是后续候选，

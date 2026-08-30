@@ -1,4 +1,4 @@
-# XPU-OJ v388: v380 拆双 JIT —— Stage1-only safe-off + vec256-off
+# XPU-OJ v399: v380 拆双 JIT —— Stage1-only safe-off + vec256-off
 #
 # 动机（对齐主线 PROGRESS/共享结论）：
 #   - v380（全局 safe-off + vec256-off）已 2A，但全局关闭 safe pass 后偶发稀疏 WA；
@@ -132,6 +132,122 @@ def _moe_stage1(
 @tilelang.jit(
     pass_configs={
         tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True,
+        "tl.disable_safe_memory_legalize": True,
+        "tl.disable_vectorize_256": True,
+    }
+)
+def _moe_stage1_prefetch(
+    hidden,
+    intermediate,
+    num_experts,
+    total_padded_tokens,
+    num_blocks_m,
+    bt1,
+    bh1,
+    be1,
+    th1,
+):
+    gu_k_pack = 2 if hidden >= 7000 else 1
+    scale = 1.44269504
+    dtype = T.float16
+    accum_dtype = T.float32
+
+    input_shape = (total_padded_tokens, hidden)
+    intermediate_shape = (total_padded_tokens, intermediate)
+    gate_shape = (num_experts, intermediate, hidden)
+    up_shape = (num_experts, intermediate, hidden)
+
+    @T.prim_func
+    def stage1(
+        stacked_expert_tokens: T.Tensor(input_shape, dtype),
+        gate_w: T.Tensor(gate_shape, dtype),
+        up_w: T.Tensor(up_shape, dtype),
+        group_sizes: T.Tensor((num_experts,), T.int32),
+        group_padded_offsets: T.Tensor((num_experts + 1,), T.int32),
+        group_idx_for_bx: T.Tensor((num_blocks_m,), T.int32),
+        up_logits: T.Tensor(intermediate_shape, dtype),
+    ):
+        # ---- Stage1: gate/up GEMM + silu(gate)*up -> workspace ----
+        # smem: A(bt1*bh1) + gate(be1*bh1) + up(be1*bh1) = (128+256)*64*2B = 48KB
+        with T.Kernel(num_blocks_m, T.ceildiv(intermediate, be1), threads=th1) as (bx, by):
+            input_shared = T.alloc_shared((bt1, bh1), dtype=dtype)
+            weight_shared = T.alloc_shared((be1, bh1), dtype=dtype)
+            up_prefetch = T.alloc_fragment((be1, bh1), dtype=dtype)
+            gate_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
+            up_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
+
+            # swizzle(4)：OJ 三用例实测比默认 swizzle(10) 稳定快 ~0.7%
+            T.use_swizzle(4, order="column")
+
+            expert_id = group_idx_for_bx[bx]
+            block_start = bx * bt1
+            group_size = group_sizes[expert_id]
+            padded_start = group_padded_offsets[expert_id]
+            actual_rows = T.max(0, T.min(bt1, group_size - (block_start - padded_start)))
+            active_k_steps = T.if_then_else(actual_rows > 0, T.ceildiv(hidden, bh1), 0)
+
+            T.clear(gate_local)
+            T.clear(up_local)
+
+            # A normal serial loop permits the Gate and Up tiles to reuse one
+            # shared allocation.  Explicit barriers protect the overwrite
+            # while the other waves may still be consuming the prior tile.
+            for k in range(active_k_steps):
+                T.copy(
+                    stacked_expert_tokens[
+                        block_start : block_start + bt1,
+                        k * bh1 : (k + 1) * bh1,
+                    ],
+                    input_shared,
+                )
+                T.copy(
+                    gate_w[
+                        expert_id,
+                        by * be1 : (by + 1) * be1,
+                        k * bh1 : (k + 1) * bh1,
+                    ],
+                    weight_shared,
+                    coalesced_width=8,
+                )
+                T.copy(
+                    up_w[
+                        expert_id,
+                        by * be1 : (by + 1) * be1,
+                        k * bh1 : (k + 1) * bh1,
+                    ],
+                    up_prefetch,
+                    coalesced_width=8,
+                )
+                T.gemm(input_shared, weight_shared, gate_local, transpose_B=True, policy=T.GemmWarpPolicy.Square, k_pack=gu_k_pack)
+                T.sync_threads()
+                T.copy(
+                    up_prefetch,
+                    weight_shared,
+                    coalesced_width=8,
+                )
+                T.gemm(input_shared, weight_shared, up_local, transpose_B=True, policy=T.GemmWarpPolicy.Square, k_pack=gu_k_pack)
+                T.sync_threads()
+
+            for i, j in T.Parallel(bt1, be1):
+                # 仅写有效行：padding 行的 stacked 输入是任意值，写出来也无意义，
+                # Stage2 会用 else 分支把 padding 行输出清 0；跳过实测快 14%
+                if i < actual_rows:
+                    up_logits[block_start + i, by * be1 + j] = (
+                        up_local[i, j]
+                        * (
+                            gate_local[i, j]
+                            * (1.0 / (1.0 + T.exp2(-gate_local[i, j] * scale)))
+                        )
+                    )
+
+    return stage1
+
+
+
+
+@tilelang.jit(
+    pass_configs={
+        tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True,
     }
 )
 def _moe_stage2(
@@ -237,7 +353,8 @@ def _get_stage1(hidden, intermediate, num_experts, total_padded_tokens, num_bloc
     )
     stage1 = _KERNEL_CACHE.get(key)
     if stage1 is None:
-        stage1 = _moe_stage1(*key[1:])
+        builder = _moe_stage1_prefetch if hidden >= 7000 else _moe_stage1
+        stage1 = builder(*key[1:])
         _KERNEL_CACHE[key] = stage1
     return stage1
 
