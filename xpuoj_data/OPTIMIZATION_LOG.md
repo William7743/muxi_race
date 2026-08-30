@@ -1766,3 +1766,24 @@ v282 的 (128,128) @256th 全 fp16 T.gemm 是 TileLang-MACA 0.1.10 在 C500 上
 - `T.call_extern`、`T.import_source`、`readfirstlane`、`rcpf` 与原生 fp16 MFMA 均已实证可用；
   当前阻塞点不是“不知道内建函数”，而是合法同步搬运能力已被 `T.copy` 覆盖，唯一额外的大额
   能力属于被规则禁止的异步 bsm 路径。因此本轮不再为相同 ABI 重复提交无效探针。
+
+## v368-v374：编译级边界检查与向量化筛选（2026-08-30）
+
+- 源码审计发现评测所引用的 `ee6db437` 已公开 `tl.disable_safe_memory_legalize`。该 pass 默认会
+  为编译器无法静态证明的 global load/store 插入边界谓词；本题正式输入保证
+  `group_idx_for_bx` 有效，hidden/intermediate 与当前 tile 整除，token 维又已 padding 到 128，
+  因此这些自动谓词在 v282 的正式三形状上是冗余的。
+- v368（132534）：只在 v282 的 jit pass config 中加入
+  `"tl.disable_safe_memory_legalize": True`，三档全部 **Accepted**，慢资源档约
+  **4.201/7.847/15.897ms，displayScore=70.33**。相对同档 v282 约
+  4.30–4.33/8.63–8.64/17.65–17.78ms，case2/3 加速约 **9–11%**；这是明确超过噪声的
+  新收益，已原样复验为 132546，等待第二个完整样本后再提升主文件。
+- v369（132540）：仅关闭 256-bit 自动向量化；v370（132541）：仅强制 let inline；
+  v371（132544）：安全访问关闭 + 256-bit 向量化关闭；v372（132545）：安全访问关闭 +
+  let inline，均已排队，用 2×2 单变量/组合筛选确定能否叠加。
+- v374（132548）：在安全访问关闭版本上，将两个 kernel 的 expert/group 元数据改为每个
+  64-lane wave 仅 lane0 条件读取，再用已验证合法的
+  `__builtin_mxc_readfirstlane` 广播。此前 v38 只证明 builtin 能透传，没有让它承担真实
+  数据流；本版用于判断元数据冗余读取是否仍是残余开销，已排队。
+- 所有瞬态版本提交后，`submission.py` 均恢复为与 126390/126398 字节一致的 v282；待
+  v368 原样复验通过后，才会把单一 pass 开关提升为新稳定基线。

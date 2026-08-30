@@ -119,3 +119,15 @@
    torch.cuda.stream 上下文流
 4. judge 对 run_kernel 一切异常记 WA（不区分 RE），timeUsed=0 = 未完成计时（早崩/首检即败）
 5. 跨时段分数不可比；一切结论以同窗 timeUsed 对照为准
+
+## 9. 2026-08-30 新突破：关闭冗余安全边界改写
+
+- v368 / 132534：在字节一致 v282 上仅增加
+  `"tl.disable_safe_memory_legalize": True`，三档全部 Accepted，慢资源档
+  **4.201/7.847/15.897ms，70.33分**。
+- 同档 v282 约 4.30–4.33/8.63–8.64/17.65–17.78ms；新开关对 case2/3 有约
+  **9–11%** 的明确收益。原因是正式 shape/tile 全部整除且 token 已 padding，默认 safe-memory
+  pass 仍会因动态 expert/group 索引无法静态证明而生成大量冗余谓词。
+- 原样复验 132546，以及 vectorize256/let-inline 的独立与组合筛选
+  132540/132541/132544/132545、真实 `readfirstlane` 元数据广播 132548 已排队。
+- 在复验完成前，主文件继续锁定 v282；通过后再提升新稳定版本并继续从该基线冲分。
