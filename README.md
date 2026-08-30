@@ -10,7 +10,7 @@
 - **当前最高：77.33（v386 / 133078，3.043/5.495/10.709ms）**；
   原样复验133469也Accepted，当前2A/0W。
 - 可直接提交的主文件：`xpuoj_data/submission.py` = **v388**（Stage1 safe-off +
-  disable-vectorize256，Stage2保留safe-memory legalize）；133218/133232/133234字节一致3A/0W，
+  disable-vectorize256，Stage2保留safe-memory legalize）；精确复验现为3A/1W，
   快档约3.090/5.629/11.085ms。
 - v387合法同步寄存器预取的最终统计为3A/2W，收益真实但case1不稳定，
   因此没有直接提升。
