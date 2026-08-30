@@ -21,6 +21,7 @@ XPUOJ 提交脚本 — 沐曦 MoE 算子优化比赛 (contest 5, problem 1)
 """
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -52,8 +53,11 @@ class XPUOJClient:
         self._login(email, password)
 
     def _login(self, email, password):
+        proof_of_work = self._solve_proof_of_work("login")
         r = self.session.post(self.api + "/api/auth/login",
-                              json={"email": email, "password": password}, timeout=30)
+                              json={"email": email, "password": password},
+                              headers={"X-Proof-Of-Work": json.dumps(proof_of_work)},
+                              timeout=30)
         if r.status_code not in (200, 201):
             raise RuntimeError(f"登录失败 ({r.status_code}): {r.text[:300]}")
         data = r.json()
@@ -61,6 +65,31 @@ class XPUOJClient:
         if not self.token:
             raise RuntimeError(f"登录响应中没有 token: {data}")
         self.session.headers["Authorization"] = "Bearer " + self.token
+
+    def _solve_proof_of_work(self, action):
+        """Acquire and solve the same SHA-256 challenge used by the web client."""
+        r = self.session.post(
+            self.api + "/api/proofOfWork/issueChallenge",
+            json={"action": action},
+            timeout=30,
+        )
+        if r.status_code not in (200, 201):
+            raise RuntimeError(f"获取登录校验失败 ({r.status_code}): {r.text[:300]}")
+        challenge = r.json()
+        difficulty = int(challenge["difficulty"])
+        full_bytes, half_nibble = divmod(difficulty, 2)
+        prefix = challenge["randomData"]
+        nonce = 0
+        while True:
+            digest = hashlib.sha256(f"{prefix}{nonce}".encode()).digest()
+            if (not any(digest[:full_bytes]) and
+                    (not half_nibble or digest[full_bytes] < 0x10)):
+                return {
+                    "id": challenge["id"],
+                    "nonce": nonce,
+                    "response": digest.hex(),
+                }
+            nonce += 1
 
     def post(self, path, body):
         r = self.session.post(self.api + "/api/" + path, json=body, timeout=60)
