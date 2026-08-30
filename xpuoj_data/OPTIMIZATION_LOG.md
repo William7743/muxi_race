@@ -1751,3 +1751,18 @@ v282 的 (128,128) @256th 全 fp16 T.gemm 是 TileLang-MACA 0.1.10 在 C500 上
 2. 显式默认 mapping 可把转置版做到3A/0W，却不能带来比 v282 更快的同档时间。
 3. shape隔离、cw4、barrier、轴序、M-first、FullCol、单边互换与M256拼接均无进一步价值。
 4. `submission.py` 保持与 126390/126398 字节一致的 v282，转置子空间不再继续消耗评测额度。
+
+## 同步 MACA builtin 再审计（2026-08-30）
+
+- 重新逐行核对官方 standalone `fused_moe_i8_tn_kernel.h` 与 TileLang-MACA `copy.h`：
+  C500 的 `__builtin_mxc_ldg_b128_bsm + arrive/wait` 是 global→LDS 异步路径，赛题明确禁止；
+  不能因为它快而采用。
+- 合法的同步 `__builtin_mxc_ldg_b128(ptr, 0, -1, true, true, false, false)` 在官方 raw kernel
+  中用于 global→register；但本项目 v81 已按该完整签名接入原生微核仍 mxcc 失败，v103 再修正
+  指针类型后仍失败，说明评测编译环境没有可用的 fp16 ABI 通道。
+- `tilelang-metax/src/tl_templates/maca/copy.h` 的合法同步 32/64/128/256-bit load/store 本质是
+  对齐向量指针解引用；现有 `T.copy` lowering 已使用同类机制。重复用 `T.call_extern` 封装不会
+  获得新的指令级能力，反而增加调用/布局风险。
+- `T.call_extern`、`T.import_source`、`readfirstlane`、`rcpf` 与原生 fp16 MFMA 均已实证可用；
+  当前阻塞点不是“不知道内建函数”，而是合法同步搬运能力已被 `T.copy` 覆盖，唯一额外的大额
+  能力属于被规则禁止的异步 bsm 路径。因此本轮不再为相同 ABI 重复提交无效探针。
