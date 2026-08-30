@@ -1849,3 +1849,8 @@ v282 的 (128,128) @256th 全 fp16 T.gemm 是 TileLang-MACA 0.1.10 在 C500 上
   `tl.enable_lower_ldgstg=True`。历史v110在默认safe pass生成谓词访问时数值错误；本次已
   关闭冗余安全谓词并把自动向量宽度限制在128-bit，测试对齐ramp能否直接落到官方合法的
   同步32/64/128-bit LDG/STG指针内建。此实验不使用被赛题禁止的async/bsm通道，排队中。
+- v385 / 133075：v380只为Stage1增加`actual_rows==128`的无谓词完整块epilogue，tail
+  保持原有效行分支；历史v165证明该快路径可正确运行，本次检验safe-memory关闭后能否稳定
+  叠加并减少SwiGLU逐元素分支，排队中。
+- v386 / 133078：v380只为Stage2增加同类完整块无谓词epilogue，tail继续负责padding清零；
+  与v385形成Stage1/Stage2独立消融，排队中。
