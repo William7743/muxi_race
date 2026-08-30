@@ -1970,6 +1970,12 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   Stage2始终保留v388的safe-memory legalize。已提交 **133501**，排队中；
   提交后主文件已恢复为v388精确SHA。
 
+### v398 / 133508：v388 + Stage2 expert-id范围证明
+- v388相对v380的约2.5%差距来自Stage2恢复完整safe-memory pass；历史133011已证明
+  仅expert-id范围假设可Accepted。本版只在Stage2加入`0 <= expert_id < num_experts`，
+  不关闭safe pass，也不改动raw routed-weight与tail访问保护；用于检验能否安全回收
+  up/down/out的部分边界证明开销。已提交 **133508**，排队中；主文件已恢复v388。
+
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在
   133218/133232/133234三次字节一致提交中保持3A/0W，已将跟踪的
