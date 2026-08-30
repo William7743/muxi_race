@@ -146,3 +146,6 @@
   `readfirstlane`真实元数据广播正确但中性。确定性高层persistent版本133001虽Accepted，
   但约5.194/10.804/21.341ms、仅64.33分，persistent路线关闭。当前继续等待增强证明器、
   block紧约束和同步LDG/STG交互结果，主文件保持v380。
+- v383 / 133016的强化`tl.Simplify`已 **Accepted 69**，慢档约
+  **4.246/8.505/17.263ms**，与普通完整assume等价，无法进一步取代
+  `disable_safe_memory_legalize`；增强证明器路线关闭。
