@@ -1,17 +1,17 @@
-# XPU-OJ v380: v282 + remove redundant safe-memory predicates
+# XPU-OJ v388: v380 拆双 JIT —— Stage1-only safe-off + vec256-off
 #
-# 相对官方模板（race_tests/moe/custom_fusedmoe.py）的核心优化：
-#   1.【主要收益】GEMM 的 A operand 由 alloc_fragment 改为 alloc_shared。
-#      实测纯 GEMM 吞吐 26.8 -> 87 TFLOPS（3.2x）：fragment 操作数走寄存器
-#      搬运路径，严重拖累 MMA；shared 操作数是硬件 GEMM 单元的原生路径。
-#   2. kernel1 权重 tile be=128 / K 分块 bh=64 / threads=512：在 OJ 三个
-#      真实用例（hidden=2048/7168）上均为实测最优；A tile 每个 k 迭代被
-#      gate/up 两个 GEMM 复用，shared A 避免重复寄存器搬运。
-#   3. kernel2 同样 A-shared（be=64/bh=128/threads=512）；两 kernel 的
-#      smem 均 ≤ 64KB 上限（(128+256)*64*2=48KB / (128+128)*64*2=32KB）。
+# 动机（对齐主线 PROGRESS/共享结论）：
+#   - v380（全局 safe-off + vec256-off）已 2A，但全局关闭 safe pass 后偶发稀疏 WA；
+#   - Stage2 唯一非 padded buffer 是 routed_expert_weights（raw 索引，在
+#     `if i < actual_rows` 内访问），怀疑偶发 WA 来自 Stage2 尾块该 load 被
+#     向量化/推测执行；
+#   - safe-off 的 9~11% 收益预计主要来自占 ~78% 时间的 Stage1
+#     （其输入/权重为完整矩阵、token padded 到 128，关闭语义安全）。
 #
-# 接口按题目页约定：stacked/out 用 padded 坐标，routed_expert_weights 用
-# raw 坐标；out 为唯一 INOUT 参数，padding 行写 0。
+# 本版改动（其余 tile/threads/swizzle/GEMM/SwiGLU/索引语义与 v380 完全一致）：
+#   Stage1 JIT: disable_safe_memory_legalize=True + disable_vectorize_256=True
+#   Stage2 JIT: 保留默认 safe-memory legalize（只关 warp-specialized）
+#   双 kernel 拆成两个独立 JIT callable，仍为同流两次 GPU launch。
 import torch
 import tilelang
 import tilelang.language as T
@@ -24,28 +24,20 @@ _WORKSPACE_CACHE = {}
 @tilelang.jit(
     pass_configs={
         tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True,
-        # Official shapes are tile-aligned and token rows are padded to 128.
-        # Avoid dynamic bounds predicates that the compiler cannot prove away.
         "tl.disable_safe_memory_legalize": True,
-        # Neutral alone, but 2A/0W together with the safe-memory fast path.
         "tl.disable_vectorize_256": True,
     }
 )
-def _moe_forward_kernel(
+def _moe_stage1(
     hidden,
     intermediate,
     num_experts,
     total_padded_tokens,
-    total_valid_tokens,
     num_blocks_m,
     bt1,
     bh1,
     be1,
     th1,
-    bh2,
-    be2,
-    th2,
-    weights_dtype,
 ):
     gu_k_pack = 2 if hidden >= 7000 else 1
     scale = 1.44269504
@@ -56,23 +48,18 @@ def _moe_forward_kernel(
     intermediate_shape = (total_padded_tokens, intermediate)
     gate_shape = (num_experts, intermediate, hidden)
     up_shape = (num_experts, intermediate, hidden)
-    down_shape = (num_experts, hidden, intermediate)
 
     @T.prim_func
-    def kernel(
+    def stage1(
         stacked_expert_tokens: T.Tensor(input_shape, dtype),
         gate_w: T.Tensor(gate_shape, dtype),
         up_w: T.Tensor(up_shape, dtype),
-        down_w: T.Tensor(down_shape, dtype),
-        routed_expert_weights: T.Tensor((total_valid_tokens,), weights_dtype),
         group_sizes: T.Tensor((num_experts,), T.int32),
-        group_offsets: T.Tensor((num_experts + 1,), T.int32),
         group_padded_offsets: T.Tensor((num_experts + 1,), T.int32),
         group_idx_for_bx: T.Tensor((num_blocks_m,), T.int32),
         up_logits: T.Tensor(intermediate_shape, dtype),
-        out: T.Tensor(input_shape, dtype),
     ):
-        # ---- Kernel 1: gate/up GEMM + silu(gate)*up -> workspace ----
+        # ---- Stage1: gate/up GEMM + silu(gate)*up -> workspace ----
         # smem: A(bt1*bh1) + gate(be1*bh1) + up(be1*bh1) = (128+256)*64*2B = 48KB
         with T.Kernel(num_blocks_m, T.ceildiv(intermediate, be1), threads=th1) as (bx, by):
             input_shared = T.alloc_shared((bt1, bh1), dtype=dtype)
@@ -129,7 +116,7 @@ def _moe_forward_kernel(
 
             for i, j in T.Parallel(bt1, be1):
                 # 仅写有效行：padding 行的 stacked 输入是任意值，写出来也无意义，
-                # kernel2 会用 else 分支把 padding 行输出清 0；跳过实测快 14%
+                # Stage2 会用 else 分支把 padding 行输出清 0；跳过实测快 14%
                 if i < actual_rows:
                     up_logits[block_start + i, by * be1 + j] = (
                         up_local[i, j]
@@ -139,7 +126,46 @@ def _moe_forward_kernel(
                         )
                     )
 
-        # ---- Kernel 2: down GEMM × routed_weight -> out（padding 行写 0）----
+    return stage1
+
+
+@tilelang.jit(
+    pass_configs={
+        tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True,
+    }
+)
+def _moe_stage2(
+    hidden,
+    intermediate,
+    num_experts,
+    total_padded_tokens,
+    total_valid_tokens,
+    num_blocks_m,
+    bt1,
+    bh2,
+    be2,
+    th2,
+    weights_dtype,
+):
+    dtype = T.float16
+    accum_dtype = T.float32
+
+    intermediate_shape = (total_padded_tokens, intermediate)
+    input_shape = (total_padded_tokens, hidden)
+    down_shape = (num_experts, hidden, intermediate)
+
+    @T.prim_func
+    def stage2(
+        up_logits: T.Tensor(intermediate_shape, dtype),
+        down_w: T.Tensor(down_shape, dtype),
+        routed_expert_weights: T.Tensor((total_valid_tokens,), weights_dtype),
+        group_sizes: T.Tensor((num_experts,), T.int32),
+        group_offsets: T.Tensor((num_experts + 1,), T.int32),
+        group_padded_offsets: T.Tensor((num_experts + 1,), T.int32),
+        group_idx_for_bx: T.Tensor((num_blocks_m,), T.int32),
+        out: T.Tensor(input_shape, dtype),
+    ):
+        # ---- Stage2: down GEMM × routed_weight -> out（padding 行写 0）----
         # smem: A(bt1*be2) + down(bh2*be2) = (128+128)*64*2B = 32KB
         with T.Kernel(num_blocks_m, T.ceildiv(hidden, bh2), threads=th2) as (bx, by):
             up_shared = T.alloc_shared((bt1, be2), dtype=dtype)
@@ -186,48 +212,61 @@ def _moe_forward_kernel(
                 else:
                     out[block_start + i, by * bh2 + j] = 0
 
-    return kernel
+    return stage2
 
 
 def _pick_tiles(intermediate):
     # group_idx_for_bx 按 128 token/block 预计算，block_token 必须保持 128。
-    # kernel1 首选 be=128/bh=64/threads=512（OJ 三用例实测最优）；
-    # intermediate 不能整除 128 时退回 be=64/bh=64。
-    return 128, 64, 128, 256  #冒险: Square policy 下重试 th=512 保持但看 be=128 是否仍最优
+    # Stage1 首选 be=128/bh=64/threads=256（OJ 三用例实测最优）。
+    return 128, 64, 128, 256  # v388 与 v380 保持一致
 
 
-def _get_kernel(
-    hidden,
-    intermediate,
-    num_experts,
-    total_padded_tokens,
-    total_valid_tokens,
-    num_blocks_m,
-    weights_dtype,
-):
+def _get_stage1(hidden, intermediate, num_experts, total_padded_tokens, num_blocks_m):
     bt1, bh1, be1, th1 = _pick_tiles(intermediate)
+    key = (
+        "s1",
+        int(hidden),
+        int(intermediate),
+        int(num_experts),
+        int(total_padded_tokens),
+        int(num_blocks_m),
+        bt1,
+        bh1,
+        be1,
+        th1,
+    )
+    stage1 = _KERNEL_CACHE.get(key)
+    if stage1 is None:
+        stage1 = _moe_stage1(*key[1:])
+        _KERNEL_CACHE[key] = stage1
+    return stage1
+
+
+def _get_stage2(
+    hidden, intermediate, num_experts, total_padded_tokens, total_valid_tokens, num_blocks_m, weights_dtype
+):
+    bt1 = _pick_tiles(intermediate)[0]
     bh2, be2, th2 = 128, 64, 256
     key = (
+        "s2",
         int(hidden),
         int(intermediate),
         int(num_experts),
         int(total_padded_tokens),
         int(total_valid_tokens),
         int(num_blocks_m),
-        bt1,
-        bh1,
-        be1,
-        th1,
+        int(bt1),
         bh2,
         be2,
         th2,
         str(weights_dtype),
     )
-    kernel = _KERNEL_CACHE.get(key)
-    if kernel is None:
-        kernel = _moe_forward_kernel(*key)
-        _KERNEL_CACHE[key] = kernel
-    return kernel
+    stage2 = _KERNEL_CACHE.get(key)
+    if stage2 is None:
+        stage2 = _moe_stage2(*key[1:])
+        _KERNEL_CACHE[key] = stage2
+    return stage2
+
 
 def _get_workspace(stacked_expert_tokens, intermediate):
     # up_logits workspace：按 padded 行数 × intermediate 缓存复用
@@ -272,7 +311,9 @@ def run_kernel(
         weights_dtype = T.float32
     else:
         weights_dtype = T.float16
-    kernel = _get_kernel(
+
+    stage1 = _get_stage1(hidden, intermediate, num_experts, total_padded_tokens, num_blocks_m)
+    stage2 = _get_stage2(
         hidden,
         intermediate,
         num_experts,
@@ -281,16 +322,23 @@ def run_kernel(
         num_blocks_m,
         weights_dtype,
     )
-    kernel(
+    # 同流两次 launch：Stage2 依赖 Stage1 的 up_logits，默认流天然串行
+    stage1(
         stacked_expert_tokens,
         gate_w,
         up_w,
+        group_sizes,
+        group_padded_offsets,
+        group_idx_for_bx,
+        up_logits,
+    )
+    stage2(
+        up_logits,
         down_w,
         routed_expert_weights,
         group_sizes,
         group_offsets,
         group_padded_offsets,
         group_idx_for_bx,
-        up_logits,
         out,
     )
