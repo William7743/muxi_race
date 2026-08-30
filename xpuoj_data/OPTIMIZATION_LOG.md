@@ -2042,10 +2042,12 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   **0.138/0.115/0.295**；计时分别5.943/5.948/3.672ms。固定比例INT8 workspace无法同时
   满足当前checker精度，停止继续做v404的搬移scale优化。
 - 作废的v403 / 133589运行期报错，确认不纳入任何性能或精度结论。
-- XPUOJ登录接口新增Proof-of-Work校验，旧客户端返回403。根据官网前端source map核对协议：
+- XPUOJ登录和提交接口新增Proof-of-Work校验，旧客户端返回403。根据官网前端source map核对协议：
   先调用`proofOfWork/issueChallenge`取得随机串与难度，寻找
   `SHA256(randomData + decimal_nonce)`满足指定前导零nibble，再把id/nonce/完整digest通过
-  `X-Proof-Of-Work`头发送登录请求。客户端已合法适配，凭据处理方式不变。
+  `X-Proof-Of-Work`头发送受保护请求。客户端已合法适配，凭据处理方式不变。提交接口还要求
+  官网Turnstile，客户端支持短时环境变量`XPUOJ_TURNSTILE_TOKEN`，但token只能通过官方页面
+  的正常验证码流程取得；截至本记录，查询已恢复，新的复提仍等待完成验证码。
 
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在

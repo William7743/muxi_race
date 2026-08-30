@@ -91,8 +91,19 @@ class XPUOJClient:
                 }
             nonce += 1
 
-    def post(self, path, body):
-        r = self.session.post(self.api + "/api/" + path, json=body, timeout=60)
+    def post(self, path, body, proof_of_work_action=None, captcha_result=None):
+        headers = {}
+        if proof_of_work_action:
+            proof = self._solve_proof_of_work(proof_of_work_action)
+            headers["X-Proof-Of-Work"] = json.dumps(proof)
+        if captcha_result:
+            headers["X-Captcha-Result"] = json.dumps(captcha_result)
+        r = self.session.post(
+            self.api + "/api/" + path,
+            json=body,
+            headers=headers,
+            timeout=60,
+        )
         if r.status_code not in (200, 201):
             raise RuntimeError(f"API {path} 失败 ({r.status_code}): {r.text[:400]}")
         return r.json()
@@ -110,7 +121,15 @@ class XPUOJClient:
                 "compileAndRunOptions": compile_and_run_options or {},
             },
         }
-        data = self.post("contest/play/submit", body)
+        captcha_token = os.environ.get("XPUOJ_TURNSTILE_TOKEN")
+        captcha_result = ({"turnstile": {"token": captcha_token}}
+                          if captcha_token else None)
+        data = self.post(
+            "contest/play/submit",
+            body,
+            "submit_problem",
+            captcha_result,
+        )
         return data
 
     def query_submissions(self, contest_id=DEFAULT_CONTEST, problem_order=DEFAULT_PROBLEM,

@@ -220,5 +220,6 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
   4.262/8.322/17.113ms），先保留为待复验候选。
 - v401 / v402 / v403b分别在case1产生约0.138/0.115/0.295的明显误差；INT8中间
   workspace虽然v403b计时可到3.672ms，但固定scale精度不满足checker，路线关闭。
-- XPUOJ 8/31为登录启用SHA-256 PoW；`xpuoj_submit.py`已按官网`issueChallenge` +
-  `X-Proof-Of-Work`协议适配，查询与提交恢复。
+- XPUOJ 8/31为登录和提交启用SHA-256 PoW，提交另需官方Turnstile；`xpuoj_submit.py`已按
+  官网`issueChallenge` + `X-Proof-Of-Work`协议适配，查询恢复，并支持通过短时
+  `XPUOJ_TURNSTILE_TOKEN`传入官网取得的验证码token。后续复提须先完成官方验证码。
