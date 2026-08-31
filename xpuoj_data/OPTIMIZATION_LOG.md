@@ -2133,6 +2133,19 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
 - AST审计确认相对v407只有`_moe_stage1_prefetch`变化，hidden2048/case1所有函数不变；
   Python语法与diff检查通过。候选已推送`codex/v409-stage1-triple-prefetch`（`9036ef1`）。
 
+### v410候选：extern填充 + 单次N256 Gate/Up GEMM
+- 历史v98-v102把两个只读权重直接写入同一个N256 shared时均止于LayoutInference；但更早
+  v13证明`M128×N256×K64 @512`单累加器本身可Accepted。因此v410只用已验证的
+  `T.import_source + T.call_extern`内联设备helper执行同步FP16标量搬运，使两源shared填充
+  对布局推导不透明，再交给一次成熟`T.gemm`计算Gate/Up联合N256累加器。
+- 每CTA共享内存为A 16KB + Gate/Up 32KB = 48KB；512线程、每线程约64个FP32累加器，
+  理论驻留8 waves/SM，与v399的2×256线程CTA同阶。相较当前两次N128 GEMM，潜在收益是
+  消除中间权重覆盖barrier并让编译器统一调度；主要风险是shared布局地址空间ABI以及历史
+  N256的8-wave性能惩罚。没有async/bsm、arrive/wait，也没有修改输入或跨调用缓存。
+- 仅hidden7168在host选择新JIT；AST审计确认case1使用的`_moe_stage1`、Stage2和run_kernel
+  与v399完全不变。Python语法/diff检查通过，推送
+  `codex/v410-extern-concat-n256`（`4063e24`）。定位为v404-v409之后的高风险结构探针。
+
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在
   133218/133232/133234三次字节一致提交中保持3A/0W，已将跟踪的
