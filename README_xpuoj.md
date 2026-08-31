@@ -20,6 +20,12 @@ echo "muxi2026C1050@example.com:<你的密码>" > .xpuoj_credentials
 python xpuoj_submit.py --code solution.py --status
 ```
 
+历史提交需要字节一致复验时，可以直接从 OJ 回读原始源码，不必手工复制：
+
+```bash
+python xpuoj_submit.py --resubmit 133556 --status
+```
+
 ```bash
 # 方式三：命令行参数
 python xpuoj_submit.py --code solution.py --email xxx --password yyy --status
@@ -29,7 +35,7 @@ python xpuoj_submit.py --code solution.py --email xxx --password yyy --status
 
 | 参数 | 说明 | 默认值 |
 |---|---|---|
-| `--code` | **必填**，要提交的代码文件路径（.py） | - |
+| `--code` / `--resubmit` | 二选一：本地代码文件，或历史 submissionId 原码 | - |
 | `--language` | 评测语言 | `tilelang.maca-c500` |
 | `--contest` | 竞赛 ID | `5` |
 | `--problem` | 题目序号 | `1` |

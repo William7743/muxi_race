@@ -7,6 +7,7 @@ XPUOJ 提交脚本 — 沐曦 MoE 算子优化比赛 (contest 5, problem 1)
 
 用法:
     python xpuoj_submit.py --code solution.py
+    python xpuoj_submit.py --resubmit 133556              # 精确复提历史源码
     python xpuoj_submit.py --code solution.py --language tilelang.maca-c500
     python xpuoj_submit.py --code solution.py --contest 5 --problem 1
     python xpuoj_submit.py --code solution.py --status          # 提交后轮询评测结果
@@ -189,9 +190,31 @@ def load_credentials(args):
     return email, password
 
 
+def extract_submission_code(payload):
+    """从评测详情的嵌套响应中提取完整 TileLang 提交源码。"""
+    if isinstance(payload, dict):
+        code = payload.get("code")
+        if (isinstance(code, str) and "run_kernel" in code and
+                ("tilelang" in code or "triton" in code)):
+            return code
+        for value in payload.values():
+            found = extract_submission_code(value)
+            if found is not None:
+                return found
+    elif isinstance(payload, list):
+        for value in payload:
+            found = extract_submission_code(value)
+            if found is not None:
+                return found
+    return None
+
+
 def main():
     p = argparse.ArgumentParser(description="XPUOJ 代码提交工具")
-    p.add_argument("--code", required=True, help="要提交的代码文件路径 (.py)")
+    source = p.add_mutually_exclusive_group(required=True)
+    source.add_argument("--code", help="要提交的代码文件路径 (.py)")
+    source.add_argument("--resubmit", type=int,
+                        help="从 OJ 回读指定 submissionId 的原始源码并精确复提")
     p.add_argument("--language", default=DEFAULT_LANGUAGE,
                    help=f"评测语言 (默认 {DEFAULT_LANGUAGE})")
     p.add_argument("--contest", type=int, default=DEFAULT_CONTEST, help="竞赛 ID")
@@ -203,10 +226,21 @@ def main():
     p.add_argument("--dry-run", action="store_true", help="只打印将发送的请求体, 不提交")
     args = p.parse_args()
 
-    if not os.path.exists(args.code):
-        raise SystemExit(f"代码文件不存在: {args.code}")
-    with open(args.code, "r", encoding="utf-8") as f:
-        code = f.read()
+    client = None
+    if args.code:
+        if not os.path.exists(args.code):
+            raise SystemExit(f"代码文件不存在: {args.code}")
+        with open(args.code, "r", encoding="utf-8") as f:
+            code = f.read()
+    else:
+        email, password = load_credentials(args)
+        client = XPUOJClient(email, password)
+        print(f"已登录: {email}")
+        detail = client.get_submission_detail(args.resubmit)
+        code = extract_submission_code(detail)
+        if code is None:
+            raise SystemExit(f"未能从 submissionId={args.resubmit} 提取完整源码")
+        print(f"已回读 submissionId={args.resubmit}: {len(code)} bytes")
 
     if args.dry_run:
         print(json.dumps({
@@ -217,9 +251,10 @@ def main():
         }, ensure_ascii=False, indent=2))
         return
 
-    email, password = load_credentials(args)
-    client = XPUOJClient(email, password)
-    print(f"已登录: {email}")
+    if client is None:
+        email, password = load_credentials(args)
+        client = XPUOJClient(email, password)
+        print(f"已登录: {email}")
 
     data = client.submit(code, args.contest, args.problem, args.language)
     print("提交响应:", json.dumps(data, ensure_ascii=False))
