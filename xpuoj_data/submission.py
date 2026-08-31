@@ -1,4 +1,4 @@
-# XPU-OJ v404 candidate: v399 + hidden7168-only Stage2 Down next-K prefetch
+# XPU-OJ v405 candidate: v404 + hidden7168-only Stage2 A/B next-K prefetch
 #
 # 动机（对齐主线 PROGRESS/共享结论）：
 #   - v380（全局 safe-off + vec256-off）已 2A，但全局关闭 safe pass 后偶发稀疏 WA；
@@ -349,7 +349,7 @@ def _moe_stage2_prefetch(
     th2,
     weights_dtype,
 ):
-    """Stage2 with synchronous next-K Down-weight register prefetch.
+    """Stage2 with synchronous next-K Up/Down register prefetch.
 
     This is a distinct hidden=7168-only JIT so the sensitive case1 lowering
     remains byte-for-byte on the original v399 Stage2 function.  The prefetch
@@ -378,6 +378,7 @@ def _moe_stage2_prefetch(
         with T.Kernel(num_blocks_m, T.ceildiv(hidden, bh2), threads=th2) as (bx, by):
             up_shared = T.alloc_shared((bt1, be2), dtype=dtype)
             down_shared = T.alloc_shared((bh2, be2), dtype=dtype)
+            up_prefetch = T.alloc_fragment((bt1, be2), dtype=dtype)
             down_prefetch = T.alloc_fragment((bh2, be2), dtype=dtype)
             out_local = T.alloc_fragment((bt1, bh2), dtype=accum_dtype)
 
@@ -396,6 +397,13 @@ def _moe_stage2_prefetch(
             # Prime k=0.  Each group_idx entry represents a block containing
             # at least one valid token, so every launched CTA has k_steps work.
             T.copy(
+                up_logits[
+                    block_start : block_start + bt1,
+                    0:be2,
+                ],
+                up_prefetch,
+            )
+            T.copy(
                 down_w[
                     expert_id,
                     by * bh2 : (by + 1) * bh2,
@@ -405,18 +413,19 @@ def _moe_stage2_prefetch(
                 coalesced_width=8,
             )
 
-            # After the current prefetched tile is committed to shared, issue
-            # the next global load before MMA.  Its scoreboard wait is delayed
-            # until the following iteration, overlapping it with current MMA.
+            # After the current prefetched tiles are committed to shared, issue
+            # both next global loads before MMA.  Their scoreboard waits are
+            # delayed until the following iteration and overlap current MMA.
             for k in range(k_steps - 1):
+                T.copy(up_prefetch, up_shared)
+                T.copy(down_prefetch, down_shared, coalesced_width=8)
                 T.copy(
                     up_logits[
                         block_start : block_start + bt1,
-                        k * be2 : (k + 1) * be2,
+                        (k + 1) * be2 : (k + 2) * be2,
                     ],
-                    up_shared,
+                    up_prefetch,
                 )
-                T.copy(down_prefetch, down_shared, coalesced_width=8)
                 T.copy(
                     down_w[
                         expert_id,
@@ -435,13 +444,7 @@ def _moe_stage2_prefetch(
                 )
                 T.sync_threads()
 
-            T.copy(
-                up_logits[
-                    block_start : block_start + bt1,
-                    last_k * be2 : (last_k + 1) * be2,
-                ],
-                up_shared,
-            )
+            T.copy(up_prefetch, up_shared)
             T.copy(down_prefetch, down_shared, coalesced_width=8)
             T.gemm(
                 up_shared,
