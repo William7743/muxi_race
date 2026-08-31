@@ -1,4 +1,4 @@
-# XPU-OJ v407 candidate: v399 + hidden7168-only Stage1 Gate/Up next-K prefetch
+# XPU-OJ v409 candidate: v407 + hidden7168-only Stage1 A/Gate/Up next-K prefetch
 #
 # 动机（对齐主线 PROGRESS/共享结论）：
 #   - v380（全局 safe-off + vec256-off）已 2A，但全局关闭 safe pass 后偶发稀疏 WA；
@@ -13,9 +13,9 @@
 #   Stage2 JIT: 保留默认 safe-memory legalize（只关 warp-specialized）
 #   双 kernel 拆成两个独立 JIT callable，仍为同流两次 GPU launch。
 #
-# v407仅扩展hidden=7168使用的独立Stage1预取函数：v399已经把当前Up tile提前到
-# Gate MMA之前，本版再给Gate分配同形fragment，并把下一K的Gate/Up全局读取分别
-# 发到当前Gate/Up MMA之前；仍复用同一个weight shared，不使用async/bsm。
+# v409仅扩展hidden=7168使用的独立Stage1预取函数：在v407已经预取下一K Gate/Up
+# 的基础上，再给A分配同形fragment，把下一K输入读取也发到当前两次MMA之前；仍复用
+# 原来的input/weight shared，不使用async/bsm。case1继续编译v399原函数。
 import torch
 import tilelang
 import tilelang.language as T
@@ -176,6 +176,7 @@ def _moe_stage1_prefetch(
         with T.Kernel(num_blocks_m, T.ceildiv(intermediate, be1), threads=th1) as (bx, by):
             input_shared = T.alloc_shared((bt1, bh1), dtype=dtype)
             weight_shared = T.alloc_shared((be1, bh1), dtype=dtype)
+            input_prefetch = T.alloc_fragment((bt1, bh1), dtype=dtype)
             gate_prefetch = T.alloc_fragment((be1, bh1), dtype=dtype)
             up_prefetch = T.alloc_fragment((be1, bh1), dtype=dtype)
             gate_local = T.alloc_fragment((bt1, be1), dtype=accum_dtype)
@@ -196,8 +197,15 @@ def _moe_stage1_prefetch(
 
             # Every group_idx_for_bx entry maps to a block with at least one
             # valid token, so the hidden=7168-only builder always executes all
-            # compile-time K steps.  Prime both weight fragments with k=0.
+            # compile-time K steps.  Prime all three operand fragments with k=0.
             k_steps = T.ceildiv(hidden, bh1)
+            T.copy(
+                stacked_expert_tokens[
+                    block_start : block_start + bt1,
+                    0:bh1,
+                ],
+                input_prefetch,
+            )
             T.copy(
                 gate_w[
                     expert_id,
@@ -220,15 +228,19 @@ def _moe_stage1_prefetch(
             # A single shared weight tile is still reused.  Once the current
             # fragment has been committed to shared, issue the next global
             # load into that fragment before the current MMA consumes shared.
-            # This overlaps Gate(k+1) with Gate(k), and Up(k+1) with Up(k),
-            # without async/bsm copies or an extra shared allocation.
+            # This overlaps A/Gate/Up(k+1) with the current two MMAs, without
+            # async/bsm copies or an extra shared allocation.
             for k in range(k_steps - 1):
+                T.copy(
+                    input_prefetch,
+                    input_shared,
+                )
                 T.copy(
                     stacked_expert_tokens[
                         block_start : block_start + bt1,
-                        k * bh1 : (k + 1) * bh1,
+                        (k + 1) * bh1 : (k + 2) * bh1,
                     ],
-                    input_shared,
+                    input_prefetch,
                 )
                 T.copy(
                     gate_prefetch,
@@ -265,10 +277,7 @@ def _moe_stage1_prefetch(
 
             last_k = k_steps - 1
             T.copy(
-                stacked_expert_tokens[
-                    block_start : block_start + bt1,
-                    last_k * bh1 : (last_k + 1) * bh1,
-                ],
+                input_prefetch,
                 input_shared,
             )
             T.copy(gate_prefetch, weight_shared, coalesced_width=8)
