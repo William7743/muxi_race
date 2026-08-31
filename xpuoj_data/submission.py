@@ -1,4 +1,4 @@
-# XPU-OJ v399: v380 拆双 JIT —— Stage1-only safe-off + vec256-off
+# XPU-OJ v406 candidate: v399 + hidden7168-only Stage2 safe-off JIT
 #
 # 动机（对齐主线 PROGRESS/共享结论）：
 #   - v380（全局 safe-off + vec256-off）已 2A，但全局关闭 safe pass 后偶发稀疏 WA；
@@ -331,6 +331,92 @@ def _moe_stage2(
     return stage2
 
 
+@tilelang.jit(
+    pass_configs={
+        tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True,
+        "tl.disable_safe_memory_legalize": True,
+        "tl.disable_vectorize_256": True,
+    }
+)
+def _moe_stage2_fast(
+    hidden,
+    intermediate,
+    num_experts,
+    total_padded_tokens,
+    total_valid_tokens,
+    num_blocks_m,
+    bt1,
+    bh2,
+    be2,
+    th2,
+    weights_dtype,
+):
+    """Byte-equivalent Stage2 body with fast passes for hidden=7168 only."""
+    dtype = T.float16
+    accum_dtype = T.float32
+
+    intermediate_shape = (total_padded_tokens, intermediate)
+    input_shape = (total_padded_tokens, hidden)
+    down_shape = (num_experts, hidden, intermediate)
+
+    @T.prim_func
+    def stage2(
+        up_logits: T.Tensor(intermediate_shape, dtype),
+        down_w: T.Tensor(down_shape, dtype),
+        routed_expert_weights: T.Tensor((total_valid_tokens,), weights_dtype),
+        group_sizes: T.Tensor((num_experts,), T.int32),
+        group_offsets: T.Tensor((num_experts + 1,), T.int32),
+        group_padded_offsets: T.Tensor((num_experts + 1,), T.int32),
+        group_idx_for_bx: T.Tensor((num_blocks_m,), T.int32),
+        out: T.Tensor(input_shape, dtype),
+    ):
+        with T.Kernel(num_blocks_m, T.ceildiv(hidden, bh2), threads=th2) as (bx, by):
+            up_shared = T.alloc_shared((bt1, be2), dtype=dtype)
+            down_shared = T.alloc_shared((bh2, be2), dtype=dtype)
+            out_local = T.alloc_fragment((bt1, bh2), dtype=accum_dtype)
+
+            T.use_swizzle(4, order="column")
+
+            expert_id = group_idx_for_bx[bx]
+            block_start = bx * bt1
+            group_size = group_sizes[expert_id]
+            raw_start = group_offsets[expert_id]
+            padded_start = group_padded_offsets[expert_id]
+            token_offset = block_start - padded_start
+            actual_rows = T.max(0, T.min(bt1, group_size - token_offset))
+            active_k_steps = T.if_then_else(actual_rows > 0, T.ceildiv(intermediate, be2), 0)
+
+            T.clear(out_local)
+
+            for k in T.Pipelined(active_k_steps, num_stages=1):
+                T.copy(
+                    up_logits[
+                        block_start : block_start + bt1,
+                        k * be2 : (k + 1) * be2,
+                    ],
+                    up_shared,
+                )
+                T.copy(
+                    down_w[
+                        expert_id,
+                        by * bh2 : (by + 1) * bh2,
+                        k * be2 : (k + 1) * be2,
+                    ],
+                    down_shared,
+                )
+                T.gemm(up_shared, down_shared, out_local, transpose_B=True, policy=T.GemmWarpPolicy.Square)
+
+            for i, j in T.Parallel(bt1, bh2):
+                if i < actual_rows:
+                    out[block_start + i, by * bh2 + j] = (
+                        out_local[i, j] * routed_expert_weights[raw_start + token_offset + i]
+                    )
+                else:
+                    out[block_start + i, by * bh2 + j] = 0
+
+    return stage2
+
+
 def _pick_tiles(intermediate):
     # group_idx_for_bx 按 128 token/block 预计算，block_token 必须保持 128。
     # Stage1 首选 be=128/bh=64/threads=256（OJ 三用例实测最优）。
@@ -380,7 +466,8 @@ def _get_stage2(
     )
     stage2 = _KERNEL_CACHE.get(key)
     if stage2 is None:
-        stage2 = _moe_stage2(*key[1:])
+        builder = _moe_stage2_fast if hidden >= 7000 else _moe_stage2
+        stage2 = builder(*key[1:])
         _KERNEL_CACHE[key] = stage2
     return stage2
 
