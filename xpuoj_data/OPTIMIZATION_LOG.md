@@ -2067,6 +2067,14 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   若v404正确，则同窗对比可判断workspace侧预取能否在额外约16 regs/thread下继续获益。
   代码已通过Python语法与diff检查并推送到`codex/v405-stage2-dual-prefetch`。
 
+### v406候选：hidden7168-only Stage2 fast-pass隔离
+- v380相对Stage2保留默认safe pass的v388约快2.5%，但扩展WA都落在hidden2048 case1；
+  v397又证明在同一PrimFunc里写常量形状分支仍会改变case1 lowering，只有v399的独立JIT隔离有效。
+- v406从v399复制一个Stage2函数，内部`stage2`经AST归一化比较与原函数完全一致；差异只有独立
+  JIT装饰器增加`tl.disable_safe_memory_legalize=True`与`tl.disable_vectorize_256=True`，host仅在
+  hidden7168选择它。这样case1继续编译原v399 Stage2，case2/3单独检验能否安全回收fast-pass收益。
+  代码已通过语法、diff与AST等价检查，推送到`codex/v406-stage2-fast7168`（`8347a1f`）。
+
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在
   133218/133232/133234三次字节一致提交中保持3A/0W，已将跟踪的

@@ -231,3 +231,7 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
   在同一hidden7168独立Stage2里再为`up_logits`增加下一K同步fragment预取，使A/B两侧的
   global读取都在当前MMA前发出；case1仍走v399原函数。额外fragment约16个32-bit寄存器/线程，
   不改变32KB shared占用。应严格按v404→v405顺序提交，避免把Down收益与workspace读取收益混杂。
+- v406已在远端分支`codex/v406-stage2-fast7168`准备：从v399出发复制一个AST完全相同的
+  Stage2函数，只在独立JIT装饰器关闭safe-memory legalize与256-bit vectorize，并仅由
+  hidden7168选择；hidden2048继续编译v399原函数。它独立检验v380→v388约2.5%差距能否在
+  避开case1敏感lowering后安全回收，之后才考虑与v404预取组合。
