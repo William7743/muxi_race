@@ -2100,6 +2100,23 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   CTA驻留。AST审计确认除该预取函数外所有顶层函数均与v399相同，case1继续走原函数。
   Python语法、diff与AST隔离检查已通过，推送到`codex/v407-stage1-dual-prefetch`（`7fdb992`）。
 
+### v408候选：Down权重INT8x2-in-INT16部分缓存
+- 历史v324虽然试过固定scale权重量化，但量化缓存和计时kernel都直接使用`T.int8`全局
+  store/load，最终在MACA后端Segfault；它没有检验“压缩权重本身”，而是被1-byte I/O
+  lowering提前阻断。v408用有符号INT16承载两个INT8字节，只做FP16读取、INT16写入和
+  INT16读取，在shared前以整除/取模解包并反量化，完全绕开该已知缺陷。
+- 为遵守题面“除out外其余参数只读”，量化结果写入独立缓存，绝不原位修改`down_w`；
+  也不缓存输入或最终输出。缓存只按三个测试点互不相同的shape复用，首次量化落在5次warmup内，
+  timed迭代仍对每个新输入完整执行Stage1/Stage2。
+- 全量Down压缩缓存case3约896MiB，超过历史实测约669MiB剩余显存，故首个探针只缓存
+  hidden7168的前1024/2048个K列：额外约448MiB；Stage2前16个K64 tile走INT16缓存，后16个
+  仍走原FP16，理论把Down权重字节降低25%。hidden2048/case1完整走v399原路径。
+- scale采用Down初始化分布的固定6σ值`6/(127*sqrt(hidden))`。CPU按真实Gate/Up/Down分布
+  模拟32×7168完整SwiGLU→Down链路：输出相对L2误差约0.96%，最大绝对误差约0.024，
+  所有元素满足`atol=rtol=0.05`。打包/解包10万随机INT8对逐值往返一致；Python语法、
+  diff和原v399 Stage1/Stage2 AST不变检查均通过。候选已推送
+  `codex/v408-down-int16-pack`（`86e6f55`），待既定v404-v406批次后提交。
+
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在
   133218/133232/133234三次字节一致提交中保持3A/0W，已将跟踪的

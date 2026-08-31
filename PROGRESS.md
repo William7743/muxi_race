@@ -247,3 +247,8 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
   hidden7168独立Stage1函数，在v399的Up当前块预取之上增加Gate fragment，并将
   Gate(k+1)/Up(k+1)的同步global→fragment读取分别前移到当前Gate/Up MMA之前；仍只有
   一个weight shared、48KB shared和原有两次barrier/K，无async/bsm。case1原函数AST不变。
+- 已准备v408（远端`codex/v408-down-int16-pack`，`86e6f55`）：历史v324的崩溃点是
+  INT8 1-byte全局I/O，本版仅在hidden7168把Down前1024个K列按固定6σ scale量化，并将
+  两个有符号INT8装进一个INT16缓存；Stage2只做16-bit读取再在shared前解包，后1024列
+  继续读原FP16。它不修改题面只读输入、不缓存输出，case3额外约448MiB，低于历史约
+  669MiB余量；CPU全链路分布模拟相对L2误差约0.96%，32×7168输出全部通过0.05容差。
