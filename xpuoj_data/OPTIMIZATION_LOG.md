@@ -2117,6 +2117,22 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   diff和原v399 Stage1/Stage2 AST不变检查均通过。候选已推送
   `codex/v408-down-int16-pack`（`86e6f55`），待既定v404-v406批次后提交。
 
+### v408提交前语义复核：暂缓
+- 复核v214-v219历史后确认：OJ沙箱会在调用间重建Tensor代理，`id()`不能作为稳定权重键，
+  而同shape也可能轮换不同测试数据；v408当前只按shape缓存量化Down，存在复用陈旧权重的
+  明确风险。该分支仅保留为INT16全局I/O/解包技术探针，在找到合法可靠的数据身份判定前
+  **不得作为正确性候选提交**。这不影响v404-v407/v409，它们每次都读取当前输入和权重。
+
+### v409候选：hidden7168-only Stage1 A/Gate/Up三路next-K预取
+- 基于v407再增加一个`(128,64)` FP16输入fragment：prologue装入A0/Gate0/Up0，每轮先将
+  当前fragment同步写入原有shared，再在当前两次MMA前发出A/Gate/Up(k+1)的同步全局读取；
+  最后一轮静态收尾。目标是继续隐藏v407未覆盖的输入读取等待。
+- 共享内存实际仍为input 16KB + 单weight 16KB = 32KB；三个预取fragment合计约48个
+  32-bit寄存器/线程，加上两个FP32累加器约176 regs/thread，按C500 128K regs/SM估算仍可
+  维持2 CTA/SM，但这是v409最主要的性能风险。无`Pipelined(ns>=2)`、async/bsm或新增barrier。
+- AST审计确认相对v407只有`_moe_stage1_prefetch`变化，hidden2048/case1所有函数不变；
+  Python语法与diff检查通过。候选已推送`codex/v409-stage1-triple-prefetch`（`9036ef1`）。
+
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在
   133218/133232/133234三次字节一致提交中保持3A/0W，已将跟踪的
