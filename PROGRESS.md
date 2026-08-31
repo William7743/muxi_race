@@ -257,7 +257,7 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
 - 已准备v409（远端`codex/v409-stage1-triple-prefetch`，`9036ef1`）：在v407的Gate/Up
   next-K预取上再加入A输入next-K预取，仍只改hidden7168独立Stage1函数。shared保持32KB；
   预估总寄存器约176/thread，仍可2 CTA/SM但余量较小。语法、diff与AST隔离检查均通过。
-- 已准备v410（远端`codex/v410-extern-concat-n256`，`4063e24`）：用已验证的
+- 已准备v410（远端`codex/v410-extern-concat-n256`，`ae93bd4`）：用已验证的
   `T.import_source/T.call_extern`同步FP16 helper绕开v98-v102的两源shared布局推导冲突，
   hidden7168把Gate/Up拼成N256并用一次`T.gemm @512`计算；case1函数原样不变。该版是高风险
   结构探针，验证“内建通道能否解锁融合N256”，不含禁用的异步/bsm指令。

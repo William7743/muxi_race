@@ -2144,7 +2144,7 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   N256的8-wave性能惩罚。没有async/bsm、arrive/wait，也没有修改输入或跨调用缓存。
 - 仅hidden7168在host选择新JIT；AST审计确认case1使用的`_moe_stage1`、Stage2和run_kernel
   与v399完全不变。Python语法/diff检查通过，推送
-  `codex/v410-extern-concat-n256`（`4063e24`）。定位为v404-v409之后的高风险结构探针。
+  `codex/v410-extern-concat-n256`（`ae93bd4`，含纯padding块跳过）。定位为v404-v409之后的高风险结构探针。
 
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在
