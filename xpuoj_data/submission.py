@@ -1,4 +1,4 @@
-# XPU-OJ v399: v380 拆双 JIT —— Stage1-only safe-off + vec256-off
+# XPU-OJ v410 candidate: v399 + hidden7168 extern-filled fused Gate/Up N256
 #
 # 动机（对齐主线 PROGRESS/共享结论）：
 #   - v380（全局 safe-off + vec256-off）已 2A，但全局关闭 safe pass 后偶发稀疏 WA；
@@ -15,6 +15,17 @@
 import torch
 import tilelang
 import tilelang.language as T
+
+
+_EXTERN_SOURCE = """
+#include <tl_templates/maca/common.h>
+
+TL_DEVICE void moe_copy_f16_scalar(
+    const float16_t* src,
+    float16_t* dst) {
+    *dst = *src;
+}
+"""
 
 
 _KERNEL_CACHE = {}
@@ -243,6 +254,138 @@ def _moe_stage1_prefetch(
     return stage1
 
 
+@tilelang.jit(
+    pass_configs={
+        tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True,
+        "tl.disable_safe_memory_legalize": True,
+        "tl.disable_vectorize_256": True,
+    }
+)
+def _moe_stage1_concat_extern(
+    hidden,
+    intermediate,
+    num_experts,
+    total_padded_tokens,
+    num_blocks_m,
+    bt1,
+    bh1,
+    be1,
+    th1,
+):
+    """Fuse Gate/Up into one M128xN256 GEMM for hidden=7168 only.
+
+    Native scalar copies make the two-source N256 shared fill opaque to
+    TileLang layout inference.  The tensor-core computation remains T.gemm.
+    """
+    gu_k_pack = 2
+    scale = 1.44269504
+    dtype = T.float16
+    accum_dtype = T.float32
+
+    input_shape = (total_padded_tokens, hidden)
+    intermediate_shape = (total_padded_tokens, intermediate)
+    gate_shape = (num_experts, intermediate, hidden)
+    up_shape = (num_experts, intermediate, hidden)
+
+    @T.prim_func
+    def stage1(
+        stacked_expert_tokens: T.Tensor(input_shape, dtype),
+        gate_w: T.Tensor(gate_shape, dtype),
+        up_w: T.Tensor(up_shape, dtype),
+        group_sizes: T.Tensor((num_experts,), T.int32),
+        group_padded_offsets: T.Tensor((num_experts + 1,), T.int32),
+        group_idx_for_bx: T.Tensor((num_blocks_m,), T.int32),
+        up_logits: T.Tensor(intermediate_shape, dtype),
+    ):
+        # A=16KB + concatenated Gate/Up B=32KB.  512 threads give the known
+        # correct N256 T.gemm shape eight waves while keeping one CTA/SM.
+        with T.Kernel(
+            num_blocks_m,
+            T.ceildiv(intermediate, be1),
+            threads=th1 * 2,
+        ) as (bx, by):
+            T.import_source(_EXTERN_SOURCE)
+            input_shared = T.alloc_shared((bt1, bh1), dtype=dtype)
+            weight_shared = T.alloc_shared((be1 * 2, bh1), dtype=dtype)
+            gu_local = T.alloc_fragment((bt1, be1 * 2), dtype=accum_dtype)
+
+            T.use_swizzle(4, order="column")
+
+            expert_id = group_idx_for_bx[bx]
+            block_start = bx * bt1
+            group_size = group_sizes[expert_id]
+            padded_start = group_padded_offsets[expert_id]
+            actual_rows = T.max(0, T.min(bt1, group_size - (block_start - padded_start)))
+            k_steps = T.ceildiv(hidden, bh1)
+
+            T.clear(gu_local)
+
+            for k in range(k_steps):
+                T.copy(
+                    stacked_expert_tokens[
+                        block_start : block_start + bt1,
+                        k * bh1 : (k + 1) * bh1,
+                    ],
+                    input_shared,
+                )
+                # Keep the two source tensors out of TileLang's shared-layout
+                # inference.  Each inline helper still performs an ordinary,
+                # synchronous current-weight scalar load/store.
+                for j, kk in T.Parallel(be1, bh1):
+                    T.evaluate(
+                        T.call_extern(
+                            "handle",
+                            "moe_copy_f16_scalar",
+                            T.address_of(
+                                gate_w[
+                                    expert_id,
+                                    by * be1 + j,
+                                    k * bh1 + kk,
+                                ]
+                            ),
+                            T.address_of(weight_shared[j, kk]),
+                        )
+                    )
+                for j, kk in T.Parallel(be1, bh1):
+                    T.evaluate(
+                        T.call_extern(
+                            "handle",
+                            "moe_copy_f16_scalar",
+                            T.address_of(
+                                up_w[
+                                    expert_id,
+                                    by * be1 + j,
+                                    k * bh1 + kk,
+                                ]
+                            ),
+                            T.address_of(weight_shared[be1 + j, kk]),
+                        )
+                    )
+                T.sync_threads()
+                T.gemm(
+                    input_shared,
+                    weight_shared,
+                    gu_local,
+                    transpose_B=True,
+                    policy=T.GemmWarpPolicy.Square,
+                    k_pack=gu_k_pack,
+                )
+                T.sync_threads()
+
+            for i, j in T.Parallel(bt1, be1):
+                if i < actual_rows:
+                    gate_value = gu_local[i, j]
+                    up_logits[block_start + i, by * be1 + j] = (
+                        gu_local[i, be1 + j]
+                        * (
+                            gate_value
+                            * (1.0 / (1.0 + T.exp2(-gate_value * scale)))
+                        )
+                    )
+
+    return stage1
+
+
 
 
 @tilelang.jit(
@@ -353,7 +496,7 @@ def _get_stage1(hidden, intermediate, num_experts, total_padded_tokens, num_bloc
     )
     stage1 = _KERNEL_CACHE.get(key)
     if stage1 is None:
-        builder = _moe_stage1_prefetch if hidden >= 7000 else _moe_stage1
+        builder = _moe_stage1_concat_extern if hidden >= 7000 else _moe_stage1
         stage1 = builder(*key[1:])
         _KERNEL_CACHE[key] = stage1
     return stage1
