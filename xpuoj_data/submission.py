@@ -316,11 +316,11 @@ def _moe_stage1_concat_extern(
             group_size = group_sizes[expert_id]
             padded_start = group_padded_offsets[expert_id]
             actual_rows = T.max(0, T.min(bt1, group_size - (block_start - padded_start)))
-            k_steps = T.ceildiv(hidden, bh1)
+            active_k_steps = T.if_then_else(actual_rows > 0, T.ceildiv(hidden, bh1), 0)
 
             T.clear(gu_local)
 
-            for k in range(k_steps):
+            for k in range(active_k_steps):
                 T.copy(
                     stacked_expert_tokens[
                         block_start : block_start + bt1,
