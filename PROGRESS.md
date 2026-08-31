@@ -243,3 +243,7 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
   两份源码末尾最终定义均为完整v404，因此可作为“v404有效语义Accepted”的辅助证据，
   **不能**把134479按首行注释计为v406。后续批次改为整页覆盖并在浏览器端核对长度与SHA-256；
   纯净v404已校验为20509字符、`4c32d031...ffc792b6`，等待人工完成官方Turnstile。
+- 等待队列期间已准备v407（远端`codex/v407-stage1-dual-prefetch`，`7fdb992`）：只改
+  hidden7168独立Stage1函数，在v399的Up当前块预取之上增加Gate fragment，并将
+  Gate(k+1)/Up(k+1)的同步global→fragment读取分别前移到当前Gate/Up MMA之前；仍只有
+  一个weight shared、48KB shared和原有两次barrier/K，无async/bsm。case1原函数AST不变。

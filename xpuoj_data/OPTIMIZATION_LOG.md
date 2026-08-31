@@ -2089,6 +2089,17 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   浏览器端重新计算长度和SHA-256并与Git分支比较。纯净v404已装载并验证为20509字符、
   SHA-256 `4c32d031140e28a898b819696a3d51a898616f3d7527e8a779b28ea9ffc792b6`，等待人工验证码提交。
 
+### v407候选：hidden7168-only Stage1 Gate/Up双向next-K预取
+- v399只把当前K的Up权重提前到Gate MMA之前，已经让case2/3提升约5.6%/7.6%；Gate权重
+  仍在每轮MMA前直接global→shared，尚未独立测试“下一K Gate读取与当前MMA重叠”。
+- v407仅改hidden7168使用的独立`_moe_stage1_prefetch`：为Gate增加一个`(128,64)` FP16
+  fragment；prologue装Gate0/Up0，每轮先把当前fragment写入唯一的weight shared，然后在
+  当前Gate/Up MMA前分别发出Gate(k+1)/Up(k+1)的同步global→fragment读取，末K单独收尾。
+- 不增加shared或barrier，不使用`T.Pipelined(ns>=2)`、async/bsm、arrive/wait；额外约
+  32个32-bit寄存器/线程，而Stage1本来就由48KB shared限制为1 CTA/SM，因此预计不再降低
+  CTA驻留。AST审计确认除该预取函数外所有顶层函数均与v399相同，case1继续走原函数。
+  Python语法、diff与AST隔离检查已通过，推送到`codex/v407-stage1-dual-prefetch`（`7fdb992`）。
+
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在
   133218/133232/133234三次字节一致提交中保持3A/0W，已将跟踪的
