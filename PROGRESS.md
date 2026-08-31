@@ -227,3 +227,7 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
   仅为hidden7168增加独立Stage2函数；Down的下一K块先同步global→fragment，在当前MMA前
   发出，再于下一轮fragment→shared消费，以期复制Stage1预取的5–8%收益。该实现没有
   async/bsm，额外寄存器不改变32KB shared带来的2 CTA/SM上限；静态语法检查已通过，待验证码后首测。
+- v405已在远端分支`codex/v405-stage2-dual-prefetch`准备，作为v404通过后的第二级消融：
+  在同一hidden7168独立Stage2里再为`up_logits`增加下一K同步fragment预取，使A/B两侧的
+  global读取都在当前MMA前发出；case1仍走v399原函数。额外fragment约16个32-bit寄存器/线程，
+  不改变32KB shared占用。应严格按v404→v405顺序提交，避免把Down收益与workspace读取收益混杂。

@@ -2059,6 +2059,14 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   16–32 regs/thread，不应降低2 CTA/SM驻留。代码已通过Python静态语法与diff检查并推送，
   等官方Turnstile授权后与v400复验一起提交。
 
+### v405候选：hidden7168-only Stage2 A/B双同步预取
+- 在v404的Down下一K预取之上，再为`up_logits`分配一个`(128,64)` FP16 fragment：prologue
+  同时装入A0/B0，每轮fragment→shared后先发出A(k+1)/B(k+1)的同步global load，再执行当前
+  MMA。目标是把Stage2两侧访存等待都藏到MMA后面；仍不使用任何async/bsm内建。
+- v405只作为v404之后的严格消融，不应抢先提交：若v404编译或数值失败，v405无独立判别价值；
+  若v404正确，则同窗对比可判断workspace侧预取能否在额外约16 regs/thread下继续获益。
+  代码已通过Python语法与diff检查并推送到`codex/v405-stage2-dual-prefetch`。
+
 ### 稳定主文件切换为v388
 - 由于v380、v393与v396的扩展复验均已出现非确定性WA，而v388在
   133218/133232/133234三次字节一致提交中保持3A/0W，已将跟踪的
