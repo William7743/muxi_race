@@ -289,3 +289,37 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
   `codex/v406-stage2-fast7168`，提交 `8347a1f`）。它不改 case1，仅对
   hidden7168 Stage2 独立关闭 safe-memory/vec256 pass，目前是唯一同时通过正确性和
   case2/case3 双重加速的未提交候选。
+
+## 12. 2026-09-01 深夜：NaN 洞破案 + v412 本地认证 + roofline（接手 AI 第二轮）
+
+### 偶发 WA 真凶（GPU 本地复现，非猜测）
+- v391/v393 的尾块 `out_local × rw`(rw=0) 写法在 up_logits workspace padding 行
+  残留垃圾位型时产生 **NaN×0=NaN**（out padding 行整行 256000 个 NaN，本地 3/3
+  随机 group 分布 seed 复现）。v396（select 显式写 0）与 v388 同测 0 NaN。
+- 微实验（micro_nan.py）：safe-off 下 if/else store **不会**被改写为 select，
+  else-0 谓词保留 → 尾块清零必须用 select/if-else，绝不用 value×0 隐式清零。
+- 本会话 OJ 6 次 WA 中 5 次为 multiply 形态，1 次为 assume 变体 —— 与该机制一致。
+
+### 本地 roofline 实测（bw_test.py）
+- **DRAM 峰值 1.44 TB/s**（2GB d2d copy）。Stage 拆分（stage_split.py）：
+  case1 S1 1.900 / S2 1.090；case2 3.744/2.078；case3 5.675/3.338（v412）。
+- case1 S1 ≈108 TFLOPS（计算 roofline ~94%）；case3 S2 ≈1.30TB/s（copy BW 90%）；
+  **case2 S2 仅 74%** —— 唯一有真实剩余空间的位置，但 swizzle8/cw8/th512/ns2
+  等参数扫描全部中性或负，需要结构级改动（persistent/量化路线均已关闭）。
+
+### v412 提交前认证（race_loop 隔离式 20-seed 压力）
+- case1 20/20、case2 6/6、case3 6/6 随机数据 seed × 3 reps，**0 失败 0 NaN**
+- 本地测速 2.987/5.795/9.016 ms（比 v380 类快 18-26%）
+
+### 参数扫描终局（bench23.py，全部 bad=0）
+| 变体 | case2 | case3 | 结论 |
+|---|---|---|---|
+| v412 base | 5.798 | 9.076 | 主线 |
+| k_pack=1 | 5.797 | 9.008 | 中性 |
+| 去预取 | 6.122 | 9.562 | **-5.4% 预取确认正收益** |
+| S2 swizzle8 | 5.826 | 9.115 | 中性 |
+| S2 cw8 | 5.821 | 9.128 | 中性 |
+| k_pack=2 全形状 | — | — | case1 2.981 中性（v395 当年 WA 是 NaN 洞，非 k_pack）|
+| th512 | 6.379 | — | -10% 负 |
+
+**结论：v412 配置即当前局部最优；v406/v412 等待人工 Turnstile 提交 OJ。**

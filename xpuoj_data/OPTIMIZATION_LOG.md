@@ -2187,3 +2187,28 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   额外fragment/寄存器压力显著回退，暂停。
 - v410在LayoutInference报错：`gu_local` 访问布局`(i,j+128)`与`(i,j)`
   不一致；extern只绕开了两源shared写入，未解决N256累加器分割的布局推导，路线暂停。
+
+## 2026-09-01 深夜（第二轮 GPU 会话）：NaN 洞破案 + v412 认证 + roofline
+
+### 破案（GPU 本地复现）
+- v391/v393 尾块 `out_local × rw`(rw=0) 写法 + up_logits workspace padding 垃圾位型
+  → **NaN×0=NaN**（out padding 行整行 NaN；随机 group 分布 3/3 seed 复现）。
+  v396（select）/v388 同测 0 NaN。micro_nan.py 证明 safe-off 不会改写 if/else store。
+- 本会话 OJ 6 次 WA 中 5 次为 multiply 形态 —— 与该机制一致。
+- **规则：尾块清零只用 select/if-else 显式写 0，禁止 value×0 隐式清零。**
+
+### roofline 实测
+- DRAM 峰值 **1.44 TB/s**（bw_test.py，2GB d2d copy）。
+- Stage 拆分（stage_split.py，v412）：case1 1.900+1.090 / case2 3.744+2.078 /
+  case3 5.675+3.338。
+- case1 S1 ≈108 TFLOPS（~94% 计算 roofline）；case3 S2 ≈1.30TB/s（copy BW 90%）；
+  case2 S2 ≈74%（唯一有空间，参数扫描无法触及）。
+
+### v412 提交前认证 + 参数扫描终局
+- race_loop 隔离式压力：case1 20/20、case2 6/6、case3 6/6（随机数据 ×3 reps）= 0 失败。
+- 本地测速 2.987/5.795/9.016 ms（比 v380 类快 18-26%）。
+- 扫描（bench23.py，全部数值正确）：k_pack=1 中性；去预取 -5.4%（预取确认正收益）；
+  S2 swizzle8/cw8 中性；k_pack2 全形状 case1 中性（v395 当年 WA 实为 NaN 洞）；
+  th512 -10% 负。**v412 配置 = 当前局部最优。**
+- 工具入库：race_stress2/race_loop/race_seed/bench23/speed_bench/stage_split/
+  bw_test/micro_nan（服务器 /root/moe_contest 同步可用）。
