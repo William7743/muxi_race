@@ -1,4 +1,4 @@
-# XPU-OJ v404 candidate: v399 + hidden7168-only Stage2 Down next-K prefetch
+# XPU-OJ v411 candidate: v404 prefetch + hidden7168 Stage2 fast-pass
 #
 # 动机（对齐主线 PROGRESS/共享结论）：
 #   - v380（全局 safe-off + vec256-off）已 2A，但全局关闭 safe pass 后偶发稀疏 WA；
@@ -10,7 +10,7 @@
 #
 # 本版改动（其余 tile/threads/swizzle/GEMM/SwiGLU/索引语义与 v380 完全一致）：
 #   Stage1 JIT: disable_safe_memory_legalize=True + disable_vectorize_256=True
-#   Stage2 JIT: 保留默认 safe-memory legalize（只关 warp-specialized）
+#   Stage2 JIT: case1保留safe-on；hidden7168预取版同时关safe/vec256 pass
 #   双 kernel 拆成两个独立 JIT callable，仍为同流两次 GPU launch。
 import torch
 import tilelang
@@ -334,6 +334,8 @@ def _moe_stage2(
 @tilelang.jit(
     pass_configs={
         tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True,
+        "tl.disable_safe_memory_legalize": True,
+        "tl.disable_vectorize_256": True,
     }
 )
 def _moe_stage2_prefetch(
