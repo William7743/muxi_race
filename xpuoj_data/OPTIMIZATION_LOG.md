@@ -2153,3 +2153,37 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   `ca542a2e599de2be9315d95b08470652c5e94d3e2b8df61e079cc7dc185153a9`）。
 - v388仅为Stage1关闭safe-memory/256-bit向量化，Stage2恢复默认safe pass；快档
   约3.090/5.629/11.085ms（76.67分），仍比v282快约4–5%。v387若达到5A/0W才取代它。
+
+## 2026-09-01：v404 纯净提交与 C500 实机批量筛选
+
+### v404 / 134755：当前新高 78
+- 纯净源码（20509字符，SHA-256
+  `4c32d031140e28a898b819696a3d51a898616f3d7527e8a779b28ea9ffc792b6`）由官网人工完成
+  Turnstile后提交，**134755 Accepted 78.00**，timeUsed=18263ms，
+  memoryUsed=23274004。
+- sample case1 2.987ms（baseline 11.259）；正式 case1 2.993ms（baseline 11.269）；
+  case2 5.215ms（baseline 18.631）；case3 10.055ms（baseline 35.918）。
+- 主文件从 v399 提升为该纯净 v404，作为新的最高 Accepted 回退点。
+
+### 新 C500 环境与 harness 修正
+- 设备：MetaX C500，104 SM，warp64，131072 regs/SM，64KB shared/block/SM，
+  8MB L2，约33.1GB显存。软件：PyTorch `2.8.0+metax3.7.1.3`，TileLang
+  `0.1.10+cuda.gitf549117c`；OJ 使用 metax3.7.1.5。
+- 官方GEMM与自建smoke已验证：256线程、32KB shared、长K=2048、双FP32累加器、
+  SwiGLU/exp2、safe-off/vec256-off、group metadata、二维grid均可正确运行。
+- 最初v404/v293启动Segfault由本地harness造成：CPU `torch.cumsum(int32)`默认
+  产生int64，`group_offsets/group_padded_offsets`与内核声明int32不一致。强制
+  `dtype=torch.int32`后原版v404 Stage1/Stage2/完整路径全部正常。
+- harness 改为每个候选唯一primfunc名，防止TileLang进程级memory cache按
+  `stage1/stage2`名称误复用；可用纯净v404单进程保存golden，再在固定种子下
+  批量比较候选。case1完整复现2.9867ms，与OJ 2.993ms匹配。
+
+### v405-v410 实机回收
+- case2同轮（golden v404=6.005338ms）：v405=7.482419ms，v406=5.824154ms，
+  v407=9.594138ms，v409=12.177344ms；四个可运行候选与v404的最大绝对差均为0。
+- case3同轮：v404=9.353191ms，**v406=9.063834ms**，最大绝对差0。
+  v406在case2/case3分别快约3.02%/3.09%，是下一个明确提交候选。
+- v405的A/B双预取、v407的Gate/Up双预取、v409的A/Gate/Up三预取都因
+  额外fragment/寄存器压力显著回退，暂停。
+- v410在LayoutInference报错：`gu_local` 访问布局`(i,j+128)`与`(i,j)`
+  不一致；extern只绕开了两源shared写入，未解决N256累加器分割的布局推导，路线暂停。

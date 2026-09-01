@@ -1,16 +1,16 @@
 # MUXI C500 Fused MoE GEMM 优化 — 工作进度总结
 
-> 更新：2026-08-31。本文是面向快速上手的工作总结；逐版本细节见
+> 更新：2026-09-01。本文是面向快速上手的工作总结；逐版本细节见
 > `xpuoj_data/OPTIMIZATION_LOG.md`（即本地 muxi_race_LOG.md）。
 
 ## 1. 成绩概览
 
 | 项目 | 值 |
 |---|---|
-| 当前最高分 | **77.33**（v399，133517；3.077/5.315/10.243ms） |
+| 当前最高分 | **78.00**（纯净 v404，134755；2.993/5.215/10.055ms） |
 | 上一稳定基线 | v282，提交 `b13b7dd` 中的 `xpuoj_data/submission.py`（126390/126398） |
-| 当前主文件 | **v399**：v388 case1原函数 + hidden7168独立半预取JIT；扩展复验2A/2W，WA均为共享的case1非确定性 |
-| 三 case 用时（v399快档） | 3.077 / 5.315 / 10.243 ms（77.33分） |
+| 当前主文件 | **v404**：v399 + hidden7168-only Stage2 Down next-K 同步预取；纯净提交134755 Accepted |
+| 三 case 用时（v404 OJ快档） | 2.993 / 5.215 / 10.055 ms（78分） |
 | 评测机 | MACA C500：104 SM、64KB shared/block、64-lane warp、无 cp.async、禁异步拷贝内置 |
 | 用例维度 | case1: E16/hid2048/inter4096/pad3072/nbm24；case3: E64/hid7168/inter2048/pad9088/nbm71 |
 
@@ -261,3 +261,31 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
   `T.import_source/T.call_extern`同步FP16 helper绕开v98-v102的两源shared布局推导冲突，
   hidden7168把Gate/Up拼成N256并用一次`T.gemm @512`计算；case1函数原样不变。该版是高风险
   结构探针，验证“内建通道能否解锁融合N256”，不含禁用的异步/bsm指令。
+
+## 11. 2026-09-01：纯净 v404 达到 78 分 + C500 本地筛选
+
+- 纯净 v404 提交 **134755 Accepted 78.00**，总时间 18263ms，三个正式 case
+  **2.993 / 5.215 / 10.055ms**；源码 SHA-256 为
+  `4c32d031140e28a898b819696a3d51a898616f3d7527e8a779b28ea9ffc792b6`。主文件已升级为这份
+  纯净 v404，取代 v399 作为当前稳定最佳回退点。
+- 新 C500 环境为 104 SM、64-lane warp、64KB shared/block、约33.1GB 显存；
+  PyTorch `2.8.0+metax3.7.1.3`、TileLang `0.1.10+cuda.gitf549117c`。OJ 为
+  metax3.7.1.5，因此绝对时间可有小幅偏移，但同轮候选比值有效。
+- 远端 harness 初期 Segfault 的真正原因是 CPU `cumsum` 把两个 offset
+  张量隐式提升为 int64，内核却按 int32 读取。显式保持 int32 后，v404 两阶段
+  和完整链路均正常；case1 复现 2.9867ms，与 OJ 2.993ms 几乎一致。
+- 批量对煨 hidden进行固定种子、独立内核名、golden逐元素对照：
+
+  | 候选 | case2 (ms) | case3 (ms) | 正确性 / 结论 |
+  |---|---:|---:|---|
+  | v404 | 6.0053 | 9.3532 | golden，0 diff |
+  | v405 | 7.4824 | — | 0 diff，明显回退 |
+  | **v406** | **5.8242** | **9.0638** | 0 diff，两 case 均快约 **3%** |
+  | v407 | 9.5941 | — | 0 diff，明显回退 |
+  | v409 | 12.1773 | — | 0 diff，寄存器压力造成回退 |
+  | v410 | — | — | LayoutInference 拒绝 `gu_local(i,j)` / `(i,j+128)` 布局，暂停 |
+
+- 下一 OJ 优先级明确为纯净 **v406**（分支
+  `codex/v406-stage2-fast7168`，提交 `8347a1f`）。它不改 case1，仅对
+  hidden7168 Stage2 独立关闭 safe-memory/vec256 pass，目前是唯一同时通过正确性和
+  case2/case3 双重加速的未提交候选。
