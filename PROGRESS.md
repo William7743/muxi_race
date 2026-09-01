@@ -323,3 +323,30 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
 | th512 | 6.379 | — | -10% 负 |
 
 **结论：v412 配置即当前局部最优；v406/v412 等待人工 Turnstile 提交 OJ。**
+
+## 13. 2026-09-02：自动化优化循环 + v432 新候选（case1 突破 -7%）
+
+### harness（持续运行于 C500 服务器 /root/moe_contest）
+`lab_run.sh` 轮询 `lab/queue/*.py` → 自动正确性+测速 → `lab/results.tsv`。
+变体由 gen_v*.py 生成。单 GPU 时 cert 与 lab 需串行（避免计时污染）。
+
+### 本轮 16 个变体的结论（bad 全 0，计时 warmup10+100iters）
+| 类别 | 变体 | 结论 |
+|---|---|---|
+| 索引重映射 | bt1=64（bx>>1）| **-44~53%**：weight 每 FLOP 流量翻倍，bt1=128 的权重复用是最优根基 |
+| swizzle/cw | s2row/s2upcw8/s1sw2 | 全中性 |
+| 流水 | stage2 ns=2 | **+22% 负**（第三次证实 MACA Pipelined 无 cp.async 即纯开销）|
+| 寄存器 | ptxas_regu3/6 | 中性（6 略好于 3）|
+| **pass 开关** | **enable_fast_math（全装饰器）** | **-0.5~1% 三 case 一致正收益** |
+| pass 开关 | lower_ldgstg_predicated | -0.5% 正 |
+| pass 开关 | aggressive_shared_memory_merge | case2 -0.7% 正 |
+| pass 开关 | config_index_bitwidth=32 | 无效（默认已是 32）|
+| pass 开关 | buffer_init/data_race/prelower 三关 | 见 results.tsv |
+| storage_rewrite_detect_inplace | 中性 |
+| **分派全开** | **case1 也走 stage1_prefetch + stage2_fast** | **case1 -7%（"case1 敏感"假设被推翻）** |
+
+### v432 = v412 + fast_math(×4 装饰器) + ldgstg_predicated(×2 fast) + 分派全开
+- 本地 **2.778 / 5.728 / 8.993 ms**（case1 -7.0% / case2 -1.2% / case3 -0.9% vs v412）
+- **32/32 随机 seed 认证零失败**（20 case1 + 6 case2 + 6 case3）
+- 分支 `codex/v432-final`；本地文件 `xpuoj_data/submission_v432_final.py`
+- **按 v404 本地↔OJ 折算预期 OJ ≈ 80-82 分**（v404 基准 OJ 78.00）
