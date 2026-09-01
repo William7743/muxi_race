@@ -1,4 +1,4 @@
-# XPU-OJ v406 candidate: v399 + hidden7168-only Stage2 safe-off JIT
+# XPU-OJ v412 candidate: v406 + hidden7168 Stage2 full-block epilogue
 #
 # 动机（对齐主线 PROGRESS/共享结论）：
 #   - v380（全局 safe-off + vec256-off）已 2A，但全局关闭 safe pass 后偶发稀疏 WA；
@@ -406,13 +406,19 @@ def _moe_stage2_fast(
                 )
                 T.gemm(up_shared, down_shared, out_local, transpose_B=True, policy=T.GemmWarpPolicy.Square)
 
-            for i, j in T.Parallel(bt1, bh2):
-                if i < actual_rows:
+            if actual_rows == bt1:
+                for i, j in T.Parallel(bt1, bh2):
                     out[block_start + i, by * bh2 + j] = (
                         out_local[i, j] * routed_expert_weights[raw_start + token_offset + i]
                     )
-                else:
-                    out[block_start + i, by * bh2 + j] = 0
+            else:
+                for i, j in T.Parallel(bt1, bh2):
+                    if i < actual_rows:
+                        out[block_start + i, by * bh2 + j] = (
+                            out_local[i, j] * routed_expert_weights[raw_start + token_offset + i]
+                        )
+                    else:
+                        out[block_start + i, by * bh2 + j] = 0
 
     return stage2
 
