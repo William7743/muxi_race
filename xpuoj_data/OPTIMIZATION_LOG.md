@@ -2212,3 +2212,22 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   th512 -10% 负。**v412 配置 = 当前局部最优。**
 - 工具入库：race_stress2/race_loop/race_seed/bench23/speed_bench/stage_split/
   bw_test/micro_nan（服务器 /root/moe_contest 同步可用）。
+
+### 2026-09-02 第二轮参数扫描终局（bench23.py，case2/case3，全部数值正确）
+| 变体 | case2 ms | case3 ms | vs v412 基线(5.80/9.08) |
+|---|---|---|---|
+| bh2=256,be2=64,th512 | 6.456 | 10.229 | -11%/-13% |
+| bh2=256,be2=32,th256 | 6.361 | 9.992 | -10%/-10% |
+| bh2=256,be2=32,th512 | 6.422 | 10.031 | -11%/-10% |
+| Stage1 swizzle=2 | 5.806 | — | 中性 |
+| Stage1 be1=64 | 8.454 | — | **-46%**（2 CTA/SM < MMA 形状损失，复现 v66）|
+| Stage2 be2=128（64KB 贴限） | 6.344 | 9.974 | -9%/-10% |
+| Stage2 th=512 | 6.101 | 9.490 | -5%/-5% |
+
+**结论：本会话累计 12+ 个变体，无一超过 v412 配置。**
+- Stage1 两 case 均跑在 1.12TB/s（copy BW 78%）；case3 S2 1.30TB/s（90%）。
+- case2 的 71 vs 95 TFLOPS 差距来自网格形状（576 blocks=5.5 waves 尾波 +
+  per-expert 不平衡），tile/occupancy 参数无法触及；split-K 预估净收益 ≈0
+  （partials 往返流量吃掉尾波收益）。
+- **v412 即本架构（TileLang+T.gemm, C500 50% 切片）的最终形态。**
+  剩余提升只能来自：v406/v412 人工提交 OJ（+0.5~1 分）或未来 tilelang-metax 升级。
