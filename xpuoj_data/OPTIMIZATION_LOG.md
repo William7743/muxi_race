@@ -2270,6 +2270,16 @@ v432 有明确收益，才标为“待手动 OJ 提交”。v432 仍是 78.67 �
 - 相比 v432 的 78.67，v456 低 0.34 分；Stage1 row swizzle 没有在 OJ 上形成净收益。
 - 结论：v456 淘汰，继续以 v432 为最高 Accepted 回退点；不再组合 row swizzle。
 
+### v457：待用户手动 OJ 提交
+
+- 文件：`xpuoj_data/probe_v457_regu6_oj.py`。
+- 设计：严格以 v432 为基线，仅在实际使用的 Stage1-prefetch 与 Stage2-fast JIT
+  pass config 中加入 `tl.ptxas_register_usage_level=6`，不改变任何 kernel 数学、布局、
+  tile、threads、swizzle 或 offset 语义。
+- 本地 C500 已验证数值正确：2.780 / 5.731 / 8.985 ms；v432 为
+  2.778 / 5.728 / 8.993 ms。总耗时 17.496 vs 17.499 ms，case3 略快，属于低风险微收益探针。
+- 状态：**待用户手动 OJ 提交**。目标为超过 v432 的 78.67；否则直接淘汰。
+
 v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执行前中止，**不计结果**。
 这一组低风险后端/schedule 探针已收尾；在出现有依据的新规则情报或结构假设前，不建议
 继续消耗 OJ 提交额度。当前仍无“待手动 OJ 提交”候选。
