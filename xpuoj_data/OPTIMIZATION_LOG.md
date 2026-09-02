@@ -2231,3 +2231,24 @@ v393 用 w2[0]/w2[1] 双缓冲彻底消除别名（smem 48KB 仍 1 CTA/SM，且�
   （partials 往返流量吃掉尾波收益）。
 - **v412 即本架构（TileLang+T.gemm, C500 50% 切片）的最终形态。**
   剩余提升只能来自：v406/v412 人工提交 OJ（+0.5~1 分）或未来 tilelang-metax 升级。
+
+### 2026-09-02 冲刺筛选（本地 C500，1 warmup + 1 timed，保留数值校验）
+
+本轮仅作本地快速筛选；**OJ 由用户手动提交**。候选必须同时数值正确且相对
+v432 有明确收益，才标为“待手动 OJ 提交”。v432 仍是 78.67 分的已验证回退基线。
+
+| 变体 | 改动 | 本地结果 | 结论 |
+|---|---|---|---|
+| v443 | Stage2 full-block route weights 改为 shared 复用 | 2.781 / 5.779 / 9.021 ms，正确 | 淘汰：case2/3 变慢 |
+| v444 | Stage1/Stage2 的 K loop 改静态常量 | 3.656 / 7.741 / 12.223 ms，正确 | 淘汰：显著变慢 |
+| v445 | 仅 Stage2 开启 `tl.enable_lower_ldgstg` | 2.835 / 5.918 / 9.019 ms，正确 | 淘汰：全形状变慢 |
+| v446 | 仅 Stage2 开启非平凡 else loop-unswitching | 5.876 / 9.086 ms，正确 | 淘汰：case2/3 变慢 |
+| v447 | 仅 Stage2 FP16 accumulator | 未生成有效计时记录 | 编译/执行异常，非提交候选 |
+| v448 | 仅 Stage2 swizzle panel=1 | 5.837 / 9.080 ms，正确 | 淘汰：case2/3 变慢 |
+| v449 | 仅 Stage1 swizzle panel=1 | 2.817 / 5.860 / 9.055 ms，正确 | 淘汰：全形状变慢 |
+| v451 | 仅 prefetch Stage1 swizzle panel=8 | 2.889 / 5.777 / 9.112 ms，正确 | 淘汰：全形状变慢 |
+| v452 | 仅 prefetch Stage1 开启普通 LDG/STG lowering | 2.818 / 5.825 / 8.999 ms，正确 | 淘汰：全形状变慢 |
+
+v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执行前中止，**不计结果**。
+下一候选：v453（仅 prefetch Stage1 开启 non-trivial-else loop-unswitching）。完成后按同一标准补充记录；在确认
+正收益前不建议手动提交。
