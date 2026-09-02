@@ -2266,9 +2266,10 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - **确认允许且官方鼓励：**研究沐曦 MACA 内建指令；同步 vector load/store、barrier、
   MFMA 和寄存器预取仍在规则内。官方参考 Fused MoE 的 lane/MMA 布局可作实现参考，
   但其中 global-to-LDS BSM 流水不可照搬。
-- **仍未获书面确认：**`T.import_source`/`T.call_extern` 调 intrinsic、权重预处理或
-  跨 `run_kernel` 缓存的合规性（GitLink issue #39 / XPUOJ discussion #30）。因此不把
-  缓存、预量化或手写 extern MMA 作为可提交主线；若得到官方明确许可，再开独立探针。
+- **官方仓库最新书面规则已明确禁止：**`T.import_source` 注入外部设备实现、
+  `T.call_extern` 调外部设备计算、mcTlass 等外部库承担主体计算；跨 `run_kernel` 缓存、
+  复放历史结果、按 testcase/生命周期硬编码同样禁止。这一条取代此前 issue #39
+  “尚待确认”的旧记录，所有 extern/手写 MMA/量化缓存路线永久排除。
 - **评分线索：**baseline 只测一次并固定复用、计时取平均、提交次数不影响排名；这只说明
   小幅稳定优化值得提交，**不**构成缓存结果或绕过计算的授权。历史 issue 147057 已指出
   固定输入缓存会制造异常高分，不能采用。
