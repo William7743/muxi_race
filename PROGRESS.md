@@ -386,3 +386,26 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
 | Stage2 k_pack=2 | 5.761 | 8.998 | 中性偏负 |
 **Square 策略在全部 gemm 上最优。至此 tile 参数、pass 开关、调度方向、
 占用率、warp 策略、流水线六个维度全部穷尽，v432（78.67）为收敛解。**
+
+## 17. 2026-09-03：同事优化全面借鉴审查（对照官方禁令清单）
+
+### 逐项结论（对照官方明确禁止清单复核）
+| 同事工作 | 状态 | 可借鉴性 |
+|---|---|---|
+| v399-v412 血统（拆 JIT/分派/预取/fast-pass） | 已合入 v432 | 已吸收 |
+| v443 route-weights shared 复用 | 淘汰（中性偏负） | 否 — rw 仅 512B，L1 已覆盖，shared+barrier 反亏 |
+| v444 K-loop 静态常量 | 淘汰（大负） | 否 — 丢失 active_k_steps 空块跳过 |
+| v447 FP16 accumulator | 编译期死 | 否 — MACA DispatchInstruction 无 <half,half,half> |
+| v456 s1row / v457 regu6 | OJ 78.33 双否 | 否 — 与本地噪声级结论互相印证 |
+| v458 Stage2 Down 预取 + fast-pass | 本地否决（+23-25%） | 否 — 预取仅对 safe codegen 有效 |
+| v408 INT8/INT16 down 量化 | 已搁置 | 否 — 每调用重打包流量 3.76GB > 1.88GB 直读；缓存已被 OJ 轮换判死 |
+| v410 extern-concat N256 | 已死 | **已被新规明令禁止**（import_source/call_extern）|
+| 官方 lane/MMA 布局参考 | — | 仅限 T.gemm 内部路径（MFMA 经 DispatchInstruction 已在用）|
+
+### 规则边界澄清（重要）
+- 官方允许：同步 vector load/store、barrier、寄存器预取、经 T.gemm 的 MFMA —— 全部
+  都是 v432 已在用的合法手段，无新增可用空间
+- 官方禁止：async/BSM、extern、mcTlass、跨调用缓存、testcase 硬编码 —— 与我们
+  已关闭的路线完全重合，无遗漏
+
+**结论：同事工作无未吸收的可借鉴点；双方独立收敛到同一结论（v432 = 架构极限）。**
