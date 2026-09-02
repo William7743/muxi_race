@@ -2250,6 +2250,7 @@ v432 有明确收益，才标为“待手动 OJ 提交”。v432 仍是 78.67 �
 | v452 | 仅 prefetch Stage1 开启普通 LDG/STG lowering | 2.818 / 5.825 / 8.999 ms，正确 | 淘汰：全形状变慢 |
 | v453 | 仅 prefetch Stage1 开启 non-trivial-else loop-unswitching | 2.842 / 5.832 / 9.040 ms，正确 | 淘汰：全形状变慢 |
 | v454 | 仅 Stage2 swizzle 顺序改为 row | 2.911 / 5.809 / 9.169 ms，正确 | 淘汰：全形状变慢 |
+| v455 | Stage1 row swizzle + 两 stage register usage level=6 | 2.857 / 5.732 / 8.977 ms，正确 | 淘汰：case1 明显回退 |
 
 v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执行前中止，**不计结果**。
 这一组低风险后端/schedule 探针已收尾；在出现有依据的新规则情报或结构假设前，不建议
