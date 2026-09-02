@@ -2248,7 +2248,25 @@ v432 有明确收益，才标为“待手动 OJ 提交”。v432 仍是 78.67 �
 | v449 | 仅 Stage1 swizzle panel=1 | 2.817 / 5.860 / 9.055 ms，正确 | 淘汰：全形状变慢 |
 | v451 | 仅 prefetch Stage1 swizzle panel=8 | 2.889 / 5.777 / 9.112 ms，正确 | 淘汰：全形状变慢 |
 | v452 | 仅 prefetch Stage1 开启普通 LDG/STG lowering | 2.818 / 5.825 / 8.999 ms，正确 | 淘汰：全形状变慢 |
+| v453 | 仅 prefetch Stage1 开启 non-trivial-else loop-unswitching | 2.842 / 5.832 / 9.040 ms，正确 | 淘汰：全形状变慢 |
 
 v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执行前中止，**不计结果**。
-下一候选：v453（仅 prefetch Stage1 开启 non-trivial-else loop-unswitching）。完成后按同一标准补充记录；在确认
+下一候选：v454（仅 Stage2 swizzle 顺序改为 row）。完成后按同一标准补充记录；在确认
 正收益前不建议手动提交。
+
+### 2026-09-02 赛题 Issue / 规则情报复核
+
+- 公开 GitHub 的 `XPUOJ/XPUOJ-ProblemSet` 与本仓库均显示 **0 个 Issue**；赛题的
+  实质官方口径来自 GitLink `metax-maca/op_optimization` issue #50（直播答疑整理）及
+  XPUOJ 登录态 discussion #30，而不是 GitHub issue tracker。
+- **确认禁止：**异步拷贝；成功提交会被人工检查，`ldg_*_bsm`、`arrive/wait` 和多级
+  异步流水均不可作为得分方案。此前所有 BSM/async 路线继续保持关闭。
+- **确认允许且官方鼓励：**研究沐曦 MACA 内建指令；同步 vector load/store、barrier、
+  MFMA 和寄存器预取仍在规则内。官方参考 Fused MoE 的 lane/MMA 布局可作实现参考，
+  但其中 global-to-LDS BSM 流水不可照搬。
+- **仍未获书面确认：**`T.import_source`/`T.call_extern` 调 intrinsic、权重预处理或
+  跨 `run_kernel` 缓存的合规性（GitLink issue #39 / XPUOJ discussion #30）。因此不把
+  缓存、预量化或手写 extern MMA 作为可提交主线；若得到官方明确许可，再开独立探针。
+- **评分线索：**baseline 只测一次并固定复用、计时取平均、提交次数不影响排名；这只说明
+  小幅稳定优化值得提交，**不**构成缓存结果或绕过计算的授权。历史 issue 147057 已指出
+  固定输入缓存会制造异常高分，不能采用。
