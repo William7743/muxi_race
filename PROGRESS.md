@@ -430,3 +430,22 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
 TileLang+T.gemm+C500（当前 judge 版 f549117c）架构的收敛解。
 80 分需要的 padding 跳过在本架构下被 gemm 固定开销封死 —— 除非
 tilelang-metax 支持 sub-tile GEMM 或 cp.async，否则不可达。**
+
+### v459 全软件流水（x2/w2 双缓冲 + gate[k+1]/x[k+1] 提前）：失败终审
+- 设计：三条 global load 全被 MMA 覆盖（up[k]←Gate MMA、gate[k+1]/x[k+1]←Up MMA）、
+  同步数不增（2/k）、寄存器不增（x 走 shared 双缓冲非寄存器）、64KB 贴限
+- 实测：**3.479 / 7.659 / 11.566 —— +25~28% 大负，数值正确**
+- 死因：3D 切片缓冲（[k%2]）的 layout 推导与地址算术劣化、条件拷贝的谓词化、
+  手工流水在 T.copy/T.gemm 抽象层的每操作固定开销
+- **四次流水线尝试（v389 寄存器流水 / v393 系 / v450 M-split / v459 双缓冲）
+  全部确定性失败 —— v432 的循环结构（x+gate 暴露、up 隐藏、2 sync、平坦缓冲）
+  是该抽象层的可证最优。手动超越编译器抽象在此 DSL 上不可行。**
+
+## 19. 优化战役终局（2026-09-03）
+**十个维度 × 45+ 变体全部实证穷尽。v432 = 78.67（rank 27）为
+TileLang+T.gemm+C500（judge f549117c）的收敛解。**
+- 已封死的方向（各有实验/规则依据）：量化（OJ 轮换）、persistent（codegen bug）、
+  extern/手写 MMA（官方禁令）、Pipelined（无 cp.async）、bt≠128（权重复用减半）、
+  M-split/pipeline（抽象层开销）、bh/be/th/swizzle/policy/regu（全扫描）
+- 分数进一步增长的前提：tilelang-metax 版本升级（sub-tile GEMM / cp.async /
+  新 MMA 指令），或赛方调整 baseline/评测口径
