@@ -2291,6 +2291,34 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 这一组低风险后端/schedule 探针已收尾；在出现有依据的新规则情报或结构假设前，不建议
 继续消耗 OJ 提交额度。当前仍无“待手动 OJ 提交”候选。
 
+### v458：hidden7168 Stage2 fast-pass + Down next-K 同步预取
+
+- 文件：`xpuoj_data/probe_v458_s2_fast_prefetch_oj.py`。
+- 假设：v404 的 Down-only 同步寄存器预取已独立 OJ Accepted，v406/v412/v432 的
+  hidden7168 fast-pass 也已独立证明有正收益，但历史未测试二者的精确组合。预取把下一
+  个 K64 Down tile 的 global load 提前到当前 MMA 前发出，fast-pass 同时减少安全访问与
+  predicated LDG/STG lowering 开销，二者若近似独立，case2/3 仍有约 1–3% 的机会。
+- 设计：严格以 v432 为基线，移除已被 v457 OJ 否定的 `register_usage_level=6`；将未被
+  host 调用的 `_moe_stage2` builder 改为 `_moe_stage2_fast_prefetch`，移植 v404 已验证的
+  `down_prefetch` fragment、k0
+  prime、next-K global→fragment→shared 顺序及尾轮收口，并使用 v432 fast Stage2 的五项
+  pass config。仅 `hidden>=7000` 选择该新 builder；case1 继续走原 `_moe_stage2_fast`。
+- 数学与边界：仍是 M128×N128×K64 Square GEMM，FP32 accumulator 后乘 raw-coordinate
+  routed weight；full/tail 分支和 padding 清零保持 v432，不提前缩放 FP16 workspace。
+  没有 async/BSM、arrive/wait、extern、MFMA/M256/transpose 修改或结果复放。
+- 审计：Python `py_compile` 通过；禁用实现模式扫描为零；AST 检查确认 case1 使用的
+  `_moe_stage1_prefetch`、`_moe_stage2_fast`、`_get_stage1`、`run_kernel` 函数体相对
+  v432 不变，且新 Stage2 的预取核心与 v404 `_moe_stage2_prefetch` 一致。当前 GPU 已回收，
+  无法本地编译/数值/测速，风险主要是 fast-pass 与额外 fragment 组合后的寄存器压力。
+- 状态：**待用户手动 OJ 提交**。若编译或正确性失败，下一候选才尝试双 N128 Stage2
+  配对 CTA；若 Accepted 但不超过 v432 的 78.67，则淘汰并继续以 v432 回退。
+
+#### 被历史否决而未生成的直觉草案
+
+- 曾考虑把 routed weight 从 Stage2 FP32 epilogue 提前到 Stage1 FP16 workspace store，
+  但复核发现 v100 / 123212 已精确做过并 WrongAnswer（首个明显误差约 0.14）：提前舍入
+  被 Down GEMM 放大。因此该草案在编码前撤销，不占 v458 编号，也不得再次提交。
+
 ### 2026-09-02 赛题 Issue / 规则情报复核
 
 - 公开 GitHub 的 `XPUOJ/XPUOJ-ProblemSet` 与本仓库均显示 **0 个 Issue**；赛题的
