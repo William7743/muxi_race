@@ -2252,6 +2252,17 @@ v432 有明确收益，才标为“待手动 OJ 提交”。v432 仍是 78.67 �
 | v454 | 仅 Stage2 swizzle 顺序改为 row | 2.911 / 5.809 / 9.169 ms，正确 | 淘汰：全形状变慢 |
 | v455 | Stage1 row swizzle + 两 stage register usage level=6 | 2.857 / 5.732 / 8.977 ms，正确 | 淘汰：case1 明显回退 |
 
+### v456：待用户手动 OJ 提交
+
+- 文件：`xpuoj_data/probe_v456_s1row_oj.py`。
+- 设计：严格以 v432 为基线，只把实际使用的 Stage1-prefetch
+  `T.use_swizzle(4, order="column")` 改为 `order="row"`；Stage2、数学、tile、threads、
+  safe-memory、vectorize、fast-math 和 raw/padded offset 语义均保持 v432。
+- 本地 C500 已验证数值正确：v456 为 2.795 / 5.722 / 8.969 ms，v432 为
+  2.778 / 5.728 / 8.993 ms。三 case 总耗时 17.486 vs 17.499 ms，净改善约 0.07%；
+  case1 慢约 0.6%，case2/3 分别快约 0.1%/0.27%。属于低风险、低收益 OJ 探针。
+- 状态：**待用户手动 OJ 提交**。若 OJ 未超过 78.67，立即回退 v432，不组合其他改动。
+
 v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执行前中止，**不计结果**。
 这一组低风险后端/schedule 探针已收尾；在出现有依据的新规则情报或结构假设前，不建议
 继续消耗 OJ 提交额度。当前仍无“待手动 OJ 提交”候选。
