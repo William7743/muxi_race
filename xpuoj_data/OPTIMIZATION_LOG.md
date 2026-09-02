@@ -2249,10 +2249,11 @@ v432 有明确收益，才标为“待手动 OJ 提交”。v432 仍是 78.67 �
 | v451 | 仅 prefetch Stage1 swizzle panel=8 | 2.889 / 5.777 / 9.112 ms，正确 | 淘汰：全形状变慢 |
 | v452 | 仅 prefetch Stage1 开启普通 LDG/STG lowering | 2.818 / 5.825 / 8.999 ms，正确 | 淘汰：全形状变慢 |
 | v453 | 仅 prefetch Stage1 开启 non-trivial-else loop-unswitching | 2.842 / 5.832 / 9.040 ms，正确 | 淘汰：全形状变慢 |
+| v454 | 仅 Stage2 swizzle 顺序改为 row | 2.911 / 5.809 / 9.169 ms，正确 | 淘汰：全形状变慢 |
 
 v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执行前中止，**不计结果**。
-下一候选：v454（仅 Stage2 swizzle 顺序改为 row）。完成后按同一标准补充记录；在确认
-正收益前不建议手动提交。
+这一组低风险后端/schedule 探针已收尾；在出现有依据的新规则情报或结构假设前，不建议
+继续消耗 OJ 提交额度。当前仍无“待手动 OJ 提交”候选。
 
 ### 2026-09-02 赛题 Issue / 规则情报复核
 
