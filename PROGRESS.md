@@ -375,3 +375,14 @@ v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险�
 - 已穷尽：tile 参数、pass 开关（8 个）、调度方向/面板、占用率、预取组合、
   量化（OJ 权重轮换封死）、persistent（codegen bug 封死）、Pipelined（无 cp.async）
 - 后续分数增长只能来自：OJ 快档窗口重抽、tilelang-metax 升级、或全新的算法级结构
+
+## 16. 2026-09-03：warp 策略扫描收尾 — 配置空间全维度穷尽
+| 变体 | case2 | case3 | 结论 |
+|---|---|---|---|
+| Stage2 FullRow | 5.842 | 9.095 | 负 |
+| Stage2 FullCol | 5.884 | 9.274 | 负 |
+| Stage1 FullRow | 5.896 | 9.160 | 负 |
+| Stage1 FullCol | 6.044 | 9.455 | 最差 |
+| Stage2 k_pack=2 | 5.761 | 8.998 | 中性偏负 |
+**Square 策略在全部 gemm 上最优。至此 tile 参数、pass 开关、调度方向、
+占用率、warp 策略、流水线六个维度全部穷尽，v432（78.67）为收敛解。**
