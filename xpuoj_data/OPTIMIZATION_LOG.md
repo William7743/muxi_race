@@ -2387,3 +2387,27 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   在组委会未明确确认单 stage 写法前，最终合规保底应使用 v460 思路。当前 v460 仅为远端
   实验，不占手动 OJ 提交名额；后续高分候选必须同时清零 `T.Pipelined`、async/BSM、extern、
   PyTorch GEMM 和跨 case 结果缓存。
+
+### v461-v468：官方 MMA shared-layout 注解与严格同步消融
+
+- 运行环境强制使用 OJ 同版 `/opt/tilelang-metax-v0.1.10`，版本
+  `0.1.10+cuda.gitf549117c`；默认 Python 的 editable `/data/tilelang-metax` 未参与测试。
+- 官方答疑 Issue #82/#83 已确认 `T.gemm`、`make_mma_swizzle_layout`、
+  `T.annotate_layout`、`T.use_swizzle` 和 TileLang 自带 intrinsics/layout API 可以使用；本轮
+  仍不使用 async/BSM、extern/import_source、PyTorch 核心计算、结果缓存或 testcase 硬编码。
+- v461 只在实际使用的 `_moe_stage2_fast` 给 `up_shared/down_shared` 增加
+  `make_mma_swizzle_layout(..., vecSize=4)`，其余与 v432 完全一致。本地 C500 快测均与 v432
+  输出逐元素一致：case1 **2.785109 -> 2.715819 ms**，case2
+  **5.861248 -> 5.682816 ms**，case3 **9.006080 -> 8.801877 ms**，跨三 case
+  约快 2.3--3.0%。文件：`probe_v461_stage2_mma_layout4.py`。
+- v462 Stage1 同类注解：vec4 与原 `coalesced_width=8` 编译约束冲突；vec8 case2
+  **5.819563 vs v432 5.771008 ms**，负收益，关闭。
+- v463 把 v461 及未使用普通 builder 的两处单级 `T.Pipelined(...,1)` 都改为普通
+  `range`，源码扫描 `T.Pipelined=0`。结果仍逐元素一致，但 case1 **2.804907 ms**、
+  case2 **5.773568 ms**，与 v432 基本持平/略慢；不作为提分候选。
+- v464-v468 在严格 `range` 基础上消融 up/down 单侧 vec4/vec8；case1 分别为
+  up4 **2.829056**、down4 **2.790784**、both8 **2.867968**、up8 **2.855552**、
+  down8 **2.872704 ms**，全部逐元素一致但没有明确收益，关闭。
+- 状态：v461 是目前唯一跨三 case 明确正收益的新候选，但保留了 v432 原有的单级
+  `T.Pipelined` 源码形式。它不含多级/异步流水；是否手动提交应与严格审核口径一并判断。
+  v463 是零 `T.Pipelined` 的安全对照，但没有净提分信号。
