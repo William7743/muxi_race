@@ -2411,3 +2411,18 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - 状态：v461 是目前唯一跨三 case 明确正收益的新候选，但保留了 v432 原有的单级
   `T.Pipelined` 源码形式。它不含多级/异步流水；是否手动提交应与严格审核口径一并判断。
   v463 是零 `T.Pipelined` 的安全对照，但没有净提分信号。
+
+### v469：零 Pipeline 的显式同步 prime/steady/final Stage2
+
+- 对 v461/v463 的生成设备代码做差分后确认，单级调度提示的收益不是 async/BSM，而是把
+  Stage2 重排成：先同步装入 K0；每轮执行当前 `T.gemm`；`T.sync_threads` 后同步覆盖 shared
+  为 K+1；最后单独执行尾轮 `T.gemm`。v469 用普通 `if/range/T.sync_threads/T.copy/T.gemm`
+  显式表达这个顺序，并保留 v461 的官方 vec4 shared-layout 注解。
+- 静态规则扫描：`T.Pipelined`、async、BSM、extern/import_source、PyTorch GEMM、结果缓存与
+  testcase 硬编码均为零；数学、M128xN128xK64、256 threads、Square policy、FP32 accumulator、
+  raw route-weight 索引和 padding 清零保持 v432。
+- OJ 同版 TileLang 0.1.10 C500 快测（1 warmup + 3 timed），三个输出均与 v432 逐元素一致：
+  case1 **2.726997 ms**，case2 **5.601365 ms**，case3 **8.678059 ms**。对同窗 v432
+  2.785109 / 5.771--5.861 / 9.006080 ms，分别约快 2.1%、3--4.4%、3.6%。
+- 文件：`probe_v469_stage2_manual_sync_layout4.py`。状态：**待用户手动 OJ 提交**；目标超过
+  v432 的 78.67。提交前由第二代理在准确 0.1.10 环境独立复测 case2，作为交叉验证。
