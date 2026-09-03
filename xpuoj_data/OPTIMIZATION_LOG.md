@@ -2336,3 +2336,54 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - **评分线索：**baseline 只测一次并固定复用、计时取平均、提交次数不影响排名；这只说明
   小幅稳定优化值得提交，**不**构成缓存结果或绕过计算的授权。历史 issue 147057 已指出
   固定输入缓存会制造异常高分，不能采用。
+
+### 2026-09-03：同事 84 分 v113 与严格禁用规则审计
+
+- 审计对象：远端 `/data/mx/solution_v113.py`，MD5
+  `b00acfa7e7a6d6e3f4c24748903f613a`、SHA-256
+  `af27797da9b8a2ceae5e98f95c686b5adb6b14660e65e66caa2cbc8a16fb1481`。
+- **明确违规：**`run_kernel` 第 343、344、358 行分别通过 PyTorch Tensor 的隐式
+  `@` 完成 Gate、Up、Down 三组 batched GEMM。Issue #79 和最新书面规则均明确把隐式
+  `@` / `torch.matmul` 等核心计算列为禁用，因此该实现的 84 分不能作为合规成绩或直接融合。
+- **额外正确性风险：**实际选择的是 `_swiglu_route_prescale_kernel`，在第 221--224 行先把
+  FP32 routed weight cast 为 FP16 并乘进 activation，再执行 Down GEMM。我们自己的 v100
+  已精确验证该顺序会因提前舍入被 Down GEMM 放大并 OJ WrongAnswer；合法改写必须恢复为
+  Down 的 FP32 accumulator 完成后再乘 raw-coordinate routed weight。
+- **审查风险：**固定 `_EXPERT_BLOCK_M = 192` 依赖公开三 case 的当前 expert 分布；题面只
+  明确总 token 数和 M=128 padding，并未承诺任意 expert 的 `group_size <= 192`。按“不得利用
+  已知 testcase 硬编码投机”的口径，不应把该容量假设带入正式版本。
+- **可以保留的部分：**TileLang pack/unpack、SwiGLU kernel 和只缓存已分配 workspace 的做法
+  本身不属于结果回放；但 v113 的速度主体来自禁用的 vendor PyTorch GEMM。把三处 `@` 全部
+  换成 TileLang `T.gemm`、把 routed weight 移回 FP32 Down epilogue 后才合规，也会变成新的
+  kernel 家族。该同事实例上的 MKN 扫描已显示这种合法 dense batched `T.gemm` 比 vendor
+  GEMM 慢约 1.2--19 倍，因此无法保留原 84 分性能。
+- **与 v432 的可互补结论：**workspace allocation cache 已经在 v432 中使用；expert chunk=16
+  只服务于 vendor batched GEMM，pack/unpack 会多出至少三类 kernel launch；M192 又有容量风险。
+  因而没有可直接叠加的高收益部件。可借鉴的仅是“减少 M padding 浪费”这一目标，正式实现仍应
+  沿 v432 的 `group_idx_for_bx` 分块映射做通用 TileLang 优化。
+
+### v458 / v459 新 C500 快筛结果
+
+- v458（Stage2 fast-pass + Down 预取）case2 与 v432 输出逐元素一致，但同机为
+  **7.338 ms vs 5.964 ms**，明显回退，改判淘汰，不提交 OJ。
+- v459（hidden7168 paired-N128 Stage2 CTA）case2 输出逐元素一致，单次快筛为
+  **5.946 ms vs 5.964 ms**，仅约 0.3%，属于噪声级；且源码仍保留一处未使用的
+  `T.Pipelined` builder，按严格审查口径不提交 OJ。
+
+### v460：严格无 `T.Pipelined` 合规硬化实验
+
+- 基线精确取自 v432：Git commit `79f93c5dd242d75ea6c658179f32b205963a39f0`，远端
+  `/root/moe_contest/v432.py` SHA-256 为
+  `b366ab10a2debe7677de3963e01b0c8355a8b23d36f086b91a493ddca0cfe6ad`，与 OJ 135985
+  粘贴源码记录一致。
+- 唯一语义改动：把 Stage2 普通/fast builder 的两处
+  `T.Pipelined(active_k_steps, num_stages=1)` 改为普通 `range(active_k_steps)`；生成文件
+  `T.Pipelined` 扫描为 0，Python 语法检查通过。
+- C500 同进程 A/B（1 warmup + 3 timed）全部与 v432 输出逐元素一致；v432 vs v460：
+  case1 **2.802 / 2.883 ms**，case2 **5.905 / 5.943 ms**，case3
+  **9.150 / 9.285 ms**。严格无 pipeline 版总计约慢 1.5%，但消除了 Issue #79 评论中
+  “隐式 pipeline”措辞可能带来的代码审查歧义。
+- 结论：v432 的 `num_stages=1` 从执行语义上没有跨迭代异步重叠，但源码形式仍有审核风险；
+  在组委会未明确确认单 stage 写法前，最终合规保底应使用 v460 思路。当前 v460 仅为远端
+  实验，不占手动 OJ 提交名额；后续高分候选必须同时清零 `T.Pipelined`、async/BSM、extern、
+  PyTorch GEMM 和跨 case 结果缓存。
