@@ -2633,3 +2633,53 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   完整链路也无稳定方向，保留更简单且已验证的v527 panel2。
 - 三个探针继续只使用同步TileLang原语与允许的shape分派；数值均为`bad=0/max_abs=0`。
   v527仍是当前首选待OJ候选。
+
+### v531-v543：同步发射顺序、bank layout 与零级 pipeline 诊断
+
+- v531/v532/v534重排E32 Stage2首轮的Up/Down复制与accumulator清零。v534一次full为
+  **5.2068 ms**，但分段复验Stage2为 **1.8916 vs v527 1.8989 ms**，后续交替运行没有
+  稳定收益；v531/v532同样只有噪声级首轮信号。v535/v536重排E32 Stage1首轮加载与清零，
+  v535为 **3.5507 ms**；v536两组平均 **3.3484 vs v527 3.3445 ms**，均不升级。
+- v533只把E32 Stage1 Gate权重复制提前到clear之前，单轮为 **3.411 vs v527 3.344 ms**，
+  明确负收益；因此组合探针v546/v547不再进入复验。
+- v537-v542分别给Stage1 input/weight shared加入half/full/quarter bank布局。全部逐元素一致，但
+  E32 Stage1分别为 **3.5415/3.4872/3.6337/3.5264/3.6398/3.9078 ms**，均慢于同窗
+  v527约 **3.34 ms**，generic bank-layout路线关闭。
+- v543仅作规则与编译器诊断：把E32 Stage1 K循环写成`T.Pipelined(..., num_stages=0)`；结果
+  正确但为 **3.3609/3.3752 vs v527 3.3509/3.3661 ms**，略慢。该文件明确标记
+  diagnostic/no-submit，正式候选继续保持零pipeline DSL。
+
+### v544-v552：Stage2同步B微块预取突破与全shape整合
+
+- v544只替换E32 Stage2：使用评测镜像自带的`TensorCoreIntrinEmitter`，在同一K64 shared tile
+  的四个K16微步间使用两个local B fragment交替同步预取；A读取、global→shared prime/steady/
+  final、32KB shared、M128xN128、256 threads、raw route-weight epilogue均保持v527。生成设备
+  源码仍是普通同步load/MFMA/store，没有async、BSM、pipeline DSL、extern或import_source。
+- v545在v544上把K0 prime改为 **Up复制→clear(out_local)→Down复制**。E32 Stage2八轮交替
+  中位为 **1.853747 vs v527 1.872307 ms**，稳定快约 **1.00%**，且每轮均为
+  `bad=0/max_abs=0`。
+- v548-v550分别尝试双A+双B、future-B优先、双A+单B；中位为
+  **1.893248/1.906944/1.894592 ms**，均慢于同窗v544 **1.857920 ms**，说明额外A fragment
+  的寄存器压力或发射重排抵消了收益。
+- v551把v545路径扩展到E64，case3 Stage2六轮中位为 **3.014400 vs v527 3.052245 ms**，
+  快约 **1.26%**。v552再扩展到E16，case1 Stage2六轮中位为
+  **0.935339 vs 0.949717 ms**，快约 **1.54%**；三种expert shape均使用同一套同步双B微步
+  预取结构。
+- v552与v527进行完整链路四轮交替复验，三个case全部逐元素一致：case1
+  **2.503125 vs 2.524629 ms（+0.86%）**，case2
+  **5.187499 vs 5.223765 ms（+0.70%）**，case3
+  **8.218368 vs 8.246869 ms（+0.35%）**。文件：
+  `probe_v552_s2_bfrag_clear_all_experts.py`。状态：**当前首选待用户手动OJ提交候选**。
+
+### v553-v558：direct-emitter尾部消融
+
+- v553把E32 direct-emitter的动态K循环静态化，虽逐元素一致，但中位
+  **1.867136 vs v545 1.849259 ms**，回退约0.96%；保留动态`active_k_steps`。
+- v554-v558与v556覆盖K0阶段Up、Down、clear的其余安全排列。两批case2 Stage2短测均正确；
+  最终同窗中位v552为 **1.862272 ms**，v557为 **1.866560 ms**，v558为
+  **1.869248 ms**，v554出现 **2.141440 ms**长尾且中位 **2.005120 ms**；v556提前在
+  metadata前读取Up为 **1.888192 ms**。这些排列均不优于v552，顺序搜索关闭。
+- 本批新增`remote_stage_ab.py`，固定一次输入和Stage2 workspace，先逐候选完整精度检查，再按
+  forward/reverse交替顺序测量中位数，避免把编译、内存分配和执行顺序漂移误判为优化。
+- v531-v558的正式候选均只使用同步TileLang API及官方允许的shape分派/emitter；不使用
+  async/BSM、pipeline DSL、extern/import_source、PyTorch核心计算、结果缓存或评测阶段投机。
