@@ -2498,3 +2498,18 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   0.003906，48KB shared/显式微循环代价远大于节省，关闭。
 - 结论：官方emitter和`T.tvm_mfma`在规则上可用且能正确编译，但当前MoE已受global/LDS搬运主导，
   `T.gemm`生成质量不是剩余主瓶颈。v479-v490均不升级候选，继续保留v478。
+
+### v491-v493：N256 宽 GEMM终结与 Stage1 panel3 升级
+
+- v478独立分段单次计时：case1 Stage1/Stage2为 **1.672/1.063 ms**，case2
+  **3.672/1.973 ms**，case3 **5.641/3.133 ms**；Stage1持续占约61--65%，仍是主要优化目标。
+- v491尝试官方emitter的单次M128xN256 Gate+Up GEMM，并用4x1 warp布局使配对列落在同一warp；
+  高层epilogue仍被LayoutInference拒绝`gu_local(i,j)`与`gu_local(i,j+128)`混合访问。
+- v492改用`mma_store_index_map`直接按lane/local索引完成SwiGLU，成功编译且精度通过
+  （max_abs 0.003906），但case2 **14.367744 vs v478 5.499904 ms**；N256寄存器压力与
+  标量化epilogue代价过高，宽GEMM路线正式关闭。
+- v493只把实际Stage1-prefetch的`T.use_swizzle` panel从2改为3。两轮case2均同方向，正式复测
+  v478→v493：case1 **2.561792→2.557696 ms**，case2 **5.467520→5.411968 ms**，case3
+  **8.497280→8.491776 ms**；全部逐元素一致。case2改善约1.0%，其余两项中性微正。
+- 文件：`probe_v493_s1_panel3.py`。静态规则边界与v478完全一致，不含pipeline DSL、async/BSM、
+  extern/import_source、PyTorch核心计算或结果缓存。状态：**当前首选待用户手动OJ提交候选**。
