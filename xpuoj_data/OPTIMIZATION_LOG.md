@@ -2478,3 +2478,23 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - 把v478的Stage1 K循环改写为与v469 Stage2类似的显式同步prime/steady/final结构；
   case1 **2.576000→2.567424 ms**仅改善约0.3%，但case2
   **5.396608→5.535744 ms**回退约2.6%。输出逐元素一致，因长K回退而关闭，不进入仓库候选。
+
+### v479-v490：复制宽度终扫与官方 TensorCore emitter 可行性
+
+- v479把Stage1 Up global→fragment宽度改为16，TileLang编译期明确拒绝：底层vector size为8，
+  不能被宽度16整除。v480删除显式宽度、交给布局自动推断，case1复测
+  **2.801664 vs v478 2.556160 ms**，正确但回退。v484给Stage1 input global→shared显式
+  cw4，复测 **2.566400 vs 2.565248 ms**，完全中性；cw8的v485与vec4 shared layout不兼容。
+- v486给Stage2四处global→vec4 shared同步copy显式cw4，case2
+  **5.440000 vs v478 5.433856 ms**，正确但中性，说明自动布局已选到合适宽度。
+- 官方`TensorCoreIntrinEmitter`严格同步微探针（128x128x2048、256 threads、无pipeline）为
+  **0.184 ms**，朴素同形状`T.gemm`探针为 **0.242 ms**，因此继续做了真实MoE集成；探针中的
+  PyTorch仅用于计时外本地参考，不进入任何提交文件。
+- v487以direct emitter替换Stage2的`T.gemm`，case2 **5.488896 vs 5.473280 ms**；v488替换
+  Stage1、k-pack=2为 **5.536512 vs 5.425152 ms**；v489的k-pack=1为
+  **5.532928 vs 5.523712 ms**。均无提分，其中v487/v489逐元素一致，v488最大绝对差0.003906。
+- v490进一步用Gate/Up双shared tile，在每个MMA微步复用一次A fragment，理论上减少A的LDS
+  重读并去掉Up fragment→shared复制；实际case2 **6.982144 vs 5.470976 ms**，最大绝对差
+  0.003906，48KB shared/显式微循环代价远大于节省，关闭。
+- 结论：官方emitter和`T.tvm_mfma`在规则上可用且能正确编译，但当前MoE已受global/LDS搬运主导，
+  `T.gemm`生成质量不是剩余主瓶颈。v479-v490均不升级候选，继续保留v478。
