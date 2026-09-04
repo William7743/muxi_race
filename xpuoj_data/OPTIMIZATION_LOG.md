@@ -2831,3 +2831,54 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - 当前首选升级为 **v634**：E16维持v552路径，E32只拆Stage2，E64维持v614的双阶段M64
   分流。所有新路径仍是普通同步TileLang API与官方emitter，无pipeline/async/BSM/extern、
   内部编译器改写、结果缓存或评测生命周期投机。
+
+### v637-v645：E32 Stage2尾块形状、pass与K0顺序复核
+
+- v637-v639只改变v634的E32 Stage2尾块几何，且都连续三次通过完整随机精度检查：v637采用
+  `M64xN128xK128/256 threads`，Stage2/full分别慢 **8.74%/10.00%**；v638采用
+  `M64xN64xK64/128 threads`并按MACA 64线程warp配置合法的`2x1` emitter，Stage2/full
+  分别慢 **17.75%/3.86%**；v639采用`M64xN64xK64/256 threads`，Stage2/full分别慢
+  **13.15%/6.17%**。K128增加shared与等待，N64则把launch数翻倍，均抵消尾块省算力收益；
+  v634的`M64xN128xK64/256 threads`保持最优。
+- v640恢复默认256-bit vectorize、v641恢复默认safe-memory legalize、v642仅恢复predicated
+  LDG/STG；三者full相对v634分别为 **-0.62%/-2.09%/-0.05%**。因此继续保留v634已经验证的
+  `disable_safe_memory_legalize + disable_vectorize_256 + disable_predicated_ldgstg`组合。
+- v643-v645枚举E32 Stage2尾块K0的Up/Down复制与accumulator clear顺序。v643/v645 full分别
+  慢 **0.26%/0.19%**；v644的Down→clear→Up一次短测Stage2/full快 **0.67%/0.34%**，
+  连续两次精度均为`max_abs=0,bad=0`，但收益低于稳定升级阈值，仅保留为后续组合复核项。
+- 本批继续遵守256线程必须匹配MACA 64线程warp下`2x2` emitter覆盖的约束；所有正式探针只用
+  同步TileLang API和官方emitter，不含pipeline/async/BSM/extern或内部编译器改写。当前首选
+  仍为 **v634**。
+
+### v646-v654：compact grid、M96三级分流与满M64写回快路径
+
+- v646-v648把tail scope的block-x从全部外部M128 block压缩为每expert一个CTA，并由
+  `group_padded_offsets[e+1]-128`动态定位最后一块。三版均连续三次随机完整精度一致；但E32
+  Stage2 compact（v648）Stage2/full慢 **0.13%/0.80%**，E64 Stage2 compact（v647）full慢
+  **0.38%**。E64 Stage1 compact（v646）尤其因动态地址与调度恶化，Stage1/full慢
+  **28.58%/20.11%**。减少空转CTA不足以抵消地址计算/codegen损失，路线关闭。
+- v649-v651把真实路由中的92行块单独交给M96 scope，形成M128（97..128）、M96（65..96）、
+  M64（1..64）三级互斥分流，全部连续三次随机精度为`max_abs=0,bad=0`。高层`T.gemm`的M96
+  几何仍低效：E32 Stage2 v649的Stage2/full慢 **5.51%/2.18%**；E64 Stage1 v650的
+  Stage1/full慢 **6.97%/4.64%**；E64 Stage2 v651 full慢 **0.26%**。普通M96路线关闭，
+  后续只验证显式合法emitter能否形成更合适的fragment几何。
+- v652-v654为运行时`actual_rows==64`增加uniform无谓词写回快路径，其余1..63行仍走安全
+  谓词，Stage2的64..127 padding继续清零。三版均连续五次随机完整精度一致，但v652 E32
+  Stage2/full慢 **0.51%/0.42%**；v653 E64 Stage1/full慢 **1.06%/0.59%**；v654独立
+  Stage2出现约 **10%**回退，full的+0.25%与同窗大幅漂移矛盾，不构成正收益。uniform分支改变
+  lowering的代价高于省去的逐元素谓词，全部不升级。
+- v646-v654均通过Python/Ruff/禁项扫描，仍不含pipeline、async/BSM、extern/import_source、
+  内部编译器修改或结果缓存。当前稳定首选继续为 **v634**。
+
+### v655-v658：M96显式emitter几何
+
+- v655/v656为M96中档构造`3x2 warps, 32x64/warp, 384 threads`同步双B-fragment emitter。
+  静态API与线程覆盖合法，但v655在评测同版TileLang 0.1.10的`LayoutInference`阶段报
+  `no available layout found`；E64只改变expert数量、M/N/K与layout完全相同，因此v656不再
+  重复消耗GPU编译，二者均标记不可用。
+- v657/v658改用`2x2 warps, 48x64/warp, 256 threads`。E32 v657连续三次随机精度完全一致，
+  但Stage2/full慢 **3.79%/1.20%**。E64 v658连续三次随机精度一致，首轮Stage2曾有
+  **+0.88%**信号；随后四轮常量正反交替复验为Stage2 **3.100544 vs 3.097088 ms
+  （-0.11%）**、full **8.548736 vs 8.555264 ms（+0.08%）**，确认只是噪声。
+- 结论：92行减少25%理论MMA并不能抵消第三次launch及非规则48行warp fragment的效率损失；
+  M96路线至此关闭，继续保留v634的规则M128/M64两级结构。
