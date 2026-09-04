@@ -82,14 +82,90 @@ def parse_args() -> argparse.Namespace:
         default="synthetic",
         help="expert-row distribution; oj-real uses alternating 64/220 rows",
     )
+    parser.add_argument(
+        "--input-mode",
+        choices=("random", "constant"),
+        default="random",
+        help="constant fills tensors directly on GPU for rapid scheduling probes",
+    )
     parser.add_argument("--warmup", type=nonnegative_int, default=1)
     parser.add_argument("--iters", type=positive_int, default=3)
     parser.add_argument("--rounds", type=positive_int, default=4)
     return parser.parse_args()
 
 
-def make_inputs(case_id: int, routing: str) -> tuple:
+def make_constant_inputs(case_id: int, routing: str) -> tuple:
+    """Allocate inexpensive nonzero tensors directly on GPU for timing sweeps."""
+    cfg = rb.CASES[case_id]
+    if routing == "oj-real":
+        sizes = OJ_REAL_GROUP_SIZES.get(case_id)
+        if sizes is None:
+            raise ValueError("oj-real routing is defined only for scored cases 1, 2 and 3")
+        group_sizes_cpu = torch.tensor(sizes, dtype=torch.int32)
+    else:
+        group_sizes_cpu = rb.make_group_sizes(cfg)
+
+    group_offsets_cpu = torch.cat(
+        (
+            torch.zeros(1, dtype=torch.int32),
+            torch.cumsum(group_sizes_cpu, 0, dtype=torch.int32),
+        )
+    )
+    padded_sizes = torch.div(
+        group_sizes_cpu + rb.BLOCK_M - 1,
+        rb.BLOCK_M,
+        rounding_mode="floor",
+    ) * rb.BLOCK_M
+    group_padded_offsets_cpu = torch.cat(
+        (
+            torch.zeros(1, dtype=torch.int32),
+            torch.cumsum(padded_sizes, 0, dtype=torch.int32),
+        )
+    )
+    padded_total = int(group_padded_offsets_cpu[-1])
+    group_idx_cpu = torch.repeat_interleave(
+        torch.arange(cfg["experts"], dtype=torch.int32),
+        padded_sizes // rb.BLOCK_M,
+    )
+
+    def full_cuda(label: str, shape: tuple[int, ...], value: float, dtype=torch.float16):
+        print(f"allocating constant {label} on GPU: {shape}", flush=True)
+        result = torch.full(shape, value, dtype=dtype, device="cuda")
+        print(f"allocated constant {label}", flush=True)
+        return result
+
+    x = full_cuda("x", (padded_total, cfg["hidden"]), 0.01)
+    gate = full_cuda("gate", (cfg["experts"], cfg["intermediate"], cfg["hidden"]), 0.001)
+    up = full_cuda("up", (cfg["experts"], cfg["intermediate"], cfg["hidden"]), 0.0015)
+    down = full_cuda(
+        "down",
+        (cfg["experts"], cfg["hidden"], cfg["intermediate"]),
+        0.0005,
+    )
+    routed = full_cuda("routed weights", (cfg["valid"],), 0.5, dtype=torch.float32)
+    group_sizes = group_sizes_cpu.to("cuda")
+    group_offsets = group_offsets_cpu.to("cuda")
+    group_padded_offsets = group_padded_offsets_cpu.to("cuda")
+    group_idx = group_idx_cpu.to("cuda")
+    torch.cuda.synchronize()
+    print("constant inputs ready", flush=True)
+    return cfg, padded_total, (
+        x,
+        gate,
+        up,
+        down,
+        routed,
+        group_sizes,
+        group_offsets,
+        group_padded_offsets,
+        group_idx,
+    )
+
+
+def make_inputs(case_id: int, routing: str, input_mode: str) -> tuple:
     """Build inputs with either the historical skew or public OJ telemetry."""
+    if input_mode == "constant":
+        return make_constant_inputs(case_id, routing)
     if routing == "synthetic":
         return rb.make_inputs(case_id, DEFAULT_SEED + case_id)
 
@@ -318,7 +394,7 @@ def main() -> None:
     args = parse_args()
     candidate_paths = resolve_candidates(args.candidates)
 
-    cfg, padded_total, tensors = make_inputs(args.case, args.routing)
+    cfg, padded_total, tensors = make_inputs(args.case, args.routing, args.input_mode)
     expected_shape = (padded_total, cfg["hidden"])
 
     workspace = torch.empty(

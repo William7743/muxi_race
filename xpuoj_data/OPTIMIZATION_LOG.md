@@ -2760,3 +2760,33 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   `T.Pipelined`、async/BSM、extern/import_source、内部monkeypatch、PyTorch核心GEMM、结果缓存
   或评测阶段投机。当前首选升级为 **v581**：E16/E32字节级沿用v552，E64采用已复现的M64
   tail256四launch路径，待用户手动OJ提交。
+
+### v588-v600：尾块归因、GIU移植与v597升级
+
+- `remote_stage_ab.py`新增`--stage all`，一次权重分配后依次测Stage1/Stage2/full；另增
+  `--input-mode constant`，只用于已完成随机精度检查后的快速调度复验。该模式把非零常量直接填到
+  GPU，避免case3每轮在CPU重建约5.6GB随机权重；正式候选仍先用随机输入和候选0完整参考验精度。
+- v589/v590把v581拆成仅Stage1/仅Stage2使用M64 tail的三launch版本。同进程OJ-real分段中，
+  v581双阶段相对v552为Stage1 **5.606272 vs 5.770752 ms（+2.93%）**、Stage2
+  **3.215104 vs 3.326208 ms（+3.46%）**、full **8.763136 vs 9.063168 ms（+3.42%）**；
+  v589 full为 **8.846336 ms（+2.45%）**，v590为 **8.955008 ms（+1.21%）**。
+  两半均有贡献，省一次launch不足以抵消另一半tail收益，继续保留v581四launch。
+- v588把threshold/tail tile扩大到M96，使真实64与92行尾块都进tail；虽逐元素一致，但Stage1/Stage2
+  分别慢2.31%/1.53%，full **9.174528 vs v552 8.960256 ms（-2.34%）**。这验证padding
+  MMA成本接近免费，M96非规则warp行形状与额外tail工作更贵，关闭。
+- v579 E64 Stage2 panel8在真实路由为 **3.451264 vs v552 3.303424 ms（-4.28%）**；
+  v593把每行route weight预载到FP32 fragment后Stage2仅 **3.322368 vs 3.322880 ms**，full反而
+  慢0.37%。两个方向均关闭。v594/v595/v596只改M64 tail光栅化为4-column、8-column、8-row，
+  full相对v581分别慢3.33%/9.48%/0.59%；原panel2-column明确最优。
+- v591/v592以合法256线程`2x2 waves, 32x64/wave`替换M64 Stage1/Stage2 tail的官方
+  `k_pack=2` emitter。随机精度均在容差内，但四轮复验v591 full只比v581快0.13%，v592慢0.90%；
+  高层`T.gemm`继续更稳。
+- v597只把v581的M64 Stage1 tail改成与v552 E64 main一致的同步GIU路径：先Gate→shared，
+  再input→shared与Up→fragment，Gate GEMM后把Up fragment写入复用shared再做Up GEMM。
+  随机输入`max_abs=0,bad=0`，首轮Stage1/full为 **5.490944/8.654720 ms**，相对v581快
+  2.66%/1.67%；四轮常量调度复验中位仍为Stage1 **5.518464 vs 5.608320 ms（+1.63%）**、
+  full **8.660224 vs 8.773888 ms（+1.31%）**，方向稳定，升级为当前首选。
+- v598只移除旧tail的aggressive merge，四轮full相对v581仅+0.04%；v599/v600分别恢复Stage1/
+  Stage2 tail默认256-bit vectorize，首轮full慢0.37%/0.24%。均不单独升级，后续只在v597上做
+  最后组合消融。v588-v600继续通过语法、Ruff、禁项与最小AST差异检查；当前待用户手动OJ候选为
+  **v597**，E16/E32仍字节级等价v552。
