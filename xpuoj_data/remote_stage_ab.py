@@ -233,8 +233,9 @@ def compile_candidates(
             padded_total,
             num_blocks_m,
         )
-        if cfg["experts"] == 64 and hasattr(module, "_get_stage1_e64_split"):
-            stage1 = tuple(module._get_stage1_e64_split(*stage1_args))
+        stage1_split_name = f"_get_stage1_e{cfg['experts']}_split"
+        if hasattr(module, stage1_split_name):
+            stage1 = tuple(getattr(module, stage1_split_name)(*stage1_args))
         else:
             stage1 = module._get_stage1(*stage1_args)
 
@@ -248,8 +249,9 @@ def compile_candidates(
             num_blocks_m,
             weights_dtype,
         )
-        if cfg["experts"] == 64 and hasattr(module, "_get_stage2_e64_split"):
-            stage2 = tuple(module._get_stage2_e64_split(*stage2_args))
+        stage2_split_name = f"_get_stage2_e{cfg['experts']}_split"
+        if hasattr(module, stage2_split_name):
+            stage2 = tuple(getattr(module, stage2_split_name)(*stage2_args))
         else:
             stage2 = module._get_stage2(*stage2_args)
         torch.cuda.synchronize()

@@ -2813,3 +2813,21 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   fragment结构必须先通过候选0固定参考下的多次完整运行，不能凭单次`bad=0`升级。v601-v629
   均不使用`T.Pipelined`、async/BSM、extern/import_source、内部编译器修改、PyTorch核心GEMM、
   结果缓存或评测阶段投机。当前待用户手动OJ提交版本为 **v614**。
+
+### v630-v636：把M64尾块分流扩展到E32/E16
+
+- 测试工具改为按`_get_stage{1,2}_e{experts}_split`命名自动识别shape专用scope，确保E16/E32
+  候选真正运行分流kernel而不是误回退普通单核。v633/v634分别隔离E32 Stage1/Stage2分流；
+  两个候选在完整随机权重上连续两次均为`max_abs=0,bad=0`。
+- E32 Stage1-only v633的Stage1/full分别为 **3.149312/4.798080 ms**，相对v614的
+  **3.019904/4.683520 ms**慢4.11%/2.39%，额外launch与tail GIU不适合该shape。E32
+  Stage2-only v634则为Stage2 **1.643520 vs 1.699072 ms（+3.38%）**、full
+  **4.605056 vs 4.683520 ms（+1.70%）**；四轮常量复验full进一步确认
+  **4.584704 vs 4.696832 ms（+2.45%）**，且三次完整精度检查全通过。
+- E16 Stage2-only v635虽连续两次随机精度通过，但intermediate=8192下额外tail launch明显不值：
+  Stage2 **1.193600 vs 1.017472 ms（-14.76%）**，full
+  **2.751872 vs 2.597504 ms（-5.61%）**。因此不采用v635/v636的E16分支，也不把E16
+  强行纳入统一四launch。
+- 当前首选升级为 **v634**：E16维持v552路径，E32只拆Stage2，E64维持v614的双阶段M64
+  分流。所有新路径仍是普通同步TileLang API与官方emitter，无pipeline/async/BSM/extern、
+  内部编译器改写、结果缓存或评测生命周期投机。
