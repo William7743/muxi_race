@@ -2524,3 +2524,25 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - 文件：`probe_v496_s1_panel3_experts32.py`。不按输入数值、调用顺序或correctness/benchmark阶段
   分派，每次仍完整计算当前输入；符合官方“按shape选择kernel实现”答复。状态：**优先于v493的
   当前首选待用户手动OJ提交候选**。
+
+### v497-v507：Stage1细粒度消融与E32 merge隔离
+
+- 本批均保持同步TileLang计算路径；一次baseline约 **6.149 ms** 属于系统异常outlier，
+  不参与任何候选比较。其余结果使用同轮有效baseline。
+- v497把Stage1 `k_pack`改为1：case2 **5.431552 vs v493 5.410688 ms**，略慢，关闭。
+- v498重新允许256-bit向量化：**5.547648 vs 5.477760 ms**；v499仅把weight shared布局
+  改为vec8：**5.546752 vs 5.476608 ms**；v500仅把input shared布局改为vec8：
+  **5.603072 vs 5.424128 ms**。三者均明确回退，继续保持vec256关闭和双vec4布局。
+- v501把现有Up global→fragment copy移到input/gate copy之前：首轮有正信号，但复测为
+  **5.433728 vs 5.424128 ms**，归入噪声，不叠加。
+- v502仅为实际Stage1-prefetch开启`tl.enable_aggressive_shared_memory_merge=True`，两轮均正：
+  **5.473920 vs 5.521024 ms**、**5.394048 vs 5.424128 ms**，稳定改善约0.5--0.8%。
+- v503仅在case1使用同步`TensorCoreIntrinEmitter`，结果 **2.564096 ms**、逐元素一致，
+  与原`T.gemm`路径中性；不替换case1。
+- v504组合v501 copy顺序与v502 merge：**5.410304 vs 5.424128 ms**，虽微正但弱于
+  v502独立收益，说明copy前移没有可叠加价值。
+- v505是v502的`num_experts==32`独立JIT隔离版，case2 **5.426816 ms**、逐元素一致；
+  对E32与v502语义等价，同时让E16/E64字节级保留v496路径，故升级为**当前首选候选**。
+- v506只开`tl.storage_rewrite_detect_inplace=True`为 **5.828096 ms**，明显回退，关闭。
+  v507把Stage1 copy顺序从input→gate→Up改为input→Up→gate，得到 **5.437568 ms**、
+  逐元素一致，仍属噪声。copy顺序微调至此关闭。
