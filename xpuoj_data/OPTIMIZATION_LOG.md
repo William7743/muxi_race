@@ -2590,3 +2590,35 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   数学、tile、threads、shared/fragment分配、复制次数与宽度、GEMM、SwiGLU和offset语义均不变，
   假设是把Gate权重读取提前后可能改善同步load/MMA的指令排布。文件：
   `probe_v515_s1_gate_input_up_merge_experts32.py`；状态：**待case2短测**，暂不升级提交候选。
+
+### v515-v527：GIU复制顺序突破与跨shape整合
+
+- v515保留E32的aggressive shared-memory merge与panel3，只把Stage1三次全局复制发射顺序
+  从input→Up→Gate改为 **Gate→input→Up（GIU）**。首轮Stage1为
+  **3.3468 vs v510 3.5603 ms**；反向执行顺序下两组复验仍为
+  **3.3714 vs 3.5321 ms**、**3.3551 vs 3.5093 ms**。三轮均逐元素一致，稳定改善约
+  4.4--6.0%，排除单次调度噪声，v515正式升级。
+- v516的Gate→Up→input为 **3.3755 ms**，v517的Up→Gate→input为
+  **3.3851 ms**；两者均逐元素一致且快于旧v510，但稳定弱于v515，说明把Gate提前且让input
+  位于Up之前的GIU顺序最优，不升级v516/v517。
+- v518删除E32 Stage2独立clear、改由首个GEMM初始化accumulator，Stage2
+  **1.9952 vs 1.8840 ms**，明显回退，关闭。
+- 在v515上复核E32 panel与merge：v519 panel2 **3.3486 ms**、v515 panel3
+  **3.3440 ms**、v520 panel4 **3.3725 ms**、v521 panel3但移除merge
+  **3.3518 ms**，全部逐元素一致。panel3继续最优；merge相对no-merge仅约0.2%改善，影响很小，
+  但没有负担信号，故保留panel3+merge。
+- 将Gate-first路径扩展到其他shape时，case1/E16的v522与v523分别为
+  **1.6068/1.6040 ms**，弱于对应v515原路径 **1.5905/1.5878 ms**，因此E16必须保持不变。
+  case3/E64则相反：v522 **5.2439 vs v515 5.4141 ms**，v523
+  **5.2166 vs v515 5.4258 ms**，全部逐元素一致；E64采用v523的GIU+merge路径收益最大。
+- v524把E32 Stage2 prime与steady复制都改为Down→Up，Stage2 **1.8844 ms**；v525仅把
+  prime改为Down→Up、steady保持Up→Down，为 **1.8778 ms**。二者均逐元素一致但不及原顺序
+  **1.8703 ms**，Stage2不升级。
+- v526交换E32 Stage1的Gate/Up shared-fragment角色并先算Up，Stage1
+  **3.3585 vs 3.3557 ms**，逐元素一致但完全中性，关闭。
+- v527只扩展已验证builder的shape分派：E16字节级保留v515原路径，E32保持v515的
+  GIU+merge+panel3，E64使用v523验证更快的GIU+merge+panel2；所有kernel仍对当前输入完整计算。
+  文件：`probe_v527_s1_giu_merge_experts32_64.py`。状态：**当前首选待用户手动OJ提交候选**。
+- 本轮v515-v527全部只使用同步TileLang `T.copy/T.gemm/T.sync_threads/T.Parallel`、官方layout
+  API与允许的shape分派；不含pipeline DSL、异步/BSM、extern/import_source、PyTorch核心计算、
+  跨调用结果缓存或已知数值/评测阶段投机，规则扫描与精度检查均通过。
