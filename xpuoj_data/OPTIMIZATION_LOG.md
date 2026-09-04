@@ -2545,4 +2545,48 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   对E32与v502语义等价，同时让E16/E64字节级保留v496路径，故升级为**当前首选候选**。
 - v506只开`tl.storage_rewrite_detect_inplace=True`为 **5.828096 ms**，明显回退，关闭。
   v507把Stage1 copy顺序从input→gate→Up改为input→Up→gate，得到 **5.437568 ms**、
-  逐元素一致，仍属噪声。copy顺序微调至此关闭。
+  逐元素一致；单次结果属噪声级，但后续qbench两种顺序均显示约0.35--0.45%的微正，作为
+  v510组合的基础保留，独立版本不升级。
+
+### v508-v514：同步预取终扫与v510交替复验
+
+- 本批所有运行均为`bad=0`、`max_abs=0`，继续只使用同步TileLang路径。
+- v508把Stage1改为单fragment交替预取Gate/Up，Stage1 **3.7572 vs 3.5318 ms**，回退约
+  **6.4%**，关闭。
+- v509只对E32 Stage1开启`tl.force_let_inline=True`，Stage1 **3.5510 ms**，对比基线
+  **3.5318/3.5124 ms**中性略慢，关闭。
+- v510仅在E32组合v507的input→Up→gate复制顺序与v505的aggressive shared-memory merge。
+  首轮Stage1为 **3.5510 ms**，优于同轮基线首尾 **3.5693/3.5878 ms**；交替复验两组为
+  **3.5112 vs 3.5483 ms**、**3.4908 vs 3.5323 ms**，分别快约 **1.05%/1.17%**。
+  两种执行顺序均保持同方向，v510升级为**当前首选候选**。
+- v511只在E32隔离input→Up→gate顺序，不开启merge；Stage1 **3.5674 ms**，位于同轮基线
+  首尾 **3.5693/3.5878 ms**之间，微正但明显弱于v510，不单独升级。
+- v512尝试同步Up-only一tile前瞻，Stage1 **3.7868 vs 3.5251 ms**，明显回退，关闭。
+- v513在v510上只将E32 Stage2稳态复制顺序从Up→Down改为Down→Up，Stage2
+  **1.8780 ms**，对比v510首尾 **1.8668/1.8768 ms**中性略慢，关闭。
+- v514在v510上只对E32 Stage2开启`tl.force_let_inline=True`，Stage2 **2.4457 ms**，
+  明显回退，关闭。Stage2继续保持v510原路径。
+
+### q630-q635：Stage2同步预取终扫
+
+- 同窗case1基线q500为Stage2 **0.9324 ms**（full **2.5081 ms**）。q630同步Stage2预取
+  输出逐元素一致（`bad=0`、`max_abs=0`），但Stage2为 **0.9823 ms**，比基线慢约
+  **5.35%**；full为 **2.5634 ms**，关闭。
+- q631把同一路径的fragment→shared复制宽度改为4，输出同样逐元素一致；Stage2
+  **0.9514 ms**，仍比基线慢约 **2%**，full为 **2.5333 ms**，关闭。
+- q632 Down-only与q633 Up-only拆分预取分别出现约305万错误元素，均为WrongAnswer；
+  q634的`be2=32`为Stage2 **1.8322 ms**，q635的`threads=512`为 **0.9928 ms**，虽正确
+  但均明显变慢。至此Stage2同步fragment预取路线关闭，不再组合扩展。
+
+### case2 panel首轮与v515待测设计
+
+- E32/case2 Stage1 panel首轮全部输出逐元素一致：panel3 **3.5290 ms**、panel4
+  **3.5284 ms**、panel6 **3.5455 ms**、panel12 **3.5711 ms**。panel6/panel12明确回退，
+  关闭；panel4与panel3完全中性，原计划再做交替复验，但复验进程在输入分配阶段被并发外部
+  进程抢占主机内存后杀掉，尚无有效复验数据。
+- v515基于当前首选v510，仅在E32独立Stage1 builder内把三次全局复制发射顺序从
+  input→Up→Gate改为 **Gate→input→Up**，继续保留v510的
+  `tl.enable_aggressive_shared_memory_merge=True`；E16/E64仍字节级使用v496原builder。
+  数学、tile、threads、shared/fragment分配、复制次数与宽度、GEMM、SwiGLU和offset语义均不变，
+  假设是把Gate权重读取提前后可能改善同步load/MMA的指令排布。文件：
+  `probe_v515_s1_gate_input_up_merge_experts32.py`；状态：**待case2短测**，暂不升级提交候选。
