@@ -2426,3 +2426,18 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   2.785109 / 5.771--5.861 / 9.006080 ms，分别约快 2.1%、3--4.4%、3.6%。
 - 文件：`probe_v469_stage2_manual_sync_layout4.py`。状态：**待用户手动 OJ 提交**；目标超过
   v432 的 78.67。提交前由第二代理在准确 0.1.10 环境独立复测 case2，作为交叉验证。
+
+### v469 独立复验与 v470 panel/k-pack 组合
+
+- 第二代理使用完全相同的 OJ TileLang 0.1.10 启动方式独立复验 v469 case2，得到
+  **5.605376 ms**，与首测5.601365 ms仅差0.07%；输出仍为`max_abs=0`、`bad=0`。
+- 在v469上快速消融：Stage2 panel 4→2为case2 **5.569365 ms**、case3
+  **8.739328 ms**；Stage1-prefetch panel 4→2为case1 **2.692779 ms**、case2
+  **5.645142 ms**；仅case1新增`k_pack=2`为 **2.711040 ms**。be2=128和threads=512
+  均明显负收益。
+- v470组合实际使用的Stage1-prefetch改为panel2并统一`k_pack=2`，Stage2-fast改为panel2；
+  其余保持v469。同进程A/B为v469→v470：case1 **2.878379→2.695595 ms**，case2
+  **5.653760→5.644032 ms**，case3 **8.754859→8.753408 ms**，全部逐元素一致。
+  case1结果也与第二代理的独立2.692779 ms吻合；总耗时约改善1%。
+- 文件：`probe_v470_panel2_kpack2.py`。静态扫描仍无pipeline DSL、异步/BSM、extern、
+  PyTorch GEMM或结果缓存。状态：**优先于v469的待手动OJ提交候选**。
