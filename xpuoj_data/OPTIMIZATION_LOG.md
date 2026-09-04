@@ -2882,3 +2882,40 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   （-0.11%）**、full **8.548736 vs 8.555264 ms（+0.08%）**，确认只是噪声。
 - 结论：92行减少25%理论MMA并不能抵消第三次launch及非规则48行warp fragment的效率损失；
   M96路线至此关闭，继续保留v634的规则M128/M64两级结构。
+
+### v659-v662：Stage2 main raster消融
+
+- v659-v661只改变E32 Stage2 M128 main scope的`T.use_swizzle`，M64 tail与其他shape字节级
+  保持v634；panel1-column、panel4-column、panel2-row均连续三次随机精度完全一致。相对
+  panel2-column基线，Stage2分别慢 **0.80%/0.42%/0.53%**，full分别慢
+  **0.61%/0.11%/0.04%**，无可复验正信号。
+- v662只给E64 Stage2 main改panel1-column，三次随机精度完全一致；Stage2仅快噪声级
+  **0.05%**，full慢 **0.39%**。因此v634的panel2-column继续是两个shape共同最优选择，
+  main-scope raster搜索关闭。
+
+### v663-v674：Stage2普通同步跨K权重预取
+
+- v663-v666尝试在当前K块MMA之前，把下一K块的Down权重整tile同步读入fragment，再在
+  `T.sync_threads()`后写回复用shared；它不使用async、pipeline DSL或BSM。第一版新增copy沿用
+  `coalesced_width=8`，TileLang 0.1.10编译器明确报
+  `Vector size 4 is not divisible by coalesced width 8`，因此只作为编译失败探针保留。
+- v671-v674把两处新增copy修为`coalesced_width=4`，其中E32 main/tail的v671/v672均连续三次
+  随机完整精度一致。结果却非常明确：v671 Stage2/full为
+  **1.724032/4.699136 ms**，相对v634 **1.634944/4.593024 ms**慢
+  **5.17%/2.26%**；v672 Stage2/full为 **1.725824/4.676864 ms**，慢
+  **5.27%/1.79%**。E64同形状版本v673/v674因此不再重复消耗大权重分配时间。
+- v667-v670继续枚举E32 main/tail的Up-only与Up+Down整tile预取，四版均连续三次随机精度
+  `max_abs=0,bad=0`。v667/v668/v669的Stage2分别慢 **5.75%/3.75%/3.27%**，full慢
+  **1.65%/1.24%/0.70%**；尾块Up+Down的v670也使Stage2/full慢 **0.90%/0.96%**。
+  结论：即使全部是合法普通同步load，整块future-weight fragment造成的寄存器压力仍明显大于
+  latency hiding收益，Stage2跨K整tile预取路线关闭。
+
+### v675-v678：四B微fragment全预载消融
+
+- v675-v678不跨K预取global权重，只在同一K64 shared tile内先同步装入四个K16 B fragment，
+  再依次装A fragment并发射四次MMA；global/shared循环、raw route-weight、padding与pass均与
+  v634一致。E32 tail/main的v675/v676连续三次随机精度完全一致，但Stage2分别慢
+  **0.61%/0.46%**。full表面快 **0.52%/0.37%**，与未改变的Stage1漂移方向相反，不视为收益。
+- E64 tail/main的v677/v678同样连续三次随机精度完全一致；Stage2只快噪声级
+  **0.05%/0.11%**，而full窗口存在约0.15--0.33 ms的未改Stage1长尾，不能据此升级。
+  当前双B交错加载已是更好的寄存器/发射折中，稳定首选仍为 **v634**。
