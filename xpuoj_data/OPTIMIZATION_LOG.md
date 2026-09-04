@@ -2513,3 +2513,14 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   **8.497280→8.491776 ms**；全部逐元素一致。case2改善约1.0%，其余两项中性微正。
 - 文件：`probe_v493_s1_panel3.py`。静态规则边界与v478完全一致，不含pipeline DSL、async/BSM、
   extern/import_source、PyTorch核心计算或结果缓存。状态：**当前首选待用户手动OJ提交候选**。
+
+### v495-v496：panel3 形状隔离
+
+- v495在v493之上把Stage2 panel也从2改为3；case2 **5.521792 vs v493 5.509888 ms**，
+  正确但略慢，Stage2继续保持panel2。
+- v496利用官方已明确允许的编译期shape分派：仅`num_experts==32`的Stage1使用panel3，其他
+  shape继续使用v478的panel2。它对case2与v493完全同义，保留两轮均为正的约1%收益；case1/3
+  则字节级回到已验证v478调度，避免把噪声级微正当成泛化收益。
+- 文件：`probe_v496_s1_panel3_experts32.py`。不按输入数值、调用顺序或correctness/benchmark阶段
+  分派，每次仍完整计算当前输入；符合官方“按shape选择kernel实现”答复。状态：**优先于v493的
+  当前首选待用户手动OJ提交候选**。
