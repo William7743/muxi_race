@@ -2622,3 +2622,14 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - 本轮v515-v527全部只使用同步TileLang `T.copy/T.gemm/T.sync_threads/T.Parallel`、官方layout
   API与允许的shape分派；不含pipeline DSL、异步/BSM、extern/import_source、PyTorch核心计算、
   跨调用结果缓存或已知数值/评测阶段投机，规则扫描与精度检查均通过。
+
+### v528-v530：首轮清零与E64 panel复核
+
+- v528把E32 Stage1拆成显式K0与后续同步循环，删除两次独立`T.clear`，改用首轮两个
+  `T.gemm(clear_accum=True)`初始化累加器。交替复验Stage1为 **3.3545/3.3490 ms**，
+  对照v515为 **3.3531/3.3473 ms**；全部逐元素一致但完全中性，不升级。
+- v529/v530只把v527的E64 Stage1 panel从2改为3/4。同窗Stage1分别为
+  **5.2413/5.2286 ms**，v527 panel2首尾为 **5.2176/5.2512 ms**。三者差异约0.25%，
+  完整链路也无稳定方向，保留更简单且已验证的v527 panel2。
+- 三个探针继续只使用同步TileLang原语与允许的shape分派；数值均为`bad=0/max_abs=0`。
+  v527仍是当前首选待OJ候选。
