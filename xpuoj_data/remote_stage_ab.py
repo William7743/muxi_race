@@ -91,6 +91,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--warmup", type=nonnegative_int, default=1)
     parser.add_argument("--iters", type=positive_int, default=3)
     parser.add_argument("--rounds", type=positive_int, default=4)
+    parser.add_argument(
+        "--correctness-repeats",
+        type=positive_int,
+        default=1,
+        help="repeat the complete correctness path to expose nondeterministic kernels",
+    )
     return parser.parse_args()
 
 
@@ -332,7 +338,8 @@ def check_correctness(
 
     reference_f32 = reference.float()
     diff = (out.float() - reference_f32).abs()
-    bad = diff > (0.05 + 0.05 * reference_f32.abs())
+    bad = (~torch.isfinite(out)) | (~torch.isfinite(reference_f32))
+    bad |= diff > (0.05 + 0.05 * reference_f32.abs())
     max_abs = float(diff.max())
     bad_count = int(bad.sum())
     total = bad.numel()
@@ -426,14 +433,19 @@ def main() -> None:
 
     # Correctness always covers the complete Stage1 -> Stage2 path before any
     # performance numbers are produced.
-    for candidate in candidates:
-        check_correctness(
-            candidate,
-            tensors,
-            workspace,
-            out,
-            reference_path,
-            reference,
+    for correctness_round in range(args.correctness_repeats):
+        for candidate in candidates:
+            check_correctness(
+                candidate,
+                tensors,
+                workspace,
+                out,
+                reference_path,
+                reference,
+            )
+        print(
+            f"correctness_round={correctness_round + 1}/{args.correctness_repeats}",
+            flush=True,
         )
     print("all_candidates_correct", flush=True)
 

@@ -2790,3 +2790,26 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   Stage2 tail默认256-bit vectorize，首轮full慢0.37%/0.24%。均不单独升级，后续只在v597上做
   最后组合消融。v588-v600继续通过语法、Ruff、禁项与最小AST差异检查；当前待用户手动OJ候选为
   **v597**，E16/E32仍字节级等价v552。
+
+### v601-v629：E64 Stage2双B预取融合、线程消融与稳定性门槛
+
+- v601只把E64 M64 Stage2 tail换成官方`TensorCoreIntrinEmitter`的同步双B-fragment交错发射；
+  随机OJ-real输入逐元素一致，Stage2 **3.122304 vs v581 3.215488 ms（+2.98%）**，full
+  **8.670464 vs 8.772480 ms（+1.18%）**。v614将该Stage2路径与v597的Stage1 GIU合并，
+  随机两轮full为 **8.557312 vs v581 8.903168 ms（+4.04%）**；对v597的四轮复验为
+  **8.558336 vs 8.632192 ms（+0.86%）**，Stage2独立仍快3.50%。同一非零输入连续五次完整
+  Stage1→Stage2检查均为`max_abs=0,bad=0`，因此稳定首选升级为 **v614**。
+- v602让Stage1权重复制自动选宽仅为噪声；v603的vec8 shared/copy使full慢1.48%。v605-v607及
+  v615-v617消融aggressive merge/vectorize pass；v617随机full只比v614快0.19%，低于升级阈值，
+  且更激进的vectorize不适合作为最终稳定版。v611-v613调整GIU三项预载顺序，分段收益在
+  -0.65%至+0.20%之间；v618四B、v619双A双B、v620 Down-first的随机full信号仅
+  +0.13%至+0.18%，均不升级。
+- v621/v623把Stage2 tail降为128线程，首批计时一度显示full快0.54%/0.59%，但后续重复完整
+  correctness时v623出现 **57,733,787/88,080,384** 个错误与NaN，证明该线程配置存在
+  非确定同步/覆盖问题；v621及继承它的v627-v629一并标记 **unsafe / 禁止提交**。v622的512线程
+  Stage2慢约5.93%。Stage1的v624/v626 128线程分别慢37.45%/38.41%，v625 512线程Stage1
+  慢0.28%，线程路线关闭。
+- `remote_stage_ab.py`新增`--correctness-repeats`并把非有限值显式计为错误；此后任何新线程或
+  fragment结构必须先通过候选0固定参考下的多次完整运行，不能凭单次`bad=0`升级。v601-v629
+  均不使用`T.Pipelined`、async/BSM、extern/import_source、内部编译器修改、PyTorch核心GEMM、
+  结果缓存或评测阶段投机。当前待用户手动OJ提交版本为 **v614**。
