@@ -2455,3 +2455,26 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   累计快约6--7%。
 - 文件：`probe_v471_s1_mma_layout4_cw4.py`。只使用官方允许的TileLang layout/T.gemm/
   同步copy原语，规则扫描继续为零。状态：**当前首选待手动OJ提交候选**。
+
+### v472-v478：Stage1 layout/copy 消融与 v478 小幅升级
+
+- v472只给weight shared使用vec4/cw4，case1 **2.650880 ms**；v473只给input shared使用
+  vec4，case1 **2.670080 ms**。两者均正确但弱于v471的双侧协同。
+- v474双侧vec2/cw2为 **5.150336 ms**，v475 input4+weight2/cw2为
+  **3.861376 ms**，v476 input2+weight4/cw4为 **4.488064 ms**；均正确但显著回退，关闭。
+- v477把Stage2两侧shared layout改为vec2，case2 **5.687424 ms**，弱于同窗v471
+  **5.389056 ms**，关闭。
+- v478仅把Stage1 Up权重的global→fragment同步copy从`coalesced_width=4`恢复为8；两个
+  写入vec4 shared tile的copy继续保持宽度4。同进程A/B v471→v478：case1
+  **2.580608→2.566144 ms**，case2 **5.389056→5.362560 ms**，case3
+  **8.579200→8.512896 ms**；全部逐元素一致，改善约0.5--0.8%。
+- 文件：`probe_v478_s1_layout4_upglobal_cw8.py`。数学、分块、线程、swizzle、GEMM、
+  SwiGLU、raw/padded offset与pass config均保持v471；规则扫描仍无pipeline DSL、
+  async/BSM、extern/import_source、PyTorch核心计算或结果缓存。状态：**当前首选待手动
+  OJ提交候选**。
+
+### v483：Stage1 显式 prime/steady/final
+
+- 把v478的Stage1 K循环改写为与v469 Stage2类似的显式同步prime/steady/final结构；
+  case1 **2.576000→2.567424 ms**仅改善约0.3%，但case2
+  **5.396608→5.535744 ms**回退约2.6%。输出逐元素一致，因长K回退而关闭，不进入仓库候选。
