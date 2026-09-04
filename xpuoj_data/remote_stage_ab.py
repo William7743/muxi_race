@@ -29,6 +29,16 @@ import remote_bench as rb
 
 DEFAULT_SEED = 20260901
 
+# Public OJ telemetry reports an alternating 64/220 expert distribution for
+# the three scored shapes.  The original synthetic harness intentionally uses
+# a different skew, so keep both distributions available and make the choice
+# explicit on the command line.
+OJ_REAL_GROUP_SIZES = {
+    1: tuple([64, 220] * 8),
+    2: tuple([64, 220] * 16),
+    3: tuple([64, 220] * 32),
+}
+
 
 @dataclass(frozen=True)
 class CompiledCandidate:
@@ -37,8 +47,8 @@ class CompiledCandidate:
     index: int
     path: Path
     module: types.ModuleType
-    stage1: Callable[..., object]
-    stage2: Callable[..., object]
+    stage1: Callable[..., object] | tuple[Callable[..., object], ...]
+    stage2: Callable[..., object] | tuple[Callable[..., object], ...]
 
     @property
     def label(self) -> str:
@@ -64,12 +74,38 @@ def parse_args() -> argparse.Namespace:
         description="Correctness-first, interleaved Stage1/Stage2/full A/B benchmark."
     )
     parser.add_argument("--case", type=int, choices=sorted(rb.CASES), required=True)
-    parser.add_argument("--stage", choices=("s1", "s2", "full"), required=True)
+    parser.add_argument("--stage", choices=("s1", "s2", "full", "all"), required=True)
     parser.add_argument("--candidates", nargs="+", required=True)
+    parser.add_argument(
+        "--routing",
+        choices=("synthetic", "oj-real"),
+        default="synthetic",
+        help="expert-row distribution; oj-real uses alternating 64/220 rows",
+    )
     parser.add_argument("--warmup", type=nonnegative_int, default=1)
     parser.add_argument("--iters", type=positive_int, default=3)
     parser.add_argument("--rounds", type=positive_int, default=4)
     return parser.parse_args()
+
+
+def make_inputs(case_id: int, routing: str) -> tuple:
+    """Build inputs with either the historical skew or public OJ telemetry."""
+    if routing == "synthetic":
+        return rb.make_inputs(case_id, DEFAULT_SEED + case_id)
+
+    sizes = OJ_REAL_GROUP_SIZES.get(case_id)
+    if sizes is None:
+        raise ValueError("oj-real routing is defined only for scored cases 1, 2 and 3")
+    cfg = rb.CASES[case_id]
+    if len(sizes) != cfg["experts"] or sum(sizes) != cfg["valid"]:
+        raise RuntimeError(f"invalid oj-real routing for case {case_id}: {sizes}")
+
+    original_make_group_sizes = rb.make_group_sizes
+    rb.make_group_sizes = lambda _cfg: torch.tensor(sizes, dtype=torch.int32)
+    try:
+        return rb.make_inputs(case_id, DEFAULT_SEED + case_id)
+    finally:
+        rb.make_group_sizes = original_make_group_sizes
 
 
 def resolve_candidates(raw_paths: list[str]) -> list[Path]:
@@ -108,15 +144,20 @@ def compile_candidates(
                 raise AttributeError(f"{path} does not define {required_name}")
 
         print(f"compiling candidate={index} stage=s1", flush=True)
-        stage1 = module._get_stage1(
+        stage1_args = (
             cfg["hidden"],
             cfg["intermediate"],
             cfg["experts"],
             padded_total,
             num_blocks_m,
         )
+        if cfg["experts"] == 64 and hasattr(module, "_get_stage1_e64_split"):
+            stage1 = tuple(module._get_stage1_e64_split(*stage1_args))
+        else:
+            stage1 = module._get_stage1(*stage1_args)
+
         print(f"compiling candidate={index} stage=s2", flush=True)
-        stage2 = module._get_stage2(
+        stage2_args = (
             cfg["hidden"],
             cfg["intermediate"],
             cfg["experts"],
@@ -125,6 +166,10 @@ def compile_candidates(
             num_blocks_m,
             weights_dtype,
         )
+        if cfg["experts"] == 64 and hasattr(module, "_get_stage2_e64_split"):
+            stage2 = tuple(module._get_stage2_e64_split(*stage2_args))
+        else:
+            stage2 = module._get_stage2(*stage2_args)
         torch.cuda.synchronize()
         compiled.append(
             CompiledCandidate(
@@ -146,7 +191,9 @@ def launch_stage1(
     workspace: torch.Tensor,
 ) -> None:
     x, gate, up, _down, _routed, group_sizes, _go, gpo, group_idx = tensors
-    candidate.stage1(x, gate, up, group_sizes, gpo, group_idx, workspace)
+    stages = candidate.stage1 if isinstance(candidate.stage1, tuple) else (candidate.stage1,)
+    for stage in stages:
+        stage(x, gate, up, group_sizes, gpo, group_idx, workspace)
 
 
 def launch_stage2(
@@ -156,16 +203,18 @@ def launch_stage2(
     out: torch.Tensor,
 ) -> None:
     _x, _gate, _up, down, routed, group_sizes, group_offsets, gpo, group_idx = tensors
-    candidate.stage2(
-        workspace,
-        down,
-        routed,
-        group_sizes,
-        group_offsets,
-        gpo,
-        group_idx,
-        out,
-    )
+    stages = candidate.stage2 if isinstance(candidate.stage2, tuple) else (candidate.stage2,)
+    for stage in stages:
+        stage(
+            workspace,
+            down,
+            routed,
+            group_sizes,
+            group_offsets,
+            gpo,
+            group_idx,
+            out,
+        )
 
 
 def launch_full(
@@ -269,9 +318,8 @@ def main() -> None:
     args = parse_args()
     candidate_paths = resolve_candidates(args.candidates)
 
-    cfg, padded_total, tensors = rb.make_inputs(args.case, DEFAULT_SEED + args.case)
+    cfg, padded_total, tensors = make_inputs(args.case, args.routing)
     expected_shape = (padded_total, cfg["hidden"])
-    reference_path, reference = load_reference(args.case, expected_shape)
 
     workspace = torch.empty(
         (padded_total, cfg["intermediate"]),
@@ -281,6 +329,24 @@ def main() -> None:
     out = torch.empty(expected_shape, device="cuda", dtype=torch.float16)
 
     candidates = compile_candidates(candidate_paths, cfg, padded_total, tensors)
+
+    if args.routing == "synthetic":
+        reference_path, reference = load_reference(args.case, expected_shape)
+    else:
+        # Candidate zero is the already-validated baseline (normally v552).
+        # Materialize its result once so every experimental candidate is
+        # checked on the exact same 64/220 metadata before timing.
+        reference_path = Path(f"candidate_zero_{candidates[0].path.name}")
+        reference_workspace = torch.empty_like(workspace)
+        reference = torch.empty_like(out)
+        launch_full(candidates[0], tensors, reference_workspace, reference)
+        torch.cuda.synchronize()
+        reference = reference.clone()
+        print(
+            f"oj_real_reference={candidates[0].label} "
+            f"padded_total={padded_total} num_blocks_m={int(tensors[-1].numel())}",
+            flush=True,
+        )
 
     # Correctness always covers the complete Stage1 -> Stage2 path before any
     # performance numbers are produced.
@@ -296,7 +362,7 @@ def main() -> None:
     print("all_candidates_correct", flush=True)
 
     fixed_stage2_workspace = None
-    if args.stage == "s2":
+    if args.stage in ("s2", "all"):
         # This buffer is written exactly once by candidate zero's Stage1 and is
         # thereafter passed unchanged to every candidate's Stage2.
         fixed_stage2_workspace = torch.empty_like(workspace)
@@ -307,51 +373,60 @@ def main() -> None:
             flush=True,
         )
 
-    def selected_launch(candidate: CompiledCandidate) -> None:
-        if args.stage == "s1":
+    def selected_launch(stage_name: str, candidate: CompiledCandidate) -> None:
+        if stage_name == "s1":
             launch_stage1(candidate, tensors, workspace)
-        elif args.stage == "s2":
+        elif stage_name == "s2":
             if fixed_stage2_workspace is None:
                 raise RuntimeError("fixed Stage2 workspace was not initialized")
             launch_stage2(candidate, tensors, fixed_stage2_workspace, out)
         else:
             launch_full(candidate, tensors, workspace, out)
 
-    for candidate in candidates:
-        for _ in range(args.warmup):
-            selected_launch(candidate)
-        torch.cuda.synchronize()
-        print(
-            f"warmed candidate={candidate.label} launches={args.warmup}",
-            flush=True,
-        )
-
-    samples = {candidate.index: [] for candidate in candidates}
-    for round_index in range(args.rounds):
-        if round_index % 2 == 0:
-            ordered = candidates
-            order_name = "forward"
-        else:
-            ordered = list(reversed(candidates))
-            order_name = "reverse"
-        print(
-            f"round={round_index + 1}/{args.rounds} order={order_name}",
-            flush=True,
-        )
-        for candidate in ordered:
-            elapsed_ms = measure_events(
-                lambda current=candidate: selected_launch(current),
-                args.iters,
-            )
-            samples[candidate.index].append(elapsed_ms)
+    stage_names = ("s1", "s2", "full") if args.stage == "all" else (args.stage,)
+    for stage_name in stage_names:
+        print(f"stage_begin stage={stage_name}", flush=True)
+        for candidate in candidates:
+            for _ in range(args.warmup):
+                selected_launch(stage_name, candidate)
+            torch.cuda.synchronize()
             print(
-                f"timing round={round_index + 1} order={order_name} "
-                f"stage={args.stage} candidate={candidate.label} "
-                f"iters={args.iters} ms={elapsed_ms:.6f}",
+                f"warmed stage={stage_name} candidate={candidate.label} "
+                f"launches={args.warmup}",
                 flush=True,
             )
 
-    print_summary(candidates, samples)
+        samples = {candidate.index: [] for candidate in candidates}
+        for round_index in range(args.rounds):
+            if round_index % 2 == 0:
+                ordered = candidates
+                order_name = "forward"
+            else:
+                ordered = list(reversed(candidates))
+                order_name = "reverse"
+            print(
+                f"round={round_index + 1}/{args.rounds} stage={stage_name} "
+                f"order={order_name}",
+                flush=True,
+            )
+            for candidate in ordered:
+                elapsed_ms = measure_events(
+                    lambda current=candidate, current_stage=stage_name: selected_launch(
+                        current_stage, current
+                    ),
+                    args.iters,
+                )
+                samples[candidate.index].append(elapsed_ms)
+                print(
+                    f"timing round={round_index + 1} order={order_name} "
+                    f"stage={stage_name} candidate={candidate.label} "
+                    f"iters={args.iters} ms={elapsed_ms:.6f}",
+                    flush=True,
+                )
+
+        print(f"stage_summary stage={stage_name}", flush=True)
+        print_summary(candidates, samples)
+        print(f"stage_end stage={stage_name}", flush=True)
 
 
 if __name__ == "__main__":

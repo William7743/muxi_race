@@ -2683,3 +2683,80 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   forward/reverse交替顺序测量中位数，避免把编译、内存分配和执行顺序漂移误判为优化。
 - v531-v558的正式候选均只使用同步TileLang API及官方允许的shape分派/emitter；不使用
   async/BSM、pipeline DSL、extern/import_source、PyTorch核心计算、结果缓存或评测阶段投机。
+
+### v559-v570：emitter几何、寄存器作用域与Stage1 K0顺序闭环
+
+- v559仅对E32 Stage1使用direct emitter与双B fragment，保留GIU全局加载、Up整tile预取、
+  双FP32 accumulator和原SwiGLU。六轮Stage1中位为 **3.361344 vs v552 3.351360 ms**，
+  慢0.30%；v563降为单B fragment后仍为 **3.375424 vs 3.364992 ms**，慢0.31%。
+  Stage1高层`T.gemm`已生成更合适的shared→MMA路径，该路线关闭。
+- v560/v561把Stage2 emitter的4 warps从2x2改为1x4/4x1，覆盖仍为128x128；两轮E32
+  Stage2分别为 **1.920640/1.984512 ms**，相对v552 **1.873920 ms**慢2.43%/5.57%。
+  现有2x2 warp几何最优。
+- v562仅让E64 Stage2 emitter从panel2改回历史高层GEMM偏好的panel4；四轮中位
+  **3.056448 vs v552 3.031936 ms**，慢0.80%，说明旧调度偏好不能迁移到direct emitter。
+- v564仅在E32 emitter使用`k_pack=2`，正确覆盖K64的两个K32微步；精度在容差内
+  （`max_abs=0.001953,bad=0`），但Stage2 **1.917760 vs 1.871424 ms**，慢2.42%，关闭。
+- v565按TileLang 0.1.10官方emitter示例，把A/B operand buffer由`T.alloc_fragment`改为
+  `T.alloc_local`。首批case1/case2出现约1.0%/0.3--0.6%正信号，case3四轮成对比较3胜1负，
+  但系统存在明显升温长尾。随后用v569（仅A local）、v570（仅B local）做四候选因子消融：
+  v552/v569/v570/v565中位分别为 **1.871296/1.883648/1.870720/1.874048 ms**；A-only
+  慢0.66%，B-only中性，A+B慢0.15%。因此早期微正属于噪声，不升级v565。
+- v566仅把E32 Stage1的Up K0读取提前到两次accumulator clear之前。首屏显示
+  **3.352512 vs 3.385600 ms（+0.99%）**，但六轮确认变为
+  **3.368704 vs 3.362816 ms（-0.18%）**，同样归入噪声。
+- v567未占用；v568把E32 Stage1的Up权重绕过shared、直接用官方emitter从global region装入
+  B fragment。输出逐元素一致，但Stage1为 **9.117376 vs v552 3.386688 ms**，慢约2.7倍；
+  lane跨N行造成的非合并全局读取远大于省下的shared流量，直接global MMA operand路线关闭。
+- v559-v570全部通过Python语法、AST最小差异与禁用接口扫描，所有可执行精度检查除已注明的
+  v564舍入差外均为`max_abs=0/bad=0`。
+- 结论：v552继续是当前唯一跨三case稳定正收益、**待用户手动OJ提交**的首选版本。
+
+### v571-v572：低LDS与paired-N公开线索复核
+
+- v571仅对E32 Stage2删除16KB `down_shared`，直接从当前Down global K64 region装入B
+  fragments；Up shared、MMA、accumulator和epilogue均保持v552。精度逐元素一致，但Stage2
+  **7.736768 vs 1.876992 ms**，慢约4.1倍。虽然shared从32KB降至16KB，两个warp-M平面
+  的重复且非合并global读取使收益完全不可用，关闭。
+- GitLink公开实现披露了“同一M128 CTA串行计算两个相邻N128输出、共享一次A global→shared”
+  的Stage2结构，并声称在其内部k-pack lowering改写下三个case改善3.2--6.7%。v572只移植
+  其中合规且公开的算法结构：E32使用512线程、两个独立FP32 accumulator、单A/单B shared，
+  普通循环、`T.copy/T.gemm/T.sync_threads`，不使用其内部monkeypatch或`T.Pipelined`。
+  输出逐元素一致，但Stage2 **2.907904 vs v552 1.851904 ms**，慢36.3%。这与历史v459的
+  256线程paired-N仅有0.3%噪声级信号共同说明：公开收益依赖其内部k-pack lowering，不能直接
+  归因于paired-N本身；v572不提交。
+- 最新官方答疑复核：shape分派、MMA shared-layout/编译期intrinsic、`T.use_swizzle`、
+  `T.tvm_mfma`均获明确允许；`T.Pipelined(num_stages=0)`只有选手讨论、Issue #97仍无官方
+  回复。因此后续正式候选继续使用普通同步循环，不引入内部lowering monkeypatch、设备编译flags
+  或pipeline DSL。v552仍为当前首选待用户手动OJ提交版本。
+
+### OJ-real路由校正与v573-v587：E64 M64尾块取得新收益
+
+- GitLink公开测试记录给出了真实评分路由：每个case的expert行数均为交替`64/220`，因此
+  E16/E32/E64分别是`24/48/96`个外部M128 block、padded总行为`3072/6144/12288`。
+  旧随机短测在case2/case3生成了`54/110`个block，明显高估长尾块比例。`remote_stage_ab.py`
+  因此新增`--routing oj-real`：同一进程、同一组64/220 metadata下先用候选0生成完整参考，再做
+  逐元素精度检查和正反序交替计时；同时新增`--stage all`，可一次分配后连续测S1/S2/full。
+- v573把E32 Stage1改成官方direct emitter、`k_pack=2/512 threads`；精度容差内
+  （`max_abs=0.003906,bad=0`），但Stage1 **5.544448 vs v552 3.345152 ms**，慢39.7%。
+  v575把公开paired-N结构改为官方emitter同几何，OJ-real E32 Stage2两次复验为
+  **1.748160/1.733568 vs v552 1.719552/1.706368 ms**，慢约1.6%；v584再把其A/B operand
+  改为local仍慢2.15%。没有内部lowering改写时，公开k-pack/paired-N收益不能迁移，路线关闭。
+- panel扩张在真实路由下继续失败：v576 E32 Stage1 panel8、v577 E32 Stage2 panel8分别令完整链路
+  慢0.98%/1.12%；v582 E16 Stage1 panel64慢2.56%，v583 E16 Stage2 panel8首轮含长尾且明显更慢；
+  v578 E64 Stage1 panel8首轮完整链路为 **9.017856 vs 9.005696 ms**，同样中性略负。
+- v574只对E64把两个阶段各拆成M128 main与M64 tail同步scope：`actual_rows>64`走main，
+  `0<actual_rows<=64`走tail；外部block映射仍为128行，Stage2显式清零padding。512线程tail首轮
+  完整链路 **8.882048 vs v552 9.005696 ms（+1.39%）**。v581只把两个tail scope改成256线程，
+  首轮为 **8.787072 ms（+2.49%）**；四轮复验中位仍为
+  **8.789632 vs 8.996608 ms（+2.36%）**，四轮范围`8.768512--8.803840 ms`，且
+  `max_abs=0,bad=0`。独立Stage1计时为 **5.599488 vs 5.678336 ms（+1.41%）**。
+- v585/v586分别只把v574的Stage1/Stage2 M64 tail换成官方`k_pack=2` emitter，完整链路中位
+  **8.863232/8.858752 ms**；虽都比v552快约1.5%，仍弱于高层`T.gemm`且256线程的v581，
+  不升级。v587严格只给v552六个builder的expert索引加上下界钳位；E32 OJ-real完整链路
+  **4.669824 vs 4.678400 ms（+0.18%）**，Stage2 **1.689600 vs 1.693440 ms（+0.23%）**，
+  远低于复验阈值，判为噪声级。
+- v574-v587均使用普通同步TileLang API、官方layout/emitter和合法shape分派；无
+  `T.Pipelined`、async/BSM、extern/import_source、内部monkeypatch、PyTorch核心GEMM、结果缓存
+  或评测阶段投机。当前首选升级为 **v581**：E16/E32字节级沿用v552，E64采用已复现的M64
+  tail256四launch路径，待用户手动OJ提交。

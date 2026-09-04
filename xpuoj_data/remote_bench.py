@@ -38,7 +38,14 @@ def load_submission(path: str, module_name: str, kernel_suffix: str = ""):
         # batch run cannot accidentally reuse the first candidate's kernels.
         rename = {
             kernel_name: f"{kernel_name}_{kernel_suffix}"
-            for kernel_name in ("stage1", "stage2")
+            for kernel_name in (
+                "stage1",
+                "stage2",
+                "stage1_main",
+                "stage1_tail",
+                "stage2_main",
+                "stage2_tail",
+            )
         }
 
         class RenameKernels(ast.NodeTransformer):
