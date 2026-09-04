@@ -2441,3 +2441,17 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   case1结果也与第二代理的独立2.692779 ms吻合；总耗时约改善1%。
 - 文件：`probe_v470_panel2_kpack2.py`。静态扫描仍无pipeline DSL、异步/BSM、extern、
   PyTorch GEMM或结果缓存。状态：**优先于v469的待手动OJ提交候选**。
+
+### v471：Stage1 vec4 MMA shared layout + 匹配复制宽度
+
+- v462的Stage1 vec4首次尝试因原`coalesced_width=8`与vec4布局不兼容而编译失败；本版在
+  v470实际使用的Stage1-prefetch函数内，同时给`input_shared/weight_shared`增加官方
+  `make_mma_swizzle_layout(..., vecSize=4)`，并把该函数三处同步copy宽度从8匹配到4。
+- 消融case1：v470 **2.694784 ms**；both-layout4+cw4 **2.580480 ms**；weight-only
+  **2.650880 ms**；input-only **2.670080 ms**。两侧组合有明确协同收益且全部逐元素一致。
+- v470→v471三case同进程A/B：case1 **2.694784→2.580480 ms**，case2
+  **5.599488→5.373526 ms**，case3 **8.733866→8.468480 ms**；分别快约4.2%、4.0%、
+  3.0%，所有输出`max_abs=0`。三case合计约16.422ms，比v470再快3.6%，比v432本地同档
+  累计快约6--7%。
+- 文件：`probe_v471_s1_mma_layout4_cw4.py`。只使用官方允许的TileLang layout/T.gemm/
+  同步copy原语，规则扫描继续为零。状态：**当前首选待手动OJ提交候选**。
