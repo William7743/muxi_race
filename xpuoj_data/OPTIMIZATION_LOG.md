@@ -3844,3 +3844,41 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - 对140270前两点只差+1us/+2us，基线已回原性能范围；点3精确us和分项分数未知，
   不从0.33总分差猜分项归因。已提供同commit同文件的v745原链接请求一次复测。
   这是回退可重复性检查，不是恢复性能推荐；既不归罪平台也不排除E32自身回退。
+
+### 2026-09-05：v745复测140316恢复80分，点2少69us；继续E64单独验证
+
+- 用户最新截图140316：Accepted80，正式2565us/4530us/舍入9ms，样例2565us，
+  总16ms/显存22.3G；按刚才原样复测请求暂关联v745，未明确文字/上传源码核验。
+  图及转录见bench_records/v745/oj_140316_user_*。第三点精确us/分项分数未知。
+- 对相邻v743140309第二点4599us，少69us约1.5003%；点1仅少3us。72.67那次
+  全点明显回退未重现，但总分仍80、不确定此前原因，也不以一次对比声称稳定更优。
+  选择已完成本地测量的v748继续独立OJ，最高80.33基线保留。
+
+### 2026-09-05：v746/v747/v748 E64两阶段runtime短尾隔离，两fixture完成
+
+- 基于v745，仅扩展E64/H7168/I2048。746只将Stage1选择器E32→E32/E64，保持
+  内层正padded/blocks及精确H/I条件；747只扩展Stage2选择器和host两个空输入guard，
+  使用已有clamped runtime Stage2；748组合二者。所有builder/数学/布局/pass不动，
+  E64仍swizzle2、32KiB shared，正输入仍两个kernel重算；E32继承v745，E16不动。
+  无async/BSM/pipeline/extern、额外工作区或历史结果复用；submission.py保持原状。
+- Python/Ruff、完整AST与执行文本限定diff、216组host双新输入检查通过。E64 S1
+  完整生成源与E32对应源只差kernel名/swizzle3→2；S2 FP32只差kernel名/12处raw
+  clamp上界4543→9087。完整source审查和日志归档v746/与v747_v748/。
+- v748边界helper用E64 raw4746/padded9216/72CTA，含空/短尾/满行，两组新X/routes，
+  固定G/U/D。S1有效行、孤立S2、组合链10项实际bitwise_equal全True、finite全True，
+  S1 padding保持NaN、S2 padding清零；两dtype空raw/空padded host路径通过。
+  S2参考直接使用旧clamped M128 builder，不是原始未clamp E64 dispatcher；非独立
+  数学oracle。18条trace S1两版248regs、S2两版154regs、共享均32768；空输出8regs。
+  不用private0推断无spill/occupancy，不用cold trace时长当性能。
+- 两窗均关闭profiler、warmup1/iters1/四轮F/R、各版三次NaN污染full/entry容差复算。
+  alternating64-220/random，745/746/747/748入口中位
+  **8.907008/8.807552/8.765184/8.636672ms**，三候选对745全4/4快。
+  synthetic/random、换列表745/748/747/746，中位
+  **8.222464/8.180096/8.172416/8.187264ms**，三候选均3/4快；第二窗参考保存的
+  ref_v432_case3.pt而非独立oracle，打印6位max_abs=0不当bitwise证据。
+- 748相对745中位耗时减少约3.035%/0.515%，两fixture幅度不同、7/8配对更快，
+  不把一次fixture当OJ分布，不声称独立随机重复或显著性。**推荐仅v748下一次手动OJ**，
+  746/747保留隔离对照；没有748 OJ编号/分数，不替换已验证最高基线。
+- 三候选保持冻结受测SHA（creation-time静态头注释的状态由本记录更新），原始代码、
+  helper、CPU审计、生成源、trace、边界与两窗完整日志均归档。确认GPU进程结束后
+  已释放codex GPU锁，无自动OJ提交。

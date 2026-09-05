@@ -1,0 +1,33 @@
+{
+  "version": "v745",
+  "submission_id": 140316,
+  "submission_url": "https://xpuoj.com/contest/5/submissions/140316",
+  "version_mapping_source": "Inferred from the user's screenshot reply to the requested immutable v745 repeat; no explicit version text or source hash accompanies this image",
+  "version_mapping_explicit": false,
+  "result_source": "User-provided screenshot, visually inspected 2026-09-05",
+  "screenshot_file": "oj_140316_user_screenshot.png",
+  "screenshot_sha256": "5e96a7aab36e1363c7aeda392834642213e983845297792ec34542873c9ef220",
+  "status": "Accepted",
+  "score": 80,
+  "total_time_display": "16 ms",
+  "memory_display": "22.3 G",
+  "sample": {"label": "样例 1", "status": "Accepted", "time_display": "2565 µs", "time_us": 2565},
+  "scored_points": [
+    {"label": "子任务 1.1", "status": "Accepted", "time_display": "2565 µs", "time_us": 2565, "score": null},
+    {"label": "子任务 1.2", "status": "Accepted", "time_display": "4530 µs", "time_us": 4530, "score": null},
+    {"label": "子任务 1.3", "status": "Accepted", "time_display": "9 ms", "time_us": null, "score": null}
+  ],
+  "uploaded_source_verified": false,
+  "precision_note": "Point 3 exact microseconds and individual point scores are unknown. Sample is separate from the three scored points. No exact total or point 3 difference is inferred from rounded displays.",
+  "comparison": {
+    "baseline_version": "v743",
+    "baseline_submission_id": 140309,
+    "baseline_version_mapping_explicit": false,
+    "point_1_delta_us": -3,
+    "point_2_delta_us": -69,
+    "point_2_latency_reduction_percent_approx": 1.5003,
+    "point_3_delta_us": null,
+    "overall_score_delta": 0
+  },
+  "decision": "The earlier 72.67 severe regression did not recur in this repeat, but its cause and stable v745 superiority are not established. Total score remains 80. Retain the earlier failure; v748 is the next separate candidate for manual OJ testing, not an OJ-proven score gain."
+}

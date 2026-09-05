@@ -1,0 +1,107 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+allocating x on CPU: (12288, 7168)
+allocated x on GPU
+allocating gate on CPU: (64, 2048, 7168)
+allocated gate on GPU
+allocating up on CPU: (64, 2048, 7168)
+allocated up on GPU
+allocating down on CPU: (64, 7168, 2048)
+allocated down on GPU
+allocating routed weights
+allocated routed weights
+copying metadata
+inputs ready
+loading candidate=0 path=/root/moe_contest/probe_v745_v743_e32_stage1_runtime_m64.py
+compiling candidate=0 stage=s1
+compiling candidate=0 stage=s2
+stage2_builder candidate=0 name=_get_stage2 launches=1
+compiled candidate=0
+loading candidate=1 path=/root/moe_contest/probe_v746_v745_e64_stage1_runtime_m64.py
+compiling candidate=1 stage=s1
+2026-09-05 12:28:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_stage_ab_case_candidate_1` with `out_idx=None`
+2026-09-05 12:28:14  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_stage_ab_case_candidate_1`
+compiling candidate=1 stage=s2
+stage2_builder candidate=1 name=_get_stage2 launches=1
+compiled candidate=1
+loading candidate=2 path=/root/moe_contest/probe_v747_v745_e64_stage2_runtime_m64.py
+compiling candidate=2 stage=s1
+compiling candidate=2 stage=s2
+2026-09-05 12:28:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_stage_ab_case_candidate_2` with `out_idx=None`
+2026-09-05 12:28:23  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_stage_ab_case_candidate_2`
+stage2_builder candidate=2 name=_get_stage2 launches=1
+compiled candidate=2
+loading candidate=3 path=/root/moe_contest/probe_v748_v747_e64_stage1_runtime_m64.py
+compiling candidate=3 stage=s1
+2026-09-05 12:28:24  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_stage_ab_case_candidate_3` with `out_idx=None`
+2026-09-05 12:28:33  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_stage_ab_case_candidate_3`
+compiling candidate=3 stage=s2
+2026-09-05 12:28:35  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_stage_ab_case_candidate_3` with `out_idx=None`
+2026-09-05 12:28:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_stage_ab_case_candidate_3`
+stage2_builder candidate=3 name=_get_stage2 launches=1
+compiled candidate=3
+candidate_reference=c0:probe_v745_v743_e32_stage1_runtime_m64.py routing=alternating64-220 padded_total=12288 num_blocks_m=96
+correctness candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness_round=1/3
+correctness candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness_round=2/3
+correctness candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py path=launch_full reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py path=run_kernel reference=candidate_zero_probe_v745_v743_e32_stage1_runtime_m64.py max_abs=0.000000 bad=0/88080384
+correctness_round=3/3
+all_candidates_correct
+stage_begin stage=entry
+warmed stage=entry candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py launches=1
+warmed stage=entry candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py launches=1
+warmed stage=entry candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py launches=1
+warmed stage=entry candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py launches=1
+round=1/4 stage=entry order=forward
+timing round=1 order=forward stage=entry candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py iters=1 ms=8.900096
+timing round=1 order=forward stage=entry candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py iters=1 ms=8.822528
+timing round=1 order=forward stage=entry candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py iters=1 ms=8.788224
+timing round=1 order=forward stage=entry candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py iters=1 ms=8.624896
+round=2/4 stage=entry order=reverse
+timing round=2 order=reverse stage=entry candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py iters=1 ms=8.670720
+timing round=2 order=reverse stage=entry candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py iters=1 ms=8.751616
+timing round=2 order=reverse stage=entry candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py iters=1 ms=8.815360
+timing round=2 order=reverse stage=entry candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py iters=1 ms=8.913920
+round=3/4 stage=entry order=forward
+timing round=3 order=forward stage=entry candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py iters=1 ms=8.893952
+timing round=3 order=forward stage=entry candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py iters=1 ms=8.799744
+timing round=3 order=forward stage=entry candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py iters=1 ms=8.749568
+timing round=3 order=forward stage=entry candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py iters=1 ms=8.648448
+round=4/4 stage=entry order=reverse
+timing round=4 order=reverse stage=entry candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py iters=1 ms=8.587008
+timing round=4 order=reverse stage=entry candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py iters=1 ms=8.778752
+timing round=4 order=reverse stage=entry candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py iters=1 ms=8.770304
+timing round=4 order=reverse stage=entry candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py iters=1 ms=8.940032
+stage_summary stage=entry
+summary_begin
+summary candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py median_ms=8.907008 mean_ms=8.912000 stdev_ms=0.017726 min_ms=8.893952 max_ms=8.940032 speedup_vs_c0=+0.000% samples_ms=[8.900096,8.913920,8.893952,8.940032]
+summary candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py median_ms=8.807552 mean_ms=8.801984 stdev_ms=0.020060 min_ms=8.770304 max_ms=8.822528 speedup_vs_c0=+1.129% samples_ms=[8.822528,8.815360,8.799744,8.770304]
+summary candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py median_ms=8.765184 mean_ms=8.767040 stdev_ms=0.016801 min_ms=8.749568 max_ms=8.788224 speedup_vs_c0=+1.618% samples_ms=[8.788224,8.751616,8.749568,8.778752]
+summary candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py median_ms=8.636672 mean_ms=8.632768 stdev_ms=0.030992 min_ms=8.587008 max_ms=8.670720 speedup_vs_c0=+3.130% samples_ms=[8.624896,8.670720,8.648448,8.587008]
+summary_end
+paired_summary candidate=c0:probe_v745_v743_e32_stage1_runtime_m64.py baseline=c0:probe_v745_v743_e32_stage1_runtime_m64.py delta_definition=candidate_minus_baseline median_delta_us=+0.000 mean_delta_us=+0.000 wins=0 ties=4 losses=0 delta_us=[+0.000,+0.000,+0.000,+0.000]
+paired_summary candidate=c1:probe_v746_v745_e64_stage1_runtime_m64.py baseline=c0:probe_v745_v743_e32_stage1_runtime_m64.py delta_definition=candidate_minus_baseline median_delta_us=-96.385 mean_delta_us=-110.016 wins=4 ties=0 losses=0 delta_us=[-77.568,-98.560,-94.209,-169.728]
+paired_summary candidate=c2:probe_v747_v745_e64_stage2_runtime_m64.py baseline=c0:probe_v745_v743_e32_stage1_runtime_m64.py delta_definition=candidate_minus_baseline median_delta_us=-152.832 mean_delta_us=-144.960 wins=4 ties=0 losses=0 delta_us=[-111.872,-162.305,-144.384,-161.280]
+paired_summary candidate=c3:probe_v748_v747_e64_stage1_runtime_m64.py baseline=c0:probe_v745_v743_e32_stage1_runtime_m64.py delta_definition=candidate_minus_baseline median_delta_us=-260.352 mean_delta_us=-279.232 wins=4 ties=0 losses=0 delta_us=[-275.200,-243.200,-245.504,-353.024]
+stage_end stage=entry

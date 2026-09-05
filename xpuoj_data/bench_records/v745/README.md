@@ -2,7 +2,7 @@
 
 ## Status and identity
 
-**OJ140296: Accepted, 72.67 according to the user-provided screenshot. Promotion is paused: the local wins did not reproduce on OJ, and unchanged points also regressed sharply. The uploaded source has not been retrieved/verified. Python/Ruff, source-isolation, CPU symbolic/host checks, TileLang compilation and local Stage1/chain checks passed; local timings are not OJ validation.**
+**Latest screenshot: OJ140316 Accepted,80; its association with the requested unchanged-v745 repeat is inferred from reply context, not explicit version text or uploaded-source verification. The earlier OJ140296 score72.67 regression did not recur in this repeat. Point2 is69us faster than the nearby v743/140309 repeat, but total score is unchanged: stable superiority or a score gain is not established. Python/Ruff, source-isolation, CPU symbolic/host checks, TileLang compilation and local Stage1/chain checks passed.**
 
 - Candidate: [probe_v745_v743_e32_stage1_runtime_m64.py](../../probe_v745_v743_e32_stage1_runtime_m64.py).
 - GPU-tested candidate SHA256: `12f9dcc12ed1327c6f8eba411bfbee8c39132b0d626818140f8fe15cc7609c96`.
@@ -244,3 +244,33 @@ Stage1=9900 characters, Stage2(FP32 routes)=19169 characters. Raw record:
 SHA256`2983a3b5377f39c61c416d2c63b24a72e09dc6aa18a40699db9d9b7d9ad12476`.
 No kernels were launched in this check, no OJ binary was retrieved, and no
 physical resource inference is made from source arrays or null accessors.
+
+## OJ140316 screenshot repeat (2026-09-05): recovered to80, no score gain
+
+The user's screenshot reply to the unchanged-v745 repeat request shows
+[submission140316](https://xpuoj.com/contest/5/submissions/140316), Accepted80,
+total16ms and memory22.3G. The v745 mapping is contextual, not explicitly
+stated in the image or verified against uploaded source. Preserve this limit
+as `version_mapping_explicit=false` and `uploaded_source_verified=false` in
+the [structured transcription](oj_140316_user_report.json).
+The [screenshot](oj_140316_user_screenshot.png) SHA256 is
+`5e96a7aab36e1363c7aeda392834642213e983845297792ec34542873c9ef220`.
+
+| Item | Status | Displayed time | Exact microseconds | Point score |
+| --- | --- | --- | ---: | --- |
+| Sample1 (not a scored point) | Accepted | 2565us | 2565 | Not applicable |
+| Formal1.1 | Accepted | 2565us | 2565 | Unknown |
+| Formal1.2 | Accepted | 4530us | 4530 | Unknown |
+| Formal1.3 | Accepted | 9ms | Unknown | Unknown |
+
+Against v743/140309 (also context-mapped), point2 decreases4599→4530us:
+69us, or1.5003%; point1 decreases2568→2565us by3us. Both point3 displays
+are rounded9ms, so no point3 difference, exact total, or individual point
+score is inferred. Both overall scores are80.
+
+The earlier72.67 severe slowdown did not recur in this repeat. This does
+not establish its cause, stable v745 superiority, or a new score gain.
+The failure record above is retained. The next separately selected candidate
+is v748 for manual OJ testing; it is not an already-demonstrated OJ gain.
+No API query, login, browser action or code resubmission was performed for
+this screenshot transcription.
