@@ -3630,3 +3630,68 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   精确复现受测SHA，完整AST不变；最终源码CPU审计通过。GPU任务结束并释放codex锁。
   origin/main新增提交已只读核对，没有新合规高分源或编号冲突；未覆盖其历史记录。
   原submission.py不变，无新OJ成绩，已验证最高仍是v718/v719/v720 **80.33**。
+
+### 2026-09-05：v735–v742，拼接布局与 Stage2 短程同步预取，profiling 定位退步
+
+- v735 仅调整 v731 的 E32 Stage1：M128/总N128/输出64/K64/256线程不变，
+  emitter 从4x1/warp32x128改成2x2/warp64x64，Bshared按Gate32/Up32交错，
+  同步复制顺序Gate0、Gate1、Input、Up0、Up1；官方lane映射的Gate/Up本地配对
+  从+16改成+8。无新全局拼接、workspace或launch，数学/Stage2/其他shape不变。
+  编译、完整地址与同步审计通过，随机三次full/entry复算相对v720均通过精度比较。
+  同窗v720/v731/v735四轮入口中位 **4.669696/6.865024/6.661248 ms**；
+  v735虽比慢父版降低2.968%，仍比v720增加42.648%，配对中位+1984.384 us，
+  0胜4负。关闭这条拼接布局分支，不扩展K32/N16，不推荐OJ。
+- v736–v742 独立probe只分派 E32/H7168/I2048 的 Stage2，保持unsplit
+  M128/N128/K64/256线程、32KiB shared、当前输入完整重算、两次kernel launch。
+  所有原builders、Stage1、其他shape、terminal与数学不变，不覆盖submission.py。
+  v736只将steady最后一次MMA后的barrier移到MMA前；v737/v738在该早barrier后，
+  分别将下一K的Up/Down预取到fragment，跨最后一次MMA后写回shared。
+  保留Up→Down shared写入顺序，区别于旧v667/v671跨全部四次MMA的长预取。
+  全部无async/BSM/pipeline DSL/extern/外部计算或历史结果复用。
+- 第一批随机无trace入口，warmup1/iters1/四轮正反序，v720/v736/v737/v738
+  中位 **4.647680/5.969152/4.762752/5.650816 ms**，候选配对中位增量
+  **+1315.712/+111.616/+994.048 us**，均0胜4负。生成C++确认v736只移动
+  一个barrier；v737/v738另有编译器自动同步，静态site为4/5，基线3。
+- v739/v740只把v737/v738的显式barrier放回MMA后，预取仍在MMA前，
+  fragment与复制顺序不变。第二批v720/v737/v739/v740入口中位
+  **4.638464/4.768128/4.690816/4.910464 ms**。v739比同窗v737快，但相对
+  v720仍+50.432 us配对中位、0胜4负；v740为+267.008 us、0胜4负。
+  生成C++整体仅barrier移位，v739存在连续两条同步，v740仍有5处同步site。
+  没有检查native ISA是否合并重复同步，不把源代码调用数当硬件次数。
+- mcTracer独立常量诊断对照v720/v736/v737/v739，最后两轮Stage1均值
+  **2.943232/2.952960/2.918912/2.936192 ms**，Stage2均值
+  **1.665920/2.975104/1.761024/1.707392 ms**。v736约1.3ms退步定位在
+  Stage2，非Stage1或两kernel间隔；它只说明退步位置，不证明具体stall原因。
+  Stage2实际报告registers/thread为152/142/152/152，Stage1均248，shared
+  均32768 bytes；寄存器更少没有保证更快。所有8个Stage2都已在Stage1结束前
+  提交，故这些样本的间隔不是CPU迟发起Stage2导致；不推断整卡空闲。
+  未采集实际带宽/cache/stall计数器，不将资源字段解释为实测活跃occupancy。
+  完整trace与单位、筛选规则见bench_records/v736_v738/PROFILING.md。
+- v741/v742再分别删除v739/v740的唯一steady显式同步，保留编译器自动保护。
+  独立完整源码比较确认v741恰删除连续同步中的一条，loop RAW、end-K WAR、
+  terminal RAW仍受保护；v742则与v740生成源码逐字节相同，**跳过重复GPU测试**，
+  不冒称新精度/性能实测。该代码生成证明限于本次float32 route特化。
+  v741短测加入两份v720 A/A及父版：入口中位分别
+  **4.676352/4.667136/4.692352/4.714112 ms**（v720/v720/v739/v741）。
+  v741对首基线配对中位+38.912 us、1胜3负，对第二份基线四轮全慢；对父版也
+  没有稳定收益。A/A配对中位-9.216 us，不能把单轮偶然变快当升级。两版不推荐OJ。
+- 上述每个实际GPU受测probe都用本地alternating64-220 fixture：E32/H7168/I2048、
+  raw4544/padded6144、固定seed20260903；三次NaN污染workspace/out后full/entry
+  复算相对新算v720均打印max_abs=0.000000、bad=0/44040192。这是同一输入三次复算，
+  不是三个seed、独立数学oracle或已验证OJ分布；无trace计时与常量trace严格分开。
+  未推进负结果的第二fixture，不提供虚构OJ分数。生成float32 partial epilogue
+  继承raw-route load被移到行判断前的风险，未加入v723 bounds修复；随机精度通过
+  不消除此风险，不声称全输入内存安全。
+- 完整源文件、CPU/生成代码审计、所有四轮原始样本与trace归档于
+  bench_records/v735/、v736_v738/、v739_v740/、v741_v742/。
+  GPU任务结束，确认无benchmark进程后释放codex锁。无新OJ结果，已验证最高仍
+  保留v718/v719/v720的 **80.33**；本批不升级正式submission.py。
+- 测后probe只更新结果头注释（v735另规范末尾空行），反向恢复均精确命中受测
+  SHA、执行AST不变，受测/最终SHA分别列于各README；Python/Ruff与CPU审计通过。
+  mcTracer为/opt/maca/bin/mcTracer，mcProfiler命令在/usr/local/bin/mcProfiler，
+  不在/opt/maca/bin。工具可见不等于硬件计数器已经采集，继续保留未采集的说明。
+- 精度记录口径修正：remote_stage_ab.py的bad阈值是0.05+0.05*abs(ref)，
+  max_abs仅打印小数点后6位，未统计非零差或检查torch.equal。故打印0.000000且
+  bad=0只证明通过该比较，不能证明逐位相等。历史条目引用同一日志时使用的
+  “exact”也应按这一证据范围理解；本批README/头注释已改为精度比较通过。
+  源码/AST/地址映射精确相等及SHA还原证明是独立结论，不受数值输出格式影响。
