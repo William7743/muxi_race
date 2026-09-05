@@ -2,7 +2,7 @@
 
 ## Status and identity
 
-This is the user's requested final optimization experiment. Python/Ruff/CPU checks, six GPU boundary bitwise comparisons and both normal-entry correctness windows passed. Synthetic routing with tiny tails is0.9641% faster by median latency, with4/4 paired wins; alternating routing with no tiny tails is0.0490% slower by median, with1/4 paired wins. **v755 is a final optional manual OJ candidate, not a proven replacement for the Accepted80.33 v748 baseline.** No v755 OJ ID/score exists. GPU work has ended and its lock is released. Per the user's request, optimization stops here: no v756+ or further exploration.
+This is the user's requested final optimization experiment. **The user explicitly identifies OJ140440 as v755: Accepted80.33, formal2544us/4520us/rounded9ms.** Uploaded source has not been retrieved. It matches v748's score; the targeted point2 is31us slower than v748/140335, so the local tiny-tail benefit is not confirmed by this OJ comparison. Retain v755 as a same-score alternative, not a faster replacement; final recommendation remains v748. Python/Ruff/CPU checks, six GPU boundary bitwise comparisons and both normal-entry correctness windows passed. Local synthetic tiny tails were0.9641% faster (4/4), while no-tiny alternating routing was0.0490% slower (1/4). GPU work remains stopped and its lock released; no v756+ or further exploration.
 
 - [Frozen v755 source](../../probe_v755_v748_e32_stage1_runtime_m32_m64.py): `0b19e84d1695a16bca424ad7fd91f3a51b8baeb4f9e8b3cbf2fc3501224f94de`.
 - [Exact v748 base](../../probe_v748_v747_e64_stage1_runtime_m64.py): `af6b1c88d741d78de3b6a77a00d86afb136c39036c2bd76bea6daa361005ad20`.
@@ -100,10 +100,36 @@ zero overhead or statistical equivalence. No samples or fixtures are pooled.
 Only E32 is performance-tested in this final batch; E16/E64 isolation is
 supported by complete source/host checks, not newly repeated numerical runs.
 
-The tiny-tail signal supports **one optional final user-run OJ test of v755**.
+The tiny-tail signal supported **one optional final user-run OJ test of v755**, now completed below.
 It does not establish broad superiority, a score increase, or a stable win on
 the full OJ device (the local device is a25% C500 slice). If no further OJ test
 is desired, use frozen v748 with its existing140335 Accepted80.33 feedback.
 The test process exited; at2026-09-05 14:05:13UTC no GPU process was listed,
 slice usage was0/16000MiB and0%, and the owned GPU lock was released.
 No candidate code is modified after its recorded SHA; submission.py is untouched.
+
+## Final OJ feedback:140440 Accepted80.33, no promotion over v748
+
+The user labels the supplied image as the v755 result, establishing an explicit
+user-provided version mapping, not an uploaded-source hash verification.
+[Screenshot](oj_140440_user_screenshot.png) SHA256:
+`f106135cdf510a3c9b5347b6263db5b65c4847f6f8dd17a14a5318837dcc9c49`.
+[Structured transcription](oj_140440_user_report.json) retains display precision.
+
+| Item | v755140440 | v748140335 |
+| --- | --- | --- |
+| Overall score/status | 80.33 / Accepted | 80.33 / Accepted |
+| Sample (separate, not scored) | 2541us | 2539us |
+| Formal1.1 | 2544us | 2551us |
+| Formal1.2 | 4520us | 4489us |
+| Formal1.3 | Display9ms, exact unknown | Display9ms, exact unknown |
+
+v755's total display is16ms and memory22.3G; per-point scores are not visible.
+Point2, the only intended changed computation, is31us/0.6906% slower here.
+Unchanged point1 is7us faster; no exact point3 or total-time delta is inferred.
+The OJ observation does not establish a stable slowdown or its cause, but it
+does not confirm an improvement over v748. The two local fixtures' evidence is
+preserved, not erased or promoted over OJ. Keep v755 as an accepted same-score
+alternative; **final selection remains v748**, with no further test request.
+This update only records and synchronizes user feedback. No GPU work, browser
+action, automatic OJ submission, optimization restart or source change occurred.
