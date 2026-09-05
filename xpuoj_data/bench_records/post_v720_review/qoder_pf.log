@@ -1,0 +1,40 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+TILELANG 0.1.10+cuda.gitf549117c /opt/tilelang-metax-v0.1.10/tilelang/__init__.py
+allocating x on CPU: (3072, 2048)
+allocated x on GPU
+allocating gate on CPU: (16, 8192, 2048)
+allocated gate on GPU
+allocating up on CPU: (16, 8192, 2048)
+allocated up on GPU
+allocating down on CPU: (16, 2048, 8192)
+allocated down on GPU
+allocating routed weights
+allocated routed weights
+copying metadata
+inputs ready
+QB case1 E=16 H=2048 I=8192 valid=2272 padded=3072 nbm=24 gridN1=64 gridN2=16
+QB q500_base.py case1: full=2.5787 s1=1.7065 s2=0.9472 bad=0 max_abs=0.000000
+2026-09-04 11:59:37  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_q1_1` with `out_idx=None`
+2026-09-04 11:59:49  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_q1_1`
+QB q600_pf2.py case1: full=3.8176 s1=2.8505 s2=1.0098 bad=0 max_abs=0.000000
+2026-09-04 11:59:51  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_q1_2` with `out_idx=None`
+2026-09-04 12:00:02  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_q1_2`
+QB q601_pf2_cw4.py case1: full=3.7039 s1=2.7529 s2=0.9586 bad=0 max_abs=0.000000
+2026-09-04 12:00:03  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_q1_3` with `out_idx=None`
+2026-09-04 12:00:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_q1_3`
+QB q602_pf2_th512.py case1: full=3.4916 s1=2.5535 s2=0.9519 bad=0 max_abs=0.000000
+2026-09-04 12:00:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_q1_4` with `out_idx=None`
+2026-09-04 12:00:29  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_q1_4`
+QB q603_pf2_bh32.py case1: full=3.3861 s1=2.3606 s2=0.9830 bad=0 max_abs=0.000000
+2026-09-04 12:00:30  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_q1_5` with `out_idx=None`
+2026-09-04 12:00:41  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_q1_5`
+QB q604_pfgu.py case1: full=3.0580 s1=2.0924 s2=0.9483 bad=0 max_abs=0.000000
+2026-09-04 12:00:43  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_q1_6` with `out_idx=None`
+2026-09-04 12:00:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_q1_6`
+QB q605_pf2_p1.py case1: full=3.8380 s1=2.9337 s2=1.0079 bad=0 max_abs=0.000000
+2026-09-04 12:00:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_q1_7` with `out_idx=None`
+2026-09-04 12:01:00  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_q1_7`
+QB q598_pc_kp1.py case1: full=2.6942 s1=1.7408 s2=1.0011 bad=0 max_abs=0.000000
+2026-09-04 12:01:01  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_q1_8` with `out_idx=None`
+QB q599_pc_kp4.py case1: FAIL InternalError: Check failed: (false) is false: kPack must be 1 or 2
+QB DONE

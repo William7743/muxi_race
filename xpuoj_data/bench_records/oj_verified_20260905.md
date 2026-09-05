@@ -3,8 +3,8 @@
 Read-only inspection of the user's signed-in XPUOJ pages and authenticated API.
 Version mapping was checked against source headers, not guessed from submission
 time or size. v714, v716, and v718 also matched local source in full after LF normalization.
-v719 differs from its repository file only by one omitted final LF; its AST is
-identical. This is not full-text equality after line-ending normalization.
+v719 and v720 differ from their repository files only by one omitted final LF;
+their ASTs are identical. This is not full-text equality after line-ending normalization.
 All records below are Accepted.
 
 | Source version | Submission | Display score | Case scores | Case times, ms |
@@ -19,16 +19,27 @@ All records below are Accepted.
 | v716 | [139730](https://xpuoj.com/contest/5/submissions/139730) | **80.00** | 81 / 80 / 79 | 2.596 / 4.631 / **9.051** |
 | v718 | [139753](https://xpuoj.com/contest/5/submissions/139753) | **80.33** | 81 / 80 / 80 | **2.560 / 4.600 / 8.926** |
 | v719 | [139764](https://xpuoj.com/contest/5/submissions/139764) | **80.33** | 81 / 80 / 80 | **2.563 / 4.616 / 8.860** |
+| v720 | [139770](https://xpuoj.com/contest/5/submissions/139770) | **80.33** | 81 / 80 / 80 | **2.549 / 4.594 / 8.888** |
 
 v496, v691, and v713 case 3 were expanded to obtain exact stderr and checker values.
 Other values marked approximately are rounded UI values, not precise telemetry.
 
-Latest outcome: v719 / 139764 ties v718 at the best verified score of **80.33**.
+Latest outcome: v720 / 139770 also scores **80.33**, retaining v718/v719/v720
+as three independently Accepted versions at the same highest verified score.
+Only E16 Stage2 changed from v719: case 1 is 14 microseconds lower (approximately
+0.546%), 2.549 vs 2.563 ms. Total time is 16,031 vs 16,039 microseconds, nearly
+unchanged; the score did not increase. E32/E64 paths were unchanged, so case 2's
+22-microsecond reduction and case 3's 28-microsecond increase across windows are
+not attributed to E16. v720 is the next already-validated composition base, not
+a demonstrated stable overall improvement or a score upgrade. No next version
+has been selected.
+
+At the v719 checkpoint, v719 / 139764 tied v718 at **80.33**.
 Only E64 Stage2 changed: case 3 is 66 microseconds lower (approximately 0.7394%),
 8.860 vs 8.926 ms. Total reported time is 16,039 vs 16,086 microseconds, but the
 case and overall scores are unchanged. E16/E32 paths did not change and ran in
-different windows; their differences are not attributed to E64. v719 becomes
-the next experimental base while v718 is retained. No repeated-stability claim
+different windows; their differences are not attributed to E64. v719 became
+the experimental base while v718 was retained. No repeated-stability claim
 is made from these two submissions.
 
 At the preceding checkpoint v718 / 139753 raised the score to **80.33**.
@@ -99,6 +110,25 @@ repository SHA256 is
 `1ac0e5ace6f4059a965420005cdee54db11114fd6d0ccca28f6e68b40e0d7a2f`.
 Do not report exact normalized-source/hash equality. Structured record:
 [oj_139764_verified.json](v719/oj_139764_verified.json).
+
+v720 / 139770 was submitted at **2026-09-05T03:06:58.000Z**, Accepted/80.33,
+with `timeUsed=16031` microseconds. All three formal cases pass; one sample is
+excluded and no formal result is missing.
+
+| v720 formal case | Display score | Time, microseconds | Measured baseline, ms | SPJ baseline, ms | SPJ score ratio | Pass |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | 81 | 2549 | 11.273 | 11.251 | 0.815290 | true |
+| 2 | 80 | 4594 | 18.644 | 18.610 | 0.802017 | true |
+| 3 | 80 | 8888 | 35.917 | 35.875 | 0.801443 | true |
+
+The OJ source omits exactly one final LF from the LF-normalized repository file:
+39,526 vs 39,527 characters. Full ASTs are equal; text and hashes are not equal.
+OJ source SHA256 is
+`145c7a2d01928b2a6e26b5b8ce604a7d8b465ab90687adebfef5228ca57a1492`;
+repository SHA256 is
+`2d5605e80220dcecf0e1ae1d86f2edbbb9b60ad2438d2d783f77efe82bb0e774`.
+Structured record:
+[oj_139770_verified.json](v720/oj_139770_verified.json).
 
 ## Exact case-3 reports
 
@@ -217,7 +247,8 @@ then supplies an ID for the agent to retrieve feedback through read-only APIs.
   diagnostic then passed one recomputation for both candidates, with a 0.82%
   lower v720 median and all four paired times lower; both candidates have a
   round-3 tail. The original two-wins/two-losses windows remain part of the
-  evidence and are not rewritten as four wins. v720 is now a small-gain
-  candidate ready for user-operated Chrome submission, not a guaranteed score
-  upgrade. It has no OJ ID. Full samples and source hashes are in
+  evidence and are not rewritten as four wins. v720 subsequently passed its
+  independent OJ run as 139770/80.33, without raising the score. It is retained
+  as an already-validated composition base alongside v718/v719. No next
+  candidate/version has been selected. Full samples and source hashes are in
   [OPTIMIZATION_LOG.md](../OPTIMIZATION_LOG.md), with logs under `v720/`.

@@ -1,0 +1,54 @@
+{
+  "submission_id": 139770,
+  "submitted_at_utc": "2026-09-05T03:06:58.000Z",
+  "version": "v720",
+  "status": "Accepted",
+  "display_score": 80.33,
+  "time_used_us": 16031,
+  "source_sha256_lf": "145c7a2d01928b2a6e26b5b8ce604a7d8b465ab90687adebfef5228ca57a1492",
+  "repository_source_sha256_lf": "2d5605e80220dcecf0e1ae1d86f2edbbb9b60ad2438d2d783f77efe82bb0e774",
+  "source_matches_repository": false,
+  "source_matches_repository_except_final_newline": true,
+  "source_ast_equal": true,
+  "source_characters": 39526,
+  "repository_source_characters": 39527,
+  "source_difference": "Submitted source omits exactly one final LF; no other source difference and full AST equality verified.",
+  "formal_cases": [
+    {
+      "case": 1,
+      "status": "Accepted",
+      "display_score": 81,
+      "time_us": 2549,
+      "time_ms": 2.549,
+      "measured_baseline_ms": 11.273,
+      "spj_baseline_ms": 11.251,
+      "spj_score_ratio": 0.815290,
+      "pass": true
+    },
+    {
+      "case": 2,
+      "status": "Accepted",
+      "display_score": 80,
+      "time_us": 4594,
+      "time_ms": 4.594,
+      "measured_baseline_ms": 18.644,
+      "spj_baseline_ms": 18.610,
+      "spj_score_ratio": 0.802017,
+      "pass": true
+    },
+    {
+      "case": 3,
+      "status": "Accepted",
+      "display_score": 80,
+      "time_us": 8888,
+      "time_ms": 8.888,
+      "measured_baseline_ms": 35.917,
+      "spj_baseline_ms": 35.875,
+      "spj_score_ratio": 0.801443,
+      "pass": true
+    }
+  ],
+  "sample_count_excluded": 1,
+  "missing_case_result_count": 0,
+  "verification": "Authenticated getSubmissionDetail; submitted source omits only one final LF versus repository v720 and full AST equality verified; all three formal cases pass, one sample excluded, zero missing results."
+}

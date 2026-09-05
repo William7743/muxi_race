@@ -4,7 +4,8 @@
 
 | 优先级 | 文件 | 提交理由 | 状态 |
 | --- | --- | --- | --- |
-| 同分下一实验底 | [v719](probe_v719_v718_e64_stage2_bfrag_only.py) | [139764](https://xpuoj.com/contest/5/submissions/139764)：Accepted，**80.33**，分项81/80/80，2.563/4.616/8.860 ms，timeUsed16039微秒。仅E64 Stage2变化，点3较v718低66微秒（约0.7394%）。 | 源码只比仓库少末尾一个LF，strip相等、AST全等；总分持平，保留v718，不宣称跨窗口重复稳定 |
+| 同分已通过组合底 | [v720](probe_v720_v719_e16_stage2_bfrag_only.py) | [139770](https://xpuoj.com/contest/5/submissions/139770)：Accepted，**80.33**，分项81/80/80，2.549/4.594/8.888 ms，timeUsed16031微秒。只改E16 Stage2，点1比v719少14微秒（约0.546%）。 | 源码仅少末尾一个LF、AST全等；总分未升，总耗时与v719仅差8微秒，保留v718/v719，不称整体稳定更好 |
+| 80.33分保留对照 | [v719](probe_v719_v718_e64_stage2_bfrag_only.py) | [139764](https://xpuoj.com/contest/5/submissions/139764)：Accepted，**80.33**，分项81/80/80，2.563/4.616/8.860 ms，timeUsed16039微秒。仅E64 Stage2变化，点3较v718低66微秒（约0.7394%）。 | 源码只比仓库少末尾一个LF，strip相等、AST全等；保留作v720的同分单变量对照 |
 | 80.33分保留基线 | [v718](probe_v718_v716_e64_stage1_terminal_k_only.py) | [139753](https://xpuoj.com/contest/5/submissions/139753)：Accepted，**80.33**，分项81/80/80，2.560/4.600/8.926 ms，timeUsed16086微秒。 | 完整源码LF归一化逐字一致；保留与v719同分的正式基线作对照 |
 | 80分保留基线 | [v714](probe_v714_v713_e32_stage2_bfrag_only.py) | [139698](https://xpuoj.com/contest/5/submissions/139698)：Accepted，**80.00**，分项81/80/79，2.594/4.616/9.207 ms。 | 完整提交源码已与仓库归一化逐字核对；保留已取得80分的基线 |
 | 80分对照 | [v716](probe_v716_v714_e64_stage1_giu_merge_only.py) | [139730](https://xpuoj.com/contest/5/submissions/139730)：Accepted，**80.00**，分项81/80/79，2.596/4.631/9.051 ms。只改E64 Stage1，点3比v714低156微秒、约1.69%。 | 保留作v718单变量对照，当前最高已经是v718的80.33 |
@@ -12,7 +13,6 @@
 | 已测同分 | [v713](probe_v713_v496_e32_stage1_terminal_k_only.py) | [139689](https://xpuoj.com/contest/5/submissions/139689)：Accepted，**79.67**，分项81/79/79，2.582/4.658/9.214 ms。E32耗时比v496低约1.92%，总分未升级。 | 保留为E32隔离优化的实验基础；不宣称超过v496总分 |
 | 组件对照 | [v715](probe_v715_v713_e64_stage1_giu_merge_only.py) | v713仅替换E64 Stage1为v527原始GIU＋shared merge。GPU随机三轮正确，入口中位8.984192 vs9.247488 ms，耗时低约2.85%；另一synthetic常量路由低约0.70%。 | 本文件未单独OJ；组件已融合到v716，v716整体独立取得80分 |
 | 独立备用 | [v717](probe_v717_v716_e64_stage2_bfrag_only.py) | 仅E64 Stage2分派到已有双B emitter。随机三轮精度通过；入口中位8.955776 vs9.017472 ms，耗时低约0.68%；另一synthetic常量窗口低约0.79%。 | 不与v718叠加，暂作备用；尚未OJ提交，无新ID |
-| 下一待手动OJ | [v720](probe_v720_v719_e16_stage2_bfrag_only.py) | 基于已OJ80.33分的v719，仅让E16 Stage2选择双B emitter。随机/常量检查通过，中位耗时低约0.51%/0.80%；列表反置后仍低约0.82%，该窗四对均快。 | 可提供代码链接，待用户Chrome提交，无OJ ID；保留前两窗仅2/4对快、顺序影响和第三窗长尾，不保证升级 |
 | 已测未升级 | [v691](probe_v691_e32_stage1_split_terminal_k.py) | [139661](https://xpuoj.com/contest/5/submissions/139661)：Accepted，78.33，分项81/78/76。 | 不再推荐重复提交或替代v496 |
 | 已测未升级 | [v634](probe_v634_e32_stage2_m64_bfrag_th256.py) | [139669](https://xpuoj.com/contest/5/submissions/139669)：Accepted，78.33，分项81/78/76。 | 不再推荐重复提交或替代v496 |
 
@@ -50,6 +50,9 @@ v719正式结果：[139764精确记录](bench_records/v719/oj_139764_verified.js
 已核对完整diff与AST。E16/E32路径未改，跨窗口耗时差不归因于E64 Stage2。
 v720三轮测试包含同批随机复算、独立synthetic常量fixture、候选加载列表反置诊断；
 仅最后一个窗口四对均快，前两个窗口仍为两对快。详细样本及源码注释前后哈希见实验日志。
+v720现已独立通过OJ：[139770精确记录](bench_records/v720/oj_139770_verified.json)，
+正式三个点全部pass、样例1排除、缺失0；E32/E64路径没变，点2少22微秒/点3多28微秒
+不归因于E16改动。v718/v719/v720三份80.33均保留，v720作后续已通过组合底，下一版本尚未选定。
 完整实验说明见 [OPTIMIZATION_LOG.md](OPTIMIZATION_LOG.md)。
 
 v691的本地full指完整预编译kernel链，不含Python入口分派；新加`--stage entry`直接计时
