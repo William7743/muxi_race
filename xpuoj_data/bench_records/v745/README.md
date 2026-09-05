@@ -2,7 +2,7 @@
 
 ## Status and identity
 
-**Recommended candidate for manual OJ submission. Python/Ruff, source-isolation, CPU symbolic/host checks, TileLang compilation and local Stage1/chain edge checks passed. Across two routing fixtures and three untraced timing windows, v745 wins all12 paired comparisons against each of v720 and v743. These are local baseline comparisons, not independent mathematical or OJ validation; no OJ submission ID or score is claimed.**
+**OJ140296: Accepted, 72.67 according to the user-provided screenshot. Promotion is paused: the local wins did not reproduce on OJ, and unchanged points also regressed sharply. The uploaded source has not been retrieved/verified. Python/Ruff, source-isolation, CPU symbolic/host checks, TileLang compilation and local Stage1/chain checks passed; local timings are not OJ validation.**
 
 - Candidate: [probe_v745_v743_e32_stage1_runtime_m64.py](../../probe_v745_v743_e32_stage1_runtime_m64.py).
 - GPU-tested candidate SHA256: `12f9dcc12ed1327c6f8eba411bfbee8c39132b0d626818140f8fe15cc7609c96`.
@@ -195,8 +195,52 @@ Separate-median latency is2.1281% lower than v720 and1.5736% lower than v743 in 
 
 ## Completed local conclusion
 
-Across two routing fixtures and three timing windows, v745 is faster in all12 same-round pairs against each control. Separate-median latency reductions span2.13%–4.19% against v720 and1.57%–2.22% against v743. This supports prioritizing v745 for the user's manual OJ submission. Reused deterministic inputs and repeated timing windows are not12 independent random fixtures or a statistical-significance proof; local results do not predict an OJ score. No OJ result is available for v745 in this record.
+Across two routing fixtures and three timing windows, v745 is faster in all12 same-round pairs against each control. Separate-median latency reductions span2.13%–4.19% against v720 and1.57%–2.22% against v743. This was the historical basis for its first manual OJ submission; the subsequent OJ72.67 result below supersedes that recommendation. Reused deterministic inputs and repeated timing windows are not12 independent random fixtures or a statistical-significance proof; local results do not predict an OJ score.
 
 All planned local checks in this batch are complete. The tested identity is preserved above; the published file differs only by result comments. Independent generated-source verification is in [CODEGEN_AUDIT.md](CODEGEN_AUDIT.md). The persistent [CPU audit](audit_v745_cpu.py) SHA256 is `ceb7de0db54b51cba10b15396c4ffaa248e5a7c09d5f6619e348b720e734d267`. The separate [GPU diagnostic helper](../../remote_v745_stage1_edges.py) SHA256 is `5833ddc174d373fb3b796cfc73f6363fea3b89b7ad2757d8f5325188adffb382`.
 
 The main thread confirmed all GPU jobs terminal and no benchmark processes remaining before releasing its GPU lock. Keep submission.py and the OJ-validated baselines unchanged. No gain is claimed for E16/E64 paths, which this candidate does not alter; local sliced-device timing does not guarantee full-device OJ gains.
+
+## OJ140296 screenshot feedback (2026-09-05): promotion paused
+
+The user identifies v745 as [submission140296](https://xpuoj.com/contest/5/submissions/140296)
+and supplies a screenshot showing Accepted,72.67. Formal point1=3733us;
+point2 displays7ms and point3 displays14ms (exact microseconds unknown).
+Sample1=3747us is separate. Total25ms and memory22.3G retain UI precision;
+individual point scores are not visible. [Structured transcription](oj_140296_user_report.json)
+and [original screenshot](oj_140296_user_screenshot.png) preserve the evidence.
+
+Compared with v743/OJ140270, the unchanged E16 point1 also slows2567→3733us
+(+45.42%); unchanged E64 point3 goes from a rounded9ms to14ms. Thus the
+cross-submission slowdown does not isolate the E32 Stage1 change, but does
+not prove a platform/load issue either. Request a fresh manual v743 baseline
+repeat in the current OJ window; do not promote v745 or infer its benefit
+by rescaling these points. Source upload, runtime/device/load and timing
+conditions remain unverified for this submission.
+
+Uploaded source has not been retrieved/hashed. The delivered artifact is
+commit b492df528e365561b3e4cd05702d4fac2355e3fc with the final published-header
+SHA above. The version mapping is user-provided and result evidence is a
+screenshot, not an authenticated API capture. No browser or new login was used.
+
+The requested baseline repeat subsequently returned OJ140309,Accepted80,
+2568us/4599us/rounded9ms (v743 association inferred from the reply context,
+not uploaded-source verification). Its first two points match the previous
+v743 timing range. A single unchanged-v745 repeat is now requested to check
+reproducibility; this is diagnostic resubmission, not renewed promotion.
+
+An independent read-only whole-module audit also confirms the E16/E64
+reachable builders, arguments, host path, workspace/cache behavior and launch
+order are unchanged (96 metadata/dtype combinations, two fresh inputs each).
+There is one additional top-level `@tilelang.jit` wrapper construction for the
+new E32 builder, not an additional top-level kernel launch. This source audit
+does not verify OJ's uploaded file, import/JIT timing or evaluation conditions.
+
+A pinned local TileLang0.1.10+maca compile-only check of E16/H2048/I8192,
+padded3072/raw2272/blocks24 also generated identical complete device source
+for v743/v745 after replacing only the diagnostic kernel name suffix1→0:
+Stage1=9900 characters, Stage2(FP32 routes)=19169 characters. Raw record:
+[codex_e16_743_745_unchanged_codegen.log](codex_e16_743_745_unchanged_codegen.log),
+SHA256`2983a3b5377f39c61c416d2c63b24a72e09dc6aa18a40699db9d9b7d9ad12476`.
+No kernels were launched in this check, no OJ binary was retrieved, and no
+physical resource inference is made from source arrays or null accessors.

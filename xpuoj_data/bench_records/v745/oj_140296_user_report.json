@@ -1,0 +1,23 @@
+{
+  "version": "v745",
+  "submission_id": 140296,
+  "submission_url": "https://xpuoj.com/contest/5/submissions/140296",
+  "version_mapping_source": "User message: v745 is 140296",
+  "result_source": "User-provided screenshot, visually inspected 2026-09-05",
+  "screenshot_file": "oj_140296_user_screenshot.png",
+  "screenshot_sha256": "99f34d9fc3a2816c0cbbc73590175b61b9995da1bdeecad86b435cf0da91be5a",
+  "status": "Accepted",
+  "score": 72.67,
+  "total_time_display": "25 ms",
+  "memory_display": "22.3 G",
+  "sample": {"label": "样例 1", "status": "Accepted", "time_display": "3747 µs", "time_us": 3747},
+  "scored_points": [
+    {"label": "子任务 1.1", "status": "Accepted", "time_display": "3733 µs", "time_us": 3733, "score": null},
+    {"label": "子任务 1.2", "status": "Accepted", "time_display": "7 ms", "time_us": null, "score": null},
+    {"label": "子任务 1.3", "status": "Accepted", "time_display": "14 ms", "time_us": null, "score": null}
+  ],
+  "uploaded_source_verified": false,
+  "precision_note": "Points 2 and 3 are displayed in rounded milliseconds; exact microseconds and individual scores are unknown. Sample is not a fourth scored point.",
+  "decision": "Pause v745 promotion. Request a same-window repeat of the immutable v743 baseline before attributing regression to the E32-only change.",
+  "comparison_note": "v743 point 1 was 2567 us; v745 point 1 is 3733 us, approximately 45.42 percent slower despite its E16 implementation being unchanged in the repository. This does not prove platform contention, nor verify the uploaded source. No new authentication or browser submission was attempted."
+}

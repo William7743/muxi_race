@@ -1,0 +1,22 @@
+{
+  "version": "v743",
+  "submission_id": 140270,
+  "submission_url": "https://xpuoj.com/contest/5/submissions/140270",
+  "version_mapping_source": "User message: v743 is 140270",
+  "result_source": "User-provided screenshot, visually inspected 2026-09-05",
+  "screenshot_file": "oj_140270_user_screenshot.png",
+  "screenshot_sha256": "5faf2dcb260f9bd4c48768a99606e5fb7ed7d84d7a66ad353eb69f0da886405a",
+  "status": "Accepted",
+  "score": 80.33,
+  "total_time_display": "16 ms",
+  "memory_display": "22.2 G",
+  "sample": {"label": "样例 1", "status": "Accepted", "time_display": "2569 µs", "time_us": 2569},
+  "scored_points": [
+    {"label": "子任务 1.1", "status": "Accepted", "time_display": "2567 µs", "time_us": 2567, "score": null},
+    {"label": "子任务 1.2", "status": "Accepted", "time_display": "4597 µs", "time_us": 4597, "score": null},
+    {"label": "子任务 1.3", "status": "Accepted", "time_display": "9 ms", "time_us": null, "score": null}
+  ],
+  "uploaded_source_verified": false,
+  "precision_note": "The UI displays point 3 in rounded milliseconds; do not infer an exact 9000 microseconds. Individual point scores are not visible. The sample is separate from the three scored points.",
+  "query_note": "One anonymous read-only detail request returned HTTP 201 without submission meta. No login, challenge handling or browser automation was attempted. Screenshot is the result evidence, not an authenticated API capture."
+}

@@ -1,6 +1,6 @@
 # v743: one Stage2 kernel with runtime M128 / M64 / zero paths
 
-2026-09-05 experiment. No OJ submission or score. Keep `submission.py` unchanged.
+2026-09-05 experiment. User identifies OJ submission140270 as v743; the supplied screenshot shows Accepted,80.33. Uploaded-source identity and precise point3 time are not verified. Keep `submission.py` unchanged.
 
 ## Hypothesis and design
 
@@ -221,9 +221,47 @@ performance in E16/E64 paths, which were not changed. Explicit bitwise evidence
 is confined to the separate Stage2 edge fixture; entry checks above use the
 harness tolerance. Profiling evidence stays separate in [PROFILING.md](PROFILING.md).
 
-There is **no v743 OJ submission ID, Accepted result or score yet**. Keep
+The user subsequently reported **v743 -> OJ submission140270**, and supplied a
+screenshot showing **Accepted,80.33**. This is screenshot evidence, not an
+authenticated API result; the uploaded-source hash remains unverified. Keep
 `submission.py` and the existing OJ baselines unchanged. The user submits the
 standalone probe manually; subsequent OJ feedback must be tied to its actual
 source identity before any promotion. All local tests have finished, their
 raw logs are archived here, no GPU job remains and the GPU lock has been
 confirmed released by the main thread.
+
+## User-reported OJ mapping (2026-09-05)
+
+- Submission: [140270](https://xpuoj.com/contest/5/submissions/140270).
+- Reported version: v743. The delivered repository artifact is the final
+  source SHA5eaa07dc2949351cebcf42373267d4e5d85b906caadd8c37a93dd2d69c6bd0b9
+  at commit ec774f8d5390f60cf9764b8f03eb01d731631191.
+- The actual uploaded source has not been retrieved/hashed. The subsequent
+  screenshot supplies the result below; local tests are not used to fill OJ fields.
+
+## Screenshot-confirmed OJ result
+
+[User screenshot](oj_140270_user_screenshot.png) and [structured transcription](oj_140270_user_report.json):
+Accepted,80.33 overall; formal points1.1/1.2/1.3 all Accepted with displayed
+times **2567us / 4597us / 9ms**. Point3 is only displayed in milliseconds;
+its exact microseconds and per-point scores remain unknown. Sample1 is
+separately Accepted at2569us and is not counted as a fourth scored point.
+The page displays total16ms and memory22.2G; preserve the display precision.
+
+Compared with v720/139770's recorded point2 of4594us, v743 is3us slower in this
+submission, essentially tied rather than reproducing the local gain. The total
+score remains80.33. Point1 differs by+18us despite its unchanged code, illustrating
+cross-run variation; point3 cannot be compared precisely from this screenshot.
+Do not promote v743 as an OJ speed improvement or infer the v745 result from it.
+
+## Requested baseline repeat: OJ140309
+
+After v745/OJ140296 returned72.67, the user replied to the v743-repeat request
+with [this screenshot](oj_140309_user_screenshot.png):140309,Accepted,80;
+formal points2568us/4599us/rounded9ms, sample2573us, total16ms/memory22.2G.
+[Structured record](oj_140309_user_report.json) marks the v743 association as
+context-inferred rather than an explicit version message or source check.
+The first two points are only1us/2us above140270, so the baseline is back in
+its prior timing range. Exact point3 timing and individual scores are unknown;
+do not assign the0.33 score difference to a particular point without evidence.
+Next diagnostic is a repeat of the identical v745 artifact, not a new probe.
