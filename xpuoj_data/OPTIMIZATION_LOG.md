@@ -3512,3 +3512,35 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   FullRow policy。当前GIU双累加/单Bshared/明确4×1 emitter完整组合未找到，但不把
   “融合方式不同”当作收益证据；下一步若研究须先取得实质代码生成差异，不直接优先
   重跑相同几何，也不据这些负例宣称已达硬件上限。
+
+### 2026-09-05：mcTracer 实际采样打通；v725/v726 随机负例归档
+
+- 服务器已验证 `/opt/maca/bin/mcTracer` 3.7.1.5-ef9e10e，并成功采集 v720 及
+  v720/v724/v725/v726 的 E32 两阶段执行时间线。另有 libmcpti 与 profiler headers；
+  不把接口文件存在当作硬件计数器已采集。官方 mcProfiler 提供访存/计算/调度指标，
+  手册版本为 Windows win-perf-kit 客户端配合 Linux 采样，本机常用下载/工作目录未找到。
+- v720 短采样两轮 Stage1 2.945024/2.931968 ms，Stage2 1.679360/1.666048 ms；
+  S1 约占两 kernel 执行和的 64%。间隙28.672/26.624 us，但 S2 已在 S1 开始后约
+  4 us 提交，故这两轮不是 Python 迟发 S2；不排除未记录的调度/其他租户/追踪扰动。
+  这只是本地常量输入诊断，不能等同 OJ、随机精度或正式无采样性能。
+- 首次取得实际资源 metadata：v720/v724/v725/v726 Stage1 每线程寄存器
+  **248/256/240/242**，四版 Stage2 均152；dynamic shared 均32768 bytes，
+  private_per_thread均0；v724 Stage1的private_total为12，其余为0。不据此推算
+  每线程spill字节或断言无spill。`mtreg_occupancy(%)` 未核实定义，不称作实测SM
+  活跃占用率。TileLang MACA 的 Python n_regs/n_spills 返回空值，
+  代码生成辅助脚本现显式记录 unavailable，避免把空值当0。
+- v725/v726 为独立 E32 Stage1-only clone：分别把当前K Gate/Input通过既有
+  up_prefetch做cw8全局读→cw4 shared写，立即消费，随后原Up再覆盖fragment。
+  CPU完整源码/AST、steady/terminal依赖与地址枚举通过。生成源码保留uint4宽读，
+  但静态barrier从9增至11，共享内存不变。它们不是旧跨K预取、无新增buffer、无async。
+- 关闭profiler后重新做随机输入A/A/B/C：v720/v720/v725/v726同批随机三次
+  NaN污染复算full/entry全exact；warmup1/iters1/四轮正反序入口中位分别
+  **4.658944/4.649088/4.918016/4.992000 ms**。候选相对首基线多5.561%/7.149%，
+  配对中位增量+251.136/+329.600 us，均0胜4负，明显超出本次A/A差异。
+  **v725/v726不推荐OJ，不拓展第二fixture，不把寄存器减少当成收益证据。**
+- remote_stage_ab保留原summary输出并追加配对差值/胜负，7项纯CPU测试通过；
+  没有改变输入、正确性检查、launch次序或计时逻辑。v724历史四轮配对中位其实
+  +4.480 us（2胜2负），均值仅-2.176 us，因此继续判中性。
+- 全部源码、代码生成、原始JSON时间线、无采样随机日志及复现说明归档
+  `bench_records/v725_v726/`。测试后只更改probe结果头注释，执行逻辑未改，测试/最终
+  SHA均有记录。GPU任务结束并释放codex锁。原submission.py不变，正式最高仍80.33。

@@ -1,0 +1,42 @@
+(Tracer): 04:36:12 [INFO ] Tracer startup
+(Tracer): 04:36:12 [INFO ] =====Name Enable=====
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+mctxAutoStart called! 
+mcToolsExtPid_UsedPort:1076736-38267
+(Tracer): 04:36:35 [INFO ] Rpc connection established!
+allocating constant x on GPU: (6144, 7168)
+allocated constant x
+allocating constant gate on GPU: (32, 2048, 7168)
+allocated constant gate
+allocating constant up on GPU: (32, 2048, 7168)
+allocated constant up
+allocating constant down on GPU: (32, 7168, 2048)
+allocated constant down
+allocating constant routed weights on GPU: (4544,)
+allocated constant routed weights
+constant inputs ready
+loading candidate=0 path=/root/moe_contest/probe_v720_v719_e16_stage2_bfrag_only.py
+compiling candidate=0 stage=s1
+compiling candidate=0 stage=s2
+stage2_builder candidate=0 name=_get_stage2 launches=1
+compiled candidate=0
+candidate_reference=c0:probe_v720_v719_e16_stage2_bfrag_only.py routing=alternating64-220 padded_total=6144 num_blocks_m=48
+correctness candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py path=launch_full reference=candidate_zero_probe_v720_v719_e16_stage2_bfrag_only.py max_abs=0.000000 bad=0/44040192
+correctness candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py path=run_kernel reference=candidate_zero_probe_v720_v719_e16_stage2_bfrag_only.py max_abs=0.000000 bad=0/44040192
+correctness_round=1/1
+all_candidates_correct
+stage_begin stage=entry
+warmed stage=entry candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py launches=1
+round=1/2 stage=entry order=forward
+timing round=1 order=forward stage=entry candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py iters=1 ms=4.691712
+round=2/2 stage=entry order=reverse
+timing round=2 order=reverse stage=entry candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py iters=1 ms=4.660992
+stage_summary stage=entry
+summary_begin
+summary candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py median_ms=4.676352 mean_ms=4.676352 stdev_ms=0.015360 min_ms=4.660992 max_ms=4.691712 speedup_vs_c0=+0.000% samples_ms=[4.691712,4.660992]
+summary_end
+paired_summary candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py baseline=c0:probe_v720_v719_e16_stage2_bfrag_only.py delta_definition=candidate_minus_baseline median_delta_us=+0.000 mean_delta_us=+0.000 wins=0 ties=2 losses=0 delta_us=[+0.000,+0.000]
+stage_end stage=entry
+(Tracer): 04:36:37 [INFO ] Output file: 	/root/moe_contest/codex_profile_v720_20260905/v720-1076736.json
+(Tracer): 04:36:48 [INFO ] User process ends execution.
+(Tracer): 04:36:48 [INFO ] Tracer ends execution.

@@ -54,6 +54,9 @@ def main():
             "weights_dtype": args.weights_dtype,
             "source_sha256": hashlib.sha256(source.encode()).hexdigest(),
             "source_characters": len(source),
+            "adapter_libpath": str(getattr(kernel.adapter, "libpath", "")),
+            "reported_n_regs": getattr(kernel, "n_regs", None),
+            "reported_n_spills": getattr(kernel, "n_spills", None),
             "static_syncthreads_sites": source.count("__syncthreads()"),
             "shared_offsets": [s.strip() for s in lines if "void* " in s and "buf_dyn_shmem" in s],
             "local_array_declarations": [
@@ -66,7 +69,10 @@ def main():
             "route_load_source_lines": [
                 s.strip() for s in lines if "routed_expert_weights[" in s
             ],
-            "note": "Static source sites/arrays are not dynamic barrier counts or physical register usage.",
+            "note": (
+                "Static source sites/arrays are not dynamic barrier counts or physical register usage. "
+                "Null reported resources mean unavailable, not zero."
+            ),
         }
         print(json.dumps(summary, ensure_ascii=False), flush=True)
         if args.full_source:

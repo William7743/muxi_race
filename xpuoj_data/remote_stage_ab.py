@@ -431,7 +431,7 @@ def check_correctness(
 
 
 def measure_events(launch: Callable[[], None], iters: int) -> float:
-    """Measure one candidate with an idle device before and after the event pair."""
+    """Measure an event pair, synchronizing work in the current device context."""
     torch.cuda.synchronize()
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
@@ -441,6 +441,24 @@ def measure_events(launch: Callable[[], None], iters: int) -> float:
     end.record()
     torch.cuda.synchronize()
     return float(start.elapsed_time(end)) / iters
+
+
+def compute_paired_stats(baseline_ms: list[float], candidate_ms: list[float]) -> dict:
+    """Compare the same rounds; positive candidate-minus-baseline deltas are slower."""
+    if len(baseline_ms) != len(candidate_ms):
+        raise ValueError("paired samples must have equal lengths")
+    if not baseline_ms:
+        raise ValueError("paired samples must not be empty")
+    delta_us = [(candidate - baseline) * 1000.0
+                for baseline, candidate in zip(baseline_ms, candidate_ms)]
+    return {
+        "delta_us": delta_us,
+        "median_delta_us": statistics.median(delta_us),
+        "mean_delta_us": statistics.mean(delta_us),
+        "wins": sum(candidate < baseline for baseline, candidate in zip(baseline_ms, candidate_ms)),
+        "ties": sum(candidate == baseline for baseline, candidate in zip(baseline_ms, candidate_ms)),
+        "losses": sum(candidate > baseline for baseline, candidate in zip(baseline_ms, candidate_ms)),
+    }
 
 
 def print_summary(
@@ -464,6 +482,19 @@ def print_summary(
             flush=True,
         )
     print("summary_end", flush=True)
+    baseline = candidates[0]
+    for candidate in candidates:
+        paired = compute_paired_stats(samples[baseline.index], samples[candidate.index])
+        deltas = ",".join(f"{value:+.3f}" for value in paired["delta_us"])
+        print(
+            f"paired_summary candidate={candidate.label} baseline={baseline.label} "
+            "delta_definition=candidate_minus_baseline "
+            f"median_delta_us={paired['median_delta_us']:+.3f} "
+            f"mean_delta_us={paired['mean_delta_us']:+.3f} "
+            f"wins={paired['wins']} ties={paired['ties']} losses={paired['losses']} "
+            f"delta_us=[{deltas}]",
+            flush=True,
+        )
 
 
 def main() -> None:
