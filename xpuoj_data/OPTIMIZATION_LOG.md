@@ -3695,3 +3695,52 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   bad=0只证明通过该比较，不能证明逐位相等。历史条目引用同一日志时使用的
   “exact”也应按这一证据范围理解；本批README/头注释已改为精度比较通过。
   源码/AST/地址映射精确相等及SHA还原证明是独立结论，不受数值输出格式影响。
+
+### 2026-09-05：v743 同 kernel 的 M128/M64 Stage2，三窗口正向，推荐手动 OJ 待测
+
+- 以v723为精确基底，保留E32 raw-route clamp、valid0零输出kernel及padded0返回。
+  仅E32/H7168/I2048正输入新增Stage2 builder：一个T.Kernel内CTA统一判断行数，
+  rows>64走原M128 dual-B；1..64走借自v634的M64 dual-B；rows0只写128行零。
+  tail使用同一128x64 UpShared的前64行，DownShared仍128x64；两套私有C布局独立。
+  无全局拼接、额外workspace/launch或host main/tail拆分，正常输入仍两次launch。
+  原builder、其他shape、所有Stage1及v723空输入host处理不变，submission.py未改。
+  全部为当前输入同步TileLang计算，无async/BSM/pipeline DSL/外部计算/结果回放。
+- Python/Ruff与独立CPU审计通过：整个模块AST可由v723和v634重建；rows0..128、
+  K1/2/32的标签/MMA次序、两种布局、shared前缀与输出覆盖通过；168组host参数
+  每组两份新输入核对0/1/2-launch、缓存仅复用JIT/workspace、目标与非目标分派。
+- FP32/FP16 route生成C++均通过审查：32KiB shared、两branch各3个静态barrier，
+  各自保护loop RAW/end-K WAR/terminal RAW；12处标量route下标各自保留clamp。
+  M64实际LDS只读Up前64行，padding和zero路径完整写零。生成full路径还消除了
+  condval/k<31伪保护并交换Up/Down物理shared基址，故收益不能全部归因尾块MMA减少。
+  详见bench_records/v743/CODEGEN_AUDIT.md，不把C++同步计数当硬件次数。
+- 新诊断remote_v743_stage2_edges.py（不进提交计算）在实际H7168/I2048/E32上测
+  raw2373/padded4608、36CTA=1zero+18tail+17full，覆盖0/1/63/64/65/127/128及
+  最后raw token后127行padding；Up无效行填NaN。FP32/FP16 route各两组独立Up/route
+  随机输入seed74301/74302（Down固定seed74300），四次均finite、nonzero_diff0、
+  int16-view bitwise_equal=True、padding全0。这是Stage2对v723比较，不是独立oracle；
+  valid0/padded0的整次GPU调用未在该fixture重测，host继承与mock证据单列。
+- mcTracer这8次边界调用，两种dtype的v723/v743都报告154 registers/thread、
+  32768 bytes dynamic shared，static/private原值0，未见资源字段增长。不把无预热
+  correctness调用的时长或间隔当正式性能，也不把metadata等同活跃occupancy、
+  无spill或硬件带宽/stall证据。原始trace、字段定义与复算见本批PROFILING.md。
+- 正式本地筛选均关闭profiler，warmup1/iters1、四轮正反序、真实run_kernel入口。
+  第一窗口alternating64-220，v720/v720/v723/v743中位
+  **4.649500/4.666496/4.660224/4.577280 ms**；v743对primary720配对中位
+  -74.524 us，4胜0负，中位耗时降低1.553%；同批A/A为+16.128 us、2胜2负。
+  第二窗口换候选位置，v720/v743/v723中位 **4.660864/4.553216/4.661120 ms**；
+  v743为-107.648 us、4胜0负，中位耗时降低2.310%。两窗口仍是同seed20260903
+  的相同随机fixture，不当成两套独立随机输入；各三次NaN污染后full/entry复算
+  均打印max_abs0.000000、bad0/44040192，通过容差检查，不声称该日志证明逐位相等。
+- 第三窗口synthetic路由raw4544/padded6912、54CTA，v720/v743/v723中位
+  **5.210624/5.158016/5.203840 ms**；v743对720配对中位-48.768 us、4胜0负，
+  中位耗时降低1.010%。该fixture参考为harness保存的ref_v432_case2.pt，三版均
+  三次full/entry容差通过、bad0/49545216，不冒称fresh c0或独立数学oracle。
+- 两种本地路由、三窗口合计v743对primary v720 **12/12配对更快**，对同窗v723
+  也均更快；保留全部原始样本，不合并不同fixture计时。**推荐v743作为用户手动
+  OJ待测候选**，不是已获得新OJ成绩，不自动提交；已核实最高仍为v718/v719/v720
+  的80.33。局部GPU/精度证据不证明OJ整卡收益、全输入安全或最终赛事审核结果。
+- 测试源SHA67d25409b20cf6417d79375f57edb3770a79fb1a7a619eb8bc3ca9e3b6e0e7ec。
+  测后只改头部状态注释，精确逆向还原该SHA且全AST不变；最终SHA为
+  5eaa07dc2949351cebcf42373267d4e5d85b906caadd8c37a93dd2d69c6bd0b9。
+  原始source/codegen/trace/edge/三窗日志归档bench_records/v743/；GPU任务结束并
+  确认无benchmark进程后释放codex锁。等待用户提供OJ编号/三点反馈继续归因优化。
