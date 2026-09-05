@@ -4,7 +4,8 @@
 # Both stages stay unsplit M128, with exactly two launches for every shape.
 # Every effective output is recomputed from current inputs; no result caching.
 # Synchronous TileLang only; no async/BSM, pipeline DSL, extern, or device imports.
-# CPU/static checks only for this isolated composition; OJ performance pending.
+# Three local random-input checks passed, including the NaN-poisoned run_kernel.
+# Local entry timing improved on two routing fixtures; OJ performance pending.
 import torch
 import tilelang
 import tilelang.language as T

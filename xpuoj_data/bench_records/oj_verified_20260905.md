@@ -11,8 +11,9 @@ from submission time or code size. All records below are Accepted.
 | v534 | [139278](https://xpuoj.com/contest/5/submissions/139278) | 79.33 | 80 / 79 / 79 | 2.651 / 4.797 / approximately 9 |
 | v691 | [139661](https://xpuoj.com/contest/5/submissions/139661) | 78.33 | 81 / 78 / 76 | 2.552 / 4.974 / **11.036** |
 | v634 | [139669](https://xpuoj.com/contest/5/submissions/139669) | 78.33 | 81 / 78 / 76 | 2.584 / approximately 5 / approximately 11 |
+| v713 | [139689](https://xpuoj.com/contest/5/submissions/139689) | **79.67** | 81 / 79 / 79 | 2.582 / **4.658** / 9.214 |
 
-v496 and v691 case 3 were expanded to obtain exact stderr and checker values.
+v496, v691, and v713 case 3 were expanded to obtain exact stderr and checker values.
 Other values marked approximately are rounded UI values, not precise telemetry.
 
 ## Exact case-3 reports
@@ -35,7 +36,17 @@ v691 / 139661 stderr:
 Its SPJ uses baseline 35.875000 ms, user kernel 11.036000 ms, speedup 3.251x,
 score ratio 0.764746, display score 76/100.
 
-Both reports identify experts=64, hidden=7168, intermediate=2048,
+v713 / 139689 stderr:
+
+```json
+{"schema_version":2,"time_ms":9.214,"speedup":3.909811,"tk_time_ms":9.214,"tb_time_ms":36.025,"pass":true}
+```
+
+Its SPJ uses baseline 35.875000 ms, user kernel 9.214000 ms, score ratio
+0.795649, display score 79/100. The exact 9.214 ms supersedes the user's initial
+rounded report of approximately 9 ms.
+
+The case-3 reports identify experts=64, hidden=7168, intermediate=2048,
 total_tokens=9088. They do not expose individual expert group sizes.
 
 ## Interpretation and limitations
@@ -52,5 +63,36 @@ total_tokens=9088. They do not expose individual expert group sizes.
 - The platform evaluation guide identifies the displayed memory value as CPU
   RSS; do not infer GPU memory consumption or an input-pool size from 22.2 G.
 
-The formal baseline remains v496. v713 isolates only v691's E32 Stage1 on top
-of v496; it must obtain its own OJ result before replacing the baseline.
+The formal baseline remains v496; v713 now ties its verified total score at
+79.67. v713 isolates only v691's E32 Stage1 on top of v496. Its case-2 time is
+4.658 vs 4.749 ms, approximately 1.92% lower, but this is a timing signal from
+different submission windows, not an increase in the displayed case or total
+score. E16/E64 code paths are unchanged; their observed time differences must
+not be attributed to the E32-only transformation.
+
+## Next isolated candidates and submission authority
+
+On 2026-09-05 the user authorized the agent to submit through the signed-in OJ
+browser and retrieve feedback, replacing the prior manual-submission-only
+constraint. Any human-verification challenge is handed back to the user.
+
+- v714 starts from v713 and copies only v552's original unsplit M128 E32
+  Stage2 dual-B-fragment emitter. The other shapes and all Stage1 functions
+  are unchanged. It does not include the M128/M64 split.
+- v715 starts from v713 and uses only v527's original unsplit E64 Stage1
+  GIU/shared-merge builder. E32 retains v713's terminal-K builder and all
+  Stage2 functions are unchanged.
+- Source/AST equivalence, Python compilation, Ruff F/E9, and CPU mock dispatch
+  for E1/E8/E16/E32/E64 passed. Each candidate exercised both route-weight
+  dtypes and repeated calls with new inputs: 15 cached compiled callables and
+  40 mock launches, exactly two launches per invocation. These checks are not
+  GPU accuracy or performance results.
+- GPU follow-up: v714 passed three random-input checks but has no stable entry
+  timing gain; v715 passed three random-input checks with a 2.85% local entry
+  time reduction and a separate constant-input routing retest with 0.70%.
+  See `v714_v715/` raw logs and OPTIMIZATION_LOG.md for limits of these tests.
+- Neither candidate has an OJ ID. The browser v714 submit returned no ID, and
+  authenticated query confirmed 139689 remained the newest record. A normal
+  submit through the existing repository client returned HTTP 403, "Captcha
+  verification failed". No bypass attempted; user interaction is required.
+  Authenticated login, submission listing and detail reads are operational.
