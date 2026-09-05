@@ -4,10 +4,11 @@
 
 | 优先级 | 文件 | 提交理由 | 状态 |
 | --- | --- | --- | --- |
-| 最佳已核实 | [v496](probe_v496_s1_panel3_experts32.py) | [138992](https://xpuoj.com/contest/5/submissions/138992)：Accepted，**79.67**，分项81/79/79。 | 保留为正式基线，不因版本号旧而降级 |
+| 当前最佳 | [v714](probe_v714_v713_e32_stage2_bfrag_only.py) | [139698](https://xpuoj.com/contest/5/submissions/139698)：Accepted，**80.00**，分项81/80/79，2.594/4.616/9.207 ms。 | 完整提交源码已与仓库归一化逐字核对；正式成绩升级，保留原文件 |
+| 历史对照 | [v496](probe_v496_s1_panel3_experts32.py) | [138992](https://xpuoj.com/contest/5/submissions/138992)：Accepted，**79.67**，分项81/79/79。 | 保留作历史对照，当前最高已为v714的80.00 |
 | 已测同分 | [v713](probe_v713_v496_e32_stage1_terminal_k_only.py) | [139689](https://xpuoj.com/contest/5/submissions/139689)：Accepted，**79.67**，分项81/79/79，2.582/4.658/9.214 ms。E32耗时比v496低约1.92%，总分未升级。 | 保留为E32隔离优化的实验基础；不宣称超过v496总分 |
-| 等待人机验证 | [v714](probe_v714_v713_e32_stage2_bfrag_only.py) | v713仅替换E32 Stage2为v552原始双B emitter；M128、两次launch不变。GPU随机三轮正确；入口中位4.884992 vs4.658560 ms，存在长尾，无稳定收益。 | 浏览器全量代码回读一致，但没有生成ID；正常提交API明确返回403 Captcha verification failed，待用户在页面完成验证 |
-| 下一独立待OJ | [v715](probe_v715_v713_e64_stage1_giu_merge_only.py) | v713仅替换E64 Stage1为v527原始GIU＋shared merge。GPU随机三轮正确，入口中位8.984192 vs9.247488 ms，耗时低约2.85%；另一synthetic常量路由低约0.70%。 | GPU局部验证通过，尚未点击OJ提交；本地正信号不保证OJ升级 |
+| 下一待OJ | [v716](probe_v716_v714_e64_stage1_giu_merge_only.py) | 在已OJ80分的v714上，仅加v715的E64 Stage1 GIU/shared merge。E16/E32逐函数同v714，E64完整路径同v715。 | 源码/AST/Python/Ruff/CPU分派通过；组件路径分别测试过，v716整体尚未GPU/OJ，正在准备编辑器 |
+| 组件对照 | [v715](probe_v715_v713_e64_stage1_giu_merge_only.py) | v713仅替换E64 Stage1为v527原始GIU＋shared merge。GPU随机三轮正确，入口中位8.984192 vs9.247488 ms，耗时低约2.85%；另一synthetic常量路由低约0.70%。 | 未单独OJ；下一优先v716以保留v714已经取得的E32收益 |
 | 已测未升级 | [v691](probe_v691_e32_stage1_split_terminal_k.py) | [139661](https://xpuoj.com/contest/5/submissions/139661)：Accepted，78.33，分项81/78/76。 | 不再推荐重复提交或替代v496 |
 | 已测未升级 | [v634](probe_v634_e32_stage2_m64_bfrag_th256.py) | [139669](https://xpuoj.com/contest/5/submissions/139669)：Accepted，78.33，分项81/78/76。 | 不再推荐重复提交或替代v496 |
 

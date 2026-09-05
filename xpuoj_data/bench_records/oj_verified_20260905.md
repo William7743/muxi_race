@@ -1,8 +1,9 @@
 # OJ results verified on 2026-09-05
 
-Read-only inspection of the user's signed-in XPUOJ submission pages. Version
-mapping was checked against the visible submitted-source header, not guessed
-from submission time or code size. All records below are Accepted.
+Read-only inspection of the user's signed-in XPUOJ pages and authenticated API.
+Version mapping was checked against source headers, not guessed from submission
+time or size. v714 also matched the local source in full after LF normalization.
+All records below are Accepted.
 
 | Source version | Submission | Display score | Case scores | Case times, ms |
 | --- | --- | --- | --- | --- |
@@ -12,9 +13,16 @@ from submission time or code size. All records below are Accepted.
 | v691 | [139661](https://xpuoj.com/contest/5/submissions/139661) | 78.33 | 81 / 78 / 76 | 2.552 / 4.974 / **11.036** |
 | v634 | [139669](https://xpuoj.com/contest/5/submissions/139669) | 78.33 | 81 / 78 / 76 | 2.584 / approximately 5 / approximately 11 |
 | v713 | [139689](https://xpuoj.com/contest/5/submissions/139689) | **79.67** | 81 / 79 / 79 | 2.582 / **4.658** / 9.214 |
+| v714 | [139698](https://xpuoj.com/contest/5/submissions/139698) | **80.00** | 81 / 80 / 79 | 2.594 / **4.616** / 9.207 |
 
 v496, v691, and v713 case 3 were expanded to obtain exact stderr and checker values.
 Other values marked approximately are rounded UI values, not precise telemetry.
+
+Latest outcome: v714 is the best verified OJ result, 80.00. Its E32-only Stage2
+change reduces case 2 by 42 microseconds relative to v713 in these two OJ runs,
+crossing the displayed integer score boundary. This is not a repeatability claim.
+The user completed the required browser verification and provided ID 139698;
+automated read-only feedback verified the source, Accepted status, and all times.
 
 ## Exact case-3 reports
 
