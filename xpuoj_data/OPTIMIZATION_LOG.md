@@ -3544,3 +3544,51 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - 全部源码、代码生成、原始JSON时间线、无采样随机日志及复现说明归档
   `bench_records/v725_v726/`。测试后只更改probe结果头注释，执行逻辑未改，测试/最终
   SHA均有记录。GPU任务结束并释放codex锁。原submission.py不变，正式最高仍80.33。
+
+### 2026-09-05：v727–v730 同步 operand 调度；继续用 profiling 筛选
+
+- 四份独立 probe，不覆盖 submission.py。只动 E32 Stage1，其他 shape、Stage2、
+  host 分派/raw-padded/数学语义保留；仍是当前输入完整重算，无 async/BSM/外部计算。
+  v727 保留四份当前 K 的 Gate B fragment，在同一份 Bshared 改放 Up 后，按 K16
+  顺序逐对执行 Gate/Up MMA，共用每个 A fragment；v728 只推迟最后一份 Gate MMA。
+  v729 基于 v724 四份 A 复用，将 steady barrier 提前到最后 Up MMA 前；v730 基于
+  v727 将同一 barrier 提前到最后 Gate/Up 两个 MMA 前。末次 K 的处理不变。
+- CPU 全源码/AST/逐 K 标签依赖/host 分派检查、Python/Ruff 通过。生成代码四版均
+  shared 32KiB、9 个静态 CTA barrier；v729 对 v724、v730 对 v727 的完整生成源码
+  仅移动一条 barrier，末次 K/epilogue 无变化，且没有自动补回晚 barrier。
+  CPU/源码证明不等于机器指令、跨 wave 执行或浮点正确性证明，覆盖边界见审计文档。
+- E32 alternating64-220 本地 fixture，同一批随机输入、seed20260903，每批三次
+  NaN 污染后重算 full/entry，所有受测版相对 v720 均 exact：
+  max_abs=0，bad=0/44040192。不是三组随机种子，也不是 OJ 生成器分布。
+- 无 profiler，warmup1/iters1/四轮正反序：第一批 v720/v727/v728/v729 中位
+  **4.669824/4.633728/4.706944/4.644864 ms**；第二批含 A/A，
+  v720/v720/v727/v729 为 **4.660992/4.671488/4.641536/4.654464 ms**；
+  第三批 v720/v727/v730 为 **4.661888/4.647936/4.647936 ms**。
+  v727 三批配对中位差为 -39.040/-11.008/-10.624 us，胜负3/1、2/2、3/1；
+  第二批 A/A 配对中位差 +14.080 us，提示小收益与噪声相当。v728 回退，v729
+  复测中性；v730 未证明比 v727 更快。完整样本不裁剪，见 bench_records/v727_v729。
+- mcTracer 再采 v720/v727/v730：两轮 S1 均值 **2.930944/2.919680/2.942592 ms**，
+  S2 **1.668608/1.670912/1.676928 ms**；S1 实际报告寄存器 **248/252/252**，
+  S2 均152，shared 均32768 bytes。v727 的差异仍很小，v730 未显示一致收益；
+  不把这两轮常量 trace 当正式性能，不把资源 metadata 等同硬件带宽或活跃占用率。
+  原始 JSON、日志、解析定义见 bench_records/v730/PROFILING.md。
+- 发现 /opt/maca 是指向 /opt/maca-3.7.1 的符号链接；正确遍历后找到官方
+  profilerScope 示例、配置和 MCPTI headers。新增独立诊断 remote_mcpti_inventory.py，
+  枚举166个 metric 成功；可选空 event group 的创建/销毁实跑均返回0，未开启采集。
+  原始计数器 enable/read、指标单位与虚拟 GPU 作用域尚未验证；不推导利用率或带宽。
+  诊断脚本不进入任何提交文件，OJ 提交仍由用户手动完成。
+- 目前未新增 OJ 结果，保留 v718/v719/v720 的 **80.33** 为已核实成绩。
+  v727 的第二路由 synthetic fixture 随后实测完成：padded6912，54个M块，对保存的
+  v432 reference 三次 NaN 污染后 full/entry 复算均exact，bad=0/49545216。无trace、
+  warmup1/iters1/四轮 v720/v727 中位 **5.191552/5.243008 ms**，候选耗时增加
+  **0.991%**，配对中位 +58.368 us，1胜3负；原始日志已归档。不是独立数学oracle。
+  **v727 不具跨 fixture 稳健收益，这四份都不优先推荐 OJ，保留结构实验，不升级基线。**
+- MCPTI 进一步 metadata-only preflight：event3 add 与属性查询成功、group销毁成功；
+  event/group scope原始4字节均为01000000，all-instances也为01000000，实例数属性
+  原始0d000000。没有证明context-only范围，不按同名NVIDIA属性或切片比例解释；
+  因payload契约/采样范围未证实，在enable前主动结束，无kernel计数结果。
+  独立脚本 remote_mcpti_event_preflight.py 不导入Torch、不启动kernel、不改变采样模式。
+  本批所有GPU任务已结束，确认无benchmark进程后释放codex持有的GPU锁。
+- 测后四个probe只更新头部状态注释并去掉末尾多余空行；还原后均精确复现受测SHA，
+  完整AST不变，全部CPU审计重跑通过，最终SHA见本批README。新增计数器preflight
+  的7项离线mock测试通过；原submission.py始终不变。

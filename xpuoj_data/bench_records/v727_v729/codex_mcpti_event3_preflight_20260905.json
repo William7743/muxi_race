@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "purpose": "metadata_only_preflight_for_future_stage1_smoke",
+  "device": 0,
+  "event_id": 3,
+  "maca_root": "/opt/maca-3.7.1",
+  "abi_header_sha256": {
+    "mcpti.h": "8d280365099be08c332c2960fb7ef71314274746acfad799c001b94229fc8b1b",
+    "mcpti_type.h": "a9be1b75203e1cee64b2f453fcb6e2f5496fb188116f0d55e510e86ab7e32f69"
+  },
+  "status": "metadata_only",
+  "api_status": {
+    "mcSetDevice": 0,
+    "mcptiGetVersion": 0,
+    "mcCtxGetCurrent": 0,
+    "mcptiEventGroupCreate": 0,
+    "mcptiEventGroupAddEvent": 0
+  },
+  "event_attributes": [
+    {
+      "attribute_id": 0,
+      "attribute_name": "name",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 13,
+      "raw_hex": "6163746976655f776172707300",
+      "typed_value": null,
+      "payload_type_verified": false
+    },
+    {
+      "attribute_id": 1,
+      "attribute_name": "short_description",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 13,
+      "raw_hex": "6163746976655f776172707300",
+      "typed_value": null,
+      "payload_type_verified": false
+    },
+    {
+      "attribute_id": 2,
+      "attribute_name": "long_description",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 13,
+      "raw_hex": "6163746976655f776172707300",
+      "typed_value": null,
+      "payload_type_verified": false
+    },
+    {
+      "attribute_id": 3,
+      "attribute_name": "category",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 4,
+      "raw_hex": "04000000",
+      "typed_value": null,
+      "payload_type_verified": false
+    },
+    {
+      "attribute_id": 5,
+      "attribute_name": "profiling_scope",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 4,
+      "raw_hex": "01000000",
+      "typed_value": null,
+      "payload_type_verified": false
+    }
+  ],
+  "group_attributes": [
+    {
+      "attribute_id": 0,
+      "attribute_name": "event_domain_id",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 4,
+      "raw_hex": "02000000",
+      "typed_value": null,
+      "payload_type_verified": false
+    },
+    {
+      "attribute_id": 1,
+      "attribute_name": "profile_all_domain_instances",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 4,
+      "raw_hex": "01000000",
+      "typed_value": null,
+      "payload_type_verified": false
+    },
+    {
+      "attribute_id": 3,
+      "attribute_name": "num_events",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 4,
+      "raw_hex": "01000000",
+      "typed_value": null,
+      "payload_type_verified": false
+    },
+    {
+      "attribute_id": 4,
+      "attribute_name": "events",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 4,
+      "raw_hex": "03000000",
+      "typed_value": null,
+      "payload_type_verified": false
+    },
+    {
+      "attribute_id": 5,
+      "attribute_name": "instance_count",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 4,
+      "raw_hex": "0d000000",
+      "typed_value": null,
+      "payload_type_verified": false
+    },
+    {
+      "attribute_id": 6,
+      "attribute_name": "profiling_scope",
+      "status": 0,
+      "capacity_bytes": 4096,
+      "returned_size_bytes": 4,
+      "raw_hex": "01000000",
+      "typed_value": null,
+      "payload_type_verified": false
+    }
+  ],
+  "collection_enable_attempted": false,
+  "collection_enabled": false,
+  "collection_mode_changed": false,
+  "profiling_scope_changed": false,
+  "all_instances_changed": false,
+  "replay_enabled": false,
+  "model_tensors_allocated": false,
+  "candidate_compiled": false,
+  "stage1_warmup_launches": 0,
+  "stage1_collected_launches": 0,
+  "counter_values": null,
+  "context_scope_verified": false,
+  "cleanup": {
+    "destroy_attempted": true,
+    "destroy_status": 0
+  },
+  "mcpti_api_version": 18,
+  "has_context": true,
+  "has_group": true,
+  "failed_attributes": [],
+  "stop_reason": "group_attribute_payload_type_and_context_scope_contract_not_verified; no_enable_or_stage1_launch_permitted"
+}
