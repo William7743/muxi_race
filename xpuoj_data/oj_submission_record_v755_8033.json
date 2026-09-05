@@ -1,0 +1,18 @@
+{
+  "account": "muxi2026C1050",
+  "version": "v755 (final)",
+  "submissionId": 140440,
+  "status": "Accepted",
+  "displayScore": 80.33,
+  "timeUsed": 15917,
+  "memoryUsed": 23406920,
+  "submitTime": "2026-09-05T14:19:12.000Z",
+  "source_sha256": "0b19e84d1695a16bca424ad7fd91f3a51b8baeb4f9e8b3cbf2fc3501224f94de",
+  "source_bytes": 88648,
+  "visible_cases_us": {
+    "样例1": 2541,
+    "子任务1.1": 2544,
+    "子任务1.2": 4520,
+    "子任务1.3": "9ms(rounded)"
+  }
+}
