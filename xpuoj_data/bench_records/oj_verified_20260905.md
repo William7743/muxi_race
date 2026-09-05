@@ -3,6 +3,8 @@
 Read-only inspection of the user's signed-in XPUOJ pages and authenticated API.
 Version mapping was checked against source headers, not guessed from submission
 time or size. v714, v716, and v718 also matched local source in full after LF normalization.
+v719 differs from its repository file only by one omitted final LF; its AST is
+identical. This is not full-text equality after line-ending normalization.
 All records below are Accepted.
 
 | Source version | Submission | Display score | Case scores | Case times, ms |
@@ -16,11 +18,20 @@ All records below are Accepted.
 | v714 | [139698](https://xpuoj.com/contest/5/submissions/139698) | **80.00** | 81 / 80 / 79 | 2.594 / **4.616** / 9.207 |
 | v716 | [139730](https://xpuoj.com/contest/5/submissions/139730) | **80.00** | 81 / 80 / 79 | 2.596 / 4.631 / **9.051** |
 | v718 | [139753](https://xpuoj.com/contest/5/submissions/139753) | **80.33** | 81 / 80 / 80 | **2.560 / 4.600 / 8.926** |
+| v719 | [139764](https://xpuoj.com/contest/5/submissions/139764) | **80.33** | 81 / 80 / 80 | **2.563 / 4.616 / 8.860** |
 
 v496, v691, and v713 case 3 were expanded to obtain exact stderr and checker values.
 Other values marked approximately are rounded UI values, not precise telemetry.
 
-Latest outcome: v718 / 139753 is the new best verified OJ score at **80.33**.
+Latest outcome: v719 / 139764 ties v718 at the best verified score of **80.33**.
+Only E64 Stage2 changed: case 3 is 66 microseconds lower (approximately 0.7394%),
+8.860 vs 8.926 ms. Total reported time is 16,039 vs 16,086 microseconds, but the
+case and overall scores are unchanged. E16/E32 paths did not change and ran in
+different windows; their differences are not attributed to E64. v719 becomes
+the next experimental base while v718 is retained. No repeated-stability claim
+is made from these two submissions.
+
+At the preceding checkpoint v718 / 139753 raised the score to **80.33**.
 It changes only E64 Stage1 relative to v716: case 3 drops from 9.051 to 8.926 ms,
 125 microseconds or approximately 1.38%, and the displayed case score increases
 from 79 to 80. Total score rises from 80.00 to 80.33. E16/E32 code is unchanged;
@@ -69,6 +80,25 @@ Three formal cases pass, one sample is excluded, and zero results are missing.
 
 Structured record:
 [oj_139753_verified.json](v717_v718/oj_139753_verified.json).
+
+v719 / 139764 was submitted at **2026-09-05T02:46:14.000Z**, Accepted/80.33,
+with `timeUsed=16039` microseconds. All three formal cases pass, one sample is
+excluded, and zero formal results are missing.
+
+| v719 formal case | Display score | Time, microseconds | Measured baseline, ms | SPJ baseline, ms | SPJ score ratio | Pass |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | 81 | 2563 | 11.268 | 11.251 | 0.814464 | true |
+| 2 | 80 | 4616 | 18.644 | 18.610 | 0.801257 | true |
+| 3 | 80 | 8860 | 35.916 | 35.875 | 0.801945 | true |
+
+Full-text diff confirms that the OJ source is 39,438 characters and omits just
+one final LF from the 39,439-character repository file. `strip()` results and
+full ASTs are equal. OJ source SHA256 is
+`776d6493c72513097bb4732e4da2fa8b5127440503d82ede7865114a9edfc4cc`;
+repository SHA256 is
+`1ac0e5ace6f4059a965420005cdee54db11114fd6d0ccca28f6e68b40e0d7a2f`.
+Do not report exact normalized-source/hash equality. Structured record:
+[oj_139764_verified.json](v719/oj_139764_verified.json).
 
 ## Exact case-3 reports
 
@@ -162,7 +192,7 @@ then supplies an ID for the agent to retrieve feedback through read-only APIs.
   separate constant-input checks; it has no OJ ID. v718 adds only E64 Stage1
   terminal-K, passed its local checks, and is now independently Accepted/80.33
   as 139753. The two changes were not stacked in v718.
-- The next candidate is v719, based on v718 with only E64 Stage2 selecting the
+- v719 is based on v718 with only E64 Stage2 selecting the
   existing dual-B emitter. All builder bodies are unchanged. Python/Ruff,
   source/AST, and CPU mock checks passed. Three NaN-poisoned recomputations of
   the same random input batch and two recomputations of a separate constant-input
@@ -170,7 +200,24 @@ then supplies an ID for the agent to retrieve feedback through read-only APIs.
   approximately 0.60%/0.48% lower, with all four pairs lower in each fixture.
   The constant fixture is not random-input validation; these small local gains
   do not guarantee an OJ score increase. GPU testing ended and the lock was
-  released. v719 is ready to provide as a code link for user-operated Chrome
-  submission; it has no OJ ID or score yet. Logs:
+  released. v719 subsequently passed its independent OJ run as 139764/80.33,
+  with the precise final-newline source difference documented above. Logs:
   [same-batch random](v719/codex_e64_718_719_entry_random.log),
   [synthetic constant](v719/codex_e64_718_719_entry_synthetic_constant.log).
+- Candidate v720 is confirmed: only the Stage2 selector changes from (32,64)
+  to (16,32,64), enabling the existing dual-B emitter for E16 on top of v719.
+  CPU dispatch checks include the actual E16 H2048/I8192 specialization. Three
+  NaN-poisoned recomputations of one random batch matched v719 exactly; entry
+  median is approximately 0.51% lower, but only two of four pairs improve, with
+  both forward-order comparisons slower and both reverse-order comparisons
+  faster. A separate same-batch synthetic constant fixture passed two accuracy
+  recomputations and has a 0.80% lower median, but again only the two reverse
+  comparisons improve; both forward comparisons are slower. This is not robust
+  positive evidence by itself. A reversed candidate-list constant-input
+  diagnostic then passed one recomputation for both candidates, with a 0.82%
+  lower v720 median and all four paired times lower; both candidates have a
+  round-3 tail. The original two-wins/two-losses windows remain part of the
+  evidence and are not rewritten as four wins. v720 is now a small-gain
+  candidate ready for user-operated Chrome submission, not a guaranteed score
+  upgrade. It has no OJ ID. Full samples and source hashes are in
+  [OPTIMIZATION_LOG.md](../OPTIMIZATION_LOG.md), with logs under `v720/`.
