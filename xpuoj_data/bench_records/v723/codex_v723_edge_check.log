@@ -1,0 +1,38 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+PASS pad=0 dtype=torch.float16: no workspace/build/launch path
+2026-09-05 03:50:41  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v723_edge_probe` with `out_idx=None`
+2026-09-05 03:50:43  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v723_edge_probe`
+PASS valid=0 pad=129 hidden=129 dtype=torch.float16: empty block map, no Stage1, all-zero output
+2026-09-05 03:50:45  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_v723_edge_base` with `out_idx=None`
+2026-09-05 03:50:50  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_v723_edge_base`
+2026-09-05 03:50:51  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v723_edge_base` with `out_idx=None`
+2026-09-05 03:50:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v723_edge_base`
+2026-09-05 03:50:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_v723_edge_probe` with `out_idx=None`
+2026-09-05 03:51:01  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_v723_edge_probe`
+2026-09-05 03:51:02  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v723_edge_probe` with `out_idx=None`
+2026-09-05 03:51:06  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v723_edge_probe`
+PASS full_then_short_tail valid=129 pad=256 dtype=torch.float16: bitwise v720 match, final raw token followed by 127 zero padding rows
+2026-09-05 03:51:09  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_v723_edge_base` with `out_idx=None`
+2026-09-05 03:51:14  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_v723_edge_base`
+2026-09-05 03:51:15  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v723_edge_base` with `out_idx=None`
+2026-09-05 03:51:19  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v723_edge_base`
+2026-09-05 03:51:20  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_v723_edge_probe` with `out_idx=None`
+2026-09-05 03:51:25  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_v723_edge_probe`
+2026-09-05 03:51:26  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v723_edge_probe` with `out_idx=None`
+2026-09-05 03:51:30  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v723_edge_probe`
+PASS one_token_last_expert valid=1 pad=128 dtype=torch.float16: bitwise v720 match, final raw token followed by 127 zero padding rows
+PASS pad=0 dtype=torch.float32: no workspace/build/launch path
+2026-09-05 03:51:33  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v723_edge_probe` with `out_idx=None`
+2026-09-05 03:51:35  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v723_edge_probe`
+PASS valid=0 pad=129 hidden=129 dtype=torch.float32: empty block map, no Stage1, all-zero output
+2026-09-05 03:51:37  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v723_edge_base` with `out_idx=None`
+2026-09-05 03:51:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v723_edge_base`
+2026-09-05 03:51:43  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v723_edge_probe` with `out_idx=None`
+2026-09-05 03:51:47  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v723_edge_probe`
+PASS full_then_short_tail valid=129 pad=256 dtype=torch.float32: bitwise v720 match, final raw token followed by 127 zero padding rows
+2026-09-05 03:51:50  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v723_edge_base` with `out_idx=None`
+2026-09-05 03:51:54  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v723_edge_base`
+2026-09-05 03:51:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v723_edge_probe` with `out_idx=None`
+2026-09-05 03:51:59  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v723_edge_probe`
+PASS one_token_last_expert valid=1 pad=128 dtype=torch.float32: bitwise v720 match, final raw token followed by 127 zero padding rows
+PASS all 8 small edge checks; no benchmark/timing performed.

@@ -4,6 +4,10 @@
 
 | 优先级 | 文件 | 提交理由 | 状态 |
 | --- | --- | --- | --- |
+| 结构实验中性，不优先提交 | [v724](probe_v724_v720_e32_stage1_a_fragment_reuse.py) | E32 Stage1保留四份A fragment跨Gate/Up复用，shared仍32KiB；同批随机3轮full/entry完全一致。 | 入口中位4.676480 vs4.685312 ms，只差约0.19%，两对快两对慢，不能认定提速；暂无OJ ID |
+| 边界保护备选，非提分推荐 | [v723](probe_v723_v720_e32_route_load_bounds.py) | E32 Stage2 route index clamp，FP16/FP32生成源码均保留；空路由写零。大E32随机3轮和8个小型边界测试通过。 | 尚无OJ ID；入口中位4.669440 vs4.649216 ms，慢约0.435%，有单个长尾，不宣称提速；暂不优先提交 |
+| 本地负例，不提交 | [v721](probe_v721_v720_e32_stage1_unroll2.py) | E32 Stage1稳态2倍展开，同批随机三轮复算精度一致；入口中位5.802240 vs4.672768 ms，耗时增加约24.17%，四对都慢。 | 关闭、不做第二fixture、不推荐OJ；生成源码21128 vs12945字符、静态sync19 vs9，但不据此推断物理寄存器/动态同步或根因 |
+| 本地负例，不提交 | [v722](probe_v722_v720_e32_stage1_unroll3.py) | E32 Stage1稳态3倍展开，同批随机三轮复算精度一致；入口中位6.109696 vs4.672768 ms，耗时增加约30.75%，四对都慢。 | 关闭、不做第二fixture、不推荐OJ；生成源码21321字符/静态sync19，共享offset仍0/16384；不推断具体occupancy或根因 |
 | 同分已通过组合底 | [v720](probe_v720_v719_e16_stage2_bfrag_only.py) | [139770](https://xpuoj.com/contest/5/submissions/139770)：Accepted，**80.33**，分项81/80/80，2.549/4.594/8.888 ms，timeUsed16031微秒。只改E16 Stage2，点1比v719少14微秒（约0.546%）。 | 源码仅少末尾一个LF、AST全等；总分未升，总耗时与v719仅差8微秒，保留v718/v719，不称整体稳定更好 |
 | 80.33分保留对照 | [v719](probe_v719_v718_e64_stage2_bfrag_only.py) | [139764](https://xpuoj.com/contest/5/submissions/139764)：Accepted，**80.33**，分项81/80/80，2.563/4.616/8.860 ms，timeUsed16039微秒。仅E64 Stage2变化，点3较v718低66微秒（约0.7394%）。 | 源码只比仓库少末尾一个LF，strip相等、AST全等；保留作v720的同分单变量对照 |
 | 80.33分保留基线 | [v718](probe_v718_v716_e64_stage1_terminal_k_only.py) | [139753](https://xpuoj.com/contest/5/submissions/139753)：Accepted，**80.33**，分项81/80/80，2.560/4.600/8.926 ms，timeUsed16086微秒。 | 完整源码LF归一化逐字一致；保留与v719同分的正式基线作对照 |

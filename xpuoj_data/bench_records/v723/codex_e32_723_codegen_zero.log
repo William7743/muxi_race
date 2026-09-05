@@ -1,0 +1,26 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-05 03:56:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_codegen_review_0` with `out_idx=None`
+2026-09-05 03:56:46  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_codegen_review_0`
+{"file": "probe_v723_v720_e32_route_load_bounds.py", "stage": 2, "case": 2, "weights_dtype": "float16", "source_sha256": "00061766d5b27acd72ea56b59573c9060e7685da877be7be1b371ea3906e1c00", "source_characters": 1046, "static_syncthreads_sites": 0, "shared_offsets": [], "local_array_declarations": [], "outer_loop_headers": [], "route_load_source_lines": [], "note": "Static source sites/arrays are not dynamic barrier counts or physical register usage."}
+SOURCE_BEGIN probe_v723_v720_e32_route_load_bounds.py
+#include <tl_templates/maca/gemm.h>
+#include <tl_templates/maca/copy.h>
+#include <tl_templates/maca/reduce.h>
+#include <tl_templates/maca/intrin.h>
+#include <tl_templates/maca/atomic.h>
+#include <tl_templates/maca/threadblock_swizzle.h>
+#include <tl_templates/maca/debug.h>
+
+extern "C" __global__ void stage2_codegen_review_0_kernel(half_t* __restrict__ out);
+extern "C" __global__ void __launch_bounds__(256, 1) stage2_codegen_review_0_kernel(half_t* __restrict__ out) {
+  #pragma unroll
+  for (int i = 0; i < 8; ++i) {
+    if ((((((int)blockIdx.x) * 128) + (i * 16)) + (((int)threadIdx.x) >> 4)) < 129) {
+      half_t broadcast_var = half_t(0x0p+0f/*0.000000e+00*/);
+      *(uint4*)(out + (((((((int)blockIdx.x) * 917504) + (i * 114688)) + ((((int)threadIdx.x) >> 4) * 7168)) + (((int)blockIdx.y) * 128)) + ((((int)threadIdx.x) & 15) * 8))) = make_uint4(__pack_half2(broadcast_var, broadcast_var), __pack_half2(broadcast_var, broadcast_var), __pack_half2(broadcast_var, broadcast_var), __pack_half2(broadcast_var, broadcast_var));
+    }
+  }
+}
+
+
+SOURCE_END probe_v723_v720_e32_route_load_bounds.py
