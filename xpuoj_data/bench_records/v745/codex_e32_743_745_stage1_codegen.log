@@ -1,0 +1,623 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"file": "probe_v743_v723_e32_stage2_runtime_m64.py", "stage": 1, "case": 2, "weights_dtype": "float16", "source_sha256": "32f3b1b3e9da925514a1aa02c6313d4bcd34adae330783fdc82e4f4a36f2692b", "source_characters": 12945, "adapter_libpath": "/root/.tilelang/cache/0.1.10_cuda_gitf549117c-x86_64/kernels/105e82f0a6484177babfc9d5ce2059b46579cc5a18ff2a93dd90268eeb6e2932/executable.so", "reported_n_regs": null, "reported_n_spills": null, "static_syncthreads_sites": 9, "shared_offsets": ["void* weight_shared = ((void*)((char*)buf_dyn_shmem + 0));", "void* input_shared = ((void*)((char*)buf_dyn_shmem + 16384));"], "local_array_declarations": ["float gate_local[64];", "float up_local[64];", "half_t up_prefetch[32];", "half_t up_logits_local_cast[4];", "half_t A_local[16];", "half_t B_local[16];", "half_t A_local_1[16];", "half_t B_local_1[16];", "half_t A_local_2[16];", "half_t B_local_2[16];", "half_t A_local_3[16];", "half_t B_local_3[16];"], "outer_loop_headers": ["for (int k = 0; k < 111; ++k) {"], "route_load_source_lines": [], "note": "Static source sites/arrays are not dynamic barrier counts or physical register usage. Null reported resources mean unavailable, not zero."}
+SOURCE_BEGIN probe_v743_v723_e32_stage2_runtime_m64.py
+#include <tl_templates/maca/gemm.h>
+#include <tl_templates/maca/copy.h>
+#include <tl_templates/maca/reduce.h>
+#include <tl_templates/maca/intrin.h>
+#include <tl_templates/maca/atomic.h>
+#include <tl_templates/maca/threadblock_swizzle.h>
+#include <tl_templates/maca/debug.h>
+
+extern "C" __global__ void stage1_codegen_review_0_kernel(const half_t* __restrict__ gate_w, const int* __restrict__ group_idx_for_bx, const int* __restrict__ group_padded_offsets, const int* __restrict__ group_sizes, const half_t* __restrict__ stacked_expert_tokens, half_t* __restrict__ up_logits, const half_t* __restrict__ up_w);
+extern "C" __global__ void __launch_bounds__(256, 1) stage1_codegen_review_0_kernel(const half_t* __restrict__ gate_w, const int* __restrict__ group_idx_for_bx, const int* __restrict__ group_padded_offsets, const int* __restrict__ group_sizes, const half_t* __restrict__ stacked_expert_tokens, half_t* __restrict__ up_logits, const half_t* __restrict__ up_w) {
+  extern __shared__ __align__(1024) uchar buf_dyn_shmem[];
+  void* weight_shared = ((void*)((char*)buf_dyn_shmem + 0));
+  void* input_shared = ((void*)((char*)buf_dyn_shmem + 16384));
+  float gate_local[64];
+  float up_local[64];
+  half_t up_prefetch[32];
+  half_t up_logits_local_cast[4];
+  const dim3 blockIdx = tl::rasterization2DColumn<3>();
+  int expert_id = group_idx_for_bx[((int)blockIdx.x)];
+  int group_size = group_sizes[((int64_t)expert_id)];
+  int padded_start = group_padded_offsets[((int64_t)expert_id)];
+  #pragma unroll
+  for (int i = 0; i < 16; ++i) {
+    float broadcast_var = 0x0p+0f/*0.000000e+00*/;
+    *(float4*)(gate_local + (i * 4)) = make_float4(broadcast_var, broadcast_var, broadcast_var, broadcast_var);
+  }
+  #pragma unroll
+  for (int i_1 = 0; i_1 < 16; ++i_1) {
+    float broadcast_var_1 = 0x0p+0f/*0.000000e+00*/;
+    *(float4*)(up_local + (i_1 * 4)) = make_float4(broadcast_var_1, broadcast_var_1, broadcast_var_1, broadcast_var_1);
+  }
+  if (0 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+    for (int k = 0; k < 111; ++k) {
+      #pragma unroll
+      for (int i_2 = 0; i_2 < 8; ++i_2) {
+        *(uint2*)(((half_t*)weight_shared) + (((i_2 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(gate_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_2) * (int64_t)114688)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)7168)) + (((int64_t)k) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)));
+      }
+      #pragma unroll
+      for (int i_3 = 0; i_3 < 8; ++i_3) {
+        *(uint2*)(((half_t*)input_shared) + (((i_3 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(stacked_expert_tokens + (((((((int)blockIdx.x) * 917504) + (i_3 * 114688)) + ((((int)threadIdx.x) >> 4) * 7168)) + (k * 64)) + ((((int)threadIdx.x) & 15) * 4)));
+      }
+      #pragma unroll
+      for (int i_4 = 0; i_4 < 4; ++i_4) {
+        *(uint4*)(up_prefetch + (i_4 * 8)) = *(uint4*)(up_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_4) * (int64_t)229376)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)3) * (int64_t)7168)) + (((int64_t)k) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)7) * (int64_t)8)));
+      }
+      half_t A_local[16];
+      half_t B_local[16];
+      __syncthreads();
+      for (int ki = 0; ki < 4; ++ki) {
+        for (int i_5 = 0; i_5 < 4; ++i_5) {
+          *(uint2*)(A_local + (i_5 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_5 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int j = 0; j < 4; ++j) {
+          *(uint2*)(B_local + (j * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int i_6 = 0; i_6 < 4; ++i_6) {
+          for (int j_1 = 0; j_1 < 4; ++j_1) {
+            {
+      *(((float32x4*)gate_local) + ((i_6 * 4) + j_1)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local) + j_1),
+                    *(((float16x4*)A_local) + i_6),
+                    *(((float32x4*)gate_local) + ((i_6 * 4) + j_1)));
+    };
+          }
+        }
+      }
+      __syncthreads();
+      __syncthreads();
+      #pragma unroll
+      for (int i_7 = 0; i_7 < 8; ++i_7) {
+        *(uint2*)(((half_t*)weight_shared) + ((((i_7 >> 1) * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + (((((((int)threadIdx.x) & 7) * 2) + (i_7 & 1)) ^ ((((int)threadIdx.x) & 127) >> 3)) * 4))) = *(uint2*)(up_prefetch + (i_7 * 4));
+      }
+      half_t A_local_1[16];
+      half_t B_local_1[16];
+      __syncthreads();
+      for (int ki_1 = 0; ki_1 < 4; ++ki_1) {
+        for (int i_8 = 0; i_8 < 4; ++i_8) {
+          *(uint2*)(A_local_1 + (i_8 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_8 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_1 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int j_2 = 0; j_2 < 4; ++j_2) {
+          *(uint2*)(B_local_1 + (j_2 * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j_2 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_1 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int i_9 = 0; i_9 < 4; ++i_9) {
+          for (int j_3 = 0; j_3 < 4; ++j_3) {
+            {
+      *(((float32x4*)up_local) + ((i_9 * 4) + j_3)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local_1) + j_3),
+                    *(((float16x4*)A_local_1) + i_9),
+                    *(((float32x4*)up_local) + ((i_9 * 4) + j_3)));
+    };
+          }
+        }
+      }
+      __syncthreads();
+    }
+    #pragma unroll
+    for (int i_10 = 0; i_10 < 8; ++i_10) {
+      *(uint2*)(((half_t*)weight_shared) + (((i_10 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(gate_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_10) * (int64_t)114688)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)7168)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)) + (int64_t)7104));
+    }
+    #pragma unroll
+    for (int i_11 = 0; i_11 < 8; ++i_11) {
+      *(uint2*)(((half_t*)input_shared) + (((i_11 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(stacked_expert_tokens + (((((((int)blockIdx.x) * 917504) + (i_11 * 114688)) + ((((int)threadIdx.x) >> 4) * 7168)) + ((((int)threadIdx.x) & 15) * 4)) + 7104));
+    }
+    #pragma unroll
+    for (int i_12 = 0; i_12 < 4; ++i_12) {
+      *(uint4*)(up_prefetch + (i_12 * 8)) = *(uint4*)(up_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_12) * (int64_t)229376)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)3) * (int64_t)7168)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)7) * (int64_t)8)) + (int64_t)7104));
+    }
+  }
+  __syncthreads();
+  if (0 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+    half_t A_local_2[16];
+    half_t B_local_2[16];
+    for (int ki_2 = 0; ki_2 < 4; ++ki_2) {
+      for (int i_13 = 0; i_13 < 4; ++i_13) {
+        *(uint2*)(A_local_2 + (i_13 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_13 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_2 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+      }
+      for (int j_4 = 0; j_4 < 4; ++j_4) {
+        *(uint2*)(B_local_2 + (j_4 * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j_4 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_2 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+      }
+      for (int i_14 = 0; i_14 < 4; ++i_14) {
+        for (int j_5 = 0; j_5 < 4; ++j_5) {
+          {
+      *(((float32x4*)gate_local) + ((i_14 * 4) + j_5)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local_2) + j_5),
+                    *(((float16x4*)A_local_2) + i_14),
+                    *(((float32x4*)gate_local) + ((i_14 * 4) + j_5)));
+    };
+        }
+      }
+    }
+    __syncthreads();
+    __syncthreads();
+    #pragma unroll
+    for (int i_15 = 0; i_15 < 8; ++i_15) {
+      *(uint2*)(((half_t*)weight_shared) + ((((i_15 >> 1) * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + (((((((int)threadIdx.x) & 7) * 2) + (i_15 & 1)) ^ ((((int)threadIdx.x) & 127) >> 3)) * 4))) = *(uint2*)(up_prefetch + (i_15 * 4));
+    }
+  }
+  __syncthreads();
+  if (0 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+    half_t A_local_3[16];
+    half_t B_local_3[16];
+    for (int ki_3 = 0; ki_3 < 4; ++ki_3) {
+      for (int i_16 = 0; i_16 < 4; ++i_16) {
+        *(uint2*)(A_local_3 + (i_16 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_16 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_3 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+      }
+      for (int j_6 = 0; j_6 < 4; ++j_6) {
+        *(uint2*)(B_local_3 + (j_6 * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j_6 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_3 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+      }
+      for (int i_17 = 0; i_17 < 4; ++i_17) {
+        for (int j_7 = 0; j_7 < 4; ++j_7) {
+          {
+      *(((float32x4*)up_local) + ((i_17 * 4) + j_7)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local_3) + j_7),
+                    *(((float16x4*)A_local_3) + i_17),
+                    *(((float32x4*)up_local) + ((i_17 * 4) + j_7)));
+    };
+        }
+      }
+    }
+  }
+  #pragma unroll
+  for (int i_18 = 0; i_18 < 16; ++i_18) {
+    if ((((((((int)threadIdx.x) & 127) >> 6) * 64) + ((i_18 >> 2) * 16)) + (((int)threadIdx.x) & 15)) < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+      float broadcast_var_2 = 0x1p+0f/*1.000000e+00*/;
+      float broadcast_var_3 = 0x1p+0f/*1.000000e+00*/;
+      float broadcast_var_4 = -0x1p+0f/*-1.000000e+00*/;
+      float broadcast_var_5 = 0x1.7154764ee6c2fp+0f/*1.442695e+00*/;
+      uint2 __1;
+      float4 __2;
+        float4 v_ = *(float4*)(up_local + (i_18 * 4));
+        float4 __3;
+          float4 v__1 = *(float4*)(gate_local + (i_18 * 4));
+          float4 __4;
+            float4 v__2 = make_float4(broadcast_var_2, broadcast_var_2, broadcast_var_2, broadcast_var_2);
+            float4 __5;
+              float4 v__3 = make_float4(broadcast_var_3, broadcast_var_3, broadcast_var_3, broadcast_var_3);
+              float4 __6;
+              float4 __7;
+                float4 __8;
+                  float4 v__4 = make_float4(broadcast_var_4, broadcast_var_4, broadcast_var_4, broadcast_var_4);
+                  __8.x = (v__1.x*v__4.x);
+                  __8.y = (v__1.y*v__4.y);
+                  __8.z = (v__1.z*v__4.z);
+                  __8.w = (v__1.w*v__4.w);
+                float4 v__5 = make_float4(broadcast_var_5, broadcast_var_5, broadcast_var_5, broadcast_var_5);
+                __7.x = (__8.x*v__5.x);
+                __7.y = (__8.y*v__5.y);
+                __7.z = (__8.z*v__5.z);
+                __7.w = (__8.w*v__5.w);
+              __6.x = exp2f(__7.x);
+              __6.y = exp2f(__7.y);
+              __6.z = exp2f(__7.z);
+              __6.w = exp2f(__7.w);
+              __5.x = (v__3.x+__6.x);
+              __5.y = (v__3.y+__6.y);
+              __5.z = (v__3.z+__6.z);
+              __5.w = (v__3.w+__6.w);
+            __4.x = (v__2.x/__5.x);
+            __4.y = (v__2.y/__5.y);
+            __4.z = (v__2.z/__5.z);
+            __4.w = (v__2.w/__5.w);
+          __3.x = (v__1.x*__4.x);
+          __3.y = (v__1.y*__4.y);
+          __3.z = (v__1.z*__4.z);
+          __3.w = (v__1.w*__4.w);
+        __2.x = (v_.x*__3.x);
+        __2.y = (v_.y*__3.y);
+        __2.z = (v_.z*__3.z);
+        __2.w = (v_.w*__3.w);
+      ((half2*)(&__1))[0] = __float22half2_rn(((float2*)(&__2))[0]);
+      ((half2*)(&__1))[1] = __float22half2_rn(((float2*)(&__2))[1]);
+      *(uint2*)(up_logits_local_cast + 0) = __1;
+      *(uint2*)(up_logits + ((((((((((int)blockIdx.x) * 262144) + (((((int)threadIdx.x) & 127) >> 6) * 131072)) + ((i_18 >> 2) * 32768)) + ((((int)threadIdx.x) & 15) * 2048)) + (((int)blockIdx.y) * 128)) + ((((int)threadIdx.x) >> 7) * 64)) + ((i_18 & 3) * 16)) + (((((int)threadIdx.x) & 63) >> 4) * 4))) = *(uint2*)(up_logits_local_cast + 0);
+    }
+  }
+}
+
+
+SOURCE_END probe_v743_v723_e32_stage2_runtime_m64.py
+2026-09-05 11:27:30  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_codegen_review_1` with `out_idx=None`
+2026-09-05 11:27:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_codegen_review_1`
+{"file": "probe_v745_v743_e32_stage1_runtime_m64.py", "stage": 1, "case": 2, "weights_dtype": "float16", "source_sha256": "67282b935424a980038cc9beed0de38dedf723278f7c1c8147645f9d69456782", "source_characters": 25102, "adapter_libpath": "", "reported_n_regs": null, "reported_n_spills": null, "static_syncthreads_sites": 18, "shared_offsets": ["void* weight_shared = ((void*)((char*)buf_dyn_shmem + 0));", "void* input_shared = ((void*)((char*)buf_dyn_shmem + 16384));"], "local_array_declarations": ["float gate_local[64];", "float up_local[64];", "half_t up_prefetch[32];", "float tail_gate_local[32];", "float tail_up_local[32];", "half_t up_logits_local_cast[4];", "half_t up_logits_local_cast_1[4];", "half_t A_local[16];", "half_t B_local[16];", "half_t A_local_1[16];", "half_t B_local_1[16];", "half_t A_local_2[16];", "half_t B_local_2[16];", "half_t A_local_3[16];", "half_t B_local_3[16];", "half_t A_local_4[8];", "half_t B_local_4[16];", "half_t A_local_5[8];", "half_t B_local_5[16];", "half_t A_local_6[8];", "half_t B_local_6[16];", "half_t A_local_7[8];", "half_t B_local_7[16];"], "outer_loop_headers": ["for (int k = 0; k < 111; ++k) {"], "route_load_source_lines": [], "note": "Static source sites/arrays are not dynamic barrier counts or physical register usage. Null reported resources mean unavailable, not zero."}
+SOURCE_BEGIN probe_v745_v743_e32_stage1_runtime_m64.py
+#include <tl_templates/maca/gemm.h>
+#include <tl_templates/maca/copy.h>
+#include <tl_templates/maca/reduce.h>
+#include <tl_templates/maca/intrin.h>
+#include <tl_templates/maca/atomic.h>
+#include <tl_templates/maca/threadblock_swizzle.h>
+#include <tl_templates/maca/debug.h>
+
+extern "C" __global__ void stage1_codegen_review_1_kernel(const half_t* __restrict__ gate_w, const int* __restrict__ group_idx_for_bx, const int* __restrict__ group_padded_offsets, const int* __restrict__ group_sizes, const half_t* __restrict__ stacked_expert_tokens, half_t* __restrict__ up_logits, const half_t* __restrict__ up_w);
+extern "C" __global__ void __launch_bounds__(256, 1) stage1_codegen_review_1_kernel(const half_t* __restrict__ gate_w, const int* __restrict__ group_idx_for_bx, const int* __restrict__ group_padded_offsets, const int* __restrict__ group_sizes, const half_t* __restrict__ stacked_expert_tokens, half_t* __restrict__ up_logits, const half_t* __restrict__ up_w) {
+  extern __shared__ __align__(1024) uchar buf_dyn_shmem[];
+  void* weight_shared = ((void*)((char*)buf_dyn_shmem + 0));
+  void* input_shared = ((void*)((char*)buf_dyn_shmem + 16384));
+  float gate_local[64];
+  float up_local[64];
+  half_t up_prefetch[32];
+  float tail_gate_local[32];
+  float tail_up_local[32];
+  half_t up_logits_local_cast[4];
+  half_t up_logits_local_cast_1[4];
+  const dim3 blockIdx = tl::rasterization2DColumn<3>();
+  int expert_id = group_idx_for_bx[((int)blockIdx.x)];
+  int group_size = group_sizes[((int64_t)expert_id)];
+  int padded_start = group_padded_offsets[((int64_t)expert_id)];
+  if (64 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+    #pragma unroll
+    for (int i = 0; i < 16; ++i) {
+      float broadcast_var = 0x0p+0f/*0.000000e+00*/;
+      *(float4*)(gate_local + (i * 4)) = make_float4(broadcast_var, broadcast_var, broadcast_var, broadcast_var);
+    }
+    #pragma unroll
+    for (int i_1 = 0; i_1 < 16; ++i_1) {
+      float broadcast_var_1 = 0x0p+0f/*0.000000e+00*/;
+      *(float4*)(up_local + (i_1 * 4)) = make_float4(broadcast_var_1, broadcast_var_1, broadcast_var_1, broadcast_var_1);
+    }
+    for (int k = 0; k < 111; ++k) {
+      #pragma unroll
+      for (int i_2 = 0; i_2 < 8; ++i_2) {
+        *(uint2*)(((half_t*)weight_shared) + (((i_2 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(gate_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_2) * (int64_t)114688)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)7168)) + (((int64_t)k) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)));
+      }
+      #pragma unroll
+      for (int i_3 = 0; i_3 < 8; ++i_3) {
+        *(uint2*)(((half_t*)input_shared) + (((i_3 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(stacked_expert_tokens + (((((((int)blockIdx.x) * 917504) + (i_3 * 114688)) + ((((int)threadIdx.x) >> 4) * 7168)) + (k * 64)) + ((((int)threadIdx.x) & 15) * 4)));
+      }
+      #pragma unroll
+      for (int i_4 = 0; i_4 < 4; ++i_4) {
+        *(uint4*)(up_prefetch + (i_4 * 8)) = *(uint4*)(up_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_4) * (int64_t)229376)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)3) * (int64_t)7168)) + (((int64_t)k) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)7) * (int64_t)8)));
+      }
+      half_t A_local[16];
+      half_t B_local[16];
+      __syncthreads();
+      for (int ki = 0; ki < 4; ++ki) {
+        for (int i_5 = 0; i_5 < 4; ++i_5) {
+          *(uint2*)(A_local + (i_5 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_5 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int j = 0; j < 4; ++j) {
+          *(uint2*)(B_local + (j * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int i_6 = 0; i_6 < 4; ++i_6) {
+          for (int j_1 = 0; j_1 < 4; ++j_1) {
+            {
+      *(((float32x4*)gate_local) + ((i_6 * 4) + j_1)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local) + j_1),
+                    *(((float16x4*)A_local) + i_6),
+                    *(((float32x4*)gate_local) + ((i_6 * 4) + j_1)));
+    };
+          }
+        }
+      }
+      __syncthreads();
+      __syncthreads();
+      #pragma unroll
+      for (int i_7 = 0; i_7 < 8; ++i_7) {
+        *(uint2*)(((half_t*)weight_shared) + ((((i_7 >> 1) * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + (((((((int)threadIdx.x) & 7) * 2) + (i_7 & 1)) ^ ((((int)threadIdx.x) & 127) >> 3)) * 4))) = *(uint2*)(up_prefetch + (i_7 * 4));
+      }
+      half_t A_local_1[16];
+      half_t B_local_1[16];
+      __syncthreads();
+      for (int ki_1 = 0; ki_1 < 4; ++ki_1) {
+        for (int i_8 = 0; i_8 < 4; ++i_8) {
+          *(uint2*)(A_local_1 + (i_8 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_8 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_1 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int j_2 = 0; j_2 < 4; ++j_2) {
+          *(uint2*)(B_local_1 + (j_2 * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j_2 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_1 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int i_9 = 0; i_9 < 4; ++i_9) {
+          for (int j_3 = 0; j_3 < 4; ++j_3) {
+            {
+      *(((float32x4*)up_local) + ((i_9 * 4) + j_3)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local_1) + j_3),
+                    *(((float16x4*)A_local_1) + i_9),
+                    *(((float32x4*)up_local) + ((i_9 * 4) + j_3)));
+    };
+          }
+        }
+      }
+      __syncthreads();
+    }
+    #pragma unroll
+    for (int i_10 = 0; i_10 < 8; ++i_10) {
+      *(uint2*)(((half_t*)weight_shared) + (((i_10 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(gate_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_10) * (int64_t)114688)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)7168)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)) + (int64_t)7104));
+    }
+    #pragma unroll
+    for (int i_11 = 0; i_11 < 8; ++i_11) {
+      *(uint2*)(((half_t*)input_shared) + (((i_11 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(stacked_expert_tokens + (((((((int)blockIdx.x) * 917504) + (i_11 * 114688)) + ((((int)threadIdx.x) >> 4) * 7168)) + ((((int)threadIdx.x) & 15) * 4)) + 7104));
+    }
+    #pragma unroll
+    for (int i_12 = 0; i_12 < 4; ++i_12) {
+      *(uint4*)(up_prefetch + (i_12 * 8)) = *(uint4*)(up_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_12) * (int64_t)229376)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)3) * (int64_t)7168)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)7) * (int64_t)8)) + (int64_t)7104));
+    }
+    half_t A_local_2[16];
+    half_t B_local_2[16];
+    __syncthreads();
+    for (int ki_2 = 0; ki_2 < 4; ++ki_2) {
+      for (int i_13 = 0; i_13 < 4; ++i_13) {
+        *(uint2*)(A_local_2 + (i_13 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_13 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_2 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+      }
+      for (int j_4 = 0; j_4 < 4; ++j_4) {
+        *(uint2*)(B_local_2 + (j_4 * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j_4 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_2 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+      }
+      for (int i_14 = 0; i_14 < 4; ++i_14) {
+        for (int j_5 = 0; j_5 < 4; ++j_5) {
+          {
+      *(((float32x4*)gate_local) + ((i_14 * 4) + j_5)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local_2) + j_5),
+                    *(((float16x4*)A_local_2) + i_14),
+                    *(((float32x4*)gate_local) + ((i_14 * 4) + j_5)));
+    };
+        }
+      }
+    }
+    __syncthreads();
+    __syncthreads();
+    #pragma unroll
+    for (int i_15 = 0; i_15 < 8; ++i_15) {
+      *(uint2*)(((half_t*)weight_shared) + ((((i_15 >> 1) * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + (((((((int)threadIdx.x) & 7) * 2) + (i_15 & 1)) ^ ((((int)threadIdx.x) & 127) >> 3)) * 4))) = *(uint2*)(up_prefetch + (i_15 * 4));
+    }
+    half_t A_local_3[16];
+    half_t B_local_3[16];
+    __syncthreads();
+    for (int ki_3 = 0; ki_3 < 4; ++ki_3) {
+      for (int i_16 = 0; i_16 < 4; ++i_16) {
+        *(uint2*)(A_local_3 + (i_16 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_16 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_3 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+      }
+      for (int j_6 = 0; j_6 < 4; ++j_6) {
+        *(uint2*)(B_local_3 + (j_6 * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j_6 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_3 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+      }
+      for (int i_17 = 0; i_17 < 4; ++i_17) {
+        for (int j_7 = 0; j_7 < 4; ++j_7) {
+          {
+      *(((float32x4*)up_local) + ((i_17 * 4) + j_7)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local_3) + j_7),
+                    *(((float16x4*)A_local_3) + i_17),
+                    *(((float32x4*)up_local) + ((i_17 * 4) + j_7)));
+    };
+        }
+      }
+    }
+    #pragma unroll
+    for (int i_18 = 0; i_18 < 16; ++i_18) {
+      if ((((((((int)threadIdx.x) & 127) >> 6) * 64) + ((i_18 >> 2) * 16)) + (((int)threadIdx.x) & 15)) < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+        float broadcast_var_2 = 0x1p+0f/*1.000000e+00*/;
+        float broadcast_var_3 = 0x1p+0f/*1.000000e+00*/;
+        float broadcast_var_4 = -0x1p+0f/*-1.000000e+00*/;
+        float broadcast_var_5 = 0x1.7154764ee6c2fp+0f/*1.442695e+00*/;
+        uint2 __1;
+        float4 __2;
+          float4 v_ = *(float4*)(up_local + (i_18 * 4));
+          float4 __3;
+            float4 v__1 = *(float4*)(gate_local + (i_18 * 4));
+            float4 __4;
+              float4 v__2 = make_float4(broadcast_var_2, broadcast_var_2, broadcast_var_2, broadcast_var_2);
+              float4 __5;
+                float4 v__3 = make_float4(broadcast_var_3, broadcast_var_3, broadcast_var_3, broadcast_var_3);
+                float4 __6;
+                float4 __7;
+                  float4 __8;
+                    float4 v__4 = make_float4(broadcast_var_4, broadcast_var_4, broadcast_var_4, broadcast_var_4);
+                    __8.x = (v__1.x*v__4.x);
+                    __8.y = (v__1.y*v__4.y);
+                    __8.z = (v__1.z*v__4.z);
+                    __8.w = (v__1.w*v__4.w);
+                  float4 v__5 = make_float4(broadcast_var_5, broadcast_var_5, broadcast_var_5, broadcast_var_5);
+                  __7.x = (__8.x*v__5.x);
+                  __7.y = (__8.y*v__5.y);
+                  __7.z = (__8.z*v__5.z);
+                  __7.w = (__8.w*v__5.w);
+                __6.x = exp2f(__7.x);
+                __6.y = exp2f(__7.y);
+                __6.z = exp2f(__7.z);
+                __6.w = exp2f(__7.w);
+                __5.x = (v__3.x+__6.x);
+                __5.y = (v__3.y+__6.y);
+                __5.z = (v__3.z+__6.z);
+                __5.w = (v__3.w+__6.w);
+              __4.x = (v__2.x/__5.x);
+              __4.y = (v__2.y/__5.y);
+              __4.z = (v__2.z/__5.z);
+              __4.w = (v__2.w/__5.w);
+            __3.x = (v__1.x*__4.x);
+            __3.y = (v__1.y*__4.y);
+            __3.z = (v__1.z*__4.z);
+            __3.w = (v__1.w*__4.w);
+          __2.x = (v_.x*__3.x);
+          __2.y = (v_.y*__3.y);
+          __2.z = (v_.z*__3.z);
+          __2.w = (v_.w*__3.w);
+        ((half2*)(&__1))[0] = __float22half2_rn(((float2*)(&__2))[0]);
+        ((half2*)(&__1))[1] = __float22half2_rn(((float2*)(&__2))[1]);
+        *(uint2*)(up_logits_local_cast + 0) = __1;
+        *(uint2*)(up_logits + ((((((((((int)blockIdx.x) * 262144) + (((((int)threadIdx.x) & 127) >> 6) * 131072)) + ((i_18 >> 2) * 32768)) + ((((int)threadIdx.x) & 15) * 2048)) + (((int)blockIdx.y) * 128)) + ((((int)threadIdx.x) >> 7) * 64)) + ((i_18 & 3) * 16)) + (((((int)threadIdx.x) & 63) >> 4) * 4))) = *(uint2*)(up_logits_local_cast + 0);
+      }
+    }
+  } else {
+    if (0 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+      #pragma unroll
+      for (int i_19 = 0; i_19 < 8; ++i_19) {
+        float broadcast_var_6 = 0x0p+0f/*0.000000e+00*/;
+        *(float4*)(tail_gate_local + (i_19 * 4)) = make_float4(broadcast_var_6, broadcast_var_6, broadcast_var_6, broadcast_var_6);
+      }
+      #pragma unroll
+      for (int i_20 = 0; i_20 < 8; ++i_20) {
+        float broadcast_var_7 = 0x0p+0f/*0.000000e+00*/;
+        *(float4*)(tail_up_local + (i_20 * 4)) = make_float4(broadcast_var_7, broadcast_var_7, broadcast_var_7, broadcast_var_7);
+      }
+      for (int k_1 = 0; k_1 < 111; ++k_1) {
+        #pragma unroll
+        for (int i_21 = 0; i_21 < 8; ++i_21) {
+          *(uint2*)(((half_t*)weight_shared) + (((i_21 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(gate_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_21) * (int64_t)114688)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)7168)) + (((int64_t)k_1) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)));
+        }
+        #pragma unroll
+        for (int i_22 = 0; i_22 < 4; ++i_22) {
+          *(uint2*)(((half_t*)input_shared) + (((i_22 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(stacked_expert_tokens + (((((((int)blockIdx.x) * 917504) + (i_22 * 114688)) + ((((int)threadIdx.x) >> 4) * 7168)) + (k_1 * 64)) + ((((int)threadIdx.x) & 15) * 4)));
+        }
+        #pragma unroll
+        for (int i_23 = 0; i_23 < 4; ++i_23) {
+          *(uint4*)(up_prefetch + (i_23 * 8)) = *(uint4*)(up_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_23) * (int64_t)229376)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)3) * (int64_t)7168)) + (((int64_t)k_1) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)7) * (int64_t)8)));
+        }
+        half_t A_local_4[8];
+        half_t B_local_4[16];
+        __syncthreads();
+        for (int ki_4 = 0; ki_4 < 4; ++ki_4) {
+          for (int i_24 = 0; i_24 < 2; ++i_24) {
+            *(uint2*)(A_local_4 + (i_24 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_24 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_4 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+          }
+          for (int j_8 = 0; j_8 < 4; ++j_8) {
+            *(uint2*)(B_local_4 + (j_8 * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j_8 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_4 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+          }
+          for (int i_25 = 0; i_25 < 2; ++i_25) {
+            for (int j_9 = 0; j_9 < 4; ++j_9) {
+              {
+      *(((float32x4*)tail_gate_local) + ((i_25 * 4) + j_9)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local_4) + j_9),
+                    *(((float16x4*)A_local_4) + i_25),
+                    *(((float32x4*)tail_gate_local) + ((i_25 * 4) + j_9)));
+    };
+            }
+          }
+        }
+        __syncthreads();
+        __syncthreads();
+        #pragma unroll
+        for (int i_26 = 0; i_26 < 8; ++i_26) {
+          *(uint2*)(((half_t*)weight_shared) + ((((i_26 >> 1) * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + (((((((int)threadIdx.x) & 7) * 2) + (i_26 & 1)) ^ ((((int)threadIdx.x) & 127) >> 3)) * 4))) = *(uint2*)(up_prefetch + (i_26 * 4));
+        }
+        half_t A_local_5[8];
+        half_t B_local_5[16];
+        __syncthreads();
+        for (int ki_5 = 0; ki_5 < 4; ++ki_5) {
+          for (int i_27 = 0; i_27 < 2; ++i_27) {
+            *(uint2*)(A_local_5 + (i_27 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_27 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_5 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+          }
+          for (int j_10 = 0; j_10 < 4; ++j_10) {
+            *(uint2*)(B_local_5 + (j_10 * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j_10 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_5 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+          }
+          for (int i_28 = 0; i_28 < 2; ++i_28) {
+            for (int j_11 = 0; j_11 < 4; ++j_11) {
+              {
+      *(((float32x4*)tail_up_local) + ((i_28 * 4) + j_11)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local_5) + j_11),
+                    *(((float16x4*)A_local_5) + i_28),
+                    *(((float32x4*)tail_up_local) + ((i_28 * 4) + j_11)));
+    };
+            }
+          }
+        }
+        __syncthreads();
+      }
+      #pragma unroll
+      for (int i_29 = 0; i_29 < 8; ++i_29) {
+        *(uint2*)(((half_t*)weight_shared) + (((i_29 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(gate_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_29) * (int64_t)114688)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)7168)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)) + (int64_t)7104));
+      }
+      #pragma unroll
+      for (int i_30 = 0; i_30 < 4; ++i_30) {
+        *(uint2*)(((half_t*)input_shared) + (((i_30 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(stacked_expert_tokens + (((((((int)blockIdx.x) * 917504) + (i_30 * 114688)) + ((((int)threadIdx.x) >> 4) * 7168)) + ((((int)threadIdx.x) & 15) * 4)) + 7104));
+      }
+      #pragma unroll
+      for (int i_31 = 0; i_31 < 4; ++i_31) {
+        *(uint4*)(up_prefetch + (i_31 * 8)) = *(uint4*)(up_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)917504)) + (((int64_t)i_31) * (int64_t)229376)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)3) * (int64_t)7168)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)7) * (int64_t)8)) + (int64_t)7104));
+      }
+      half_t A_local_6[8];
+      half_t B_local_6[16];
+      __syncthreads();
+      for (int ki_6 = 0; ki_6 < 4; ++ki_6) {
+        for (int i_32 = 0; i_32 < 2; ++i_32) {
+          *(uint2*)(A_local_6 + (i_32 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_32 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_6 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int j_12 = 0; j_12 < 4; ++j_12) {
+          *(uint2*)(B_local_6 + (j_12 * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j_12 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_6 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int i_33 = 0; i_33 < 2; ++i_33) {
+          for (int j_13 = 0; j_13 < 4; ++j_13) {
+            {
+      *(((float32x4*)tail_gate_local) + ((i_33 * 4) + j_13)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local_6) + j_13),
+                    *(((float16x4*)A_local_6) + i_33),
+                    *(((float32x4*)tail_gate_local) + ((i_33 * 4) + j_13)));
+    };
+          }
+        }
+      }
+      __syncthreads();
+      __syncthreads();
+      #pragma unroll
+      for (int i_34 = 0; i_34 < 8; ++i_34) {
+        *(uint2*)(((half_t*)weight_shared) + ((((i_34 >> 1) * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + (((((((int)threadIdx.x) & 7) * 2) + (i_34 & 1)) ^ ((((int)threadIdx.x) & 127) >> 3)) * 4))) = *(uint2*)(up_prefetch + (i_34 * 4));
+      }
+      half_t A_local_7[8];
+      half_t B_local_7[16];
+      __syncthreads();
+      for (int ki_7 = 0; ki_7 < 4; ++ki_7) {
+        for (int i_35 = 0; i_35 < 2; ++i_35) {
+          *(uint2*)(A_local_7 + (i_35 * 4)) = *(uint2*)(((half_t*)input_shared) + ((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_35 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_7 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int j_14 = 0; j_14 < 4; ++j_14) {
+          *(uint2*)(B_local_7 + (j_14 * 4)) = *(uint2*)(((half_t*)weight_shared) + (((((((int)threadIdx.x) >> 7) * 4096) + (j_14 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_7 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)));
+        }
+        for (int i_36 = 0; i_36 < 2; ++i_36) {
+          for (int j_15 = 0; j_15 < 4; ++j_15) {
+            {
+      *(((float32x4*)tail_up_local) + ((i_36 * 4) + j_15)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local_7) + j_15),
+                    *(((float16x4*)A_local_7) + i_36),
+                    *(((float32x4*)tail_up_local) + ((i_36 * 4) + j_15)));
+    };
+          }
+        }
+      }
+      #pragma unroll
+      for (int i_37 = 0; i_37 < 8; ++i_37) {
+        if ((((((((int)threadIdx.x) & 127) >> 6) * 32) + ((i_37 >> 2) * 16)) + (((int)threadIdx.x) & 15)) < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+          float broadcast_var_8 = 0x1p+0f/*1.000000e+00*/;
+          float broadcast_var_9 = 0x1p+0f/*1.000000e+00*/;
+          float broadcast_var_10 = -0x1p+0f/*-1.000000e+00*/;
+          float broadcast_var_11 = 0x1.7154764ee6c2fp+0f/*1.442695e+00*/;
+          uint2 __9;
+          float4 __10;
+            float4 v__6 = *(float4*)(tail_up_local + (i_37 * 4));
+            float4 __11;
+              float4 v__7 = *(float4*)(tail_gate_local + (i_37 * 4));
+              float4 __12;
+                float4 v__8 = make_float4(broadcast_var_8, broadcast_var_8, broadcast_var_8, broadcast_var_8);
+                float4 __13;
+                  float4 v__9 = make_float4(broadcast_var_9, broadcast_var_9, broadcast_var_9, broadcast_var_9);
+                  float4 __14;
+                  float4 __15;
+                    float4 __16;
+                      float4 v__10 = make_float4(broadcast_var_10, broadcast_var_10, broadcast_var_10, broadcast_var_10);
+                      __16.x = (v__7.x*v__10.x);
+                      __16.y = (v__7.y*v__10.y);
+                      __16.z = (v__7.z*v__10.z);
+                      __16.w = (v__7.w*v__10.w);
+                    float4 v__11 = make_float4(broadcast_var_11, broadcast_var_11, broadcast_var_11, broadcast_var_11);
+                    __15.x = (__16.x*v__11.x);
+                    __15.y = (__16.y*v__11.y);
+                    __15.z = (__16.z*v__11.z);
+                    __15.w = (__16.w*v__11.w);
+                  __14.x = exp2f(__15.x);
+                  __14.y = exp2f(__15.y);
+                  __14.z = exp2f(__15.z);
+                  __14.w = exp2f(__15.w);
+                  __13.x = (v__9.x+__14.x);
+                  __13.y = (v__9.y+__14.y);
+                  __13.z = (v__9.z+__14.z);
+                  __13.w = (v__9.w+__14.w);
+                __12.x = (v__8.x/__13.x);
+                __12.y = (v__8.y/__13.y);
+                __12.z = (v__8.z/__13.z);
+                __12.w = (v__8.w/__13.w);
+              __11.x = (v__7.x*__12.x);
+              __11.y = (v__7.y*__12.y);
+              __11.z = (v__7.z*__12.z);
+              __11.w = (v__7.w*__12.w);
+            __10.x = (v__6.x*__11.x);
+            __10.y = (v__6.y*__11.y);
+            __10.z = (v__6.z*__11.z);
+            __10.w = (v__6.w*__11.w);
+          ((half2*)(&__9))[0] = __float22half2_rn(((float2*)(&__10))[0]);
+          ((half2*)(&__9))[1] = __float22half2_rn(((float2*)(&__10))[1]);
+          *(uint2*)(up_logits_local_cast_1 + 0) = __9;
+          *(uint2*)(up_logits + ((((((((((int)blockIdx.x) * 262144) + (((((int)threadIdx.x) & 127) >> 6) * 65536)) + ((i_37 >> 2) * 32768)) + ((((int)threadIdx.x) & 15) * 2048)) + (((int)blockIdx.y) * 128)) + ((((int)threadIdx.x) >> 7) * 64)) + ((i_37 & 3) * 16)) + (((((int)threadIdx.x) & 63) >> 4) * 4))) = *(uint2*)(up_logits_local_cast_1 + 0);
+        }
+      }
+    }
+  }
+}
+
+
+SOURCE_END probe_v745_v743_e32_stage1_runtime_m64.py

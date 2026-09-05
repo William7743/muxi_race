@@ -1,0 +1,12 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+metadata E=32 H=7168 I=2048 raw=2373 padded=4608 blocks=36 rows=[0, 1, 2, 3, 15, 16, 17, 31, 32, 33, 47, 48, 49, 63, 64, 65, 79, 80, 81, 95, 96, 97, 111, 112, 113, 127, 128, 128, 1, 128, 63, 128, 64, 128, 127, 1]; synthetic, not official OJ inputs
+allocating random down weights
+2026-09-05 11:25:41  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v743_edge_probe` with `out_idx=None`
+2026-09-05 11:25:45  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v743_edge_probe`
+check dtype=torch.float32 repeat=1 seed=74301 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True padding_nonzero=0
+check dtype=torch.float32 repeat=2 seed=74302 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True padding_nonzero=0
+2026-09-05 11:25:48  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v743_edge_probe` with `out_idx=None`
+2026-09-05 11:25:52  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v743_edge_probe`
+check dtype=torch.float16 repeat=1 seed=74301 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True padding_nonzero=0
+check dtype=torch.float16 repeat=2 seed=74302 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True padding_nonzero=0
+PASS Stage2-only edge checks; baseline comparison, not independent mathematical/OJ reference.

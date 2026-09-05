@@ -3744,3 +3744,62 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
   5eaa07dc2949351cebcf42373267d4e5d85b906caadd8c37a93dd2d69c6bd0b9。
   原始source/codegen/trace/edge/三窗日志归档bench_records/v743/；GPU任务结束并
   确认无benchmark进程后释放codex锁。等待用户提供OJ编号/三点反馈继续归因优化。
+
+### 2026-09-05：v744 全M128静态K/直接行判断归因对照，无收益，不推荐OJ
+
+- 基于v723，仅route-bounds Stage2删除active_k_steps赋值、改为actual_rows>0守卫、
+  range(T.ceildiv(intermediate,be2)-1)。所有正行仍计算M128，未增加M64分支；数学、
+  clamp、host/Stage1/其他shape与v723相同。旧v553只固定loop bound、保留active变量
+  和条件，历史约慢0.97%，是近重复但不完全覆盖本对照，不把静态K当新发现。
+- 全模块AST/执行文本三处限定diff、rows0..128×K1/2/32的当前K标签/算序、168组
+  host×两份新输入检查通过。K=0且正行不与旧guard等价，不扩展基线零维输入契约。
+  生成FP32源码17188字符、3同步点，去condval但Up0/Down16384、16LDS/8MMA/路由
+  地址与epilogue保留；zero-row仍经过生成的末端barrier。资源accessor为空不当作0。
+- 复用remote_v743_stage2_edges.py指定744：FP32/FP16 route各两组Up/route种子，
+  Stage2输出有限、max_abs_full0、nonzero_diff0、int16-view bitwise_equal=True、
+  padding0；固定Down，局部基线比较，不是独立oracle或全host-empty GPU证明。
+- 无profiler、随机alternating64-220、warmup1/iters1四轮正反序，720/723/744/743
+  入口中位 **4.675328/4.648192/4.678272/4.569856 ms**。744对720为2胜2负，
+  配对中位+1.792us；对723为0胜4负。743对三控均4胜，中位比720少2.256%。
+  各三次同输入NaN污染full/entry容差检查通过，不能从6位max_abs打印推出bitwise。
+- **744不推荐OJ，不继续第二fixture**。该窗口不支持仅靠循环简化复现743收益；
+  也不把剩余全部收益归因M64，因为shared基址/编译条件推导/资源及噪声仍未全隔离。
+  完整日志、审计和配对表归档bench_records/v744/。受测SHA e6345cc2dd0ca5c39aeda3712757a3ea18de6cf1bf08ac1f61c6037cdbe2736a；
+  测后只改结果注释，逆向精确还原且AST不变，最终SHA 4cf9d688af3089b7d01584ac4857753c747a9481f5d5085648a463366b50c310。
+
+### 2026-09-05：v745 两阶段均同kernel短尾分支，三窗口正向，推荐用户手动OJ
+
+- 精确基底v743，保留其Stage2/runtime M64及E32 route clamp/空输入路径。只在
+  E32/H7168/I2048正padded/blocks的Stage1增加同kernel M128/M64分支：rows>64
+  完整复制当前实际GIU/terminal-K builder，1..64复制其算序但只计算64行，0行不写。
+  旧v633是分离Stage1 main/tail三launch负例；本版仍正常两launch，不把该历史损失
+  简化成“只是多launch”。不是旧保留_v527函数，不变其他shape或Stage2。
+- A128x64+B128x64共享32KiB，M64用A前64行BufferRegion，两套独立Gate/Up C。
+  同步T.gemm/k_pack2、swizzle3、GIU宽度、SwiGLU/valid-only写workspace均保留。
+  无async/BSM/外部device实现/额外全局workspace/历史结果回放，原submission.py未动。
+- 独立CPU全模块AST/限定diff、168组host双输入、387组rows/K标签检查通过；生成
+  C++25102字符，full/tail各9静态barrier点，正分支K112实际C++调用数559，不能
+  把18静态点当每CTA同时执行。生成M64 A仅取前64行，C/输出覆盖和G/U顺序通过。
+- 新诊断remote_v745_stage1_edges.py仅测试用途，actual E32 H7168/I2048、raw2373/
+  padded4608/36CTA，含空expert、1/63/64/65/127/128及最后raw token。Gate/Up/Down
+  固定独立seed74510/11/12，两轮x/routes seed74501/02；Stage1有效行、两dtype
+  Stage2链路全部finite、max_abs_full0、nonzero_diff0、bitwise_equal=True；Stage1
+  padding保持NaN，最终padding全0。诊断直接调builder，不当成run_kernel入口测试，
+  也不当独立数学oracle；bitwise有单独真实比较，不由tol PASS推断。
+- mcTracer12个设备事件中，Stage1两版均248 registers/thread、Stage2均154，
+  dynamic_shared均32768，static/private字段0；不据此声称无spill或驻留率改善。
+  cold correctness trace独立归档，不与关闭profiler后的入口计时混用。
+- 三窗口均warmup1/iters1、四轮正反序、真实run_kernel入口；各3次同输入NaN污染
+  full/entry容差检查通过。第一alternating64-220，720/743/745入口中位
+  **4.669696/4.575744/4.474240ms**；第二同seed/fixture、调整列表位置720/745/743
+  为 **4.653568/4.477056/4.553600ms**。第三synthetic路由/random values，720/745/743
+  为 **5.202816/5.092096/5.173504ms**，参考保存ref_v432_case2.pt且三控都通过。
+  这些entry日志是容差检查，非bitwise；两次alternating不是两套新随机输入。
+- 两路由、三窗口，745对720及743均 **12/12配对更快**；各窗口中位耗时比720
+  减少约 **4.19%/3.79%/2.13%**，比743减少约 **2.22%/1.68%/1.57%**。
+  **推荐v745作为新的用户手动OJ候选**，未获得OJ ID/Accepted/新分数，不自动提交。
+  局部切片GPU收益不保证OJ整卡收益，已有正式最高仍v718/v719/v720的80.33。
+- 原始codegen、trace、边界、三窗计时、审计脚本归档bench_records/v745/。
+  受测SHA12f9dcc12ed1327c6f8eba411bfbee8c39132b0d626818140f8fe15cc7609c96；
+  测后仅更新头注释，最终SHAec864ca3ba12de060fd17920ed814f8cc8ba4e415bf28c1a20456a8b3c3cc465。
+  GPU测量全部结束，确认无benchmark进程后释放codex锁；继续按OJ反馈和未测方向优化。
