@@ -2,7 +2,7 @@
 
 Read-only inspection of the user's signed-in XPUOJ pages and authenticated API.
 Version mapping was checked against source headers, not guessed from submission
-time or size. v714 also matched the local source in full after LF normalization.
+time or size. v714 and v716 also matched the local source in full after LF normalization.
 All records below are Accepted.
 
 | Source version | Submission | Display score | Case scores | Case times, ms |
@@ -14,15 +14,36 @@ All records below are Accepted.
 | v634 | [139669](https://xpuoj.com/contest/5/submissions/139669) | 78.33 | 81 / 78 / 76 | 2.584 / approximately 5 / approximately 11 |
 | v713 | [139689](https://xpuoj.com/contest/5/submissions/139689) | **79.67** | 81 / 79 / 79 | 2.582 / **4.658** / 9.214 |
 | v714 | [139698](https://xpuoj.com/contest/5/submissions/139698) | **80.00** | 81 / 80 / 79 | 2.594 / **4.616** / 9.207 |
+| v716 | [139730](https://xpuoj.com/contest/5/submissions/139730) | **80.00** | 81 / 80 / 79 | 2.596 / 4.631 / **9.051** |
 
 v496, v691, and v713 case 3 were expanded to obtain exact stderr and checker values.
 Other values marked approximately are rounded UI values, not precise telemetry.
 
-Latest outcome: v714 is the best verified OJ result, 80.00. Its E32-only Stage2
+Latest outcome: v714 and v716 tie the best verified OJ score at 80.00. v714's E32-only Stage2
 change reduces case 2 by 42 microseconds relative to v713 in these two OJ runs,
 crossing the displayed integer score boundary. This is not a repeatability claim.
 The user completed the required browser verification and provided ID 139698;
 automated read-only feedback verified the source, Accepted status, and all times.
+
+v716 / 139730 was submitted at 2026-09-05T01:52:54.000Z. Authenticated detail
+confirms Accepted, 81/80/79, with three formal cases, one sample excluded, and
+zero missing results. Its source matches the repository exactly after LF
+normalization; SHA256 is
+`6c2e4a4d5dea28912698f8ee3c4a08004374b62dbdd34998dc182378075e4089`.
+Relative to v714 it changes only E64 Stage1. Case 3 is 156 microseconds lower
+(approximately 1.69%), while the total score remains 80.00. The sum of the three
+reported times is 16,278 vs 16,417 microseconds. These are different submission
+windows, not evidence of stable across-the-board superiority. v714 remains the
+80-point reference; v716 is the same-score, faster-observed experimental base.
+
+| v716 formal case | Time, microseconds | Measured baseline, ms | SPJ baseline, ms | SPJ score ratio | Pass |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 2596 | 11.286 | 11.251 | 0.812523 | true |
+| 2 | 4631 | 18.688 | 18.610 | 0.800740 | true |
+| 3 | 9051 | 36.021 | 35.875 | 0.798535 | true |
+
+The corresponding structured record is
+[oj_139730_verified.json](v714_v715/oj_139730_verified.json).
 
 ## Exact case-3 reports
 
@@ -106,4 +127,8 @@ constraint. Any human-verification challenge is handed back to the user.
   Authenticated login, submission listing and detail reads are operational.
 - The user then supplied 139698: v714 Accepted/80, verified above. v715 has
   no separate OJ ID. v716 combines v714's E16/E32 paths and v715's E64 path;
-  source/AST/CPU dispatch checks passed, but the composition awaits its own OJ.
+  source/AST/CPU dispatch checks passed and the composition now independently
+  passed OJ as 139730, Accepted/80.
+- Next isolated candidates: v717 adds only E64 Stage2 dual-B emitter to v716;
+  v718 adds only E64 Stage1 terminal-K to v716. Both are under development and
+  remain unverified and unsubmitted at this update; no speedup is claimed.

@@ -4,11 +4,13 @@
 
 | 优先级 | 文件 | 提交理由 | 状态 |
 | --- | --- | --- | --- |
-| 当前最佳 | [v714](probe_v714_v713_e32_stage2_bfrag_only.py) | [139698](https://xpuoj.com/contest/5/submissions/139698)：Accepted，**80.00**，分项81/80/79，2.594/4.616/9.207 ms。 | 完整提交源码已与仓库归一化逐字核对；正式成绩升级，保留原文件 |
+| 80分保留基线 | [v714](probe_v714_v713_e32_stage2_bfrag_only.py) | [139698](https://xpuoj.com/contest/5/submissions/139698)：Accepted，**80.00**，分项81/80/79，2.594/4.616/9.207 ms。 | 完整提交源码已与仓库归一化逐字核对；保留已取得80分的基线 |
+| 同分实验基础 | [v716](probe_v716_v714_e64_stage1_giu_merge_only.py) | [139730](https://xpuoj.com/contest/5/submissions/139730)：Accepted，**80.00**，分项81/80/79，2.596/4.631/9.051 ms。只改E64 Stage1，点3比v714低156微秒、约1.69%。 | 完整源码归一化逐字一致；本次总耗时16.278 vs16.417 ms，作为同分更快的实验底，不宣称跨窗口稳定全面胜出 |
 | 历史对照 | [v496](probe_v496_s1_panel3_experts32.py) | [138992](https://xpuoj.com/contest/5/submissions/138992)：Accepted，**79.67**，分项81/79/79。 | 保留作历史对照，当前最高已为v714的80.00 |
 | 已测同分 | [v713](probe_v713_v496_e32_stage1_terminal_k_only.py) | [139689](https://xpuoj.com/contest/5/submissions/139689)：Accepted，**79.67**，分项81/79/79，2.582/4.658/9.214 ms。E32耗时比v496低约1.92%，总分未升级。 | 保留为E32隔离优化的实验基础；不宣称超过v496总分 |
-| 等待提交确认 | [v716](probe_v716_v714_e64_stage1_giu_merge_only.py) | 在已OJ80分的v714上，仅加v715的E64 Stage1 GIU/shared merge。E16/E32逐函数同v714，E64完整路径同v715。 | 源码/AST/Python/Ruff/CPU分派通过；39314字符完整回读一致，已点击提交但页面“提交中”无新ID，待用户完成页面操作；组件测试不等于v716整体GPU/OJ通过 |
-| 组件对照 | [v715](probe_v715_v713_e64_stage1_giu_merge_only.py) | v713仅替换E64 Stage1为v527原始GIU＋shared merge。GPU随机三轮正确，入口中位8.984192 vs9.247488 ms，耗时低约2.85%；另一synthetic常量路由低约0.70%。 | 未单独OJ；下一优先v716以保留v714已经取得的E32收益 |
+| 组件对照 | [v715](probe_v715_v713_e64_stage1_giu_merge_only.py) | v713仅替换E64 Stage1为v527原始GIU＋shared merge。GPU随机三轮正确，入口中位8.984192 vs9.247488 ms，耗时低约2.85%；另一synthetic常量路由低约0.70%。 | 本文件未单独OJ；组件已融合到v716，v716整体独立取得80分 |
+| 开发中待验证 | [v717](probe_v717_v716_e64_stage2_bfrag_only.py) | v716仅替换E64 Stage2为双B emitter，继续隔离检验该组件在E64的效果。 | 尚未验证、尚未提交，不预判收益 |
+| 独立待验证 | [v718](probe_v718_v716_e64_stage1_terminal_k_only.py) | v716仅替换E64 Stage1为terminal-K，保留其他路径。 | 尚未验证、尚未提交，不预判收益 |
 | 已测未升级 | [v691](probe_v691_e32_stage1_split_terminal_k.py) | [139661](https://xpuoj.com/contest/5/submissions/139661)：Accepted，78.33，分项81/78/76。 | 不再推荐重复提交或替代v496 |
 | 已测未升级 | [v634](probe_v634_e32_stage2_m64_bfrag_th256.py) | [139669](https://xpuoj.com/contest/5/submissions/139669)：Accepted，78.33，分项81/78/76。 | 不再推荐重复提交或替代v496 |
 
@@ -30,6 +32,8 @@ v714/v715新增记录：[E32随机](bench_records/v714_v715/codex_e32_713_714_en
 [E64随机](bench_records/v714_v715/codex_e64_713_715_entry_random.log)、
 [E64 synthetic常量](bench_records/v714_v715/codex_e64_713_715_entry_synthetic_constant.log)。
 两版随机检查均覆盖完整链及真实入口；v715第二种路由只做了常量双轮精度，不记为随机通过。
+v716正式结果：[139730精确记录](bench_records/v714_v715/oj_139730_verified.json)，
+正式点3个、样例1个单独排除、缺失结果0个，全部pass。
 完整实验说明见 [OPTIMIZATION_LOG.md](OPTIMIZATION_LOG.md)。
 
 v691的本地full指完整预编译kernel链，不含Python入口分派；新加`--stage entry`直接计时

@@ -1,0 +1,47 @@
+{
+  "submission_id": 139730,
+  "submitted_at_utc": "2026-09-05T01:52:54.000Z",
+  "version": "v716",
+  "status": "Accepted",
+  "display_score": 80,
+  "source_sha256_lf": "6c2e4a4d5dea28912698f8ee3c4a08004374b62dbdd34998dc182378075e4089",
+  "source_matches_repository": true,
+  "formal_cases": [
+    {
+      "case": 1,
+      "status": "Accepted",
+      "display_score": 81,
+      "time_us": 2596,
+      "time_ms": 2.596,
+      "measured_baseline_ms": 11.286,
+      "spj_baseline_ms": 11.251,
+      "spj_score_ratio": 0.812523,
+      "pass": true
+    },
+    {
+      "case": 2,
+      "status": "Accepted",
+      "display_score": 80,
+      "time_us": 4631,
+      "time_ms": 4.631,
+      "measured_baseline_ms": 18.688,
+      "spj_baseline_ms": 18.610,
+      "spj_score_ratio": 0.800740,
+      "pass": true
+    },
+    {
+      "case": 3,
+      "status": "Accepted",
+      "display_score": 79,
+      "time_us": 9051,
+      "time_ms": 9.051,
+      "measured_baseline_ms": 36.021,
+      "spj_baseline_ms": 35.875,
+      "spj_score_ratio": 0.798535,
+      "pass": true
+    }
+  ],
+  "sample_count_excluded": 1,
+  "missing_case_result_count": 0,
+  "verification": "Authenticated getSubmissionDetail; full LF-normalized source equals repository v716; all three formal cases pass, one sample excluded, zero missing results."
+}
