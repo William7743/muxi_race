@@ -343,3 +343,26 @@ historical high80.33; it does not set a new high. Retain v748 as a same-score
 comparison while preserving prior baselines and source-identity caveats.
 No API query, login, browser action or code submission was performed for
 this screenshot transcription.
+
+## OJ140368 screenshot feedback (2026-09-05): v747 association, Accepted80
+
+The user's reply to the v747 recommendation shows Accepted80, total16ms,
+memory22.3G. Sample2633us is separate from formal2633us/4614us/display9ms.
+The association is contextual, not explicit version text or uploaded-source
+verification. [Structured transcription](oj_140368_user_report.json) and
+[original screenshot](oj_140368_user_screenshot.png) retain these limits;
+screenshot SHA256 is
+`f8c964039081bc7792adafac86860c07ed6a4d51da8a64212e49abe954833706`.
+
+Full local source comparison confirms v747/v748 differ only in the E64
+Stage1 selector; all other functions, imports and top-level caches match.
+Relative to v748/140335, unchanged E16/E32 are82us/125us slower (3.2144%/
+2.7846%). Neither the cause of this variation nor the effect of the E64
+change is isolated. Two rounded9ms displays cannot rank E64 performance,
+and total-score80 versus80.33 does not identify any individual point score.
+
+Do not promote v747 as faster. Retain prior80.33 baselines, including v748.
+Request existing submissions' detailed point3 feedback if the UI exposes it,
+not another duplicate submission. No API/login/browser/submission action was
+performed. The E16 v749-v751 candidates were separately rejected after the
+second local routing fixture; v752 remains an untested, stopped static draft.

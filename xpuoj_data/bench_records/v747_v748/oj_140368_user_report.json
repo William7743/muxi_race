@@ -1,0 +1,33 @@
+{
+  "version": "v747",
+  "submission_id": 140368,
+  "submission_url": "https://xpuoj.com/contest/5/submissions/140368",
+  "version_mapping_source": "Inferred from the user's screenshot reply to the v747 code recommendation; no explicit version text or uploaded-source verification",
+  "version_mapping_explicit": false,
+  "result_source": "User-provided screenshot, visually inspected 2026-09-05",
+  "screenshot_file": "oj_140368_user_screenshot.png",
+  "screenshot_sha256": "f8c964039081bc7792adafac86860c07ed6a4d51da8a64212e49abe954833706",
+  "status": "Accepted",
+  "score": 80,
+  "total_time_display": "16 ms",
+  "memory_display": "22.3 G",
+  "sample": {"label": "样例 1", "status": "Accepted", "time_display": "2633 µs", "time_us": 2633, "memory_display": "22.2 G"},
+  "scored_points": [
+    {"label": "子任务 1.1", "status": "Accepted", "time_display": "2633 µs", "time_us": 2633, "memory_display": "22.2 G", "score": null},
+    {"label": "子任务 1.2", "status": "Accepted", "time_display": "4614 µs", "time_us": 4614, "memory_display": "22.3 G", "score": null},
+    {"label": "子任务 1.3", "status": "Accepted", "time_display": "9 ms", "time_us": null, "memory_display": "22.3 G", "score": null}
+  ],
+  "uploaded_source_verified": false,
+  "precision_note": "Point 3 exact microseconds and individual point scores are unknown. Sample is separate from the three scored points, not an independent repeat. Rounded 9 ms is not an exact 9000 us measurement.",
+  "comparison": {
+    "baseline_version": "v748",
+    "baseline_submission_id": 140335,
+    "baseline_version_mapping_explicit": false,
+    "point_1_delta_us": 82,
+    "point_2_delta_us": 125,
+    "point_3_delta_us": null,
+    "overall_score_delta": -0.33,
+    "attribution_note": "Local source comparison finds only the E64 Stage1 selector differs. E16/E32 paths are unchanged; their higher observed latency is not caused by an intended change to those paths. This does not identify the cause of the cross-submission variation or isolate an E64 benefit."
+  },
+  "decision": "Do not promote v747 as faster; retain the 80.33 baselines including v748. Seek precise point 3 feedback/source identity without another submission. No untested E16 combination is recommended."
+}
