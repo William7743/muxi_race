@@ -60,8 +60,8 @@ total_tokens=9088. They do not expose individual expert group sizes.
 ## Interpretation and limitations
 
 - The user's initial recollection was v496=79.33; the checked v496 record is
-  79.67. This is the best score verified in this audit, not an exhaustive audit
-  of every historical submission.
+  79.67. It was best at the first audit; v714/139698 subsequently raised the
+  best verified score to 80.00. This is not an exhaustive historical audit.
 - v691 is not an OJ upgrade over v496. Its case-3 path is inherited from v634;
   the E32-only final-K transformation cannot itself cause the E64 difference.
 - These submissions ran at different times. They locate an important regression
@@ -71,8 +71,8 @@ total_tokens=9088. They do not expose individual expert group sizes.
 - The platform evaluation guide identifies the displayed memory value as CPU
   RSS; do not infer GPU memory consumption or an input-pool size from 22.2 G.
 
-The formal baseline remains v496; v713 now ties its verified total score at
-79.67. v713 isolates only v691's E32 Stage1 on top of v496. Its case-2 time is
+At the v713 checkpoint, v496 remained the formal reference and v713 tied its
+79.67 score. v713 isolates only v691's E32 Stage1 on top of v496. Its case-2 time is
 4.658 vs 4.749 ms, approximately 1.92% lower, but this is a timing signal from
 different submission windows, not an increase in the displayed case or total
 score. E16/E64 code paths are unchanged; their observed time differences must
@@ -99,8 +99,11 @@ constraint. Any human-verification challenge is handed back to the user.
   timing gain; v715 passed three random-input checks with a 2.85% local entry
   time reduction and a separate constant-input routing retest with 0.70%.
   See `v714_v715/` raw logs and OPTIMIZATION_LOG.md for limits of these tests.
-- Neither candidate has an OJ ID. The browser v714 submit returned no ID, and
-  authenticated query confirmed 139689 remained the newest record. A normal
+- The initial browser v714 submit returned no ID, and authenticated query
+  confirmed 139689 remained the newest record at that time. A normal
   submit through the existing repository client returned HTTP 403, "Captcha
-  verification failed". No bypass attempted; user interaction is required.
+  verification failed". No bypass attempted; the user completed verification.
   Authenticated login, submission listing and detail reads are operational.
+- The user then supplied 139698: v714 Accepted/80, verified above. v715 has
+  no separate OJ ID. v716 combines v714's E16/E32 paths and v715's E64 path;
+  source/AST/CPU dispatch checks passed, but the composition awaits its own OJ.
