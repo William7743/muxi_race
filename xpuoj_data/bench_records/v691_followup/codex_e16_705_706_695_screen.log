@@ -1,0 +1,145 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+allocating constant x on GPU: (3072, 2048)
+allocated constant x
+allocating constant gate on GPU: (16, 8192, 2048)
+allocated constant gate
+allocating constant up on GPU: (16, 8192, 2048)
+allocated constant up
+allocating constant down on GPU: (16, 2048, 8192)
+allocated constant down
+allocating constant routed weights on GPU: (2272,)
+allocated constant routed weights
+constant inputs ready
+loading candidate=0 path=/root/moe_contest/probe_v691_e32_stage1_split_terminal_k.py
+compiling candidate=0 stage=s1
+compiling candidate=0 stage=s2
+stage2_builder candidate=0 name=_get_stage2 launches=1
+compiled candidate=0
+loading candidate=1 path=/root/moe_contest/probe_v705_e16_stage1_terminal_silu_before_barrier.py
+compiling candidate=1 stage=s1
+2026-09-05 00:00:49  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_stage_ab_case_candidate_1` with `out_idx=None`
+2026-09-05 00:00:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_stage_ab_case_candidate_1`
+compiling candidate=1 stage=s2
+stage2_builder candidate=1 name=_get_stage2 launches=1
+compiled candidate=1
+loading candidate=2 path=/root/moe_contest/probe_v706_e16_stage1_terminal_silu_before_up_gemm.py
+compiling candidate=2 stage=s1
+2026-09-05 00:00:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_stage_ab_case_candidate_2` with `out_idx=None`
+2026-09-05 00:01:02  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_stage_ab_case_candidate_2`
+compiling candidate=2 stage=s2
+stage2_builder candidate=2 name=_get_stage2 launches=1
+compiled candidate=2
+loading candidate=3 path=/root/moe_contest/probe_v695_e16_stage1_skip_terminal_barrier.py
+compiling candidate=3 stage=s1
+2026-09-05 00:01:03  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_stage_ab_case_candidate_3` with `out_idx=None`
+2026-09-05 00:01:07  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_stage_ab_case_candidate_3`
+compiling candidate=3 stage=s2
+2026-09-05 00:01:08  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_stage_ab_case_candidate_3` with `out_idx=None`
+2026-09-05 00:01:12  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_stage_ab_case_candidate_3`
+stage2_builder candidate=3 name=_get_stage2 launches=1
+compiled candidate=3
+oj_real_reference=c0:probe_v691_e32_stage1_split_terminal_k.py padded_total=3072 num_blocks_m=24
+correctness candidate=c0:probe_v691_e32_stage1_split_terminal_k.py path=launch_full reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c0:probe_v691_e32_stage1_split_terminal_k.py path=run_kernel reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py path=launch_full reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py path=run_kernel reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py path=launch_full reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py path=run_kernel reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py path=launch_full reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py path=run_kernel reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness_round=1/2
+correctness candidate=c0:probe_v691_e32_stage1_split_terminal_k.py path=launch_full reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c0:probe_v691_e32_stage1_split_terminal_k.py path=run_kernel reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py path=launch_full reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py path=run_kernel reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py path=launch_full reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py path=run_kernel reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py path=launch_full reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py path=run_kernel reference=candidate_zero_probe_v691_e32_stage1_split_terminal_k.py max_abs=0.000000 bad=0/6291456
+correctness_round=2/2
+all_candidates_correct
+fixed_stage2_workspace_source=c0:probe_v691_e32_stage1_split_terminal_k.py
+stage_begin stage=s1
+warmed stage=s1 candidate=c0:probe_v691_e32_stage1_split_terminal_k.py launches=1
+warmed stage=s1 candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py launches=1
+warmed stage=s1 candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py launches=1
+warmed stage=s1 candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py launches=1
+round=1/3 stage=s1 order=forward
+timing round=1 order=forward stage=s1 candidate=c0:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=1.629440
+timing round=1 order=forward stage=s1 candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py iters=1 ms=1.683456
+timing round=1 order=forward stage=s1 candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py iters=1 ms=1.691904
+timing round=1 order=forward stage=s1 candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py iters=1 ms=1.609216
+round=2/3 stage=s1 order=reverse
+timing round=2 order=reverse stage=s1 candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py iters=1 ms=1.619200
+timing round=2 order=reverse stage=s1 candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py iters=1 ms=1.669888
+timing round=2 order=reverse stage=s1 candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py iters=1 ms=1.666304
+timing round=2 order=reverse stage=s1 candidate=c0:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=1.623552
+round=3/3 stage=s1 order=forward
+timing round=3 order=forward stage=s1 candidate=c0:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=1.623552
+timing round=3 order=forward stage=s1 candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py iters=1 ms=1.644032
+timing round=3 order=forward stage=s1 candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py iters=1 ms=1.655040
+timing round=3 order=forward stage=s1 candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py iters=1 ms=1.603072
+stage_summary stage=s1
+summary_begin
+summary candidate=c0:probe_v691_e32_stage1_split_terminal_k.py median_ms=1.623552 mean_ms=1.625515 stdev_ms=0.002776 min_ms=1.623552 max_ms=1.629440 speedup_vs_c0=+0.000% samples_ms=[1.629440,1.623552,1.623552]
+summary candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py median_ms=1.666304 mean_ms=1.664597 stdev_ms=0.016140 min_ms=1.644032 max_ms=1.683456 speedup_vs_c0=-2.566% samples_ms=[1.683456,1.666304,1.644032]
+summary candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py median_ms=1.669888 mean_ms=1.672277 stdev_ms=0.015144 min_ms=1.655040 max_ms=1.691904 speedup_vs_c0=-2.775% samples_ms=[1.691904,1.669888,1.655040]
+summary candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py median_ms=1.609216 mean_ms=1.610496 stdev_ms=0.006646 min_ms=1.603072 max_ms=1.619200 speedup_vs_c0=+0.891% samples_ms=[1.609216,1.619200,1.603072]
+summary_end
+stage_end stage=s1
+stage_begin stage=s2
+warmed stage=s2 candidate=c0:probe_v691_e32_stage1_split_terminal_k.py launches=1
+warmed stage=s2 candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py launches=1
+warmed stage=s2 candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py launches=1
+warmed stage=s2 candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py launches=1
+round=1/3 stage=s2 order=forward
+timing round=1 order=forward stage=s2 candidate=c0:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=0.994816
+timing round=1 order=forward stage=s2 candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py iters=1 ms=1.012736
+timing round=1 order=forward stage=s2 candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py iters=1 ms=1.001984
+timing round=1 order=forward stage=s2 candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py iters=1 ms=0.979200
+round=2/3 stage=s2 order=reverse
+timing round=2 order=reverse stage=s2 candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py iters=1 ms=1.008384
+timing round=2 order=reverse stage=s2 candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py iters=1 ms=1.028864
+timing round=2 order=reverse stage=s2 candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py iters=1 ms=0.973312
+timing round=2 order=reverse stage=s2 candidate=c0:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=1.009664
+round=3/3 stage=s2 order=forward
+timing round=3 order=forward stage=s2 candidate=c0:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=0.994048
+timing round=3 order=forward stage=s2 candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py iters=1 ms=0.999936
+timing round=3 order=forward stage=s2 candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py iters=1 ms=1.004032
+timing round=3 order=forward stage=s2 candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py iters=1 ms=0.995072
+stage_summary stage=s2
+summary_begin
+summary candidate=c0:probe_v691_e32_stage1_split_terminal_k.py median_ms=0.994816 mean_ms=0.999509 stdev_ms=0.007187 min_ms=0.994048 max_ms=1.009664 speedup_vs_c0=+0.000% samples_ms=[0.994816,1.009664,0.994048]
+summary candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py median_ms=0.999936 mean_ms=0.995328 stdev_ms=0.016421 min_ms=0.973312 max_ms=1.012736 speedup_vs_c0=-0.512% samples_ms=[1.012736,0.973312,0.999936]
+summary candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py median_ms=1.004032 mean_ms=1.011627 stdev_ms=0.012217 min_ms=1.001984 max_ms=1.028864 speedup_vs_c0=-0.918% samples_ms=[1.001984,1.028864,1.004032]
+summary candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py median_ms=0.995072 mean_ms=0.994219 stdev_ms=0.011930 min_ms=0.979200 max_ms=1.008384 speedup_vs_c0=-0.026% samples_ms=[0.979200,1.008384,0.995072]
+summary_end
+stage_end stage=s2
+stage_begin stage=full
+warmed stage=full candidate=c0:probe_v691_e32_stage1_split_terminal_k.py launches=1
+warmed stage=full candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py launches=1
+warmed stage=full candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py launches=1
+warmed stage=full candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py launches=1
+round=1/3 stage=full order=forward
+timing round=1 order=forward stage=full candidate=c0:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=2.611712
+timing round=1 order=forward stage=full candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py iters=1 ms=2.671360
+timing round=1 order=forward stage=full candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py iters=1 ms=2.670848
+timing round=1 order=forward stage=full candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py iters=1 ms=2.613248
+round=2/3 stage=full order=reverse
+timing round=2 order=reverse stage=full candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py iters=1 ms=2.607872
+timing round=2 order=reverse stage=full candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py iters=1 ms=2.649856
+timing round=2 order=reverse stage=full candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py iters=1 ms=2.665984
+timing round=2 order=reverse stage=full candidate=c0:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=2.598400
+round=3/3 stage=full order=forward
+timing round=3 order=forward stage=full candidate=c0:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=2.592000
+timing round=3 order=forward stage=full candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py iters=1 ms=2.664192
+timing round=3 order=forward stage=full candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py iters=1 ms=2.645760
+timing round=3 order=forward stage=full candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py iters=1 ms=2.602240
+stage_summary stage=full
+summary_begin
+summary candidate=c0:probe_v691_e32_stage1_split_terminal_k.py median_ms=2.598400 mean_ms=2.600704 stdev_ms=0.008211 min_ms=2.592000 max_ms=2.611712 speedup_vs_c0=+0.000% samples_ms=[2.611712,2.598400,2.592000]
+summary candidate=c1:probe_v705_e16_stage1_terminal_silu_before_barrier.py median_ms=2.665984 mean_ms=2.667179 stdev_ms=0.003046 min_ms=2.664192 max_ms=2.671360 speedup_vs_c0=-2.535% samples_ms=[2.671360,2.665984,2.664192]
+summary candidate=c2:probe_v706_e16_stage1_terminal_silu_before_up_gemm.py median_ms=2.649856 mean_ms=2.655488 stdev_ms=0.010989 min_ms=2.645760 max_ms=2.670848 speedup_vs_c0=-1.942% samples_ms=[2.670848,2.649856,2.645760]
+summary candidate=c3:probe_v695_e16_stage1_skip_terminal_barrier.py median_ms=2.607872 mean_ms=2.607787 stdev_ms=0.004494 min_ms=2.602240 max_ms=2.613248 speedup_vs_c0=-0.363% samples_ms=[2.613248,2.607872,2.602240]
+summary_end
+stage_end stage=full

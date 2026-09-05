@@ -1,0 +1,160 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+allocating constant x on GPU: (12288, 7168)
+allocated constant x
+allocating constant gate on GPU: (64, 2048, 7168)
+allocated constant gate
+allocating constant up on GPU: (64, 2048, 7168)
+allocated constant up
+allocating constant down on GPU: (64, 7168, 2048)
+allocated constant down
+allocating constant routed weights on GPU: (9088,)
+allocated constant routed weights
+constant inputs ready
+loading candidate=0 path=/root/moe_contest/probe_v496_s1_panel3_experts32.py
+compiling candidate=0 stage=s1
+2026-09-05 00:24:40  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_stage_ab_case_candidate_0` with `out_idx=None`
+2026-09-05 00:24:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_stage_ab_case_candidate_0`
+compiling candidate=0 stage=s2
+2026-09-05 00:24:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_stage_ab_case_candidate_0` with `out_idx=None`
+2026-09-05 00:24:48  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_stage_ab_case_candidate_0`
+stage2_builder candidate=0 name=_get_stage2 launches=1
+compiled candidate=0
+loading candidate=1 path=/root/moe_contest/probe_v527_s1_giu_merge_experts32_64.py
+compiling candidate=1 stage=s1
+compiling candidate=1 stage=s2
+2026-09-05 00:24:49  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_stage_ab_case_candidate_1` with `out_idx=None`
+2026-09-05 00:24:53  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_stage_ab_case_candidate_1`
+stage2_builder candidate=1 name=_get_stage2 launches=1
+compiled candidate=1
+loading candidate=2 path=/root/moe_contest/probe_v552_s2_bfrag_clear_all_experts.py
+compiling candidate=2 stage=s1
+2026-09-05 00:24:54  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_stage_ab_case_candidate_2` with `out_idx=None`
+2026-09-05 00:24:57  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_stage_ab_case_candidate_2`
+compiling candidate=2 stage=s2
+stage2_builder candidate=2 name=_get_stage2 launches=1
+compiled candidate=2
+loading candidate=3 path=/root/moe_contest/probe_v691_e32_stage1_split_terminal_k.py
+compiling candidate=3 stage=s1
+compiling candidate=3 stage=s2
+stage2_builder candidate=3 name=_get_stage2_e64_split launches=2
+compiled candidate=3
+oj_real_reference=c0:probe_v496_s1_panel3_experts32.py padded_total=12288 num_blocks_m=96
+correctness candidate=c0:probe_v496_s1_panel3_experts32.py path=launch_full reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c0:probe_v496_s1_panel3_experts32.py path=run_kernel reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c1:probe_v527_s1_giu_merge_experts32_64.py path=launch_full reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c1:probe_v527_s1_giu_merge_experts32_64.py path=run_kernel reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py path=launch_full reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py path=run_kernel reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c3:probe_v691_e32_stage1_split_terminal_k.py path=launch_full reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c3:probe_v691_e32_stage1_split_terminal_k.py path=run_kernel reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness_round=1/2
+correctness candidate=c0:probe_v496_s1_panel3_experts32.py path=launch_full reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c0:probe_v496_s1_panel3_experts32.py path=run_kernel reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c1:probe_v527_s1_giu_merge_experts32_64.py path=launch_full reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c1:probe_v527_s1_giu_merge_experts32_64.py path=run_kernel reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py path=launch_full reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py path=run_kernel reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c3:probe_v691_e32_stage1_split_terminal_k.py path=launch_full reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness candidate=c3:probe_v691_e32_stage1_split_terminal_k.py path=run_kernel reference=candidate_zero_probe_v496_s1_panel3_experts32.py max_abs=0.000000 bad=0/88080384
+correctness_round=2/2
+all_candidates_correct
+fixed_stage2_workspace_source=c0:probe_v496_s1_panel3_experts32.py
+stage_begin stage=s1
+warmed stage=s1 candidate=c0:probe_v496_s1_panel3_experts32.py launches=1
+warmed stage=s1 candidate=c1:probe_v527_s1_giu_merge_experts32_64.py launches=1
+warmed stage=s1 candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py launches=1
+warmed stage=s1 candidate=c3:probe_v691_e32_stage1_split_terminal_k.py launches=1
+round=1/4 stage=s1 order=forward
+timing round=1 order=forward stage=s1 candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=5.775872
+timing round=1 order=forward stage=s1 candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=5.709824
+timing round=1 order=forward stage=s1 candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=5.717248
+timing round=1 order=forward stage=s1 candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=5.551360
+round=2/4 stage=s1 order=reverse
+timing round=2 order=reverse stage=s1 candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=5.567232
+timing round=2 order=reverse stage=s1 candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=5.709056
+timing round=2 order=reverse stage=s1 candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=5.679104
+timing round=2 order=reverse stage=s1 candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=5.756672
+round=3/4 stage=s1 order=forward
+timing round=3 order=forward stage=s1 candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=5.758208
+timing round=3 order=forward stage=s1 candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=5.686272
+timing round=3 order=forward stage=s1 candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=5.689856
+timing round=3 order=forward stage=s1 candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=5.510656
+round=4/4 stage=s1 order=reverse
+timing round=4 order=reverse stage=s1 candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=5.499392
+timing round=4 order=reverse stage=s1 candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=5.695488
+timing round=4 order=reverse stage=s1 candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=5.688064
+timing round=4 order=reverse stage=s1 candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=5.721600
+stage_summary stage=s1
+summary_begin
+summary candidate=c0:probe_v496_s1_panel3_experts32.py median_ms=5.757440 mean_ms=5.753088 stdev_ms=0.019683 min_ms=5.721600 max_ms=5.775872 speedup_vs_c0=+0.000% samples_ms=[5.775872,5.756672,5.758208,5.721600]
+summary candidate=c1:probe_v527_s1_giu_merge_experts32_64.py median_ms=5.687168 mean_ms=5.690816 stdev_ms=0.011475 min_ms=5.679104 max_ms=5.709824 speedup_vs_c0=+1.236% samples_ms=[5.709824,5.679104,5.686272,5.688064]
+summary candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py median_ms=5.702272 mean_ms=5.702912 stdev_ms=0.010826 min_ms=5.689856 max_ms=5.717248 speedup_vs_c0=+0.967% samples_ms=[5.717248,5.709056,5.689856,5.695488]
+summary candidate=c3:probe_v691_e32_stage1_split_terminal_k.py median_ms=5.531008 mean_ms=5.532160 stdev_ms=0.027995 min_ms=5.499392 max_ms=5.567232 speedup_vs_c0=+4.094% samples_ms=[5.551360,5.567232,5.510656,5.499392]
+summary_end
+stage_end stage=s1
+stage_begin stage=s2
+warmed stage=s2 candidate=c0:probe_v496_s1_panel3_experts32.py launches=1
+warmed stage=s2 candidate=c1:probe_v527_s1_giu_merge_experts32_64.py launches=1
+warmed stage=s2 candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py launches=1
+warmed stage=s2 candidate=c3:probe_v691_e32_stage1_split_terminal_k.py launches=1
+round=1/4 stage=s2 order=forward
+timing round=1 order=forward stage=s2 candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=3.376384
+timing round=1 order=forward stage=s2 candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=3.324928
+timing round=1 order=forward stage=s2 candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=3.293184
+timing round=1 order=forward stage=s2 candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=3.138816
+round=2/4 stage=s2 order=reverse
+timing round=2 order=reverse stage=s2 candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=3.126784
+timing round=2 order=reverse stage=s2 candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=3.277824
+timing round=2 order=reverse stage=s2 candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=3.337728
+timing round=2 order=reverse stage=s2 candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=3.327744
+round=3/4 stage=s2 order=forward
+timing round=3 order=forward stage=s2 candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=3.341824
+timing round=3 order=forward stage=s2 candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=3.340288
+timing round=3 order=forward stage=s2 candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=3.349760
+timing round=3 order=forward stage=s2 candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=3.139328
+round=4/4 stage=s2 order=reverse
+timing round=4 order=reverse stage=s2 candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=3.132160
+timing round=4 order=reverse stage=s2 candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=3.298048
+timing round=4 order=reverse stage=s2 candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=3.377152
+timing round=4 order=reverse stage=s2 candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=3.325696
+stage_summary stage=s2
+summary_begin
+summary candidate=c0:probe_v496_s1_panel3_experts32.py median_ms=3.334784 mean_ms=3.342912 stdev_ms=0.020298 min_ms=3.325696 max_ms=3.376384 speedup_vs_c0=+0.000% samples_ms=[3.376384,3.327744,3.341824,3.325696]
+summary candidate=c1:probe_v527_s1_giu_merge_experts32_64.py median_ms=3.339008 mean_ms=3.345024 stdev_ms=0.019440 min_ms=3.324928 max_ms=3.377152 speedup_vs_c0=-0.127% samples_ms=[3.324928,3.337728,3.340288,3.377152]
+summary candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py median_ms=3.295616 mean_ms=3.304704 stdev_ms=0.027063 min_ms=3.277824 max_ms=3.349760 speedup_vs_c0=+1.188% samples_ms=[3.293184,3.277824,3.349760,3.298048]
+summary candidate=c3:probe_v691_e32_stage1_split_terminal_k.py median_ms=3.135488 mean_ms=3.134272 stdev_ms=0.005166 min_ms=3.126784 max_ms=3.139328 speedup_vs_c0=+6.356% samples_ms=[3.138816,3.126784,3.139328,3.132160]
+summary_end
+stage_end stage=s2
+stage_begin stage=full
+warmed stage=full candidate=c0:probe_v496_s1_panel3_experts32.py launches=1
+warmed stage=full candidate=c1:probe_v527_s1_giu_merge_experts32_64.py launches=1
+warmed stage=full candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py launches=1
+warmed stage=full candidate=c3:probe_v691_e32_stage1_split_terminal_k.py launches=1
+round=1/4 stage=full order=forward
+timing round=1 order=forward stage=full candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=9.128960
+timing round=1 order=forward stage=full candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=9.008128
+timing round=1 order=forward stage=full candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=9.192704
+timing round=1 order=forward stage=full candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=8.591104
+round=2/4 stage=full order=reverse
+timing round=2 order=reverse stage=full candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=8.559360
+timing round=2 order=reverse stage=full candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=8.993792
+timing round=2 order=reverse stage=full candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=9.003264
+timing round=2 order=reverse stage=full candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=9.072896
+round=3/4 stage=full order=forward
+timing round=3 order=forward stage=full candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=9.106944
+timing round=3 order=forward stage=full candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=9.061376
+timing round=3 order=forward stage=full candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=8.997888
+timing round=3 order=forward stage=full candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=8.557824
+round=4/4 stage=full order=reverse
+timing round=4 order=reverse stage=full candidate=c3:probe_v691_e32_stage1_split_terminal_k.py iters=1 ms=8.591616
+timing round=4 order=reverse stage=full candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py iters=1 ms=9.019648
+timing round=4 order=reverse stage=full candidate=c1:probe_v527_s1_giu_merge_experts32_64.py iters=1 ms=9.028864
+timing round=4 order=reverse stage=full candidate=c0:probe_v496_s1_panel3_experts32.py iters=1 ms=9.084416
+stage_summary stage=full
+summary_begin
+summary candidate=c0:probe_v496_s1_panel3_experts32.py median_ms=9.095680 mean_ms=9.098304 stdev_ms=0.021522 min_ms=9.072896 max_ms=9.128960 speedup_vs_c0=+0.000% samples_ms=[9.128960,9.072896,9.106944,9.084416]
+summary candidate=c1:probe_v527_s1_giu_merge_experts32_64.py median_ms=9.018496 mean_ms=9.025408 stdev_ms=0.022883 min_ms=9.003264 max_ms=9.061376 speedup_vs_c0=+0.856% samples_ms=[9.008128,9.003264,9.061376,9.028864]
+summary candidate=c2:probe_v552_s2_bfrag_clear_all_experts.py median_ms=9.008768 mean_ms=9.051008 stdev_ms=0.082397 min_ms=8.993792 max_ms=9.192704 speedup_vs_c0=+0.965% samples_ms=[9.192704,8.993792,8.997888,9.019648]
+summary candidate=c3:probe_v691_e32_stage1_split_terminal_k.py median_ms=8.575232 mean_ms=8.574976 stdev_ms=0.016394 min_ms=8.557824 max_ms=8.591616 speedup_vs_c0=+6.069% samples_ms=[8.591104,8.559360,8.557824,8.591616]
+summary_end
+stage_end stage=full

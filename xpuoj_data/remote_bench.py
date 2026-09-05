@@ -44,6 +44,7 @@ def load_submission(path: str, module_name: str, kernel_suffix: str = ""):
                 "stage1_main",
                 "stage1_tail",
                 "stage2_main",
+                "stage2_middle",
                 "stage2_tail",
             )
         }
