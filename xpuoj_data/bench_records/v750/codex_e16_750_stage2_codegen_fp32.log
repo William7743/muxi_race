@@ -1,0 +1,474 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-05 12:52:50  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_codegen_review_0` with `out_idx=None`
+2026-09-05 12:52:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_codegen_review_0`
+{"file": "probe_v750_v745_e16_stage2_runtime_m64.py", "stage": 2, "case": 1, "weights_dtype": "float32", "source_sha256": "1ef1fd9a2acf55a0d404d735f7552fc1d822b8c18ee223096d409803e247e1a8", "source_characters": 32783, "adapter_libpath": "", "reported_n_regs": null, "reported_n_spills": null, "static_syncthreads_sites": 6, "shared_offsets": ["void* down_shared = ((void*)((char*)buf_dyn_shmem + 0));", "void* up_shared = ((void*)((char*)buf_dyn_shmem + 16384));"], "local_array_declarations": ["float out_local[64];", "half_t up_matrix[16];", "half_t down_matrix0[16];", "half_t down_matrix1[16];", "float tail_out_local[32];", "half_t tail_up_matrix[8];", "half_t tail_down_matrix0[16];", "half_t tail_down_matrix1[16];", "float routed_expert_weights_local_cast_1[4];", "half_t out_local_cast[4];", "float routed_expert_weights_local_cast_3[4];", "half_t out_local_cast_2[4];", "float routed_expert_weights_local_cast_5[4];", "half_t out_local_cast_4[4];"], "outer_loop_headers": ["for (int k = 0; k < 127; ++k) {"], "route_load_source_lines": ["*(float4*)(routed_expert_weights_local_cast_1 + 0) = make_float4(routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_21 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_21 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_21 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_21 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))]);", "*(float4*)(routed_expert_weights_local_cast_3 + 0) = make_float4(routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_22 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_22 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_22 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_22 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))]);", "*(float4*)(routed_expert_weights_local_cast_5 + 0) = make_float4(routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 32)) + ((i_44 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 32)) + ((i_44 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 32)) + ((i_44 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 32)) + ((i_44 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))]);"], "note": "Static source sites/arrays are not dynamic barrier counts or physical register usage. Null reported resources mean unavailable, not zero."}
+SOURCE_BEGIN probe_v750_v745_e16_stage2_runtime_m64.py
+#include <tl_templates/maca/gemm.h>
+#include <tl_templates/maca/copy.h>
+#include <tl_templates/maca/reduce.h>
+#include <tl_templates/maca/intrin.h>
+#include <tl_templates/maca/atomic.h>
+#include <tl_templates/maca/threadblock_swizzle.h>
+#include <tl_templates/maca/debug.h>
+
+extern "C" __global__ void stage2_codegen_review_0_kernel(const half_t* __restrict__ down_w, const int* __restrict__ group_idx_for_bx, const int* __restrict__ group_offsets, const int* __restrict__ group_padded_offsets, const int* __restrict__ group_sizes, half_t* __restrict__ out, const float* __restrict__ routed_expert_weights, const half_t* __restrict__ up_logits);
+extern "C" __global__ void __launch_bounds__(256, 1) stage2_codegen_review_0_kernel(const half_t* __restrict__ down_w, const int* __restrict__ group_idx_for_bx, const int* __restrict__ group_offsets, const int* __restrict__ group_padded_offsets, const int* __restrict__ group_sizes, half_t* __restrict__ out, const float* __restrict__ routed_expert_weights, const half_t* __restrict__ up_logits) {
+  extern __shared__ __align__(1024) uchar buf_dyn_shmem[];
+  void* down_shared = ((void*)((char*)buf_dyn_shmem + 0));
+  void* up_shared = ((void*)((char*)buf_dyn_shmem + 16384));
+  float out_local[64];
+  half_t up_matrix[16];
+  half_t down_matrix0[16];
+  half_t down_matrix1[16];
+  float tail_out_local[32];
+  half_t tail_up_matrix[8];
+  half_t tail_down_matrix0[16];
+  half_t tail_down_matrix1[16];
+  float routed_expert_weights_local_cast_1[4];
+  half_t out_local_cast[4];
+  float routed_expert_weights_local_cast_3[4];
+  half_t out_local_cast_2[4];
+  float routed_expert_weights_local_cast_5[4];
+  half_t out_local_cast_4[4];
+  const dim3 blockIdx = tl::rasterization2DColumn<2>();
+  int expert_id = group_idx_for_bx[((int)blockIdx.x)];
+  int group_size = group_sizes[((int64_t)expert_id)];
+  int raw_start = group_offsets[((int64_t)expert_id)];
+  int padded_start = group_padded_offsets[((int64_t)expert_id)];
+  if (64 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+    #pragma unroll
+    for (int i = 0; i < 8; ++i) {
+      *(uint2*)(((half_t*)up_shared) + (((i * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(up_logits + ((((((int)blockIdx.x) * 1048576) + (i * 131072)) + ((((int)threadIdx.x) >> 4) * 8192)) + ((((int)threadIdx.x) & 15) * 4)));
+    }
+    #pragma unroll
+    for (int i_1 = 0; i_1 < 16; ++i_1) {
+      float broadcast_var = 0x0p+0f/*0.000000e+00*/;
+      *(float4*)(out_local + (i_1 * 4)) = make_float4(broadcast_var, broadcast_var, broadcast_var, broadcast_var);
+    }
+    #pragma unroll
+    for (int i_2 = 0; i_2 < 8; ++i_2) {
+      *(uint2*)(((half_t*)down_shared) + (((i_2 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(down_w + (((((((int64_t)expert_id) * (int64_t)16777216) + (((int64_t)((int)blockIdx.y)) * (int64_t)1048576)) + (((int64_t)i_2) * (int64_t)131072)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)8192)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)));
+    }
+    for (int k = 0; k < 127; ++k) {
+      __syncthreads();
+      for (int i_3 = 0; i_3 < 4; ++i_3) {
+        for (int local_id = 0; local_id < 4; ++local_id) {
+          up_matrix[((i_3 * 4) + local_id)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_3 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((((int)threadIdx.x) & 63) >> 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id)];
+        }
+      }
+      for (int j = 0; j < 4; ++j) {
+        for (int local_id_1 = 0; local_id_1 < 4; ++local_id_1) {
+          down_matrix0[((j * 4) + local_id_1)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((((int)threadIdx.x) & 63) >> 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_1)];
+        }
+      }
+      for (int j_1 = 0; j_1 < 4; ++j_1) {
+        for (int local_id_2 = 0; local_id_2 < 4; ++local_id_2) {
+          down_matrix1[((j_1 * 4) + local_id_2)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_1 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_2)];
+        }
+      }
+      for (int i_4 = 0; i_4 < 4; ++i_4) {
+        for (int j_2 = 0; j_2 < 4; ++j_2) {
+          {
+      *(((float32x4*)out_local) + ((i_4 * 4) + j_2)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)down_matrix0) + j_2),
+                    *(((float16x4*)up_matrix) + i_4),
+                    *(((float32x4*)out_local) + ((i_4 * 4) + j_2)));
+    };
+        }
+      }
+      for (int i_5 = 0; i_5 < 4; ++i_5) {
+        for (int local_id_3 = 0; local_id_3 < 4; ++local_id_3) {
+          up_matrix[((i_5 * 4) + local_id_3)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_5 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_3)];
+        }
+      }
+      for (int j_3 = 0; j_3 < 4; ++j_3) {
+        for (int local_id_4 = 0; local_id_4 < 4; ++local_id_4) {
+          down_matrix0[((j_3 * 4) + local_id_4)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_3 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 8) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_4)];
+        }
+      }
+      for (int i_6 = 0; i_6 < 4; ++i_6) {
+        for (int j_4 = 0; j_4 < 4; ++j_4) {
+          {
+      *(((float32x4*)out_local) + ((i_6 * 4) + j_4)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)down_matrix1) + j_4),
+                    *(((float16x4*)up_matrix) + i_6),
+                    *(((float32x4*)out_local) + ((i_6 * 4) + j_4)));
+    };
+        }
+      }
+      for (int i_7 = 0; i_7 < 4; ++i_7) {
+        for (int local_id_5 = 0; local_id_5 < 4; ++local_id_5) {
+          up_matrix[((i_7 * 4) + local_id_5)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_7 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 8) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_5)];
+        }
+      }
+      for (int j_5 = 0; j_5 < 4; ++j_5) {
+        for (int local_id_6 = 0; local_id_6 < 4; ++local_id_6) {
+          down_matrix1[((j_5 * 4) + local_id_6)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_5 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 12) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_6)];
+        }
+      }
+      for (int i_8 = 0; i_8 < 4; ++i_8) {
+        for (int j_6 = 0; j_6 < 4; ++j_6) {
+          {
+      *(((float32x4*)out_local) + ((i_8 * 4) + j_6)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)down_matrix0) + j_6),
+                    *(((float16x4*)up_matrix) + i_8),
+                    *(((float32x4*)out_local) + ((i_8 * 4) + j_6)));
+    };
+        }
+      }
+      for (int i_9 = 0; i_9 < 4; ++i_9) {
+        for (int local_id_7 = 0; local_id_7 < 4; ++local_id_7) {
+          up_matrix[((i_9 * 4) + local_id_7)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_9 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 12) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_7)];
+        }
+      }
+      for (int i_10 = 0; i_10 < 4; ++i_10) {
+        for (int j_7 = 0; j_7 < 4; ++j_7) {
+          {
+      *(((float32x4*)out_local) + ((i_10 * 4) + j_7)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)down_matrix1) + j_7),
+                    *(((float16x4*)up_matrix) + i_10),
+                    *(((float32x4*)out_local) + ((i_10 * 4) + j_7)));
+    };
+        }
+      }
+      __syncthreads();
+      #pragma unroll
+      for (int i_11 = 0; i_11 < 8; ++i_11) {
+        *(uint2*)(((half_t*)up_shared) + (((i_11 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(up_logits + ((((((((int)blockIdx.x) * 1048576) + (i_11 * 131072)) + ((((int)threadIdx.x) >> 4) * 8192)) + (k * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 64));
+      }
+      #pragma unroll
+      for (int i_12 = 0; i_12 < 8; ++i_12) {
+        *(uint2*)(((half_t*)down_shared) + (((i_12 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(down_w + (((((((((int64_t)expert_id) * (int64_t)16777216) + (((int64_t)((int)blockIdx.y)) * (int64_t)1048576)) + (((int64_t)i_12) * (int64_t)131072)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)8192)) + (((int64_t)k) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)) + (int64_t)64));
+      }
+    }
+    __syncthreads();
+    for (int i_13 = 0; i_13 < 4; ++i_13) {
+      for (int local_id_8 = 0; local_id_8 < 4; ++local_id_8) {
+        up_matrix[((i_13 * 4) + local_id_8)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_13 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((((int)threadIdx.x) & 63) >> 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_8)];
+      }
+    }
+    for (int j_8 = 0; j_8 < 4; ++j_8) {
+      for (int local_id_9 = 0; local_id_9 < 4; ++local_id_9) {
+        down_matrix0[((j_8 * 4) + local_id_9)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_8 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((((int)threadIdx.x) & 63) >> 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_9)];
+      }
+    }
+    for (int j_9 = 0; j_9 < 4; ++j_9) {
+      for (int local_id_10 = 0; local_id_10 < 4; ++local_id_10) {
+        down_matrix1[((j_9 * 4) + local_id_10)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_9 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_10)];
+      }
+    }
+    for (int i_14 = 0; i_14 < 4; ++i_14) {
+      for (int j_10 = 0; j_10 < 4; ++j_10) {
+        {
+      *(((float32x4*)out_local) + ((i_14 * 4) + j_10)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)down_matrix0) + j_10),
+                    *(((float16x4*)up_matrix) + i_14),
+                    *(((float32x4*)out_local) + ((i_14 * 4) + j_10)));
+    };
+      }
+    }
+    for (int i_15 = 0; i_15 < 4; ++i_15) {
+      for (int local_id_11 = 0; local_id_11 < 4; ++local_id_11) {
+        up_matrix[((i_15 * 4) + local_id_11)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_15 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_11)];
+      }
+    }
+    for (int j_11 = 0; j_11 < 4; ++j_11) {
+      for (int local_id_12 = 0; local_id_12 < 4; ++local_id_12) {
+        down_matrix0[((j_11 * 4) + local_id_12)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_11 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 8) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_12)];
+      }
+    }
+    for (int i_16 = 0; i_16 < 4; ++i_16) {
+      for (int j_12 = 0; j_12 < 4; ++j_12) {
+        {
+      *(((float32x4*)out_local) + ((i_16 * 4) + j_12)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)down_matrix1) + j_12),
+                    *(((float16x4*)up_matrix) + i_16),
+                    *(((float32x4*)out_local) + ((i_16 * 4) + j_12)));
+    };
+      }
+    }
+    for (int i_17 = 0; i_17 < 4; ++i_17) {
+      for (int local_id_13 = 0; local_id_13 < 4; ++local_id_13) {
+        up_matrix[((i_17 * 4) + local_id_13)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_17 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 8) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_13)];
+      }
+    }
+    for (int j_13 = 0; j_13 < 4; ++j_13) {
+      for (int local_id_14 = 0; local_id_14 < 4; ++local_id_14) {
+        down_matrix1[((j_13 * 4) + local_id_14)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_13 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 12) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_14)];
+      }
+    }
+    for (int i_18 = 0; i_18 < 4; ++i_18) {
+      for (int j_14 = 0; j_14 < 4; ++j_14) {
+        {
+      *(((float32x4*)out_local) + ((i_18 * 4) + j_14)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)down_matrix0) + j_14),
+                    *(((float16x4*)up_matrix) + i_18),
+                    *(((float32x4*)out_local) + ((i_18 * 4) + j_14)));
+    };
+      }
+    }
+    for (int i_19 = 0; i_19 < 4; ++i_19) {
+      for (int local_id_15 = 0; local_id_15 < 4; ++local_id_15) {
+        up_matrix[((i_19 * 4) + local_id_15)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 4096) + (i_19 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 12) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_15)];
+      }
+    }
+    for (int i_20 = 0; i_20 < 4; ++i_20) {
+      for (int j_15 = 0; j_15 < 4; ++j_15) {
+        {
+      *(((float32x4*)out_local) + ((i_20 * 4) + j_15)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)down_matrix1) + j_15),
+                    *(((float16x4*)up_matrix) + i_20),
+                    *(((float32x4*)out_local) + ((i_20 * 4) + j_15)));
+    };
+      }
+    }
+    if (min(128, ((group_size + padded_start) - (((int)blockIdx.x) * 128))) == 128) {
+      #pragma unroll
+      for (int i_21 = 0; i_21 < 16; ++i_21) {
+        *(float4*)(routed_expert_weights_local_cast_1 + 0) = make_float4(routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_21 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_21 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_21 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_21 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))]);
+        uint2 __1;
+        float4 __2;
+          float4 v_ = *(float4*)(out_local + (i_21 * 4));
+          float4 v__1 = *(float4*)(routed_expert_weights_local_cast_1 + 0);
+          __2.x = (v_.x*v__1.x);
+          __2.y = (v_.y*v__1.y);
+          __2.z = (v_.z*v__1.z);
+          __2.w = (v_.w*v__1.w);
+        ((half2*)(&__1))[0] = __float22half2_rn(((float2*)(&__2))[0]);
+        ((half2*)(&__1))[1] = __float22half2_rn(((float2*)(&__2))[1]);
+        *(uint2*)(out_local_cast + 0) = __1;
+        *(uint2*)(out + ((((((((((int)blockIdx.x) * 262144) + (((((int)threadIdx.x) & 127) >> 6) * 131072)) + ((i_21 >> 2) * 32768)) + ((((int)threadIdx.x) & 15) * 2048)) + (((int)blockIdx.y) * 128)) + ((((int)threadIdx.x) >> 7) * 64)) + ((i_21 & 3) * 16)) + (((((int)threadIdx.x) & 63) >> 4) * 4))) = *(uint2*)(out_local_cast + 0);
+      }
+    } else {
+      #pragma unroll
+      for (int i_22 = 0; i_22 < 16; ++i_22) {
+        *(float4*)(routed_expert_weights_local_cast_3 + 0) = make_float4(routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_22 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_22 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_22 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 64)) + ((i_22 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))]);
+        if ((((((((int)threadIdx.x) & 127) >> 6) * 64) + ((i_22 >> 2) * 16)) + (((int)threadIdx.x) & 15)) < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+          uint2 __3;
+          float4 __4;
+            float4 v__2 = *(float4*)(out_local + (i_22 * 4));
+            float4 v__3 = *(float4*)(routed_expert_weights_local_cast_3 + 0);
+            __4.x = (v__2.x*v__3.x);
+            __4.y = (v__2.y*v__3.y);
+            __4.z = (v__2.z*v__3.z);
+            __4.w = (v__2.w*v__3.w);
+          ((half2*)(&__3))[0] = __float22half2_rn(((float2*)(&__4))[0]);
+          ((half2*)(&__3))[1] = __float22half2_rn(((float2*)(&__4))[1]);
+          *(uint2*)(out_local_cast_2 + 0) = __3;
+        } else {
+          half_t broadcast_var_1 = half_t(0x0p+0f/*0.000000e+00*/);
+          *(uint2*)(out_local_cast_2 + 0) = make_uint2(__pack_half2(broadcast_var_1, broadcast_var_1), __pack_half2(broadcast_var_1, broadcast_var_1));
+        }
+        *(uint2*)(out + ((((((((((int)blockIdx.x) * 262144) + (((((int)threadIdx.x) & 127) >> 6) * 131072)) + ((i_22 >> 2) * 32768)) + ((((int)threadIdx.x) & 15) * 2048)) + (((int)blockIdx.y) * 128)) + ((((int)threadIdx.x) >> 7) * 64)) + ((i_22 & 3) * 16)) + (((((int)threadIdx.x) & 63) >> 4) * 4))) = *(uint2*)(out_local_cast_2 + 0);
+      }
+    }
+  } else {
+    if (0 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+      #pragma unroll
+      for (int i_23 = 0; i_23 < 8; ++i_23) {
+        float broadcast_var_2 = 0x0p+0f/*0.000000e+00*/;
+        *(float4*)(tail_out_local + (i_23 * 4)) = make_float4(broadcast_var_2, broadcast_var_2, broadcast_var_2, broadcast_var_2);
+      }
+      #pragma unroll
+      for (int i_24 = 0; i_24 < 4; ++i_24) {
+        *(uint2*)(((half_t*)up_shared) + (((i_24 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(up_logits + ((((((int)blockIdx.x) * 1048576) + (i_24 * 131072)) + ((((int)threadIdx.x) >> 4) * 8192)) + ((((int)threadIdx.x) & 15) * 4)));
+      }
+      #pragma unroll
+      for (int i_25 = 0; i_25 < 8; ++i_25) {
+        *(uint2*)(((half_t*)down_shared) + (((i_25 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(down_w + (((((((int64_t)expert_id) * (int64_t)16777216) + (((int64_t)((int)blockIdx.y)) * (int64_t)1048576)) + (((int64_t)i_25) * (int64_t)131072)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)8192)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)));
+      }
+      for (int k_1 = 0; k_1 < 127; ++k_1) {
+        __syncthreads();
+        for (int i_26 = 0; i_26 < 2; ++i_26) {
+          for (int local_id_16 = 0; local_id_16 < 4; ++local_id_16) {
+            tail_up_matrix[((i_26 * 4) + local_id_16)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_26 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((((int)threadIdx.x) & 63) >> 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_16)];
+          }
+        }
+        for (int j_16 = 0; j_16 < 4; ++j_16) {
+          for (int local_id_17 = 0; local_id_17 < 4; ++local_id_17) {
+            tail_down_matrix0[((j_16 * 4) + local_id_17)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_16 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((((int)threadIdx.x) & 63) >> 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_17)];
+          }
+        }
+        for (int j_17 = 0; j_17 < 4; ++j_17) {
+          for (int local_id_18 = 0; local_id_18 < 4; ++local_id_18) {
+            tail_down_matrix1[((j_17 * 4) + local_id_18)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_17 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_18)];
+          }
+        }
+        for (int i_27 = 0; i_27 < 2; ++i_27) {
+          for (int j_18 = 0; j_18 < 4; ++j_18) {
+            {
+      *(((float32x4*)tail_out_local) + ((i_27 * 4) + j_18)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)tail_down_matrix0) + j_18),
+                    *(((float16x4*)tail_up_matrix) + i_27),
+                    *(((float32x4*)tail_out_local) + ((i_27 * 4) + j_18)));
+    };
+          }
+        }
+        for (int i_28 = 0; i_28 < 2; ++i_28) {
+          for (int local_id_19 = 0; local_id_19 < 4; ++local_id_19) {
+            tail_up_matrix[((i_28 * 4) + local_id_19)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_28 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_19)];
+          }
+        }
+        for (int j_19 = 0; j_19 < 4; ++j_19) {
+          for (int local_id_20 = 0; local_id_20 < 4; ++local_id_20) {
+            tail_down_matrix0[((j_19 * 4) + local_id_20)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_19 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 8) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_20)];
+          }
+        }
+        for (int i_29 = 0; i_29 < 2; ++i_29) {
+          for (int j_20 = 0; j_20 < 4; ++j_20) {
+            {
+      *(((float32x4*)tail_out_local) + ((i_29 * 4) + j_20)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)tail_down_matrix1) + j_20),
+                    *(((float16x4*)tail_up_matrix) + i_29),
+                    *(((float32x4*)tail_out_local) + ((i_29 * 4) + j_20)));
+    };
+          }
+        }
+        for (int i_30 = 0; i_30 < 2; ++i_30) {
+          for (int local_id_21 = 0; local_id_21 < 4; ++local_id_21) {
+            tail_up_matrix[((i_30 * 4) + local_id_21)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_30 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 8) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_21)];
+          }
+        }
+        for (int j_21 = 0; j_21 < 4; ++j_21) {
+          for (int local_id_22 = 0; local_id_22 < 4; ++local_id_22) {
+            tail_down_matrix1[((j_21 * 4) + local_id_22)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_21 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 12) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_22)];
+          }
+        }
+        for (int i_31 = 0; i_31 < 2; ++i_31) {
+          for (int j_22 = 0; j_22 < 4; ++j_22) {
+            {
+      *(((float32x4*)tail_out_local) + ((i_31 * 4) + j_22)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)tail_down_matrix0) + j_22),
+                    *(((float16x4*)tail_up_matrix) + i_31),
+                    *(((float32x4*)tail_out_local) + ((i_31 * 4) + j_22)));
+    };
+          }
+        }
+        for (int i_32 = 0; i_32 < 2; ++i_32) {
+          for (int local_id_23 = 0; local_id_23 < 4; ++local_id_23) {
+            tail_up_matrix[((i_32 * 4) + local_id_23)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_32 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 12) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_23)];
+          }
+        }
+        for (int i_33 = 0; i_33 < 2; ++i_33) {
+          for (int j_23 = 0; j_23 < 4; ++j_23) {
+            {
+      *(((float32x4*)tail_out_local) + ((i_33 * 4) + j_23)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)tail_down_matrix1) + j_23),
+                    *(((float16x4*)tail_up_matrix) + i_33),
+                    *(((float32x4*)tail_out_local) + ((i_33 * 4) + j_23)));
+    };
+          }
+        }
+        __syncthreads();
+        #pragma unroll
+        for (int i_34 = 0; i_34 < 4; ++i_34) {
+          *(uint2*)(((half_t*)up_shared) + (((i_34 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(up_logits + ((((((((int)blockIdx.x) * 1048576) + (i_34 * 131072)) + ((((int)threadIdx.x) >> 4) * 8192)) + (k_1 * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 64));
+        }
+        #pragma unroll
+        for (int i_35 = 0; i_35 < 8; ++i_35) {
+          *(uint2*)(((half_t*)down_shared) + (((i_35 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(down_w + (((((((((int64_t)expert_id) * (int64_t)16777216) + (((int64_t)((int)blockIdx.y)) * (int64_t)1048576)) + (((int64_t)i_35) * (int64_t)131072)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)8192)) + (((int64_t)k_1) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)) + (int64_t)64));
+        }
+      }
+      __syncthreads();
+      for (int i_36 = 0; i_36 < 2; ++i_36) {
+        for (int local_id_24 = 0; local_id_24 < 4; ++local_id_24) {
+          tail_up_matrix[((i_36 * 4) + local_id_24)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_36 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((((int)threadIdx.x) & 63) >> 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_24)];
+        }
+      }
+      for (int j_24 = 0; j_24 < 4; ++j_24) {
+        for (int local_id_25 = 0; local_id_25 < 4; ++local_id_25) {
+          tail_down_matrix0[((j_24 * 4) + local_id_25)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_24 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((((int)threadIdx.x) & 63) >> 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_25)];
+        }
+      }
+      for (int j_25 = 0; j_25 < 4; ++j_25) {
+        for (int local_id_26 = 0; local_id_26 < 4; ++local_id_26) {
+          tail_down_matrix1[((j_25 * 4) + local_id_26)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_25 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_26)];
+        }
+      }
+      for (int i_37 = 0; i_37 < 2; ++i_37) {
+        for (int j_26 = 0; j_26 < 4; ++j_26) {
+          {
+      *(((float32x4*)tail_out_local) + ((i_37 * 4) + j_26)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)tail_down_matrix0) + j_26),
+                    *(((float16x4*)tail_up_matrix) + i_37),
+                    *(((float32x4*)tail_out_local) + ((i_37 * 4) + j_26)));
+    };
+        }
+      }
+      for (int i_38 = 0; i_38 < 2; ++i_38) {
+        for (int local_id_27 = 0; local_id_27 < 4; ++local_id_27) {
+          tail_up_matrix[((i_38 * 4) + local_id_27)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_38 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 4) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_27)];
+        }
+      }
+      for (int j_27 = 0; j_27 < 4; ++j_27) {
+        for (int local_id_28 = 0; local_id_28 < 4; ++local_id_28) {
+          tail_down_matrix0[((j_27 * 4) + local_id_28)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_27 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 8) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_28)];
+        }
+      }
+      for (int i_39 = 0; i_39 < 2; ++i_39) {
+        for (int j_28 = 0; j_28 < 4; ++j_28) {
+          {
+      *(((float32x4*)tail_out_local) + ((i_39 * 4) + j_28)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)tail_down_matrix1) + j_28),
+                    *(((float16x4*)tail_up_matrix) + i_39),
+                    *(((float32x4*)tail_out_local) + ((i_39 * 4) + j_28)));
+    };
+        }
+      }
+      for (int i_40 = 0; i_40 < 2; ++i_40) {
+        for (int local_id_29 = 0; local_id_29 < 4; ++local_id_29) {
+          tail_up_matrix[((i_40 * 4) + local_id_29)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_40 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 8) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_29)];
+        }
+      }
+      for (int j_29 = 0; j_29 < 4; ++j_29) {
+        for (int local_id_30 = 0; local_id_30 < 4; ++local_id_30) {
+          tail_down_matrix1[((j_29 * 4) + local_id_30)] = ((half_t*)down_shared)[((((((((int)threadIdx.x) >> 7) * 4096) + (j_29 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 12) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_30)];
+        }
+      }
+      for (int i_41 = 0; i_41 < 2; ++i_41) {
+        for (int j_30 = 0; j_30 < 4; ++j_30) {
+          {
+      *(((float32x4*)tail_out_local) + ((i_41 * 4) + j_30)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)tail_down_matrix0) + j_30),
+                    *(((float16x4*)tail_up_matrix) + i_41),
+                    *(((float32x4*)tail_out_local) + ((i_41 * 4) + j_30)));
+    };
+        }
+      }
+      for (int i_42 = 0; i_42 < 2; ++i_42) {
+        for (int local_id_31 = 0; local_id_31 < 4; ++local_id_31) {
+          tail_up_matrix[((i_42 * 4) + local_id_31)] = ((half_t*)up_shared)[(((((((((int)threadIdx.x) & 127) >> 6) * 2048) + (i_42 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + (((((((int)threadIdx.x) & 63) >> 4) + 12) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_31)];
+        }
+      }
+      for (int i_43 = 0; i_43 < 2; ++i_43) {
+        for (int j_31 = 0; j_31 < 4; ++j_31) {
+          {
+      *(((float32x4*)tail_out_local) + ((i_43 * 4) + j_31)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)tail_down_matrix1) + j_31),
+                    *(((float16x4*)tail_up_matrix) + i_43),
+                    *(((float32x4*)tail_out_local) + ((i_43 * 4) + j_31)));
+    };
+        }
+      }
+      #pragma unroll
+      for (int i_44 = 0; i_44 < 8; ++i_44) {
+        *(float4*)(routed_expert_weights_local_cast_5 + 0) = make_float4(routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 32)) + ((i_44 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 32)) + ((i_44 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 32)) + ((i_44 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))], routed_expert_weights[max(0, min(((((((((int)blockIdx.x) * 128) + (((((int)threadIdx.x) & 127) >> 6) * 32)) + ((i_44 >> 2) * 16)) + raw_start) + (((int)threadIdx.x) & 15)) - padded_start), 2271))]);
+        if ((((((((int)threadIdx.x) & 127) >> 6) * 32) + ((i_44 >> 2) * 16)) + (((int)threadIdx.x) & 15)) < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+          uint2 __5;
+          float4 __6;
+            float4 v__4 = *(float4*)(tail_out_local + (i_44 * 4));
+            float4 v__5 = *(float4*)(routed_expert_weights_local_cast_5 + 0);
+            __6.x = (v__4.x*v__5.x);
+            __6.y = (v__4.y*v__5.y);
+            __6.z = (v__4.z*v__5.z);
+            __6.w = (v__4.w*v__5.w);
+          ((half2*)(&__5))[0] = __float22half2_rn(((float2*)(&__6))[0]);
+          ((half2*)(&__5))[1] = __float22half2_rn(((float2*)(&__6))[1]);
+          *(uint2*)(out_local_cast_4 + 0) = __5;
+        } else {
+          half_t broadcast_var_3 = half_t(0x0p+0f/*0.000000e+00*/);
+          *(uint2*)(out_local_cast_4 + 0) = make_uint2(__pack_half2(broadcast_var_3, broadcast_var_3), __pack_half2(broadcast_var_3, broadcast_var_3));
+        }
+        *(uint2*)(out + ((((((((((int)blockIdx.x) * 262144) + (((((int)threadIdx.x) & 127) >> 6) * 65536)) + ((i_44 >> 2) * 32768)) + ((((int)threadIdx.x) & 15) * 2048)) + (((int)blockIdx.y) * 128)) + ((((int)threadIdx.x) >> 7) * 64)) + ((i_44 & 3) * 16)) + (((((int)threadIdx.x) & 63) >> 4) * 4))) = *(uint2*)(out_local_cast_4 + 0);
+      }
+      #pragma unroll
+      for (int i_45 = 0; i_45 < 4; ++i_45) {
+        half_t broadcast_var_4 = half_t(0x0p+0f/*0.000000e+00*/);
+        *(uint4*)(out + ((((((((int)blockIdx.x) * 262144) + (i_45 * 32768)) + ((((int)threadIdx.x) >> 4) * 2048)) + (((int)blockIdx.y) * 128)) + ((((int)threadIdx.x) & 15) * 8)) + 131072)) = make_uint4(__pack_half2(broadcast_var_4, broadcast_var_4), __pack_half2(broadcast_var_4, broadcast_var_4), __pack_half2(broadcast_var_4, broadcast_var_4), __pack_half2(broadcast_var_4, broadcast_var_4));
+      }
+    } else {
+      #pragma unroll
+      for (int i_46 = 0; i_46 < 8; ++i_46) {
+        half_t broadcast_var_5 = half_t(0x0p+0f/*0.000000e+00*/);
+        *(uint4*)(out + (((((((int)blockIdx.x) * 262144) + (i_46 * 32768)) + ((((int)threadIdx.x) >> 4) * 2048)) + (((int)blockIdx.y) * 128)) + ((((int)threadIdx.x) & 15) * 8))) = make_uint4(__pack_half2(broadcast_var_5, broadcast_var_5), __pack_half2(broadcast_var_5, broadcast_var_5), __pack_half2(broadcast_var_5, broadcast_var_5), __pack_half2(broadcast_var_5, broadcast_var_5));
+      }
+    }
+  }
+}
+
+
+SOURCE_END probe_v750_v745_e16_stage2_runtime_m64.py

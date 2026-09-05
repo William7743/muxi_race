@@ -3891,3 +3891,34 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - 对相邻v745140316，未改点1少14us、未改点2少41us，不能归因E64修改；总分回到
   已有最高80.33，但未突破。原截图及转录归档bench_records/v747_v748/oj_140335_user_*。
   保留作同分对照，不替代全部历史基线，继续第一点独立优化，避免未验证组合。
+
+### 2026-09-05：v749/v750/v751 E16单kernel短尾，两fixture反转，不推荐OJ
+
+- 749基于v745新增exactE16/H2048/I8192 Stage1同kernel M128/M64分支。实际parent
+  是Input→Gate→Up的_moe_stage1_prefetch，保留active_k_steps、每K末同步、k_pack2/
+  swizzle2与全部passes，不采用GIU/terminal-K/aggressive merge。A128x64/B128x64
+  共享32KiB，tail只用A首64行及独立两C64x128；外部bx128/launch不变。
+- 750只扩展E16 exact Stage2选择及空raw/padded保护，复用已有clamped runtime
+  M128/M64双B/k_pack1 builder，I8192完整128个K64。751精确组合749 Stage1和750
+  Stage2/host；E32/E64全部保留v745，未盲目叠加待验证748。所有文件独立，不动submission.py。
+- 三版Python/Ruff通过，749 CPU168组双fresh及387rows/K标签，750336组双fresh，
+  751组合216组双fresh/全AST和执行文本通过。749真实codegen完整地址/同步核对通过，
+  新源17056字符，对照9900；full/tail正CTA各32×5次C++同步，非10静态点同时执行。
+  750 FP32生成32783字符，full/tail128K、clamp2271/输出覆盖通过，不据局部数组推物理资源。
+- 751边界helper E16 raw1213/padded2432/19CTA（空1/短10/满8），两个新X/routes集、
+  固定G/U/D。10项实际bitwise比较全True，S1有效行/NaNpadding、孤立S2/组合输出/
+  两dtype空raw和空padded host检查通过。参考Stage2是显式clamped M128，而非745
+  原未clampE16 dispatcher；positivehelper非run_kernel。18条trace S1双方228regs，
+  S2clamped参考154/751152，共享32768；不从private0推spill或occupancy，不用cold时长提速。
+- 两窗均profiler关闭、warmup1/iters1/4轮F/R、各3次同输入NaN污染full/entry容差。
+  第一alternating64-220/random：745/749/750/751入口中位
+  **2.597888/2.560256/2.579584/2.539904ms**；749/750/751更快4/4、3/4、4/4。
+  第二synthetic/random换序745/751/750/749：入口中位
+  **2.539008/2.625920/2.590080/2.570496ms**；对应候选更快0/4、0/4、1/4。
+  第二窗参考ref_v432_case1.pt，两窗同raw2272/padded3072但路由不同；六位max_abs0
+  不推bitwise。这不是可复现正收益，组合从首窗约快2.23%变为第二窗慢约3.42%。
+- **749/750/751不推荐OJ**，不合入748。752合并草稿已落盘，仅Python/Ruff通过；
+  见负面反馈后立即停止独立审计及GPU，不删除、不冒称已测。所有冷trace/边界/代码/
+  CPU审计/双窗raw日志归档749/750/751，GPU任务终止并确认无进程后释放codex锁。
+- 下一次用户OJ先测已有v747（只保留E64 Stage2 runtime，与748隔离E64 Stage1），
+  继续用反馈淘汰无效组合，不以不断增加版本数当提分。当前最高仍80.33。

@@ -1,0 +1,53 @@
+(Tracer): 12:55:00 [INFO ] Tracer startup
+(Tracer): 12:55:00 [INFO ] =====Name Enable=====
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+mctxAutoStart called! 
+mcToolsExtPid_UsedPort:1118046-44959
+(Tracer): 12:55:23 [INFO ] Rpc connection established!
+baseline=probe_v745_v743_e32_stage1_runtime_m64.py sha256=12f9dcc12ed1327c6f8eba411bfbee8c39132b0d626818140f8fe15cc7609c96
+candidate=probe_v751_v749_e16_stage2_runtime_m64.py sha256=084dbc599bb2bbe1f5b14dbf6527ba8ced2ce350d57169dc40abaac5fb51eb94
+metadata E=16 H=2048 I=8192 raw=1213 padded=2432 blocks=19 rows=[0, 1, 15, 16, 31, 32, 63, 64, 65, 95, 127, 128, 128, 1, 128, 63, 128, 127, 1]; local fixture, not official OJ input
+allocating gate seed=75110
+allocating up seed=75111
+allocating down seed=75112
+2026-09-05 12:55:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_v751_edge_base` with `out_idx=None`
+2026-09-05 12:55:59  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_v751_edge_base`
+2026-09-05 12:55:59  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_v751_edge_probe` with `out_idx=None`
+2026-09-05 12:56:05  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_v751_edge_probe`
+Reference Stage2: explicit clamped M128 builder, not v745 E16 dispatcher
+stage1 repeat=1 seed=75101 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True tolerance_bad=0/9936896
+stage1 repeat=1 padding_untouched_nan=True
+2026-09-05 12:56:07  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v751_edge_base` with `out_idx=None`
+2026-09-05 12:56:12  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v751_edge_base`
+2026-09-05 12:56:13  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v751_edge_probe` with `out_idx=None`
+2026-09-05 12:56:20  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v751_edge_probe`
+isolated_stage2 repeat=1 dtype=torch.float32 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True tolerance_bad=0/4980736
+chain repeat=1 dtype=torch.float32 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True tolerance_bad=0/4980736
+chain repeat=1 dtype=torch.float32 zero_padding=True
+2026-09-05 12:56:21  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v751_edge_base` with `out_idx=None`
+2026-09-05 12:56:26  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v751_edge_base`
+2026-09-05 12:56:27  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v751_edge_probe` with `out_idx=None`
+2026-09-05 12:56:34  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v751_edge_probe`
+isolated_stage2 repeat=1 dtype=torch.float16 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True tolerance_bad=0/4980736
+chain repeat=1 dtype=torch.float16 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True tolerance_bad=0/4980736
+chain repeat=1 dtype=torch.float16 zero_padding=True
+stage1 repeat=2 seed=75102 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True tolerance_bad=0/9936896
+stage1 repeat=2 padding_untouched_nan=True
+isolated_stage2 repeat=2 dtype=torch.float32 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True tolerance_bad=0/4980736
+chain repeat=2 dtype=torch.float32 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True tolerance_bad=0/4980736
+chain repeat=2 dtype=torch.float32 zero_padding=True
+isolated_stage2 repeat=2 dtype=torch.float16 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True tolerance_bad=0/4980736
+chain repeat=2 dtype=torch.float16 finite=True max_abs_full=0 nonzero_diff=0 bitwise_equal=True tolerance_bad=0/4980736
+chain repeat=2 dtype=torch.float16 zero_padding=True
+2026-09-05 12:56:36  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v751_edge_probe` with `out_idx=None`
+2026-09-05 12:56:38  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v751_edge_probe`
+empty_routes dtype=torch.float32 finite=True nonzero=0 stage1_getter_skipped=True
+2026-09-05 12:56:38  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage2_v751_edge_probe` with `out_idx=None`
+2026-09-05 12:56:40  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage2_v751_edge_probe`
+empty_routes dtype=torch.float16 finite=True nonzero=0 stage1_getter_skipped=True
+empty_output dtype=torch.float32 return_pass=True workspace_getter_skipped=True
+empty_output dtype=torch.float16 return_pass=True workspace_getter_skipped=True
+PASS edge tolerance checks; all_tested_bitwise=True; baseline comparison, not independent mathematical/OJ validation or timing.
+(Tracer): 12:56:41 [INFO ] Output file: 	/root/moe_contest/codex_profile_751_e16_edges_20260905/edges-1118046.json
+(Tracer): 12:56:51 [INFO ] User process ends execution.
+(Tracer): 12:56:51 [INFO ] Tracer ends execution.
