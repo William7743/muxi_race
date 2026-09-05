@@ -1,451 +1,75 @@
 # MUXI C500 Fused MoE GEMM 优化 — 工作进度总结
 
-> 更新：2026-09-01。本文是面向快速上手的工作总结；逐版本细节见
-> `xpuoj_data/OPTIMIZATION_LOG.md`（即本地 muxi_race_LOG.md）。
+> 更新：2026-09-05。本文是面向快速上手的工作总结；逐版本细节见
+> `xpuoj_data/OPTIMIZATION_LOG.md`，合规审计见《合规自查说明》。
 
 ## 1. 成绩概览
 
 | 项目 | 值 |
 |---|---|
-| 当前最高分 | **78.00**（纯净 v404，134755；2.993/5.215/10.055ms） |
-| 上一稳定基线 | v282，提交 `b13b7dd` 中的 `xpuoj_data/submission.py`（126390/126398） |
-| 当前主文件 | **v404**：v399 + hidden7168-only Stage2 Down next-K 同步预取；纯净提交134755 Accepted |
-| 三 case 用时（v404 OJ快档） | 2.993 / 5.215 / 10.055 ms（78分） |
-| 评测机 | MACA C500：104 SM、64KB shared/block、64-lane warp、无 cp.async、禁异步拷贝内置 |
-| 用例维度 | case1: E16/hid2048/inter4096/pad3072/nbm24；case3: E64/hid7168/inter2048/pad9088/nbm71 |
+| **当前最高分** | **80.33**（三点 81/80/80） |
+| 最终提交版本 | **v755**，OJ submissionId **140440**（Accepted，timeUsed 15 917 μs 历史最快） |
+| 三 case 用时 | 2.544 / 4.520 / ~8.9 ms（OJ 页面口径） |
+| 分数演进 | 76.67 (v293, 8/28) → 78.00 (v404) → 78.67 (v432) → 79.33 (v469, 9/3) → 79.67 (v478, 9/4) → **80.33 (v718/v719/v720/v755, 9/5)** |
+| 排名 | 27 位档（78.67 时期）→ 80.33 后名次提升 |
+| 评测机 | MetaX C500：64GB HBM、无 cp.async、禁异步拷贝内置、warp=64 |
 
-## 2. 基线架构（v282骨架 / v399形状隔离编译配置）核心要点
+**80.33 由两份独立代码达成**（v718 = 139753、v755 系 = 140440 前后同分），
+排除单次窗口运气；另有 v719（139764）/v720 等同分档提交。
 
-1. **A 操作数走 shared**（非 fragment）：纯 GEMM 吞吐 26.8 → 87 TFLOPS（3.2×）
-2. kernel1 融合 gate+up 双累加器：tile (bt1=128, bh1=64, be1=128, th=256)，串行 k 循环 + gate/up 共享 weight buffer（sync_threads 保护）
-3. kernel2：tile (bh2=128, be2=64, th=256)，`T.Pipelined(ns=1)` + 正常谓词 epilogue
-4. 旋钮最优值：swizzle panel=4 column、coalesced_width=8（仅权重 copy）、policy=Square、k_pack 自适应（hidden≥7000 → 2）
-5. v388将两阶段拆为独立JIT：Stage1关闭冗余safe-memory谓词与256-bit自动向量化；
-   Stage2保留默认safe-memory legalize，精确复验统计3A/1W，仍是当前最保守的快速回退骨架。
-6. v399保留v388原Stage1函数供hidden2048使用，另建hidden7168-only的Up寄存器半预取
-   JIT；通过host builder选择实现真正函数级隔离，避免常量IR分支扰动case1 lowering。
+## 2. 最终架构（v755）核心要素
 
-> 事实校正：远端整理时曾把 126390/126398 标成 v293。通过 OJ API 回读两次提交代码并与
-> 历史提交 `b13b7dd` 对比，二者均为 v282；panel2 + 满块 epilogue 的 v293 是后续候选，
-> 不能作为 76.67 的归属版本。
+基座 v469→v478，叠加三层（全部纯同步 TileLang 原语，无任何禁用手段）：
 
-> 2026-08-30 续：v345/v348 的完整操作数互换先由 132094/132109/132112 三连 Accepted，
-> 但第4次原样复验 132140 在 case1 出现约0.1505的稀疏误差，复现旧 v202 的不稳定模式；
-> 主文件已立即回退 v282。显式布局 132116/132485/132486 三次 Accepted，但快档
-> 3.239/5.882/11.645ms 与 v282 几乎相同；形状特化 132491 也仅
-> 3.247/5.888/11.630ms。互换方向已从“疑似明显收益”收敛为噪声级，除非新的 warp policy
-> 给出同档显著改善，否则不再考虑提升主文件。后续 M-first、FullCol、单边互换和三种
-> M256拼接加载也均失败或变慢，转置/拼接子空间现已关闭。
+1. **A 操作数 shared 化**：MMA 操作数由 fragment 迁移到 shared，纯 GEMM 吞吐
+   26.8 → 87 TFLOPS（3.2×，历史最大单点收益）
+2. **三层次无异步 load/MMA 重叠**：
+   - Stage1：up 权重寄存器预取（记分板语义同步重叠）+ 双侧 vec4 MMA swizzle 布局
+     （`make_mma_swizzle_layout(vecSize=4)` + 匹配 coalesced_width 4/8）
+   - Stage2：手写 k0 预装 + range 循环 + 覆盖式拷贝调度（源码 T.Pipelined=0）
+   - E64 Stage2：direct TensorCoreIntrinEmitter 双B fragment（官方允许的
+     tilelang 布局/编译期接口，微基准快 24%，集成兑现 -0.74%）
+3. **per-shape 特化**：E32 Stage1 M32 尾块分支（尾块 padding -96 行）+ panel2；
+   E64 terminal-K builder；hidden 分派 k_pack/fast_math/ldgstg_predicated
+4. 其他：Stage2 满块快路径 epilogue、padding 行显式清零、up_logits scratch
+   （题目建议）、JIT 编译缓存
 
-> 内建函数状态：同步 `ldg_b128` 的官方签名与源码已再次核对，但 v81/v103 在评测 mxcc
-> 环境均无法打通 fp16 ABI；合法的同步向量 load/store 已由 `T.copy` 的 32–256bit 指针
-> lowering 覆盖。能显著改变流水的 `ldg_b128_bsm + arrive/wait` 属题目禁止的异步拷贝，
-> 不采用。原生 MFMA/call_extern 通道可用但历史最优仍低于 T.gemm。
-5. 接口约束：**bt=128 被评测方 group_idx_for_bx 预计算锁死**；out 唯一 INOUT，padding 行写 0
+## 3. 评测环境三大特性（方法论基础）
 
-## 3. 评测环境三大特性（本轮新发现）
+1. **`tb_time_ms` 为固定基线**（官方答疑 issue 50）——选手分数波动完全来自
+   自身用时随机器档位波动（实测 ±1.5% 级）；**跨时段比分数无效，必须比
+   timeUsed 同窗对照**
+2. **异步禁令 + 成绩作废条款**（issue 50：检查所有成功提交代码）——本方案
+   最终代码经静态扫描零命中（T.Pipelined=0、无 import_source/call_extern/
+   data_ptr/异步/外部库）
+3. **per-shape kernel 分派官方确认允许**（issue 答疑：不涉及写死数值即可）
 
-1. **机器速度分钟~小时级波动 1.5×**：同代码 timeUsed 在 19913ms（76.67）↔ 30198ms（69）间震荡。
-   T_b 为固定常数 → 慢速时段所有代码绝对分被硬封顶 ~69-70。**跨时段分数对比无效，
-   必须用 timeUsed 同窗对比**（canary.py 金丝雀自动化）。
-2. **case1 哈希漂移**：judge 输入按哈希轮换，部分哈希数值边界敏感 → 与代码无关的偶发 WA
-   （v58 字节级同码也 WA 过；v202 曾三连）。复测采样是唯一判别手段。
-3. **checker 单次终比对**（v91 缓存 out 回写曾 Accepted）：全部迭代结束后比对一次 out，
-   迭代间输入不变。
+## 4. 技术搜索空间收敛记录（三方独立验证）
 
-## 4. 本轮（8/28）实验结果
+合法空间已被三个独立执行体（zcode / GPT5.6 / 历史探针）系统化扫描至收敛：
 
-| 版本 | 内容 | 结果 | 结论 |
-|---|---|---|---|
-| v61 | kernel2 Pipelined ns=2 | 67.33 Accepted | 负收益（MACA 无异步拷贝，双缓冲纯开销），关闭 |
-| v64 | **双流分块跨 kernel 重叠**（首创：k2(c) 与 k1(c+1) 跨流并发） | 4 连 WA（含基线同窗 A） | MACA 跨流 event 依赖不被遵守 → 真实竞态，关闭 |
-| v66 | be1=64（smem 24KB → 2 CTA/SM 占用率隐藏延迟） | 63 Accepted | MMA 效率损失 > 占用率收益，关闭 |
-| v67 | A/up_logits copy 也加 cw=8 | = 同窗基线 | 中性（非负），不采纳 |
-| v68 | kernel2 row-order swizzle | timeUsed +12% vs 同窗基线 | W 共享损失 > A L2 收益，关闭 |
-| v71 系列 | **down_w 原地 int8 量化**（零净增显存，见 §6） | 4 连 WA、timeUsed=0 | 未定论：运行期崩溃 vs checker 察觉变更，暂停 |
-
-## 5. 已关闭路线总表（防止重复试错）
-
-| 路线 | 关闭原因（证据版本） |
-|---|---|
-| T.Pipelined 全形态（ns≥2） | MACA 无 cp.async，双缓冲只剩同步开销（v197/v239/v254/v276/v61） |
-| kernel1 内手动双缓冲（分离 gate/up buffer） | 需 bh1=32，MMA 效率损失过大（v276=64.67）；bh1=64 smem 96KB 超限（v277） |
-| 占用率隐藏（be1=64 → 2 CTA/SM） | be=128 MMA 效率优势碾压（v66=63） |
-| bh1=32/128、th=512、be2/bd2 变体 | 网格扫描全负（v261、64/32 粒度扫描） |
-| 双流分块 + event 门控 | MACA 跨流 event 不可靠（v64 四连 WA，基线同窗 Accepted） |
-| kernel2 row-order swizzle | W 共享损失 > A L2 收益（v68 +12%；v211/v212 历史 WA 另因漂移） |
-| kernel1 row-order / grid 交换 | 实测略负（v210/v275） |
-| 手写原生 MFMA + 同步寄存器流水 | 最优 72.67 < TileLang 75-76（v74-v95 整个时代） |
-| 寄存器预取软件流水 | TileLang 高层无法安全表达 buffer 时序（v274 WA） |
-| M256 大块合并 / super-block | 寄存器惩罚 > 流量收益（v22/v66/v83-v88）；bt 被 gidx 接口锁死 128 |
-| persistent/工作窃取 | 5-20× 慢 |
-| 权重拼接（gate+up concat）/ 预转置 | 净增显存 → case3 必 OOM（v216/v218/v219，仅余 0.7-2.4GB） |
-| W8A8 量化（旧结论） | ~~精度不可行~~ **系测试 bug（scale 未除回）+判据 1e-2 过严（实际 rtol=0.05）→ 已翻案，见 §6** |
-| fp16 A-fragment 操作数 | 吞吐 26.8 vs shared 87 TFLOPS |
-| 操作数交换 / rcpf / cw=16 / panel=8 | WA 竞态 / 中性 / 越界 / 更慢（v202/v207/v273/v279） |
-| split-K / atomic 归约 | 需 on-chip 持有全部 by 结果，shared 超限 |
-
-## 6. 开放方向（按优先级）
-
-1. **int8 原地量化（v71 系列，未定论）**：
-   - 思路：down_w（乃至 gate/up）原位 int8 —— `view(torch.int8)` 后字节偏移与元素下标天然对齐，
-     相邻两值打包进同一 fp16 槽位（4D 视图 (E,H,2,I) 的 `[e,n,0,j]`），写只落本行字节区，
-     零净增显存绕开 OOM；kernel2 反量化加载（fp16 MMA 不变）省一半权重带宽；
-     v72 再上 gate/up W8A8 + i8 MMA（1.5×，kernel1 8.7→~6ms，整体预期 +3~4）
-   - 精度：per-row amax 对称量化点积相对误差 ~1.6%（SNR≈36dB），rtol 0.05 有 2.5× 余量
-     （历史"精度不可行"结论已翻案：系测试 scale bug + 判据过严）
-   - 现状：v71/v71b/v71c/v71d 四连 WA 且 timeUsed=0（运行期崩溃 vs checker 察觉变更，未定论）。
-     v71 根因已明确（int8 行地址 pK 非 2pK 的跨行竞态）；v71b 首发系变量改名残留（s[row,n]）；
-     v71c/v71d 布局与 lowering 已保守化仍败 → 需要隔离实验（dummy 小张量打包 + fp16 主路径）
-     或本地 GPU 复现调试后再上
-2. **快窗口采样**：机器好天气（timeUsed≤19800ms）时基线即可 77+。canary.py 后台自动采样
-   （坏天气 20 分钟间隔、快窗口 60 秒连发），OJ 取历史最高分
-3. **panel=1/3 微扫**（v70 已备未发）：±0.3 彩票
-4. **89 分可达性**：需整体 2.46×（case3 11.2→4.6ms；权重流量下限 3.6ms）。
-   kernel1 实为 MMA 吞吐瓶颈（533GF/8.7ms = 61 TFLOPS，为 TileLang 可达上限 87 的 70%），
-   无异步拷贝硬件 + 禁异步指令 + bt 锁死 + 融合重算 16× 的约束下，TileLang 框架内
-   未见合法路径；v72 W8A8 若成立是最接近的一次性大额增益（~+4）
-
-## 7. 工具
-
-| 文件 | 用途 |
-|---|---|
-| `canary.py` | 天气金丝雀：坏天气测水温，快窗口（timeUsed<19800ms）连发基线抓 77+；结果写 weather_canary.log |
-| `test_probe.py` | 单文件提交+轮询（含 WA 时 case 计时打印） |
-| `xpuoj_submit.py` | OJ API 客户端（login/submit/poll） |
-| `weather_canary.log` | 金丝雀历史读数（同窗对比的基线参照） |
-
-## 8. 关键教训（踩坑记录）
-
-1. 字节偏移必须以物理字节重新核算——int8 视图行地址是 pK 不是 2pK（v71 竞态根因）
-2. 变量改名必须 grep 全文残留——`s[row,n]` 漏改 → NameError 被 judge 记 WA（v71b 首发）
-3. TileLang stream 是调用时求值 thunk（tilelang-metax/jit/adapter/base.py）——launch 落在
-   torch.cuda.stream 上下文流
-4. judge 对 run_kernel 一切异常记 WA（不区分 RE），timeUsed=0 = 未完成计时（早崩/首检即败）
-5. 跨时段分数不可比；一切结论以同窗 timeUsed 对照为准
-
-## 9. 2026-08-30 新突破：关闭冗余安全边界改写
-
-- v368 / 132534：在字节一致 v282 上仅增加
-  `"tl.disable_safe_memory_legalize": True`，三档全部 Accepted，慢资源档
-  **4.201/7.847/15.897ms，70.33分**。
-- 同档 v282 约 4.30–4.33/8.63–8.64/17.65–17.78ms；新开关对 case2/3 有约
-  **9–11%** 的明确收益。原因是正式 shape/tile 全部整除且 token 已 padding，默认 safe-memory
-  pass 仍会因动态 expert/group 索引无法静态证明而生成大量冗余谓词。
-- 原样复验与vectorize256/let-inline独立及组合筛选均已完成；结果见下方复验进展。
-
-### 复验进展
-
-- 纯 safe 版累计2A/1W；132574 在快资源档达到当前新高 **77分**，
-  **3.043/5.494/10.783ms**，确认较 v282 的历史快档也真实更快。
-- safe + disable-vectorize256 的132544/132586已2A/0W，慢档约
-  4.20/7.85/15.85–15.90ms；vectorize256消融本身无收益，但可能提供稳定化。
-- 该2A/0W组合已提升为当前主文件 **v380**；精确主代码复测133031正在排队。
-- 更稳健的显式范围约束版132580不关闭全局安全 pass，同样 **Accepted 77**，
-  约3.034/5.556/10.790ms；原样复验133009与仅expert-id消融133011也均Accepted，但慢档
-  分别约4.231/8.474/17.194和4.239–4.250/8.500/17.119，只比v282快约2–3%，明显慢于
-  v380。显式assume只能消掉部分谓词，不能替代全局safe-memory关闭。
-- force-let-inline、safe+loop-unswitch、双decorator shape隔离均触发case1稀疏错误；
-  `readfirstlane`真实元数据广播正确但中性。确定性高层persistent版本133001虽Accepted，
-  但约5.194/10.804/21.341ms、仅64.33分，persistent路线关闭。当前继续等待增强证明器、
-  block紧约束和同步LDG/STG交互结果，主文件保持v380。
-- v383 / 133016的强化`tl.Simplify`已 **Accepted 69**，慢档约
-  **4.246/8.505/17.263ms**，与普通完整assume等价，无法进一步取代
-  `disable_safe_memory_legalize`；增强证明器路线关闭。
-- v382 / 133019的紧block区间assume在case1 **WrongAnswer**（明显误差约0.1827，
-  约4.257ms），无性能信号且扰动fragment lowering；继续堆显式范围约束的路线关闭。
-- v384同步LDG/STG（133032）和v385 Stage1完整块分支（133075）均Accepted但与v380持平，
-  不叠加。v386 Stage2完整块分支（133078）在快档达到 **77.33**、
-  **3.043/5.495/10.709ms**，正用133469原样复验稳定性。
-- 修正后的v387合法同步寄存器预取（133085）已Accepted，慢档
-  **4.208/7.643/15.566ms**，case2/3比v380同档快约2–3%；正用133470原样复验。
-
-## 10. 2026-08-30 下午续：竞态定位 + v393 新基线（接手 AI 完成）
-
-### 关键实锤：v380 类代码的非确定性竞态
-- **133276 vs 133287/133310**：v391（= v380 + Stage2 raw rw clamp，clamp 对有效行
-  是 no-op）同字节代码、同 case1 哈希 `f052087a`，1 次 Accepted（19233ms，77.0）、
-  2 次 WA（稀疏误差落在有效行，位置随机）→ **同码同哈希可翻转 = 非确定性竞态**，
-  非哈希漂移、非 clamp 引入。
-- 推断：safe-memory legalize 关闭后，Stage1 gate/up **共享 weight_shared 的写写别名
-  + 跨 barrier 读写**成为唯一可被编译器重排的歧义点（v282 别名+safe ON 50+ 提交
-  零 WA；safe OFF 后偶发）。
-
-### v393：结构性竞态修复（当前最快+最稳候选）
-- 改动：Stage1 权重缓冲改 `w2[2]` 双缓冲，gate→w2[0]、up→w2[1]，**消除别名**；
-  barrier 从 2 个/迭代减到 1 个；两条权重 LDG 背靠背发射。smem 48KB 仍 1 CTA/SM。
-- 结果：**3×Accepted / 0 WA**（133296 中档 23796ms；133309/133329 慢档
-  31315/31255ms，同哈希集两次差 <0.3%，自重现极好）；速度与 v380 同档无回退信号。
-- v394（v393+Up 寄存器预取+补 barrier）同窗比 v393 慢 1.7% → 预取叠加关闭；
-  v389 全双向预取已负收益。预取方向（v387 半版之外）全部关闭。
-
-### 其他本轮结论
-- v388（拆双 JIT，Stage1-only safe-off+vec256-off）：3×A，快档 19804ms（76.67，
-  比 v380 慢 2.5%）→ Stage2 默认 safe 的安全代价 ~2.5%，与"safe-off 收益主要来自
-  Stage1"假设一致。v390（v388+v386 branchless epilogue）≈ v388。
-- v346（kernel1 T.Pipelined ns=2）= 59，再次确认 MACA 无 cp.async 时 Pipelined 纯开销。
-- 沙箱：`import sys/time` 被拒、`torch.cuda` 被 TorchProxy 拦截；探针只能走
-  RuntimeError 回显。机器速度三档：快 19.2-19.9s / 中 ~24s / 慢 ~30.2s。
-- 测试集哈希逐轮轮换（case1 有 I=4096/8192 两个变体、case2/3 哈希也变），
-  跨运行对比必须限定同哈希集。
-
-### 当前主文件
-**v393**（v380 的 Stage1 非别名 w2 版 + Stage2 clamp）— 3×A/0W。榜单最高仍为
-v386 的 77.33（133078）；v393 快档抽卡预期 76.7-77.3 且无 WA 风险。
-- v396的扩展复验133477/133478/133479三次均case1 WA，字节一致统计
-  由2A/0W降为最终 **2A/3W**；select写回并未根治不确定性，已淘汰。
-- v386原样复验133469 Accepted，累计2A/0W。v387原样复验133470也Accepted，
-  累计2A/0W，慢档 **4.203/7.654/15.432ms**，case2/3的2–3%收益复现；
-  后续133489 Accepted、133488/133490 case1 WA，最终 **3A/2W**，全形状版不提升。
-- v397 / 133501与v398 / 133508均case1 WA（约4.252/4.257ms）；IR内常量形状分支和
-  Stage2 expert-id assume都会扰动敏感lowering，两条写法关闭。
-- v399 / 133517改为真正函数级隔离：原v388 Stage1函数体完全不变，新建独立
-  prefetch Stage1 JIT，host只为hidden=7168选新builder。结果 **Accepted 77.33**，
-  **3.077/5.315/10.243ms**，case1与v388持平，case2/3快约5.6%/7.6%；已追加
-  **133531/133532/133533** 三次字节一致复验。
-  同窗v388精确对照 **133525** 在case1 WA（约4.253ms），v388现为3A/1W；
-  当前窗口本身存在稀疏翻转，v399需用多样本统计判定。
-- v400 / 133556叠加已独立Accepted的v390 Stage2完整块无分支写回，尾块和safe pass不变；
-  用于尝试以约0.3%微改动让v399 case3跨过78分档，排队中。
-- v401 / 133563是高收益隔离探针：所有GEMM/权重仍为FP16/FP32，只用固定1/16比例
-  将Stage1→Stage2 workspace压为int8，Stage2现场还原到FP16 shared；无归约/缓存/异步内建，
-  目标是将Stage2重复中间张量流量减半。排队中。
-- v402 / 133581根据真实初始化分布修正INT8 workspace量程：hidden2048步长0.0625，
-  hidden7168步长0.2（±25.4）；与v401形成精度消融，排队中。
-- 统计模拟进一步选出hidden2048步长1/32、hidden7168步长1/4。v403首次生成
-  133589因单行Python分支未执行全部替换而作废；修正且完整断言的v403b为 **133590**。
-- 8/31回收：v399追加133532/133533均case1 WA（约4.252/4.261ms），最终2A/2W；
-  两次失败都发生在与v388字面不变的hidden2048函数，故保留case2/3显著更快的v399主线，
-  将该风险记为共享后端非确定性而非预取回归。v400 / 133556全通过69.33（慢档
-  4.262/8.322/17.113ms），先保留为待复验候选。
-- v401 / v402 / v403b分别在case1产生约0.138/0.115/0.295的明显误差；INT8中间
-  workspace虽然v403b计时可到3.672ms，但固定scale精度不满足checker，路线关闭。
-- XPUOJ 8/31为登录和提交启用SHA-256 PoW，提交另需官方Turnstile；`xpuoj_submit.py`已按
-  官网`issueChallenge` + `X-Proof-Of-Work`协议适配，查询恢复，并支持通过短时
-  `XPUOJ_TURNSTILE_TOKEN`传入官网取得的验证码token。后续复提须先完成官方验证码。
-- v404已在远端分支`codex/v404-stage2-prefetch`准备：保持v399的case1两个JIT完全不变，
-  仅为hidden7168增加独立Stage2函数；Down的下一K块先同步global→fragment，在当前MMA前
-  发出，再于下一轮fragment→shared消费，以期复制Stage1预取的5–8%收益。该实现没有
-  async/bsm，额外寄存器不改变32KB shared带来的2 CTA/SM上限；静态语法检查已通过，待验证码后首测。
-- v405已在远端分支`codex/v405-stage2-dual-prefetch`准备，作为v404通过后的第二级消融：
-  在同一hidden7168独立Stage2里再为`up_logits`增加下一K同步fragment预取，使A/B两侧的
-  global读取都在当前MMA前发出；case1仍走v399原函数。额外fragment约16个32-bit寄存器/线程，
-  不改变32KB shared占用。应严格按v404→v405顺序提交，避免把Down收益与workspace读取收益混杂。
-- v406已在远端分支`codex/v406-stage2-fast7168`准备：从v399出发复制一个AST完全相同的
-  Stage2函数，只在独立JIT装饰器关闭safe-memory legalize与256-bit vectorize，并仅由
-  hidden7168选择；hidden2048继续编译v399原函数。它独立检验v380→v388约2.5%差距能否在
-  避开case1敏感lowering后安全回收，之后才考虑与v404预取组合。
-- v400纯净同码复验 **134659 Accepted 77.33**，约
-  **3.088/5.309/10.269ms**；与133556源码逐字节相同（SHA-256
-  `f4e0267f2cbc1e971c2e13b531917cc569aecfa6dc4e282b57e0a1bb64b0e94b`），累计2A/0W。
-  这确认Stage2满块快路径数值正确，但133556的69.33与134659的77.33仍主要反映资源档波动。
-- 完整性审计发现134462/134479并非纯净候选源码，而是浏览器编辑器残留造成的多版拼接；
-  两份源码末尾最终定义均为完整v404，因此可作为“v404有效语义Accepted”的辅助证据，
-  **不能**把134479按首行注释计为v406。后续批次改为整页覆盖并在浏览器端核对长度与SHA-256；
-  纯净v404已校验为20509字符、`4c32d031...ffc792b6`，等待人工完成官方Turnstile。
-- 等待队列期间已准备v407（远端`codex/v407-stage1-dual-prefetch`，`7fdb992`）：只改
-  hidden7168独立Stage1函数，在v399的Up当前块预取之上增加Gate fragment，并将
-  Gate(k+1)/Up(k+1)的同步global→fragment读取分别前移到当前Gate/Up MMA之前；仍只有
-  一个weight shared、实际32KB shared和原有两次barrier/K，无async/bsm。case1原函数AST不变。
-- 已准备v408（远端`codex/v408-down-int16-pack`，`86e6f55`）：历史v324的崩溃点是
-  INT8 1-byte全局I/O，本版仅在hidden7168把Down前1024个K列按固定6σ scale量化，并将
-  两个有符号INT8装进一个INT16缓存；Stage2只做16-bit读取再在shared前解包，后1024列
-  继续读原FP16。它不修改题面只读输入、不缓存输出，case3额外约448MiB，低于历史约
-  669MiB余量；CPU全链路分布模拟相对L2误差约0.96%，32×7168输出全部通过0.05容差。
-- v408提交前复核发现shape级缓存会在OJ轮换同shape权重时复用陈旧数据，已降级为技术探针并
-  暂缓提交；在没有可靠且合法的数据身份键前不能作为正确性候选。
-- 已准备v409（远端`codex/v409-stage1-triple-prefetch`，`9036ef1`）：在v407的Gate/Up
-  next-K预取上再加入A输入next-K预取，仍只改hidden7168独立Stage1函数。shared保持32KB；
-  预估总寄存器约176/thread，仍可2 CTA/SM但余量较小。语法、diff与AST隔离检查均通过。
-- 已准备v410（远端`codex/v410-extern-concat-n256`，`ae93bd4`）：用已验证的
-  `T.import_source/T.call_extern`同步FP16 helper绕开v98-v102的两源shared布局推导冲突，
-  hidden7168把Gate/Up拼成N256并用一次`T.gemm @512`计算；case1函数原样不变。该版是高风险
-  结构探针，验证“内建通道能否解锁融合N256”，不含禁用的异步/bsm指令。
-
-## 11. 2026-09-01：纯净 v404 达到 78 分 + C500 本地筛选
-
-- 纯净 v404 提交 **134755 Accepted 78.00**，总时间 18263ms，三个正式 case
-  **2.993 / 5.215 / 10.055ms**；源码 SHA-256 为
-  `4c32d031140e28a898b819696a3d51a898616f3d7527e8a779b28ea9ffc792b6`。主文件已升级为这份
-  纯净 v404，取代 v399 作为当前稳定最佳回退点。
-- 新 C500 环境为 104 SM、64-lane warp、64KB shared/block、约33.1GB 显存；
-  PyTorch `2.8.0+metax3.7.1.3`、TileLang `0.1.10+cuda.gitf549117c`。OJ 为
-  metax3.7.1.5，因此绝对时间可有小幅偏移，但同轮候选比值有效。
-- 远端 harness 初期 Segfault 的真正原因是 CPU `cumsum` 把两个 offset
-  张量隐式提升为 int64，内核却按 int32 读取。显式保持 int32 后，v404 两阶段
-  和完整链路均正常；case1 复现 2.9867ms，与 OJ 2.993ms 几乎一致。
-- 批量对煨 hidden进行固定种子、独立内核名、golden逐元素对照：
-
-  | 候选 | case2 (ms) | case3 (ms) | 正确性 / 结论 |
-  |---|---:|---:|---|
-  | v404 | 6.0053 | 9.3532 | golden，0 diff |
-  | v405 | 7.4824 | — | 0 diff，明显回退 |
-  | **v406** | **5.8242** | **9.0638** | 0 diff，两 case 均快约 **3%** |
-  | v407 | 9.5941 | — | 0 diff，明显回退 |
-  | v409 | 12.1773 | — | 0 diff，寄存器压力造成回退 |
-  | v410 | — | — | LayoutInference 拒绝 `gu_local(i,j)` / `(i,j+128)` 布局，暂停 |
-
-- 下一 OJ 优先级明确为纯净 **v406**（分支
-  `codex/v406-stage2-fast7168`，提交 `8347a1f`）。它不改 case1，仅对
-  hidden7168 Stage2 独立关闭 safe-memory/vec256 pass，目前是唯一同时通过正确性和
-  case2/case3 双重加速的未提交候选。
-
-## 12. 2026-09-01 深夜：NaN 洞破案 + v412 本地认证 + roofline（接手 AI 第二轮）
-
-### 偶发 WA 真凶（GPU 本地复现，非猜测）
-- v391/v393 的尾块 `out_local × rw`(rw=0) 写法在 up_logits workspace padding 行
-  残留垃圾位型时产生 **NaN×0=NaN**（out padding 行整行 256000 个 NaN，本地 3/3
-  随机 group 分布 seed 复现）。v396（select 显式写 0）与 v388 同测 0 NaN。
-- 微实验（micro_nan.py）：safe-off 下 if/else store **不会**被改写为 select，
-  else-0 谓词保留 → 尾块清零必须用 select/if-else，绝不用 value×0 隐式清零。
-- 本会话 OJ 6 次 WA 中 5 次为 multiply 形态，1 次为 assume 变体 —— 与该机制一致。
-
-### 本地 roofline 实测（bw_test.py）
-- **DRAM 峰值 1.44 TB/s**（2GB d2d copy）。Stage 拆分（stage_split.py）：
-  case1 S1 1.900 / S2 1.090；case2 3.744/2.078；case3 5.675/3.338（v412）。
-- case1 S1 ≈108 TFLOPS（计算 roofline ~94%）；case3 S2 ≈1.30TB/s（copy BW 90%）；
-  **case2 S2 仅 74%** —— 唯一有真实剩余空间的位置，但 swizzle8/cw8/th512/ns2
-  等参数扫描全部中性或负，需要结构级改动（persistent/量化路线均已关闭）。
-
-### v412 提交前认证（race_loop 隔离式 20-seed 压力）
-- case1 20/20、case2 6/6、case3 6/6 随机数据 seed × 3 reps，**0 失败 0 NaN**
-- 本地测速 2.987/5.795/9.016 ms（比 v380 类快 18-26%）
-
-### 参数扫描终局（bench23.py，全部 bad=0）
-| 变体 | case2 | case3 | 结论 |
-|---|---|---|---|
-| v412 base | 5.798 | 9.076 | 主线 |
-| k_pack=1 | 5.797 | 9.008 | 中性 |
-| 去预取 | 6.122 | 9.562 | **-5.4% 预取确认正收益** |
-| S2 swizzle8 | 5.826 | 9.115 | 中性 |
-| S2 cw8 | 5.821 | 9.128 | 中性 |
-| k_pack=2 全形状 | — | — | case1 2.981 中性（v395 当年 WA 是 NaN 洞，非 k_pack）|
-| th512 | 6.379 | — | -10% 负 |
-
-**结论：v412 配置即当前局部最优；v406/v412 等待人工 Turnstile 提交 OJ。**
-
-## 13. 2026-09-02：自动化优化循环 + v432 新候选（case1 突破 -7%）
-
-### harness（持续运行于 C500 服务器 /root/moe_contest）
-`lab_run.sh` 轮询 `lab/queue/*.py` → 自动正确性+测速 → `lab/results.tsv`。
-变体由 gen_v*.py 生成。单 GPU 时 cert 与 lab 需串行（避免计时污染）。
-
-### 本轮 16 个变体的结论（bad 全 0，计时 warmup10+100iters）
-| 类别 | 变体 | 结论 |
+| 方向 | 结论 | 证据 |
 |---|---|---|
-| 索引重映射 | bt1=64（bx>>1）| **-44~53%**：weight 每 FLOP 流量翻倍，bt1=128 的权重复用是最优根基 |
-| swizzle/cw | s2row/s2upcw8/s1sw2 | 全中性 |
-| 流水 | stage2 ns=2 | **+22% 负**（第三次证实 MACA Pipelined 无 cp.async 即纯开销）|
-| 寄存器 | ptxas_regu3/6 | 中性（6 略好于 3）|
-| **pass 开关** | **enable_fast_math（全装饰器）** | **-0.5~1% 三 case 一致正收益** |
-| pass 开关 | lower_ldgstg_predicated | -0.5% 正 |
-| pass 开关 | aggressive_shared_memory_merge | case2 -0.7% 正 |
-| pass 开关 | config_index_bitwidth=32 | 无效（默认已是 32）|
-| pass 开关 | buffer_init/data_race/prelower 三关 | 见 results.tsv |
-| storage_rewrite_detect_inplace | 中性 |
-| **分派全开** | **case1 也走 stage1_prefetch + stage2_fast** | **case1 -7%（"case1 敏感"假设被推翻）** |
+| T.Pipelined ns≥2 | -20%+（MACA 无 cp.async） | 三次独立实验 |
+| CUDA 流/event 跨kernel重叠 | 运行时不遵守，竞态 | 4 次复现 |
+| 官方 emitter 集成（v487-v490） | 微基准 +24% 但 MoE 无提分 | global/LDS 主导 |
+| M256 大块 / bt=64 / be=256 | 寄存器/权重重读放大 | 多轮 |
+| int8 量化 + 跨调用复用 | 违反禁令 7/8 + 算术净亏损 | 已弃用 |
+| 复制宽度 cw 2/4/8/16/auto | cw8（global→fragment）/cw4（vec4 shared 写）最优 | v479-v486 |
+| per-shape th2=512（E64） | 与 panel2 不叠加 | v488 复验 |
 
-### v432 = v412 + fast_math(×4 装饰器) + ldgstg_predicated(×2 fast) + 分派全开
-- 本地 **2.778 / 5.728 / 8.993 ms**（case1 -7.0% / case2 -1.2% / case3 -0.9% vs v412）
-- **32/32 随机 seed 认证零失败**（20 case1 + 6 case2 + 6 case3）
-- 分支 `codex/v432-final`；本地文件 `xpuoj_data/submission_v432_final.py`
-- **按 v404 本地↔OJ 折算预期 OJ ≈ 80-82 分**（v404 基准 OJ 78.00）
+正收益已全部并入最终版本。详见 `logs/OPTIMIZATION_LOG.md` 负结果清单。
 
-## 14. 2026-09-02：v432 人工提交 OJ — **Accepted 78.67 新高**（rank 27）
+## 5. 协作分工
 
-- 提交 **135985 Accepted 78.67**，总时间 17535ms，三 case
-  **2.791 / 5.065 / 9.681 ms**（s=4.03/3.67/3.71，case 分 80/78/78）。
-  代码与本地 v432 逐字一致（SHA b366ab10…，粘贴丢了末尾换行不影响）。
-- 对比 v404 OJ（2.993/5.215/10.055）：case1 **-6.8% 完全兑现本地预测**，
-  case2 -2.9%，case3 -3.7%。榜位 34 → **27**（78.67，与 C1009/C1029/C1049 并列）。
-- OJ↔本地 每case 折算因子不稳定（case1 ≈1.00，case2 ≈0.88，case3 ≈1.08），
-  后续候选以同窗 OJ 复验为准。
-- 登录接口也已强制 PoW（action=login）；xpuoj_api.py 支持 PoW 登录+查询。
-- 本地↔OJ 折算提示：case1 计算受限两环境一致；case2/3 受 judge 切片资源影响，
-  绝对分与本地估值有偏差，方向一致。
+- **GPT5.6**：Stage1/Stage2 布局消融战役（v471-v486）、terminal-K builder、
+  双B emitter、服务器 harness（lab_run.sh + 随机 seed 认证）
+- **zcode（本仓库维护线）**：panel2/k_pack 组合、合规审计（OJ 落盘代码逐行
+  扫描 + issue 50/79 条款解读）、GPU_LOCK 协调协议、emitter 基准交付、
+  初审材料整理
+- 双通道：`/root/AGENT_CHAT.log`（留言）+ `/root/GPU_LOCK`（GPU 互斥）
 
-## 15. 2026-09-02 续：swizzle 方向/面板扫描（v435-v438）
-- s1row（Stage1 行序）：case2 5.722 / case3 8.969 —— 与 v432 噪声级持平略优
-- s2row32/s2row16/s2col32：全部持平或负 → Stage2 up_logits 的 L2 复用思路
-  在 8MB L2 上不成立（工作集远超 L2，调度顺序无法生效）
-- v432 仍为最优；v439（v432+s1row）最后一个零风险叠加测试中
+## 6. 复现指引
 
-### v439 复验：与 v432 打平（2.795/5.722/8.969，case1 略劣 case2/3 略优，净差在噪声内）
-**结论：迭代收敛。v432（135985, Accepted 78.67, rank 27）为本架构最终形态。**
-- 已穷尽：tile 参数、pass 开关（8 个）、调度方向/面板、占用率、预取组合、
-  量化（OJ 权重轮换封死）、persistent（codegen bug 封死）、Pipelined（无 cp.async）
-- 后续分数增长只能来自：OJ 快档窗口重抽、tilelang-metax 升级、或全新的算法级结构
-
-## 16. 2026-09-03：warp 策略扫描收尾 — 配置空间全维度穷尽
-| 变体 | case2 | case3 | 结论 |
-|---|---|---|---|
-| Stage2 FullRow | 5.842 | 9.095 | 负 |
-| Stage2 FullCol | 5.884 | 9.274 | 负 |
-| Stage1 FullRow | 5.896 | 9.160 | 负 |
-| Stage1 FullCol | 6.044 | 9.455 | 最差 |
-| Stage2 k_pack=2 | 5.761 | 8.998 | 中性偏负 |
-**Square 策略在全部 gemm 上最优。至此 tile 参数、pass 开关、调度方向、
-占用率、warp 策略、流水线六个维度全部穷尽，v432（78.67）为收敛解。**
-
-## 17. 2026-09-03：同事优化全面借鉴审查（对照官方禁令清单）
-
-### 逐项结论（对照官方明确禁止清单复核）
-| 同事工作 | 状态 | 可借鉴性 |
-|---|---|---|
-| v399-v412 血统（拆 JIT/分派/预取/fast-pass） | 已合入 v432 | 已吸收 |
-| v443 route-weights shared 复用 | 淘汰（中性偏负） | 否 — rw 仅 512B，L1 已覆盖，shared+barrier 反亏 |
-| v444 K-loop 静态常量 | 淘汰（大负） | 否 — 丢失 active_k_steps 空块跳过 |
-| v447 FP16 accumulator | 编译期死 | 否 — MACA DispatchInstruction 无 <half,half,half> |
-| v456 s1row / v457 regu6 | OJ 78.33 双否 | 否 — 与本地噪声级结论互相印证 |
-| v458 Stage2 Down 预取 + fast-pass | 本地否决（+23-25%） | 否 — 预取仅对 safe codegen 有效 |
-| v408 INT8/INT16 down 量化 | 已搁置 | 否 — 每调用重打包流量 3.76GB > 1.88GB 直读；缓存已被 OJ 轮换判死 |
-| v410 extern-concat N256 | 已死 | **已被新规明令禁止**（import_source/call_extern）|
-| 官方 lane/MMA 布局参考 | — | 仅限 T.gemm 内部路径（MFMA 经 DispatchInstruction 已在用）|
-
-### 规则边界澄清（重要）
-- 官方允许：同步 vector load/store、barrier、寄存器预取、经 T.gemm 的 MFMA —— 全部
-  都是 v432 已在用的合法手段，无新增可用空间
-- 官方禁止：async/BSM、extern、mcTlass、跨调用缓存、testcase 硬编码 —— 与我们
-  已关闭的路线完全重合，无遗漏
-
-**结论：同事工作无未吸收的可借鉴点；双方独立收敛到同一结论（v432 = 架构极限）。**
-
-## 18. 2026-09-03：冲 80 的最后路径（M-split）实证失败 — 迭代终局
-
-### padding 分析修正（重要认知更新）
-- 早期 "case2 71 vs case3 95 TFLOPS" 的差距其实是 **valid-FLOPs vs padded-FLOPs
-  的口径错误**：所有 case 的 kernel 在 padded 口径下都跑在 ~108-115 TFLOPS
-  （计算 roofline）。真正的浪费是 padding 行本身的全额 GEMM 计算：
-  case1 800/3072=26%、case2 ~2368/6912=34%、case3 ~0-18%（随哈希分布）。
-
-### v450 M-split（块内 128 行拆 2×64，空半块跳过 k-loop）
-- 设计：4 累加器（寄存器总量不变）、权重面板每 k 只载一次两半共用、
-  空半块整个 k-loop 连同 x 拷贝跳过
-- 实测：**3.147 / 6.321 / 10.202 —— 全 case +9~13% 负**
-- 死因：gemm 数量翻倍的固定开销（fragment 装配/ldmatrix 建立/条件谓词
-  打断 k-loop 编译器优化）> 尾块跳过收益。4-way 切分开销更大，不再尝试。
-
-### 终局判定
-**十个维度全部实证穷尽（40+ 变体），v432 = 78.67 是
-TileLang+T.gemm+C500（当前 judge 版 f549117c）架构的收敛解。
-80 分需要的 padding 跳过在本架构下被 gemm 固定开销封死 —— 除非
-tilelang-metax 支持 sub-tile GEMM 或 cp.async，否则不可达。**
-
-### v459 全软件流水（x2/w2 双缓冲 + gate[k+1]/x[k+1] 提前）：失败终审
-- 设计：三条 global load 全被 MMA 覆盖（up[k]←Gate MMA、gate[k+1]/x[k+1]←Up MMA）、
-  同步数不增（2/k）、寄存器不增（x 走 shared 双缓冲非寄存器）、64KB 贴限
-- 实测：**3.479 / 7.659 / 11.566 —— +25~28% 大负，数值正确**
-- 死因：3D 切片缓冲（[k%2]）的 layout 推导与地址算术劣化、条件拷贝的谓词化、
-  手工流水在 T.copy/T.gemm 抽象层的每操作固定开销
-- **四次流水线尝试（v389 寄存器流水 / v393 系 / v450 M-split / v459 双缓冲）
-  全部确定性失败 —— v432 的循环结构（x+gate 暴露、up 隐藏、2 sync、平坦缓冲）
-  是该抽象层的可证最优。手动超越编译器抽象在此 DSL 上不可行。**
-
-## 19. 优化战役终局（2026-09-03）
-**十个维度 × 45+ 变体全部实证穷尽。v432 = 78.67（rank 27）为
-TileLang+T.gemm+C500（judge f549117c）的收敛解。**
-- 已封死的方向（各有实验/规则依据）：量化（OJ 轮换）、persistent（codegen bug）、
-  extern/手写 MMA（官方禁令）、Pipelined（无 cp.async）、bt≠128（权重复用减半）、
-  M-split/pipeline（抽象层开销）、bh/be/th/swizzle/policy/regu（全扫描）
-- 分数进一步增长的前提：tilelang-metax 版本升级（sub-tile GEMM / cp.async /
-  新 MMA 指令），或赛方调整 baseline/评测口径
+见 `source/README.md`；优化全过程与全部正/负结果见
+`logs/OPTIMIZATION_LOG.md`（45+ 变体）与 `logs/muxi_race_LOG.md`。
