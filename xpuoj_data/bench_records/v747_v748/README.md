@@ -2,14 +2,17 @@
 
 ## Status and frozen source identities
 
-**v748 is the next candidate for the user's manual OJ submission; its score
-is unknown.** Python/Ruff,
+**Latest screenshot: OJ140335 Accepted80.33, context-associated with v748;
+uploaded source is not verified. This matches, but does not exceed, the
+historical highest score. Retain it as a same-score comparison, not a
+replacement for all baselines or proof of an isolated E64 gain.** Python/Ruff,
 CPU isolation and captured E64 FP32 Stage2 source checks passed. The completed
 v748 boundary run below also passed explicit bitwise comparisons. v745,
 v746, v747 and v748 have now each completed a full-chain/normal-entry
 correctness check and warmed entry timing in both local fixtures. v748 is
-faster in7/8 paired rounds against v745, not8/8. No v747/v748 OJ result is
-recorded; do not promote submission.py before feedback. The frozen source
+faster in7/8 paired rounds against v745, not8/8. No OJ result is
+recorded for v747; v748's screenshot feedback is recorded below. Keep
+submission.py unchanged. The frozen source
 headers' static-candidate statements describe creation time; this README's
 later evidence supersedes that status without changing the tested files/hashes.
 Local filename/version-reference scans found neither number occupied before
@@ -308,4 +311,35 @@ remain context-based, **not source-verified**, and rounded9ms is not an exact
 microsecond result. The prior pause is therefore replaced by **v748 pending
 user manual OJ submission**, while retaining the feedback/identity caveats.
 v748 inherits v745's E32 implementation unchanged; only the specified E64
-paths differ. Its new OJ result and score are still unknown.
+paths differ. That pending recommendation is superseded by the feedback below.
+
+## OJ140335 screenshot feedback (2026-09-05):80.33, matching the prior high
+
+The user's screenshot reply to the v748 code request shows
+[submission140335](https://xpuoj.com/contest/5/submissions/140335), Accepted80.33,
+total16ms and memory22.3G. The v748 association is inferred from reply
+context, not explicit version text or uploaded-source verification. The
+[structured transcription](oj_140335_user_report.json) records both
+`version_mapping_explicit=false` and `uploaded_source_verified=false`.
+The [screenshot](oj_140335_user_screenshot.png) SHA256 is
+`71824c9ffc15fb5d4b5156cbdd71e5f324886103daf228a7418d421a32654c1a`.
+
+| Item | Status | Displayed time | Exact microseconds | Point score |
+| --- | --- | --- | ---: | --- |
+| Sample1 (not scored) | Accepted | 2539us | 2539 | Not applicable |
+| Formal1.1 | Accepted | 2551us | 2551 | Unknown |
+| Formal1.2 | Accepted | 4489us | 4489 | Unknown |
+| Formal1.3 | Accepted | 9ms | Unknown | Unknown |
+
+Compared with context-associated v745/140316 (80,2565us/4530us/rounded9ms),
+formal point1 is14us lower and point2 is41us lower. Those E16/E32 paths
+are unchanged by v748, so these differences are not attributed to E64.
+Point3's exact microseconds and all individual point scores are unknown;
+the rounded9ms display cannot independently establish the new E64 path's
+benefit or an exact total-time difference.
+
+The overall score rises0.33 relative to that v745 repeat and matches the
+historical high80.33; it does not set a new high. Retain v748 as a same-score
+comparison while preserving prior baselines and source-identity caveats.
+No API query, login, browser action or code submission was performed for
+this screenshot transcription.

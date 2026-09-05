@@ -1,0 +1,33 @@
+{
+  "version": "v748",
+  "submission_id": 140335,
+  "submission_url": "https://xpuoj.com/contest/5/submissions/140335",
+  "version_mapping_source": "Inferred from the user's screenshot reply to the v748 code request; no explicit version text or source hash accompanies this image",
+  "version_mapping_explicit": false,
+  "result_source": "User-provided screenshot, visually inspected 2026-09-05",
+  "screenshot_file": "oj_140335_user_screenshot.png",
+  "screenshot_sha256": "71824c9ffc15fb5d4b5156cbdd71e5f324886103daf228a7418d421a32654c1a",
+  "status": "Accepted",
+  "score": 80.33,
+  "total_time_display": "16 ms",
+  "memory_display": "22.3 G",
+  "sample": {"label": "样例 1", "status": "Accepted", "time_display": "2539 µs", "time_us": 2539},
+  "scored_points": [
+    {"label": "子任务 1.1", "status": "Accepted", "time_display": "2551 µs", "time_us": 2551, "score": null},
+    {"label": "子任务 1.2", "status": "Accepted", "time_display": "4489 µs", "time_us": 4489, "score": null},
+    {"label": "子任务 1.3", "status": "Accepted", "time_display": "9 ms", "time_us": null, "score": null}
+  ],
+  "uploaded_source_verified": false,
+  "precision_note": "Point 3 exact microseconds and individual point scores are unknown. Sample is separate from the three scored points. No exact total-time or point 3 difference is inferred from rounded displays.",
+  "comparison": {
+    "baseline_version": "v745",
+    "baseline_submission_id": 140316,
+    "baseline_version_mapping_explicit": false,
+    "point_1_delta_us": -14,
+    "point_2_delta_us": -41,
+    "point_3_delta_us": null,
+    "overall_score_delta": 0.33,
+    "attribution_note": "E16 and E32 paths are unchanged from v745; their lower observed times are not attributed to the E64 change. Point 3 precision is insufficient to isolate an E64 benefit."
+  },
+  "decision": "Matches the historical highest score of 80.33 without exceeding it. Retain v748 as a same-score comparison, not a replacement for all baselines or proof of an isolated E64 gain."
+}
