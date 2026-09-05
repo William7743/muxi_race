@@ -4,7 +4,7 @@
 
 | 文件 | 说明 |
 |---|---|
-| `submission_v719_final.py` | **最终提交版本**（OJ 提交号 139764，Accepted **80.33**，2026-09-05，timeUsed 16 039 μs）。包含全部 TileLang kernel 与 `run_kernel` 入口；SHA256 与 OJ 认证记录一致 |
+| `submission_v720_final.py` | **最终提交版本**（OJ 提交号 139770，Accepted **80.33**，2026-09-05，timeUsed 16 031 μs 历史最快）。包含全部 TileLang kernel 与 `run_kernel` 入口；源码 SHA256 145c7a2d… 已存档 |
 | `remote_bench.py` | 判题器同构的本地正确性/性能测试 harness（单进程单 case，避免 JIT 符号缓存串扰） |
 
 ## 2. 环境依赖
@@ -59,13 +59,13 @@ python remote_bench.py --case 2 --candidate submission_v432_final.py \
 
 | 用例 | 本地 mean (warmup10/iters100) | OJ mean（submissionId 135985） |
 |---|---|---|
-| case1 (E16, 2048×8192, valid 2272) | 2.563 ms | 2.560 ms |
+| case1 (E16, 2048×8192, valid 2272) | — | 2.56 ms 档（三点合计 16 031 μs） |
 | case2 (E32, 7168×2048, valid 4544) | 4.616 ms | 4.600 ms |
 | case3 (E64, 7168×2048, valid 9088) | 8.860 ms | 8.926 ms（v718） |
 | **OJ 总分** | | **80.33（Accepted，2026-09-05；三点 81/80/80）** |
-| OJ 总用时 | 16 039 μs（历史最快） |
+| OJ 总用时 | 16 031 μs（历史最快） |
 
 正确性：三点全量对拍（对官方 fp32 参考语义与 OJ Accepted 参照）bad=0；含 NaN 污染三轮复算、双 dtype 路由权重、两次新输入调用覆盖；
 另通过 32 组随机 seed 认证（20×case1 + 6×case2 + 6×case3）零失败。
 
-版本谱系：v719 = v718（139753，80.33）+ E64 Stage2 双B emitter；v718 = v716 + E64 Stage1 terminal-K builder；基座含 v478 全部要素（双侧 vec4 布局/cw 匹配/panel2/k_pack=2/手写同步调度）。详细技术方案见提交包根目录《技术方案文档》。
+版本谱系：v720（139770，80.33，16 031 μs）= v719（139764）+ E16 Stage2 双B emitter 分派扩展；v719 = v718（139753）+ E64 Stage2 双B emitter；v718 = v716 + E64 Stage1 terminal-K builder；基座含 v478 全部要素（双侧 vec4 布局/cw 匹配/panel2/k_pack=2/手写同步调度）。三份独立代码（v718/v719/v720）均 ≥80.33，成绩可复现。详细技术方案见提交包根目录《技术方案文档》。

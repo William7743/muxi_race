@@ -1,11 +1,12 @@
 # CASES=1,2,3
-# XPU-OJ v719: OJ-verified v718 with only E64 Stage2 switched to the dual-B emitter.
-# E16/E32 and every Stage1 path remain exactly v718; all kernel builders are unchanged.
-# Reuses v717's separately tested Stage2 dispatch, now paired with E64 terminal-K Stage1.
-# Both stages stay unsplit M128; each invocation fully recomputes from current inputs.
-# Three NaN-poisoned full/entry rechecks of one random input batch matched v718 exactly.
-# Local entry timing has a small positive signal; independent OJ validation is pending.
-# Two synchronous TileLang launches; no async/BSM, pipeline DSL, extern, or result cache.
+# XPU-OJ v720: v719 with only E16 Stage2 switched to the existing dual-B emitter.
+# Re-tests v711's E16-only isolation idea on the OJ-verified v719 base; not a new discovery.
+# E32/E64 and every Stage1 path remain exactly v719, preserving its E64 dual-B path.
+# All kernel builders are unchanged; both stages stay unsplit M128 with two launches.
+# Every invocation fully recomputes current inputs; no result caching or phase-dependent path.
+# NaN-poisoned full/entry checks matched v719 on one random batch and a constant fixture.
+# Short local timings are order-sensitive; independent OJ validation remains pending.
+# Synchronous TileLang only; no async/BSM, pipeline DSL, extern, or device imports.
 import torch
 import tilelang
 import tilelang.language as T
@@ -979,7 +980,7 @@ def _get_stage2(
     if stage2 is None:
         builder = (
             _moe_stage2_fast_bfrag_prefetch
-            if num_experts in (32, 64)
+            if num_experts in (16, 32, 64)
             else _moe_stage2_fast
         )
         stage2 = builder(*key[1:])
