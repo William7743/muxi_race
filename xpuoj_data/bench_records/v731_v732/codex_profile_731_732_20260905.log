@@ -1,0 +1,66 @@
+(Tracer): 08:43:11 [INFO ] Tracer startup
+(Tracer): 08:43:11 [INFO ] =====Name Enable=====
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+mctxAutoStart called! 
+mcToolsExtPid_UsedPort:1095033-43037
+(Tracer): 08:43:34 [INFO ] Rpc connection established!
+allocating constant x on GPU: (6144, 7168)
+allocated constant x
+allocating constant gate on GPU: (32, 2048, 7168)
+allocated constant gate
+allocating constant up on GPU: (32, 2048, 7168)
+allocated constant up
+allocating constant down on GPU: (32, 7168, 2048)
+allocated constant down
+allocating constant routed weights on GPU: (4544,)
+allocated constant routed weights
+constant inputs ready
+loading candidate=0 path=/root/moe_contest/probe_v720_v719_e16_stage2_bfrag_only.py
+compiling candidate=0 stage=s1
+compiling candidate=0 stage=s2
+stage2_builder candidate=0 name=_get_stage2 launches=1
+compiled candidate=0
+loading candidate=1 path=/root/moe_contest/probe_v731_v720_e32_stage1_concat_gu64_k64.py
+compiling candidate=1 stage=s1
+compiling candidate=1 stage=s2
+stage2_builder candidate=1 name=_get_stage2 launches=1
+compiled candidate=1
+loading candidate=2 path=/root/moe_contest/probe_v732_v720_e32_stage1_concat_gu64_k32.py
+compiling candidate=2 stage=s1
+compiling candidate=2 stage=s2
+stage2_builder candidate=2 name=_get_stage2 launches=1
+compiled candidate=2
+candidate_reference=c0:probe_v720_v719_e16_stage2_bfrag_only.py routing=alternating64-220 padded_total=6144 num_blocks_m=48
+correctness candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py path=launch_full reference=candidate_zero_probe_v720_v719_e16_stage2_bfrag_only.py max_abs=0.000000 bad=0/44040192
+correctness candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py path=run_kernel reference=candidate_zero_probe_v720_v719_e16_stage2_bfrag_only.py max_abs=0.000000 bad=0/44040192
+correctness candidate=c1:probe_v731_v720_e32_stage1_concat_gu64_k64.py path=launch_full reference=candidate_zero_probe_v720_v719_e16_stage2_bfrag_only.py max_abs=0.000000 bad=0/44040192
+correctness candidate=c1:probe_v731_v720_e32_stage1_concat_gu64_k64.py path=run_kernel reference=candidate_zero_probe_v720_v719_e16_stage2_bfrag_only.py max_abs=0.000000 bad=0/44040192
+correctness candidate=c2:probe_v732_v720_e32_stage1_concat_gu64_k32.py path=launch_full reference=candidate_zero_probe_v720_v719_e16_stage2_bfrag_only.py max_abs=0.000000 bad=0/44040192
+correctness candidate=c2:probe_v732_v720_e32_stage1_concat_gu64_k32.py path=run_kernel reference=candidate_zero_probe_v720_v719_e16_stage2_bfrag_only.py max_abs=0.000000 bad=0/44040192
+correctness_round=1/1
+all_candidates_correct
+stage_begin stage=entry
+warmed stage=entry candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py launches=1
+warmed stage=entry candidate=c1:probe_v731_v720_e32_stage1_concat_gu64_k64.py launches=1
+warmed stage=entry candidate=c2:probe_v732_v720_e32_stage1_concat_gu64_k32.py launches=1
+round=1/2 stage=entry order=forward
+timing round=1 order=forward stage=entry candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py iters=1 ms=4.658176
+timing round=1 order=forward stage=entry candidate=c1:probe_v731_v720_e32_stage1_concat_gu64_k64.py iters=1 ms=6.592512
+timing round=1 order=forward stage=entry candidate=c2:probe_v732_v720_e32_stage1_concat_gu64_k32.py iters=1 ms=15.667456
+round=2/2 stage=entry order=reverse
+timing round=2 order=reverse stage=entry candidate=c2:probe_v732_v720_e32_stage1_concat_gu64_k32.py iters=1 ms=15.628800
+timing round=2 order=reverse stage=entry candidate=c1:probe_v731_v720_e32_stage1_concat_gu64_k64.py iters=1 ms=6.542848
+timing round=2 order=reverse stage=entry candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py iters=1 ms=4.671232
+stage_summary stage=entry
+summary_begin
+summary candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py median_ms=4.664704 mean_ms=4.664704 stdev_ms=0.006528 min_ms=4.658176 max_ms=4.671232 speedup_vs_c0=+0.000% samples_ms=[4.658176,4.671232]
+summary candidate=c1:probe_v731_v720_e32_stage1_concat_gu64_k64.py median_ms=6.567680 mean_ms=6.567680 stdev_ms=0.024832 min_ms=6.542848 max_ms=6.592512 speedup_vs_c0=-28.975% samples_ms=[6.592512,6.542848]
+summary candidate=c2:probe_v732_v720_e32_stage1_concat_gu64_k32.py median_ms=15.648128 mean_ms=15.648128 stdev_ms=0.019328 min_ms=15.628800 max_ms=15.667456 speedup_vs_c0=-70.190% samples_ms=[15.667456,15.628800]
+summary_end
+paired_summary candidate=c0:probe_v720_v719_e16_stage2_bfrag_only.py baseline=c0:probe_v720_v719_e16_stage2_bfrag_only.py delta_definition=candidate_minus_baseline median_delta_us=+0.000 mean_delta_us=+0.000 wins=0 ties=2 losses=0 delta_us=[+0.000,+0.000]
+paired_summary candidate=c1:probe_v731_v720_e32_stage1_concat_gu64_k64.py baseline=c0:probe_v720_v719_e16_stage2_bfrag_only.py delta_definition=candidate_minus_baseline median_delta_us=+1902.976 mean_delta_us=+1902.976 wins=0 ties=0 losses=2 delta_us=[+1934.336,+1871.616]
+paired_summary candidate=c2:probe_v732_v720_e32_stage1_concat_gu64_k32.py baseline=c0:probe_v720_v719_e16_stage2_bfrag_only.py delta_definition=candidate_minus_baseline median_delta_us=+10983.424 mean_delta_us=+10983.424 wins=0 ties=0 losses=2 delta_us=[+11009.280,+10957.568]
+stage_end stage=entry
+(Tracer): 08:43:38 [INFO ] Output file: 	/root/moe_contest/codex_profile_731_732_20260905/concat-1095033.json
+(Tracer): 08:43:49 [INFO ] User process ends execution.
+(Tracer): 08:43:49 [INFO ] Tracer ends execution.

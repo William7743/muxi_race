@@ -1,0 +1,137 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-05 06:55:18  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_codegen_review_0` with `out_idx=None`
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/root/moe_contest/remote_codegen_review.py", line 85, in <module>
+    main()
+  File "/root/moe_contest/remote_codegen_review.py", line 38, in main
+    kernel = module._get_stage1(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/root/moe_contest/probe_v731_v720_e32_stage1_concat_gu64_k64.py", line 1123, in _get_stage1
+    stage1 = builder(*key[1:])
+             ^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/__init__.py", line 461, in __call__
+    kernel = self.compile(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/__init__.py", line 391, in compile
+    kernel_result = compile(
+                    ^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/__init__.py", line 111, in compile
+    return cached(
+           ^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/cache/__init__.py", line 74, in cached
+    return _dispatch_map[execution_backend].cached(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/cache/kernel_cache.py", line 365, in cached
+    kernel = JITKernel(
+             ^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/kernel.py", line 132, in __init__
+    adapter = self._compile_and_create_adapter(func, out_idx)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/kernel.py", line 247, in _compile_and_create_adapter
+    artifact = tilelang.lower(
+               ^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/engine/lower.py", line 384, in lower
+    host_mod, device_mod, params, target, target_host = lower_to_host_device_ir(
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/engine/lower.py", line 358, in lower_to_host_device_ir
+    mod = LowerAndLegalize(mod, target)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/engine/phase.py", line 206, in LowerAndLegalize
+    mod = tilelang.transform.LayoutInference()(mod)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/3rdparty/tvm/python/tvm/ir/transform.py", line 171, in __call__
+    return _ffi_transform_api.RunPass(self, mod)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/tvm_ffi/cython/function.pxi", line 968, in tvm_ffi.core.Function.__call__
+  File "<unknown>", line 0, in tvm::transform::Pass::operator()(tvm::IRModule) const
+  File "<unknown>", line 0, in tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  File "<unknown>", line 0, in tvm::tirx::transform::PrimFuncPassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  File "<unknown>", line 0, in std::_Function_handler<tvm::tirx::PrimFunc (tvm::tirx::PrimFunc, tvm::IRModule, tvm::transform::PassContext), tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}>::_M_invoke(std::_Any_data const&, tvm::tirx::PrimFunc&&, tvm::IRModule&&, tvm::transform::PassContext&&)
+  File "<unknown>", line 0, in std::enable_if<is_invocable_r_v<tvm::tirx::PrimFunc, tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}&, tvm::tirx::PrimFunc, tvm::IRModule, tvm::transform::PassContext>, tvm::tirx::PrimFunc>::type std::__invoke_r<tvm::tirx::PrimFunc, tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}&, tvm::tirx::PrimFunc, tvm::IRModule, tvm::transform::PassContext>(tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}&, tvm::tirx::PrimFunc&&, tvm::IRModule&&, tvm::transform::PassContext&&)
+  File "<unknown>", line 0, in tvm::tirx::PrimFunc std::__invoke_impl<tvm::tirx::PrimFunc, tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}&, tvm::tirx::PrimFunc, tvm::IRModule, tvm::transform::PassContext>(std::__invoke_other, tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}&, tvm::tirx::PrimFunc&&, tvm::IRModule&&, tvm::transform::PassContext&&)
+  File "<unknown>", line 0, in tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}::operator()(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&) const
+  File "<unknown>", line 0, in tvm::tl::LayoutInferencer::Substitute(tvm::tirx::PrimFunc, bool)
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::Collect(tvm::tirx::PrimFunc const&)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::operator()(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::VisitStmt_(tvm::tirx::SBlockNode const*)
+  File "<unknown>", line 0, in tvm::arith::IRVisitorWithAnalyzer::VisitStmt_(tvm::tirx::SBlockNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::arith::IRVisitorWithAnalyzer::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::arith::IRVisitorWithAnalyzer::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::arith::IRVisitorWithAnalyzer::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::arith::IRVisitorWithAnalyzer::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::arith::IRVisitorWithAnalyzer::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::VisitStmt_(tvm::tirx::SBlockNode const*)
+  File "<unknown>", line 0, in tvm::arith::IRVisitorWithAnalyzer::VisitStmt_(tvm::tirx::SBlockNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::arith::IRVisitorWithAnalyzer::VisitStmt_(tvm::tirx::AttrStmtNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tirx::StmtVisitor::VisitStmt_(tvm::tirx::SeqStmtNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::VisitStmt_(tvm::tirx::ForNode const*)
+  File "<unknown>", line 0, in tvm::tl::ParallelOp::ParallelOp(tvm::tirx::For const&)
+  File "<unknown>", line 0, in tvm::ffi::ObjectPtr<tvm::tl::ParallelOpNode> tvm::ffi::make_object<tvm::tl::ParallelOpNode, tvm::tirx::For const&>(tvm::tirx::For const&)
+  File "<unknown>", line 0, in tvm::ffi::ObjectPtr<tvm::tl::ParallelOpNode> tvm::ffi::details::ObjAllocatorBase<tvm::ffi::details::SimpleObjAllocator>::make_object<tvm::tl::ParallelOpNode, tvm::tirx::For const&>(tvm::tirx::For const&)
+  File "<unknown>", line 0, in tvm::tl::ParallelOpNode* tvm::ffi::details::SimpleObjAllocator::Handler<tvm::tl::ParallelOpNode>::New<tvm::tirx::For const&>(tvm::ffi::details::SimpleObjAllocator*, tvm::tirx::For const&)
+  File "<unknown>", line 0, in tvm::tl::ParallelOpNode::ParallelOpNode(tvm::tirx::For)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::ParallelLoopNestVisitor::VisitStmt_(tvm::tirx::ForNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::ParallelLoopNestVisitor::VisitStmt_(tvm::tirx::ForNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tirx::StmtVisitor::VisitStmt_(tvm::tirx::IfThenElseNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>::VisitStmt(tvm::tirx::Stmt const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::StmtFunctor<void (tvm::tirx::Stmt const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::ParallelLoopNestVisitor::VisitStmt_(tvm::tirx::BufferStoreNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtVisitor::VisitStmt_(tvm::tirx::BufferStoreNode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtExprVisitor::VisitExpr(tvm::PrimExpr const&)
+  File "<unknown>", line 0, in tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>::VisitExpr(tvm::PrimExpr const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>*) const
+  File "<unknown>", line 0, in tvm::tirx::StmtExprVisitor::VisitExpr(tvm::PrimExpr const&)
+  File "<unknown>", line 0, in tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>::VisitExpr(tvm::PrimExpr const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>*) const
+  File "<unknown>", line 0, in tvm::tirx::StmtExprVisitor::VisitExpr(tvm::PrimExpr const&)
+  File "<unknown>", line 0, in tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>::VisitExpr(tvm::PrimExpr const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>*) const
+  File "<unknown>", line 0, in tvm::tirx::ExprVisitor::VisitExpr_(tvm::tirx::NENode const*)
+  File "<unknown>", line 0, in tvm::tirx::StmtExprVisitor::VisitExpr(tvm::PrimExpr const&)
+  File "<unknown>", line 0, in tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>::VisitExpr(tvm::PrimExpr const&)
+  File "<unknown>", line 0, in tvm::NodeFunctor<void (tvm::ffi::ObjectRef const&, tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>*)>::operator()(tvm::ffi::ObjectRef const&, tvm::tirx::ExprFunctor<void (tvm::PrimExpr const&)>*) const
+  File "<unknown>", line 0, in tvm::tl::ParallelLoopNestVisitor::VisitExpr_(tvm::tirx::BufferLoadNode const*)
+  File "/opt/tilelang-metax-v0.1.10/src/op/parallel.cc", line 192, in void tvm::tl::ParallelOpNode::RecordBufferAccess(const tvm::tirx::Buffer&, const tvm::ffi::Array<tvm::PrimExpr>&, bool)
+    ICHECK(StructuralEqual()(it->second.indices, indices))
+
+tvm.error.InternalError: Check failed: (StructuralEqual()(it->second.indices, indices)) is false: gu_local: (i, j) and (i, j + 64)

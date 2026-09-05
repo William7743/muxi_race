@@ -3592,3 +3592,41 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - 测后四个probe只更新头部状态注释并去掉末尾多余空行；还原后均精确复现受测SHA，
   完整AST不变，全部CPU审计重跑通过，最终SHA见本批README。新增计数器preflight
   的7项离线mock测试通过；原submission.py始终不变。
+
+### 2026-09-05：v731–v734 单次 Gate/Up 拼接 GEMM 与展开消融，未获收益
+
+- 继续从 v720 独立派生，仅针对 E32/H7168/I2048 Stage1。v731 用 M128、
+  Gate64+Up64 总N128、K64、256线程，官方 emitter 4x1 warps / warp32x128 /
+  k_pack1；v732 仅把该路径K改32。当前 Gate/Input/Up 同步装入 shared 后做
+  一次 GEMM，并用官方64-lane store map在同一线程配对 Gate/Up 做原 FP32
+  SwiGLU。无全局预拼接、额外launch或workspace，其他shape与Stage2保留v720。
+  N方向CTA翻倍，也使本地fixture的A逻辑读取增加1344MiB；不是只减少资源的单变量。
+- attempt1 高层 C(i,j)/C(i,j+64) epilogue 在 v731 LayoutInference失败，
+  helper随即停止，因此v732未在该次编译。attempt2换成官方 lane/local 映射后
+  两版编译成功。独立审计完整global/shared地址、K16顺序、C64槽与Up+16、
+  raw/padded输出覆盖、空块/尾块guard与全部同步通过。3个静态barrier site
+  对有效块的动态次数为223/447，不是每CTA只同步3次。
+- 本地quarter-C500，alternating64-220、raw4544/padded6144、seed20260903，
+  三次NaN污染后full/entry复算相对当前v720全部exact，bad=0/44040192。
+  这是同一随机输入的三次复算，不是三个seed或独立数学oracle。
+  无profiler、warmup1/iters1/四轮正反序：v720/v731/v732入口中位
+  **4.643456/6.898816/15.448192 ms**；候选配对中位增量
+  **+2256.384/+10783.104 us**，均0胜4负，明显变慢，不推荐OJ。
+- mcTracer独立常量诊断的最后两轮，v720/v731/v732 Stage1为
+  **2.936064/4.822528/13.908736 ms**，Stage2约1.67ms基本不变。
+  Stage1实际报告registers/thread **248/140/118**，dynamic shared
+  **32768/32768/16384 bytes**；private_per_thread/private_total原值均0。
+  寄存器/shared减少未转化为提速；没有采到带宽、stall或活跃occupancy计数器，
+  不能断言由spill、bank conflict或某个单一原因导致。trace不与无trace结果混算。
+- v733/v734分别只在v731/v732的两个K16微循环和三个输出循环把T.serial改
+  T.unroll。Python全AST隔离通过；生成源确实多5个pragma，并出现一处等价
+  row-valid条件内移，其余地址/同步/数学相同。不能据pragma推断native最终展开。
+  两版随机三次full/entry均exact；无trace四轮 v720/v733/v734 中位
+  **4.665984/6.929408/15.371008 ms**，配对中位增量
+  **+2263.424/+10701.440 us**，仍均0胜4负。展开未挽救本结构，停止推进这四版，
+  不浪费OJ提交；不声称所有拼接实现都无效，不跨批比较微小展开收益。
+- 完整源码、失败/成功编译、无trace随机日志、原始trace JSON和独立审计归档
+  bench_records/v731_v732/、v733_v734/。测后只改头部状态与末尾空行，反向还原
+  精确复现受测SHA，完整AST不变；最终源码CPU审计通过。GPU任务结束并释放codex锁。
+  origin/main新增提交已只读核对，没有新合规高分源或编号冲突；未覆盖其历史记录。
+  原submission.py不变，无新OJ成绩，已验证最高仍是v718/v719/v720 **80.33**。

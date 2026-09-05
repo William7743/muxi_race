@@ -1,0 +1,235 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-05 08:35:54  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_codegen_review_0` with `out_idx=None`
+2026-09-05 08:35:58  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_codegen_review_0`
+{"file": "probe_v731_v720_e32_stage1_concat_gu64_k64.py", "stage": 1, "case": 2, "weights_dtype": "float16", "source_sha256": "4132f97e6420a6fdd28e73ef094c0067a135b4c024903816bc681064cbe4a888", "source_characters": 8240, "adapter_libpath": "", "reported_n_regs": null, "reported_n_spills": null, "static_syncthreads_sites": 3, "shared_offsets": ["void* weight_shared = ((void*)((char*)buf_dyn_shmem + 0));", "void* input_shared = ((void*)((char*)buf_dyn_shmem + 16384));"], "local_array_declarations": ["float gu_local[64];", "half_t input_matrix[8];", "half_t weight_matrix[32];"], "outer_loop_headers": ["for (int k = 0; k < 111; ++k) {"], "route_load_source_lines": [], "note": "Static source sites/arrays are not dynamic barrier counts or physical register usage. Null reported resources mean unavailable, not zero."}
+SOURCE_BEGIN probe_v731_v720_e32_stage1_concat_gu64_k64.py
+#include <tl_templates/maca/gemm.h>
+#include <tl_templates/maca/copy.h>
+#include <tl_templates/maca/reduce.h>
+#include <tl_templates/maca/intrin.h>
+#include <tl_templates/maca/atomic.h>
+#include <tl_templates/maca/threadblock_swizzle.h>
+#include <tl_templates/maca/debug.h>
+
+extern "C" __global__ void stage1_codegen_review_0_kernel(const half_t* __restrict__ gate_w, const int* __restrict__ group_idx_for_bx, const int* __restrict__ group_padded_offsets, const int* __restrict__ group_sizes, const half_t* __restrict__ stacked_expert_tokens, half_t* __restrict__ up_logits, const half_t* __restrict__ up_w);
+extern "C" __global__ void __launch_bounds__(256, 1) stage1_codegen_review_0_kernel(const half_t* __restrict__ gate_w, const int* __restrict__ group_idx_for_bx, const int* __restrict__ group_padded_offsets, const int* __restrict__ group_sizes, const half_t* __restrict__ stacked_expert_tokens, half_t* __restrict__ up_logits, const half_t* __restrict__ up_w) {
+  extern __shared__ __align__(1024) uchar buf_dyn_shmem[];
+  void* weight_shared = ((void*)((char*)buf_dyn_shmem + 0));
+  void* input_shared = ((void*)((char*)buf_dyn_shmem + 16384));
+  float gu_local[64];
+  half_t input_matrix[8];
+  half_t weight_matrix[32];
+  const dim3 blockIdx = tl::rasterization2DColumn<3>();
+  int expert_id = group_idx_for_bx[((int)blockIdx.x)];
+  int group_size = group_sizes[((int64_t)expert_id)];
+  int padded_start = group_padded_offsets[((int64_t)expert_id)];
+  #pragma unroll
+  for (int i = 0; i < 16; ++i) {
+    float broadcast_var = 0x0p+0f/*0.000000e+00*/;
+    *(float4*)(gu_local + (i * 4)) = make_float4(broadcast_var, broadcast_var, broadcast_var, broadcast_var);
+  }
+  if (0 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+    for (int k = 0; k < 111; ++k) {
+      #pragma unroll
+      for (int i_1 = 0; i_1 < 4; ++i_1) {
+        *(uint2*)(((half_t*)weight_shared) + (((i_1 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(gate_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)458752)) + (((int64_t)i_1) * (int64_t)114688)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)7168)) + (((int64_t)k) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)));
+      }
+      #pragma unroll
+      for (int i_2 = 0; i_2 < 8; ++i_2) {
+        *(uint2*)(((half_t*)input_shared) + (((i_2 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(stacked_expert_tokens + (((((((int)blockIdx.x) * 917504) + (i_2 * 114688)) + ((((int)threadIdx.x) >> 4) * 7168)) + (k * 64)) + ((((int)threadIdx.x) & 15) * 4)));
+      }
+      #pragma unroll
+      for (int i_3 = 0; i_3 < 4; ++i_3) {
+        *(uint2*)(((half_t*)weight_shared) + ((((i_3 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4)) + 4096)) = *(uint2*)(up_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)458752)) + (((int64_t)i_3) * (int64_t)114688)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)7168)) + (((int64_t)k) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)));
+      }
+      __syncthreads();
+      for (int ki = 0; ki < 4; ++ki) {
+        for (int i_4 = 0; i_4 < 2; ++i_4) {
+          for (int local_id = 0; local_id < 4; ++local_id) {
+            input_matrix[((i_4 * 4) + local_id)] = ((half_t*)input_shared)[((((((((int)threadIdx.x) >> 6) * 2048) + (i_4 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id)];
+          }
+        }
+        for (int j = 0; j < 8; ++j) {
+          for (int local_id_1 = 0; local_id_1 < 4; ++local_id_1) {
+            weight_matrix[((j * 4) + local_id_1)] = ((half_t*)weight_shared)[((((j * 1024) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_1)];
+          }
+        }
+        for (int i_5 = 0; i_5 < 2; ++i_5) {
+          for (int j_1 = 0; j_1 < 8; ++j_1) {
+            {
+      *(((float32x4*)gu_local) + ((i_5 * 8) + j_1)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)weight_matrix) + j_1),
+                    *(((float16x4*)input_matrix) + i_5),
+                    *(((float32x4*)gu_local) + ((i_5 * 8) + j_1)));
+    };
+          }
+        }
+      }
+      __syncthreads();
+    }
+    #pragma unroll
+    for (int i_6 = 0; i_6 < 4; ++i_6) {
+      *(uint2*)(((half_t*)weight_shared) + (((i_6 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(gate_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)458752)) + (((int64_t)i_6) * (int64_t)114688)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)7168)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)) + (int64_t)7104));
+    }
+    #pragma unroll
+    for (int i_7 = 0; i_7 < 8; ++i_7) {
+      *(uint2*)(((half_t*)input_shared) + (((i_7 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4))) = *(uint2*)(stacked_expert_tokens + (((((((int)blockIdx.x) * 917504) + (i_7 * 114688)) + ((((int)threadIdx.x) >> 4) * 7168)) + ((((int)threadIdx.x) & 15) * 4)) + 7104));
+    }
+    #pragma unroll
+    for (int i_8 = 0; i_8 < 4; ++i_8) {
+      *(uint2*)(((half_t*)weight_shared) + ((((i_8 * 1024) + ((((int)threadIdx.x) >> 4) * 64)) + (((((int)threadIdx.x) & 15) ^ (((int)threadIdx.x) >> 4)) * 4)) + 4096)) = *(uint2*)(up_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)458752)) + (((int64_t)i_8) * (int64_t)114688)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)7168)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)4)) + (int64_t)7104));
+    }
+  }
+  __syncthreads();
+  if (0 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+    for (int ki_1 = 0; ki_1 < 4; ++ki_1) {
+      for (int i_9 = 0; i_9 < 2; ++i_9) {
+        for (int local_id_2 = 0; local_id_2 < 4; ++local_id_2) {
+          input_matrix[((i_9 * 4) + local_id_2)] = ((half_t*)input_shared)[((((((((int)threadIdx.x) >> 6) * 2048) + (i_9 * 1024)) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_1 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_2)];
+        }
+      }
+      for (int j_2 = 0; j_2 < 8; ++j_2) {
+        for (int local_id_3 = 0; local_id_3 < 4; ++local_id_3) {
+          weight_matrix[((j_2 * 4) + local_id_3)] = ((half_t*)weight_shared)[((((j_2 * 1024) + ((((int)threadIdx.x) & 15) * 64)) + ((((ki_1 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ (((int)threadIdx.x) & 15)) * 4)) + local_id_3)];
+        }
+      }
+      for (int i_10 = 0; i_10 < 2; ++i_10) {
+        for (int j_3 = 0; j_3 < 8; ++j_3) {
+          {
+      *(((float32x4*)gu_local) + ((i_10 * 8) + j_3)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)weight_matrix) + j_3),
+                    *(((float16x4*)input_matrix) + i_10),
+                    *(((float32x4*)gu_local) + ((i_10 * 8) + j_3)));
+    };
+        }
+      }
+    }
+  }
+  for (int row_tile = 0; row_tile < 2; ++row_tile) {
+    if (((((((int)threadIdx.x) >> 6) * 32) + (row_tile * 16)) + (((int)threadIdx.x) & 15)) < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+      for (int col_tile = 0; col_tile < 4; ++col_tile) {
+        for (int local_id_4 = 0; local_id_4 < 4; ++local_id_4) {
+          up_logits[((((((((((int)blockIdx.x) * 262144) + ((((int)threadIdx.x) >> 6) * 65536)) + (row_tile * 32768)) + ((((int)threadIdx.x) & 15) * 2048)) + (((int)blockIdx.y) * 64)) + (col_tile * 16)) + (((((int)threadIdx.x) & 63) >> 4) * 4)) + local_id_4)] = ((half_t)(gu_local[((((row_tile * 32) + (col_tile * 4)) + local_id_4) + 16)] * (gu_local[(((row_tile * 32) + (col_tile * 4)) + local_id_4)] * (0x1p+0f/*1.000000e+00*/ / (0x1p+0f/*1.000000e+00*/ + exp2f(((gu_local[(((row_tile * 32) + (col_tile * 4)) + local_id_4)] * -0x1p+0f/*-1.000000e+00*/) * 0x1.7154764ee6c2fp+0f/*1.442695e+00*/)))))));
+        }
+      }
+    }
+  }
+}
+
+
+SOURCE_END probe_v731_v720_e32_stage1_concat_gu64_k64.py
+2026-09-05 08:35:59  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `stage1_codegen_review_1` with `out_idx=None`
+2026-09-05 08:36:02  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `stage1_codegen_review_1`
+{"file": "probe_v732_v720_e32_stage1_concat_gu64_k32.py", "stage": 1, "case": 2, "weights_dtype": "float16", "source_sha256": "d7d0ee41065bd84376003ee43fd6a9816a8ce2f9ba48a4c2b6ba7f5818da32b9", "source_characters": 8299, "adapter_libpath": "", "reported_n_regs": null, "reported_n_spills": null, "static_syncthreads_sites": 3, "shared_offsets": ["void* weight_shared = ((void*)((char*)buf_dyn_shmem + 0));", "void* input_shared = ((void*)((char*)buf_dyn_shmem + 8192));"], "local_array_declarations": ["float gu_local[64];", "half_t input_matrix[8];", "half_t weight_matrix[32];"], "outer_loop_headers": ["for (int k = 0; k < 223; ++k) {"], "route_load_source_lines": [], "note": "Static source sites/arrays are not dynamic barrier counts or physical register usage. Null reported resources mean unavailable, not zero."}
+SOURCE_BEGIN probe_v732_v720_e32_stage1_concat_gu64_k32.py
+#include <tl_templates/maca/gemm.h>
+#include <tl_templates/maca/copy.h>
+#include <tl_templates/maca/reduce.h>
+#include <tl_templates/maca/intrin.h>
+#include <tl_templates/maca/atomic.h>
+#include <tl_templates/maca/threadblock_swizzle.h>
+#include <tl_templates/maca/debug.h>
+
+extern "C" __global__ void stage1_codegen_review_1_kernel(const half_t* __restrict__ gate_w, const int* __restrict__ group_idx_for_bx, const int* __restrict__ group_padded_offsets, const int* __restrict__ group_sizes, const half_t* __restrict__ stacked_expert_tokens, half_t* __restrict__ up_logits, const half_t* __restrict__ up_w);
+extern "C" __global__ void __launch_bounds__(256, 1) stage1_codegen_review_1_kernel(const half_t* __restrict__ gate_w, const int* __restrict__ group_idx_for_bx, const int* __restrict__ group_padded_offsets, const int* __restrict__ group_sizes, const half_t* __restrict__ stacked_expert_tokens, half_t* __restrict__ up_logits, const half_t* __restrict__ up_w) {
+  extern __shared__ __align__(1024) uchar buf_dyn_shmem[];
+  void* weight_shared = ((void*)((char*)buf_dyn_shmem + 0));
+  void* input_shared = ((void*)((char*)buf_dyn_shmem + 8192));
+  float gu_local[64];
+  half_t input_matrix[8];
+  half_t weight_matrix[32];
+  const dim3 blockIdx = tl::rasterization2DColumn<3>();
+  int expert_id = group_idx_for_bx[((int)blockIdx.x)];
+  int group_size = group_sizes[((int64_t)expert_id)];
+  int padded_start = group_padded_offsets[((int64_t)expert_id)];
+  #pragma unroll
+  for (int i = 0; i < 16; ++i) {
+    float broadcast_var = 0x0p+0f/*0.000000e+00*/;
+    *(float4*)(gu_local + (i * 4)) = make_float4(broadcast_var, broadcast_var, broadcast_var, broadcast_var);
+  }
+  if (0 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+    for (int k = 0; k < 223; ++k) {
+      #pragma unroll
+      for (int i_1 = 0; i_1 < 2; ++i_1) {
+        *(uint2*)(((half_t*)weight_shared) + (((i_1 * 1024) + ((((int)threadIdx.x) >> 3) * 32)) + (((((int)threadIdx.x) & 7) ^ ((((int)threadIdx.x) & 127) >> 4)) * 4))) = *(uint2*)(gate_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)458752)) + (((int64_t)i_1) * (int64_t)229376)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)3) * (int64_t)7168)) + (((int64_t)k) * (int64_t)32)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)7) * (int64_t)4)));
+      }
+      #pragma unroll
+      for (int i_2 = 0; i_2 < 4; ++i_2) {
+        *(uint2*)(((half_t*)input_shared) + (((i_2 * 1024) + ((((int)threadIdx.x) >> 3) * 32)) + (((((int)threadIdx.x) & 7) ^ ((((int)threadIdx.x) & 127) >> 4)) * 4))) = *(uint2*)(stacked_expert_tokens + (((((((int)blockIdx.x) * 917504) + (i_2 * 229376)) + ((((int)threadIdx.x) >> 3) * 7168)) + (k * 32)) + ((((int)threadIdx.x) & 7) * 4)));
+      }
+      #pragma unroll
+      for (int i_3 = 0; i_3 < 2; ++i_3) {
+        *(uint2*)(((half_t*)weight_shared) + ((((i_3 * 1024) + ((((int)threadIdx.x) >> 3) * 32)) + (((((int)threadIdx.x) & 7) ^ ((((int)threadIdx.x) & 127) >> 4)) * 4)) + 2048)) = *(uint2*)(up_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)458752)) + (((int64_t)i_3) * (int64_t)229376)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)3) * (int64_t)7168)) + (((int64_t)k) * (int64_t)32)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)7) * (int64_t)4)));
+      }
+      __syncthreads();
+      for (int ki = 0; ki < 2; ++ki) {
+        for (int i_4 = 0; i_4 < 2; ++i_4) {
+          for (int local_id = 0; local_id < 4; ++local_id) {
+            input_matrix[((i_4 * 4) + local_id)] = ((half_t*)input_shared)[((((((((int)threadIdx.x) >> 6) * 1024) + (i_4 * 512)) + ((((int)threadIdx.x) & 15) * 32)) + ((((ki * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ ((((int)threadIdx.x) & 15) >> 1)) * 4)) + local_id)];
+          }
+        }
+        for (int j = 0; j < 8; ++j) {
+          for (int local_id_1 = 0; local_id_1 < 4; ++local_id_1) {
+            weight_matrix[((j * 4) + local_id_1)] = ((half_t*)weight_shared)[((((j * 512) + ((((int)threadIdx.x) & 15) * 32)) + ((((ki * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ ((((int)threadIdx.x) & 15) >> 1)) * 4)) + local_id_1)];
+          }
+        }
+        for (int i_5 = 0; i_5 < 2; ++i_5) {
+          for (int j_1 = 0; j_1 < 8; ++j_1) {
+            {
+      *(((float32x4*)gu_local) + ((i_5 * 8) + j_1)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)weight_matrix) + j_1),
+                    *(((float16x4*)input_matrix) + i_5),
+                    *(((float32x4*)gu_local) + ((i_5 * 8) + j_1)));
+    };
+          }
+        }
+      }
+      __syncthreads();
+    }
+    #pragma unroll
+    for (int i_6 = 0; i_6 < 2; ++i_6) {
+      *(uint2*)(((half_t*)weight_shared) + (((i_6 * 1024) + ((((int)threadIdx.x) >> 3) * 32)) + (((((int)threadIdx.x) & 7) ^ ((((int)threadIdx.x) & 127) >> 4)) * 4))) = *(uint2*)(gate_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)458752)) + (((int64_t)i_6) * (int64_t)229376)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)3) * (int64_t)7168)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)7) * (int64_t)4)) + (int64_t)7136));
+    }
+    #pragma unroll
+    for (int i_7 = 0; i_7 < 4; ++i_7) {
+      *(uint2*)(((half_t*)input_shared) + (((i_7 * 1024) + ((((int)threadIdx.x) >> 3) * 32)) + (((((int)threadIdx.x) & 7) ^ ((((int)threadIdx.x) & 127) >> 4)) * 4))) = *(uint2*)(stacked_expert_tokens + (((((((int)blockIdx.x) * 917504) + (i_7 * 229376)) + ((((int)threadIdx.x) >> 3) * 7168)) + ((((int)threadIdx.x) & 7) * 4)) + 7136));
+    }
+    #pragma unroll
+    for (int i_8 = 0; i_8 < 2; ++i_8) {
+      *(uint2*)(((half_t*)weight_shared) + ((((i_8 * 1024) + ((((int)threadIdx.x) >> 3) * 32)) + (((((int)threadIdx.x) & 7) ^ ((((int)threadIdx.x) & 127) >> 4)) * 4)) + 2048)) = *(uint2*)(up_w + ((((((((int64_t)expert_id) * (int64_t)14680064) + (((int64_t)((int)blockIdx.y)) * (int64_t)458752)) + (((int64_t)i_8) * (int64_t)229376)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)3) * (int64_t)7168)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)7) * (int64_t)4)) + (int64_t)7136));
+    }
+  }
+  __syncthreads();
+  if (0 < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+    for (int ki_1 = 0; ki_1 < 2; ++ki_1) {
+      for (int i_9 = 0; i_9 < 2; ++i_9) {
+        for (int local_id_2 = 0; local_id_2 < 4; ++local_id_2) {
+          input_matrix[((i_9 * 4) + local_id_2)] = ((half_t*)input_shared)[((((((((int)threadIdx.x) >> 6) * 1024) + (i_9 * 512)) + ((((int)threadIdx.x) & 15) * 32)) + ((((ki_1 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ ((((int)threadIdx.x) & 15) >> 1)) * 4)) + local_id_2)];
+        }
+      }
+      for (int j_2 = 0; j_2 < 8; ++j_2) {
+        for (int local_id_3 = 0; local_id_3 < 4; ++local_id_3) {
+          weight_matrix[((j_2 * 4) + local_id_3)] = ((half_t*)weight_shared)[((((j_2 * 512) + ((((int)threadIdx.x) & 15) * 32)) + ((((ki_1 * 4) + ((((int)threadIdx.x) & 63) >> 4)) ^ ((((int)threadIdx.x) & 15) >> 1)) * 4)) + local_id_3)];
+        }
+      }
+      for (int i_10 = 0; i_10 < 2; ++i_10) {
+        for (int j_3 = 0; j_3 < 8; ++j_3) {
+          {
+      *(((float32x4*)gu_local) + ((i_10 * 8) + j_3)) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)weight_matrix) + j_3),
+                    *(((float16x4*)input_matrix) + i_10),
+                    *(((float32x4*)gu_local) + ((i_10 * 8) + j_3)));
+    };
+        }
+      }
+    }
+  }
+  for (int row_tile = 0; row_tile < 2; ++row_tile) {
+    if (((((((int)threadIdx.x) >> 6) * 32) + (row_tile * 16)) + (((int)threadIdx.x) & 15)) < ((group_size + padded_start) - (((int)blockIdx.x) * 128))) {
+      for (int col_tile = 0; col_tile < 4; ++col_tile) {
+        for (int local_id_4 = 0; local_id_4 < 4; ++local_id_4) {
+          up_logits[((((((((((int)blockIdx.x) * 262144) + ((((int)threadIdx.x) >> 6) * 65536)) + (row_tile * 32768)) + ((((int)threadIdx.x) & 15) * 2048)) + (((int)blockIdx.y) * 64)) + (col_tile * 16)) + (((((int)threadIdx.x) & 63) >> 4) * 4)) + local_id_4)] = ((half_t)(gu_local[((((row_tile * 32) + (col_tile * 4)) + local_id_4) + 16)] * (gu_local[(((row_tile * 32) + (col_tile * 4)) + local_id_4)] * (0x1p+0f/*1.000000e+00*/ / (0x1p+0f/*1.000000e+00*/ + exp2f(((gu_local[(((row_tile * 32) + (col_tile * 4)) + local_id_4)] * -0x1p+0f/*-1.000000e+00*/) * 0x1.7154764ee6c2fp+0f/*1.442695e+00*/)))))));
+        }
+      }
+    }
+  }
+}
+
+
+SOURCE_END probe_v732_v720_e32_stage1_concat_gu64_k32.py
