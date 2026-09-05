@@ -3934,3 +3934,39 @@ v450 的补丁命中了未使用的普通 Stage1 builder，已在开始 GPU 执�
 - 不把747升级为更优基线，保留748及既有80.33记录。请求已有两次提交的第三点详细
   耗时/分数（若页面可见），不要求新提交，不操作浏览器。当前没有新晋推荐候选；
   749-751第二fixture退步，752未GPU验证，均不推荐。
+
+### 2026-09-05：v753/v754 M32 Stage2调查与负例
+
+- v753基于748，仅E64 Stage2 tail64→32、emitter warp行16、清零扩展到32..127，
+  CPU语法/AST/分派检查通过。但本地E64 synthetic尾是40/41，不触发新分支，故停止
+  而未GPU测试；不把未测称作失败。官方M32布局pure函数CPU枚举另有可重跑审计。
+- v754转E32，独立Stage2三分支M128/M64/M32，仅exact E32 getter改变；两dtype生成源
+  旧full/M64正文核验保留，tiny地址/K顺序/route clamp/完整96行零填充通过。实际边界
+  raw2373/padded4608，两新Up/routes种子×FP32/FP16共4项bitwise全True、padding全零。
+  8条trace两版均154regs、共享32768，不以cold时长或private0推断性能/无spill。
+- synthetic/random实际entry三轮full/entry共12容差通过，warmup1/iters1/4F/R：
+  748中位5.080448ms，754中位5.105152ms，增加0.4863%，四对全慢。关闭推广，不跑
+  第二fixture，不OJ；源码/CPU/codegen/trace/完整日志归档bench_records/v753_v754/。
+
+### 2026-09-05：最后实验v755完成，按用户明确要求停止迭代
+
+- 用户要求“最后一版吧，做完就不再优化”。v755是最后候选：以冻结748为底，仅exact
+  E32 Stage1增加<=32行T.gemm分支，保留M128/M64、GIU当前Up预取、terminal K111、
+  Square/256threads/kpack2/共享32KiB/SwiGLU/有效行写，Stage2/E16/E64/host不改。
+  不包含754；原submission.py不覆盖。源码SHA为
+  0b19e84d1695a16bca424ad7fd91f3a51b8baeb4f9e8b3cbf2fc3501224f94de。
+- Python/Ruff、整模块AST/原路径文本、216组host双fresh及387行数/K序列CPU检查通过。
+  实际生成源核验旧full/M64正文保留、M32 A/C映射/当前Up预取/terminal111/guard通过；
+  每正CTA选中一个分支，源层同步111*5+4=559，非三分支同时执行。
+  E32 raw2373/padded4608边界两新X/routes种子：S1有效行2项和双dtype当前链4项共6项
+  实际bitwise全True、S1 padding保持NaN、输出padding全零。12条trace S1两版248regs、
+  S2两版154regs、共享32768，不作occupancy/无spill推论，不用cold trace时长作收益。
+- profiler关闭、warmup1/iters1/4F/R、每窗3次同输入full/entry容差复算全部通过。
+  synthetic/random：748/755中位5.085056/5.036032ms，减少0.9641%、4/4配对快。
+  alternating64-220/random无<=32正行块：4.441856/4.444032ms，增加0.0490%、1/4快；
+  仅是本窗近中性，不能说零开销或统计等价。第一窗参照保存v432，第二窗参照fresh748，
+  均非独立OJ oracle；未把六位max_abs0当entry bitwise。完整样本不删不跨fixture混合。
+- **755可作为最后一次手动OJ候选，尚无OJ分数；不宣称超过748。** 若直接封版不再测，
+  仍选已有140335 Accepted80.33的748。原始记录全部归档bench_records/v755/。
+  最后GPU测试已结束，14:05:13UTC确认无GPU进程/切片0占用并释放codex锁。
+  遵照用户最新要求，此处停止优化，无756+、无新的自动OJ或后台优化工作。
