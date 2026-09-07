@@ -9,8 +9,12 @@ cases but is dramatically slower and fails launching D64/BS32; NSA016 shared
 probability bridge passes all four cases but remains 13–49x slower. See VECTOR015.md.
 NSA013 broader D64/BS32 sweep passes all8 (seed327). Large grids improve
 45.13->36.97us and81.75->65.56us; small grids do not consistently improve.
-NSA017 combines NSA007 with gated NSA013 D64/D128 BS32 paths; full public109
-paired comparison is running (seed328), not yet a submission recommendation.
+NSA017 combines NSA007 with gated NSA013 D64/D128 BS32 paths. Full public109
+passes for both baseline and candidate (seed328): overall geomean1.00816x;
+changed5 geomean1.19924x; unchanged104 geomean0.99978x. See PUBLIC017.md.
+NSA018 D64 CK2/CV4 passes four checks but regresses changed D64 cases:
+BS16 29.76->220.20us, BS32 46.43->109.16us. Reject. NSA019 changes only
+D64 CV to2 (output tile32 rather than16); paired seed330 running.
 
 NSA014 padding to32 passes but regresses BS16 (56.56->60.70us); reject there.
 BS32 gain repeats (~80.20->65.74us). Full-PV CV1 sweep completes all checks;
