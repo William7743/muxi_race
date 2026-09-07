@@ -1,0 +1,44 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 32, "S": 1, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 32, "S": 1, "block_size": 16, "is_causal": true}, "candidate": "candidate", "phase": "compile_correctness"}
+2026-09-07 08:31:28  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `vector_kernel` with `out_idx=None`
+2026-09-07 08:31:31  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `vector_kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 32, "S": 1, "block_size": 16, "is_causal": true}, "seed": 325, "status": "PASS", "call_event_ms": {"baseline": [0.017459200322628023, 0.015513600409030914, 0.015334400534629821, 0.01515520066022873], "candidate": [0.6096896171569824, 0.6095615863800049, 0.6094848155975342, 0.6093056201934814]}, "median_ms": {"baseline": 0.015424000471830367, "candidate": 0.6095232009887696}, "baseline_over_candidate": 0.025305026038072918}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 32, "S": 1, "block_size": 32, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 32, "S": 1, "block_size": 32, "is_causal": true}, "candidate": "candidate", "phase": "compile_correctness"}
+2026-09-07 08:31:33  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `vector_kernel` with `out_idx=None`
+2026-09-07 08:31:37  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `vector_kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 32, "S": 1, "block_size": 32, "is_causal": true}, "seed": 325, "status": "PASS", "call_event_ms": {"baseline": [0.02396160066127777, 0.022886399924755097, 0.02237440049648285, 0.021376000344753267], "candidate": [2.3113983154296873, 2.313369560241699, 2.310220718383789, 2.3135488510131834]}, "median_ms": {"baseline": 0.022630400210618976, "candidate": 2.312383937835693}, "baseline_over_candidate": 0.009786610190607102}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 1, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 1, "block_size": 16, "is_causal": true}, "candidate": "candidate", "phase": "compile_correctness"}
+2026-09-07 08:31:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `vector_kernel` with `out_idx=None`
+2026-09-07 08:31:48  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `vector_kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 1, "block_size": 16, "is_causal": true}, "seed": 325, "status": "PASS", "call_event_ms": {"baseline": [0.032179200649261476, 0.03038719892501831, 0.03031040132045746, 0.029798400402069092], "candidate": [6.835379028320313, 6.809164428710938, 6.838527679443359, 6.836249542236328]}, "median_ms": {"baseline": 0.030348800122737885, "candidate": 6.835814285278321}, "baseline_over_candidate": 0.004439675926845668}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 1, "block_size": 32, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 1, "block_size": 32, "is_causal": true}, "candidate": "candidate", "phase": "compile_correctness"}
+2026-09-07 08:31:51  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `vector_kernel` with `out_idx=None`
+2026-09-07 08:31:57  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `vector_kernel`
+[08:31:59.974][MCR][E]mc_platform.cpp          :91  : Error in allocating private memory because the private memory size required in the kernel is greater than the maximum value set by the system, You can change insmod metax.ko by specifying parameters: pri_mem_sz=XXX.The system is set to :4 KB/Thread,kernel request:5 KB/thread
+[08:31:59.974][MCR][E]mc_runtime_api.cpp       :513 : 166611: [7fdff65e1740] mcModuleLaunchKernel: Returned mcErrorMemoryValueTooLarge
+Traceback (most recent call last):
+  File "/root/nsa_20260907_codex/nsa/tests/compare_s1.py", line 95, in <module>
+    main()
+  File "/root/nsa_20260907_codex/nsa/tests/compare_s1.py", line 72, in main
+    mod.run_kernel(q,k,v,idx,outs[name],*args)
+  File "/root/nsa_20260907_codex/nsa/probes/probe_nsa015_vector_reduce.py", line 337, in run_kernel
+    kernel(q, k, v, block_indices, output)
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/kernel.py", line 202, in __call__
+    return self.torch_function(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/adapter/tvm_ffi.py", line 253, in func
+    executable(*tensor_list)
+  File "/opt/tilelang-metax-v0.1.10/3rdparty/tvm/python/tvm/runtime/executable.py", line 46, in __call__
+    return self.jit().main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/tvm_ffi/cython/function.pxi", line 968, in tvm_ffi.core.Function.__call__
+  File "<unknown>", line 0, in tvm::runtime::detail::PackFuncPackedArgAligned_<0, tvm::runtime::MACAWrappedFunc>(tvm::runtime::MACAWrappedFunc, std::vector<tvm::runtime::detail::ArgConvertCode, std::allocator<tvm::runtime::detail::ArgConvertCode> > const&)::{lambda(tvm::ffi::PackedArgs, tvm::ffi::Any*)#1}::operator()(tvm::ffi::PackedArgs, tvm::ffi::Any*) const
+  File "/opt/tilelang-metax-v0.1.10/src/backend/maca/runtime/maca_module.cc", line 238, in void tvm::runtime::MACAWrappedFunc::operator()(tvm::ffi::PackedArgs, tvm::ffi::Any*, void*, size_t) const
+    TVM_FFI_THROW(InternalError) << os.str();
+
+tvm.error.InternalError: MACALaunch Error: mcErrorMemoryValueTooLarge
+ grid=(1024,16,1),  block=(64,1,1) dyn_smem_bytes=256
