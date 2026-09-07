@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA085 early online V load: paired0859/9 PASS, changed paths slight
+regression/parity; no established benefit. Keep078. See ONLINE085.md.
+
 NSA084 online reciprocal epilogue: paired0849/9 PASS, under0.5%
 timing difference, no established gain. Generated source differs only
 at epilogue. Keep078; see ONLINE084.md.
