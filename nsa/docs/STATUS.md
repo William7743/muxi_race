@@ -4,6 +4,11 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+profile090 completed retained078 B8/L4096 D64/S1: correctness PASS;
+MMA duty5.57%, shared non-conflict78.95%, WSM/VLS stalls. VLS duty0%
+is suspect; counters guide shared-exchange investigation, not a confirmed
+bandwidth diagnosis. See PROFILE090.md. Keep078.
+
 NSA089 unrolled two-query CTA: paired08929/29 PASS, geom0.8202,
 sum-time ratio0.7710 versus078. Reject; serial/unrolled grouping both
 regress. See SIMPLE089.md. Keep078.

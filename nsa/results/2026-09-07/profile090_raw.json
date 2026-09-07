@@ -1,0 +1,51 @@
+{
+    "ISU Statistics": [
+        {
+            "data": {
+                "wsm_stall": 1984588.0,
+                "vls_pipeline_stall": 2077013.0,
+                "vls_wdata_stall": 1028512.0,
+                "valu_stall": 0.0
+            },
+            "isError": false,
+            "message": "",
+            "name": "ISU stall cycles layout"
+        }
+    ],
+    "Memory Statistics": [
+        {
+            "data": 75350336.0,
+            "isError": false,
+            "message": "",
+            "name": "Global Memory Read bytes"
+        }
+    ],
+    "Workgroup Memory": [
+        {
+            "data": 78.94802340927922,
+            "isError": false,
+            "message": "",
+            "name": "shared memory access efficiency"
+        }
+    ],
+    "GPU Throughput Statistics": [
+        {
+            "data": 5.571978842229708,
+            "isError": false,
+            "message": "",
+            "name": "AP MMA Duty ratio"
+        },
+        {
+            "data": 0.0,
+            "isError": false,
+            "message": "",
+            "name": "VLS Duty ratio"
+        },
+        {
+            "data": 2.3800952342706,
+            "isError": false,
+            "message": "",
+            "name": "L2C Duty ratio"
+        }
+    ]
+}
