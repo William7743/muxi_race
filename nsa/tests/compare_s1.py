@@ -23,7 +23,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', type=Path, default=ROOT / 'baselines/oj_115804.py')
     parser.add_argument('--candidate', type=Path, default=ROOT / 'probes/probe_nsa003_bs32_ck4.py')
-    parser.add_argument('--suite', choices=['bs32','qfragment'], default='bs32')
+    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','public'], default='bs32')
+    parser.add_argument('--seed', type=int, default=314)
     parser.add_argument('--output-dir', type=Path,
                         default=ROOT / 'results' / datetime.now().strftime('local-%Y%m%d-%H%M%S-%f'))
     options = parser.parse_args()
@@ -31,15 +32,22 @@ def main():
     mods = {'baseline': load('old', options.baseline),
             'candidate': load('new', options.candidate)}
     with open(ROOT / 'vendor/public_20260907/test_cases_nsa_fwd.json') as f:
-        cases = [x for x in json.load(f) if x['S'] == 1 and x['D'] == 128 and x['block_size'] == 32]
+        public_cases = json.load(f)
+        cases = [x for x in public_cases if x['S'] == 1 and x['D'] == 128 and x['block_size'] == 32]
     cases += [dict(B=2,SEQ_LEN=512,H=h,HQ=hq,D=128,S=1,block_size=32,is_causal=True) for h,hq in ((2,16),(1,32))]
     if options.suite == 'qfragment':
         cases = [dict(B=4,SEQ_LEN=1024,H=1,HQ=16,D=d,S=1,block_size=bs,is_causal=True)
                  for d in (32,64) for bs in (16,32)]
+    if options.suite == 'qwide':
+        cases = [dict(B=b,SEQ_LEN=l,H=1,HQ=16,D=64,S=1,block_size=32,is_causal=True)
+                 for b,l in ((1,128),(1,512),(1,1024),(2,512),(2,1024),(4,1024),(8,1024))]
+        cases += [dict(B=2,SEQ_LEN=512,H=1,HQ=32,D=64,S=1,block_size=32,is_causal=True)]
+    if options.suite == 'public':
+        cases = public_cases
     for tc in cases:
         args = tuple(tc[x] for x in ('B','SEQ_LEN','H','HQ','D','S','block_size','is_causal'))
         b, length, h, hq, dim, selected, bs, causal = args
-        torch.manual_seed(314)
+        torch.manual_seed(options.seed)
         q = torch.randn(b, length, hq, dim, device='cuda', dtype=torch.float16)
         k = torch.randn(b, length, h, dim, device='cuda', dtype=torch.float16)
         v = torch.randn_like(k)
@@ -71,7 +79,7 @@ def main():
                 end.synchronize()
                 times[name].append(start.elapsed_time(end)/10)
         medians = {name:statistics.median(xs) for name,xs in times.items()}
-        result = dict(case=tc,status='PASS',call_event_ms=times,median_ms=medians,
+        result = dict(case=tc,seed=options.seed,status='PASS',call_event_ms=times,median_ms=medians,
                       baseline_over_candidate=medians['baseline']/medians['candidate'])
         print(json.dumps(result),flush=True)
         with open(options.output_dir / 'paired_s1_results.jsonl','a') as f:

@@ -4,6 +4,12 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA004 expanded seed315 test: eight D64/BS32 configurations pass; large work
+benefits, small work regresses. NSA006 padded G8 fallback passes12 checks
+(D32/64/128 x S1/4 x two seeds). NSA007 combines work-gated optimizations and
+fallback. Public109 full entry-point comparison started (seed316), pending.
+See QWIDE004_SMALL006.md. No final recommendation or OJ-score claim.
+
 S1 D128 split sweep now has concrete local evidence: CK4/CV4 versus baseline
 CK2/CV4 is 69.20 vs79.97 us for B2/L2048/H1/HQ16/BS32, but regresses BS16
 (74.21 vs54.60 us). Six non-baseline split combinations plus baseline were
