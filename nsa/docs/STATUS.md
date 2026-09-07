@@ -4,8 +4,8 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
-NSA079 online unroll experiment syntax PASS, source079 export running.
-See UNROLL079.md. NSA078 retained; no079 gain established.
+NSA079 paired0799/9 PASS, changed S8 cases about10% slower than078;
+not promoted. See UNROLL079.md. NSA078 retained.
 
 Current local working candidate: NSA078. Public109 PASS, direct057
 sparse repeat confirms changed-path gain, expanded edges108/108 PASS,
