@@ -1,0 +1,27 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case": [4, 1024, 1, 16, 128, 1, 16, 1], "variant": "ck2_cv4", "phase": "compile"}
+2026-09-07 07:51:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:51:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": [4, 1024, 1, 16, 128, 1, 16, 1], "variant": "ck1_cv2", "phase": "compile"}
+2026-09-07 07:51:43  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:51:47  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": [4, 1024, 1, 16, 128, 1, 16, 1], "variant": "ck2_cv2", "phase": "compile"}
+2026-09-07 07:51:47  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:51:51  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": [4, 1024, 1, 16, 128, 1, 16, 1], "variant": "ck1_cv4", "phase": "compile"}
+2026-09-07 07:51:51  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:51:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": [4, 1024, 1, 16, 128, 1, 16, 1], "seed": 2026, "status": "PASS", "direct_callable_us": {"ck2_cv4": [54.86080050468445, 54.7327995300293, 55.219197273254395, 55.42399883270264], "ck1_cv2": [68.71039867401123, 69.35039758682251, 69.04320120811462, 67.60960221290588], "ck2_cv2": [57.24160075187683, 56.34559988975525, 57.39520192146301, 56.88319802284241], "ck1_cv4": [64.6399974822998, 64.51200246810913, 64.20480012893677, 64.35840129852295]}, "median_us": {"ck2_cv4": 55.03999888896942, "ck1_cv2": 68.87679994106293, "ck2_cv2": 57.06239938735962, "ck1_cv4": 64.43520188331604}}
+{"case": [2, 2048, 1, 16, 128, 1, 32, 1], "variant": "ck2_cv4", "phase": "compile"}
+2026-09-07 07:51:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:51:59  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": [2, 2048, 1, 16, 128, 1, 32, 1], "variant": "ck1_cv2", "phase": "compile"}
+2026-09-07 07:52:00  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:52:03  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": [2, 2048, 1, 16, 128, 1, 32, 1], "variant": "ck2_cv2", "phase": "compile"}
+2026-09-07 07:52:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:52:08  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": [2, 2048, 1, 16, 128, 1, 32, 1], "variant": "ck1_cv4", "phase": "compile"}
+2026-09-07 07:52:08  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:52:12  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": [2, 2048, 1, 16, 128, 1, 32, 1], "seed": 2026, "status": "PASS", "direct_callable_us": {"ck2_cv4": [80.25599718093872, 80.05120158195496, 80.02560138702393, 79.64159846305847], "ck1_cv2": [114.22719955444336, 114.86719846725464, 114.38080072402954, 114.38080072402954], "ck2_cv2": [82.150399684906, 81.81759715080261, 81.51040077209473, 81.81759715080261], "ck1_cv4": [116.24959707260132, 116.24959707260132, 116.50559902191162, 116.12160205841064]}, "median_us": {"ck2_cv4": 80.03840148448944, "ck1_cv2": 114.38080072402954, "ck2_cv2": 81.81759715080261, "ck1_cv4": 116.24959707260132}}

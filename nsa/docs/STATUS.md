@@ -4,6 +4,15 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+S1 D128 split sweep now has concrete local evidence: CK4/CV4 versus baseline
+CK2/CV4 is 69.20 vs79.97 us for B2/L2048/H1/HQ16/BS32, but regresses BS16
+(74.21 vs54.60 us). Six non-baseline split combinations plus baseline were
+tested across two configurations; all checks passed. See S1_SWEEP.md and raw
+rounds under results/2026-09-07. No promotion or OJ-score claim yet.
+New-process seed2027 repeat also passes: BS32 baseline80.96 vs CK4/CV4 68.67us.
+Experimental NSA003 records the BS32-only rule and passes syntax checking;
+full run_kernel testing and wider shape coverage remain next gates.
+
 User supplied source and identified OJ #115804 (reported score 82.86).
 Frozen as `baselines/oj_115804.py`; see `baselines/PROVENANCE.md`.
 GPU kernels and shape dispatch match the already tested historical baseline;
