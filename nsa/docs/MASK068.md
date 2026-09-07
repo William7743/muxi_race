@@ -27,3 +27,8 @@ for D64/BS16 simple kernel, write with T.Parallel and use transpose_B=True
 for PV T.gemm. No external computation or cached result. Hypothesis is
 different PV operand layout; possible load/store overhead must be measured.
 Syntax PASS; d64070 seed421 launched after069 terminal. Results pending.
+
+NSA070 completed29/29 PASS, reference/candidate geomean0.810117694x,
+cumulative ratio0.728728112x. Clear regression; do not promote.
+Next action: source057simple exports current057 D32/D64 BS16 generated
+code for inspection. No further candidate queued before inspection.
