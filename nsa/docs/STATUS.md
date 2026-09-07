@@ -8,8 +8,9 @@ NSA032 ordinary safe-off CV1 direct NSA028 comparison passes both cases:
 BS16 50.522->48.230us, BS32 unchanged control61.440->61.478us.
 Full public109 seed359 all PASS, geomean1.0506872x, but two ordinary BS32
 cases regress. NSA033 gates CV1 to BS16; public109 seed360 all PASS,
-geomean1.05438805x vs #115804. Direct31 D128 parent comparison running
-seed361; see GATED033.md. Still provisional, no OJ score established.
+geomean1.05438805x vs #115804. Direct31 D128 parent comparison all PASS
+seed361, geomean1.02860972x vs NSA028. Independent full109 repeat seed362
+running; see GATED033.md. Still provisional, no OJ score established.
 See ORDINARY032.md; not yet promoted.
 
 NSA030 shared safe-off chunk CV2 passes two-case checks, including direct
