@@ -4,6 +4,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA014 padding to32 passes but regresses BS16 (56.56->60.70us); reject there.
+BS32 gain repeats (~80.20->65.74us). Full-PV CV1 sweep completes all checks;
+BS16 best only~1% difference, BS32 regresses. No promotion; see PAD014.md.
+
 NSA012 BS32 compilation fails due to probability-fragment layout conflict.
 NSA013 shared probability resolves it and passes six cases. D64/BS32
 46.31->37.30us; D128/BS32 79.31->65.51us. D32 regresses; no global promotion.
