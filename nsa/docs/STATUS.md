@@ -4,6 +4,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA089 unrolled two-query CTA: paired08929/29 PASS, geom0.8202,
+sum-time ratio0.7710 versus078. Reject; serial/unrolled grouping both
+regress. See SIMPLE089.md. Keep078.
+
 NSA088 D64/BS16 two serial queries per CTA: paired08829/29 PASS,
 geom0.8210 and sum-time ratio0.7738 versus078. Large grids regress too;
 reject. See SIMPLE088.md. Keep078.
