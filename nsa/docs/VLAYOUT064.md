@@ -10,3 +10,8 @@ G16 also affected by this experimental source, needs gating/test if useful.
 g32064 all7 PASS. Changed candidate20.147,20.339,34.445,60.378,
 115.354us: slower than recent057, reject064. NSA065 changes only the
 Vs annotation to vec16; g32065 seed416 launched to test wider layout.
+
+g32065 completed7/7 PASS. Candidate us11.354,14.067,19.046,19.072,
+31.808,54.221,100.890. No improvement over recent057 default layout;
+do not promote065. Preserve default Vs layout. These tests do not identify
+the actual bank-conflict rate; require counters for such a claim.
