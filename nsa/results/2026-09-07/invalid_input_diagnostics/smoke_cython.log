@@ -1,0 +1,21 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 0, "phase": "before_run"}
+2026-09-07 07:11:08  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:11:15  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+Traceback (most recent call last):
+  File "/root/nsa_20260907_codex/smoke_nsa.py", line 81, in <module>
+    main()
+  File "/root/nsa_20260907_codex/smoke_nsa.py", line 61, in main
+    mod.run_kernel(q, k, v, idx, output, *case)
+  File "/root/nsa_20260907_codex/diag_serial_cython.py", line 303, in run_kernel
+    kernel(q, k, v, block_indices, output)
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/kernel.py", line 202, in __call__
+    return self.torch_function(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/adapter/cython/adapter.py", line 359, in lambda_forward
+    return self.cython_wrapper.forward([*args], stream=stream, skip_tensor_validation=skip_tensor_validation)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "../tilelang/jit/adapter/cython/cython_wrapper.pyx", line 164, in tilelang_cython_wrapper.CythonKernelWrapper.forward
+  File "../tilelang/jit/adapter/cython/cython_wrapper.pyx", line 264, in tilelang_cython_wrapper.CythonKernelWrapper.forward
+  File "../tilelang/jit/adapter/cython/cython_wrapper.pyx", line 143, in tilelang_cython_wrapper.CythonKernelWrapper._check_static_strides
+ValueError: Static stride mismatch for parameter BI: expected 8 at index 1, got 1

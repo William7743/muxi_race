@@ -1,0 +1,11 @@
+# Local SSH helpers, session state and credentials must never be committed.
+.local/
+__pycache__/
+*.pyc
+.env
+.env.*
+*credentials*
+*.pem
+*.key
+# These reviewed experiment logs intentionally override the repository-wide *.log rule.
+!results/**/*.log

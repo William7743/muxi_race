@@ -1,0 +1,64 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case": {"B": 1, "SEQ_LEN": 256, "H": 1, "HQ": 16, "D": 64, "S": 2, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+2026-09-07 07:14:10  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:14:14  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 1, "SEQ_LEN": 256, "H": 1, "HQ": 16, "D": 64, "S": 2, "block_size": 16, "is_causal": true}, "candidate": "gather", "phase": "compile_correctness"}
+2026-09-07 07:14:14  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-07 07:14:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+{"case": {"B": 1, "SEQ_LEN": 256, "H": 1, "HQ": 16, "D": 64, "S": 2, "block_size": 16, "is_causal": true}, "status": "PASS", "call_event_ms": {"baseline": [0.014668799936771393, 0.011110399663448334, 0.01090560033917427, 0.010521599650382995], "gather": [0.012083200365304947, 0.011110399663448334, 0.010726399719715118, 0.010931199789047242]}, "median_ms": {"baseline": 0.011008000001311302, "gather": 0.011020799726247789}, "baseline_over_gather": 0.9988385847439}
+{"case": {"B": 2, "SEQ_LEN": 512, "H": 1, "HQ": 16, "D": 64, "S": 2, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+2026-09-07 07:14:18  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:14:22  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 2, "SEQ_LEN": 512, "H": 1, "HQ": 16, "D": 64, "S": 2, "block_size": 16, "is_causal": true}, "candidate": "gather", "phase": "compile_correctness"}
+2026-09-07 07:14:23  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-07 07:14:26  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+{"case": {"B": 2, "SEQ_LEN": 512, "H": 1, "HQ": 16, "D": 64, "S": 2, "block_size": 16, "is_causal": true}, "status": "PASS", "call_event_ms": {"baseline": [0.02022400051355362, 0.01886720061302185, 0.018764799833297728, 0.018611200153827667], "gather": [0.013593600690364837, 0.013414399325847625, 0.013158400356769562, 0.013209599256515502]}, "median_ms": {"baseline": 0.01881600022315979, "gather": 0.013311999291181563}, "baseline_over_gather": 1.4134616304873386}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 2, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+2026-09-07 07:14:27  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:14:30  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 2, "block_size": 16, "is_causal": true}, "candidate": "gather", "phase": "compile_correctness"}
+2026-09-07 07:14:31  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-07 07:14:34  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 2, "block_size": 16, "is_causal": true}, "status": "PASS", "call_event_ms": {"baseline": [0.05181440114974976, 0.050355201959609984, 0.050432002544403075, 0.05015040040016174], "gather": [0.04188160002231598, 0.04183039963245392, 0.04190720021724701, 0.04170239865779877]}, "median_ms": {"baseline": 0.05039360225200653, "gather": 0.04185599982738495}, "baseline_over_gather": 1.20397559393709}
+{"case": {"B": 1, "SEQ_LEN": 256, "H": 1, "HQ": 16, "D": 64, "S": 4, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+2026-09-07 07:14:35  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:14:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 1, "SEQ_LEN": 256, "H": 1, "HQ": 16, "D": 64, "S": 4, "block_size": 16, "is_causal": true}, "candidate": "gather", "phase": "compile_correctness"}
+2026-09-07 07:14:40  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-07 07:14:43  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+{"case": {"B": 1, "SEQ_LEN": 256, "H": 1, "HQ": 16, "D": 64, "S": 4, "block_size": 16, "is_causal": true}, "status": "PASS", "call_event_ms": {"baseline": [0.017228800058364867, 0.015897600352764128, 0.015846399962902068, 0.015667200088500977], "gather": [0.01377280056476593, 0.013593600690364837, 0.013209599256515502, 0.013286399841308593]}, "median_ms": {"baseline": 0.015872000157833098, "gather": 0.013440000265836714}, "baseline_over_gather": 1.180952369337247}
+{"case": {"B": 2, "SEQ_LEN": 512, "H": 1, "HQ": 16, "D": 64, "S": 4, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+2026-09-07 07:14:44  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:14:47  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 2, "SEQ_LEN": 512, "H": 1, "HQ": 16, "D": 64, "S": 4, "block_size": 16, "is_causal": true}, "candidate": "gather", "phase": "compile_correctness"}
+2026-09-07 07:14:48  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-07 07:14:51  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+{"case": {"B": 2, "SEQ_LEN": 512, "H": 1, "HQ": 16, "D": 64, "S": 4, "block_size": 16, "is_causal": true}, "status": "PASS", "call_event_ms": {"baseline": [0.028313601016998292, 0.027033600211143493, 0.026931199431419372, 0.02685439884662628], "gather": [0.025856000185012818, 0.025676798820495606, 0.02529279887676239, 0.02542079985141754]}, "median_ms": {"baseline": 0.026982399821281432, "gather": 0.025548799335956572}, "baseline_over_gather": 1.0561122449033156}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 4, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+2026-09-07 07:14:52  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:14:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 4, "block_size": 16, "is_causal": true}, "candidate": "gather", "phase": "compile_correctness"}
+2026-09-07 07:14:57  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-07 07:15:00  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 4, "block_size": 16, "is_causal": true}, "status": "PASS", "call_event_ms": {"baseline": [0.07956479787826538, 0.07836160063743591, 0.07915520071983337, 0.07813119888305664], "gather": [0.08291839957237243, 0.08266239762306213, 0.3160576105117798, 0.08250880241394043]}, "median_ms": {"baseline": 0.07875840067863464, "gather": 0.08279039859771728}, "baseline_over_gather": 0.9512987256085779}
+{"case": {"B": 1, "SEQ_LEN": 256, "H": 1, "HQ": 16, "D": 64, "S": 8, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+2026-09-07 07:15:01  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:15:05  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 1, "SEQ_LEN": 256, "H": 1, "HQ": 16, "D": 64, "S": 8, "block_size": 16, "is_causal": true}, "candidate": "gather", "phase": "compile_correctness"}
+2026-09-07 07:15:06  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-07 07:15:09  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+{"case": {"B": 1, "SEQ_LEN": 256, "H": 1, "HQ": 16, "D": 64, "S": 8, "block_size": 16, "is_causal": true}, "status": "PASS", "call_event_ms": {"baseline": [0.026086398959159852, 0.02534399926662445, 0.02465279996395111, 0.02462719976902008], "gather": [0.021273599565029146, 0.02101760059595108, 0.0208639994263649, 0.02088959962129593]}, "median_ms": {"baseline": 0.02499839961528778, "gather": 0.020953600108623505}, "baseline_over_gather": 1.1930360169945033}
+{"case": {"B": 2, "SEQ_LEN": 512, "H": 1, "HQ": 16, "D": 64, "S": 8, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+2026-09-07 07:15:10  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:15:13  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 2, "SEQ_LEN": 512, "H": 1, "HQ": 16, "D": 64, "S": 8, "block_size": 16, "is_causal": true}, "candidate": "gather", "phase": "compile_correctness"}
+2026-09-07 07:15:14  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-07 07:15:17  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+{"case": {"B": 2, "SEQ_LEN": 512, "H": 1, "HQ": 16, "D": 64, "S": 8, "block_size": 16, "is_causal": true}, "status": "PASS", "call_event_ms": {"baseline": [0.04083200097084046, 0.039705601334571836, 0.0394239991903305, 0.03939839899539947], "gather": [0.07080960273742676, 0.07037439942359924, 0.07063040137290955, 0.07032319903373718]}, "median_ms": {"baseline": 0.03956480026245117, "gather": 0.0705024003982544}, "baseline_over_gather": 0.561183733304927}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 8, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+2026-09-07 07:15:18  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 07:15:22  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 8, "block_size": 16, "is_causal": true}, "candidate": "gather", "phase": "compile_correctness"}
+2026-09-07 07:15:23  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-07 07:15:26  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 64, "S": 8, "block_size": 16, "is_causal": true}, "status": "PASS", "call_event_ms": {"baseline": [0.12372479438781739, 0.12167680263519287, 0.12177920341491699, 0.12131839990615845], "gather": [0.24934399127960205, 0.2490367889404297, 0.24865279197692872, 0.24872961044311523]}, "median_ms": {"baseline": 0.12172800302505493, "gather": 0.24888319969177247}, "baseline_over_gather": 0.48909690640351805}

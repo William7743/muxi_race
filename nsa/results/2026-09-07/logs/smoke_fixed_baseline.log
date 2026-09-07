@@ -1,0 +1,25 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 0, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 0, "status": "PASS", "max_error": 0.0012853145599365234, "first_call_s": 0.11374083580449224, "exploratory_ms": 0.03840000182390213}
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 17, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 17, "status": "PASS", "max_error": 0.001232147216796875, "first_call_s": 9.964592754840851e-05, "exploratory_ms": 0.032255999743938446}
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 0, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 0, "status": "PASS", "max_error": 0.0015857219696044922, "first_call_s": 0.1054643546231091, "exploratory_ms": 0.03379200026392937}
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 17, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 17, "status": "PASS", "max_error": 0.0014605522155761719, "first_call_s": 6.690481677651405e-05, "exploratory_ms": 0.034304000437259674}
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 0, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 0, "status": "PASS", "max_error": 0.0010454654693603516, "first_call_s": 0.12682018196210265, "exploratory_ms": 0.03251200169324875}
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 17, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 17, "status": "PASS", "max_error": 0.001111745834350586, "first_call_s": 7.510930299758911e-05, "exploratory_ms": 0.03328000009059906}

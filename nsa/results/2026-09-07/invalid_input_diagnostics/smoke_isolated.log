@@ -1,0 +1,37 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 0, "phase": "before_run"}
+!!!!!!! Segfault encountered !!!!!!!
+  File "/usr/local/src/conda/python-3.12.11/Objects/exceptions.c", line 380, in PyException_GetTraceback
+  File "/usr/local/src/conda/python-3.12.11/Python/traceback.c", line 270, in PyTraceBack_Here
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 367, in _PyObject_Call
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 387, in PyCFunction_Call
+  File "Python/bytecodes.c", line 3263, in _PyEval_EvalFrameDefault
+  File "/usr/local/src/conda/python-3.12.11/Include/internal/pycore_ceval.h", line 89, in _PyEval_EvalFrame
+  File "/usr/local/src/conda/python-3.12.11/Python/ceval.c", line 1685, in _PyEval_Vector
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 419, in _PyFunction_Vectorcall
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 133, in _PyObject_FastCallDictTstate
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 508, in _PyObject_Call_Prepend
+  File "/usr/local/src/conda/python-3.12.11/Objects/typeobject.c", line 8791, in slot_tp_call
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 367, in _PyObject_Call
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 387, in PyCFunction_Call
+  File "Python/bytecodes.c", line 3263, in _PyEval_EvalFrameDefault
+  File "/usr/local/src/conda/python-3.12.11/Include/internal/pycore_ceval.h", line 89, in _PyEval_EvalFrame
+  File "/usr/local/src/conda/python-3.12.11/Python/ceval.c", line 1685, in _PyEval_Vector
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 419, in _PyFunction_Vectorcall
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 133, in _PyObject_FastCallDictTstate
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 508, in _PyObject_Call_Prepend
+  File "/usr/local/src/conda/python-3.12.11/Objects/typeobject.c", line 8791, in slot_tp_call
+  File "/usr/local/src/conda/python-3.12.11/Objects/call.c", line 240, in _PyObject_MakeTpCall
+  File "Python/bytecodes.c", line 2715, in _PyEval_EvalFrameDefault
+  File "/usr/local/src/conda/python-3.12.11/Python/ceval.c", line 580, in PyEval_EvalCode
+  File "/usr/local/src/conda/python-3.12.11/Python/pythonrun.c", line 1757, in run_eval_code_obj
+  File "/usr/local/src/conda/python-3.12.11/Python/pythonrun.c", line 1778, in run_mod
+  File "/usr/local/src/conda/python-3.12.11/Python/pythonrun.c", line 1674, in pyrun_file
+  File "/usr/local/src/conda/python-3.12.11/Python/pythonrun.c", line 459, in _PyRun_SimpleFileObject
+  File "/usr/local/src/conda/python-3.12.11/Python/pythonrun.c", line 78, in _PyRun_AnyFileObject
+  File "/usr/local/src/conda/python-3.12.11/Modules/main.c", line 361, in pymain_run_file_obj
+  File "/usr/local/src/conda/python-3.12.11/Modules/main.c", line 380, in pymain_run_file
+  File "/usr/local/src/conda/python-3.12.11/Modules/main.c", line 634, in pymain_run_python
+  File "/usr/local/src/conda/python-3.12.11/Modules/main.c", line 714, in Py_RunMain
+  File "/usr/local/src/conda/python-3.12.11/Modules/main.c", line 768, in Py_BytesMain
+  File "<unknown>", line 0, in 0xffffffffffffffff

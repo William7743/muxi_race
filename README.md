@@ -2,6 +2,10 @@
 
 沐曦「揭榜挂帅」MoE 赛题（TileLang 算子优化 - Fused MoE GEMM）优化工作区。
 
+## NSA 决赛工作区（2026-09-07）
+
+NSA 的源码、测试、题面说明与实验结果统一整理在 **[`nsa/`](nsa/README.md)**。后续 NSA 工作均在该目录维护；下面的 MoE 历史记录及已有提交材料保持不变。
+
 > **新接手先读 [`PROGRESS.md`](PROGRESS.md)**（进度总结 + 已关闭路线总表 + 开放方向），
 > 逐版本细节见 [`xpuoj_data/OPTIMIZATION_LOG.md`](xpuoj_data/OPTIMIZATION_LOG.md)。
 
