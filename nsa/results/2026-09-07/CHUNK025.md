@@ -15,3 +15,9 @@ NOT #115804: BS16 51.2000us/50.0224us (ratio1.02354); unchanged BS32
 61.5168/61.6960us (ratio0.99710). Raw paired025.jsonl/log. The small BS16
 gain warrants wider shape testing, not immediate promotion. Full public109
 against #115804 seed343 launched as public025; results pending.
+
+Full public025 seed343: all109 PASS with exact coverage, zero missing/extra.
+Overall geomean1.043981x, summed ratio1.055475x; changed33 geomean1.147975x;
+unchanged76 controls1.001812x. D12831 cases1.136785x. Raw public025.jsonl/log.
+Use --profile024 grouping (same changed predicate); no OJ score conversion.
+Single-session wider comparison warrants repeat, not a guarantee of88 points.

@@ -20,8 +20,9 @@ overall geomean1.035516x, changed33 geomean1.129247x. NSA025 tests CV2
 in ordinary safe-off chunk only (shared path unchanged), seed341 both PASS.
 BS16 baseline56.61->49.84us; this is not proof of a gain over NSA024.
 Direct NSA024-vs-NSA025 seed342 both PASS: BS16 51.20->50.02us (~2.3%
-lower), unchanged BS32 61.52->61.70us. Full public025 seed343 running;
-small improvement not yet promoted globally.
+lower), unchanged BS32 61.52->61.70us. Full public025 seed343 all109 PASS:
+geomean1.043981x, changed33 geomean1.147975x. Single-session wider result;
+independent repeat and boundary validation remain before promotion.
 Not promoted; see SAFE022.md for aligned/nonnegative-block input assumptions.
 
 NSA021 reuses K storage for V in simplified S1. All6 checks pass, but no
