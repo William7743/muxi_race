@@ -31,7 +31,8 @@ promotion; all10 D32 widening checks pass seed347. Small-grid mixed;
 large grids modest wins. NSA028 gates D32 vec16 at B*L*H>=4096 atop NSA025,
 full public109 seed348 all109 PASS: geomean1.045651x, summed ratio1.061858x.
 Direct NSA025-vs-NSA028 seed349 all10 PASS: four changed large D32 cases
-improve~3–4.5%. See PAIRED028.md. Full independent repeat pending, no OJ claim.
+improve~3–4.5%. See PAIRED028.md. Full repeat seed350 all109 PASS,
+geomean1.047443x vs first1.045651x. No OJ score established.
 Not promoted; see SAFE022.md for aligned/nonnegative-block input assumptions.
 
 NSA021 reuses K storage for V in simplified S1. All6 checks pass, but no

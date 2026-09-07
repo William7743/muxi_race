@@ -17,3 +17,8 @@ Other six cases retain identical dispatch and serve as timing controls;
 their differences are not attributed to the layout. This supports keeping
 the large-grid gate, not expanding it to all shapes. Full independent repeat
 and broader edge testing remain outstanding. No OJ score inferred.
+
+Full independent repeat seed350 completes all109 PASS, exact coverage.
+Overall geomean1.047443x, sum ratio1.062258x; changed41 geomean1.133386x;
+unchanged68 controls0.998806x. Raw public028repeat.jsonl/log. Reproduces
+the first session's~4.6% gain. This is local timing, not proof of88 OJ points.
