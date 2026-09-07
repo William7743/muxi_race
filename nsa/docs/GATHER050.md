@@ -12,4 +12,7 @@ and correctness results were pending at launch; NSA049 remains the local candida
 Completed sparse050: all9 PASS. Newly changed B1 L256 S8:24.858->21.709us
 versus frozen reference (also the parent's unchanged online path). Large S8
 controls40.986->41.037us and123.085->123.046us. This is one local run,
-not a confirmed OJ gain. Full public109 seed393 launched as public050.
+not a confirmed OJ gain. public050 terminated at argument parsing: invalid
+suite name public109. No GPU test occurred in that job. Correct suite public
+seed393 relaunched with unique label public050fixed. Added small S8 edge
+shapes to validate_edges for subsequent execution.
