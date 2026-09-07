@@ -14,6 +14,8 @@ def main():
                    help='Also exercise the large-grid shared-probability specialization')
     p.add_argument('--include-combined', action='store_true',
                    help='Exercise D32 vec16 and S2 gather dispatch with valid edge inputs')
+    p.add_argument('--include-online', action='store_true',
+                   help='Exercise online Q-fragment branches across dimensions and groups')
     a = p.parse_args()
     spec = importlib.util.spec_from_file_location('edge_candidate', a.candidate)
     mod = importlib.util.module_from_spec(spec)
@@ -30,9 +32,13 @@ def main():
                       (1,64,1,16,64,2,16), (1,64,1,16,64,4,16),
                       (1,64,1,16,64,8,16), (1,256,1,16,64,8,16),
                       (2,512,1,32,64,1,32), (2,1024,1,32,64,1,32)])
+    if a.include_online:
+        cases.extend([(2,512,1,16,64,8,16), (1,128,1,32,64,8,32),
+                      (1,128,2,32,128,2,16), (1,128,1,16,32,4,32),
+                      (1,128,1,16,128,8,32)])
     for b,l,h,hq,d,s,bs in cases:
         modes = ['current','first','scaled','zero_query']
-        if a.include_combined and s > 1:
+        if (a.include_combined or a.include_online) and s > 1:
             modes.extend(['duplicate', 'two_valid'])
         for mode in modes:
             torch.manual_seed(335)
