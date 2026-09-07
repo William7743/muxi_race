@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA080 online128/shared probability syntax PASS but representative compile
+fails GEMM layout Divide by zero; no timing. See ONLINE080.md. Keep078.
+
 NSA079 paired0799/9 PASS, changed S8 cases about10% slower than078;
 not promoted. See UNROLL079.md. NSA078 retained.
 

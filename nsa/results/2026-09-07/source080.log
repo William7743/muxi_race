@@ -1,0 +1,85 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-07 13:34:22  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+Traceback (most recent call last):
+  File "/root/nsa_20260907_codex/nsa/tools/export_kernel_source.py", line 31, in <module>
+    main()
+  File "/root/nsa_20260907_codex/nsa/tools/export_kernel_source.py", line 22, in main
+    kernel = mod._get_kernel(4, 1024, 1, a.groups, dim, a.selected, a.block_size, 1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/nsa_20260907_codex/nsa/probes/probe_nsa080_online_t128.py", line 816, in _get_kernel
+    kernel = fn(
+             ^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/__init__.py", line 461, in __call__
+    kernel = self.compile(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/__init__.py", line 391, in compile
+    kernel_result = compile(
+                    ^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/__init__.py", line 111, in compile
+    return cached(
+           ^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/cache/__init__.py", line 74, in cached
+    return _dispatch_map[execution_backend].cached(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/cache/kernel_cache.py", line 365, in cached
+    kernel = JITKernel(
+             ^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/kernel.py", line 132, in __init__
+    adapter = self._compile_and_create_adapter(func, out_idx)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/kernel.py", line 247, in _compile_and_create_adapter
+    artifact = tilelang.lower(
+               ^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/engine/lower.py", line 384, in lower
+    host_mod, device_mod, params, target, target_host = lower_to_host_device_ir(
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/engine/lower.py", line 358, in lower_to_host_device_ir
+    mod = LowerAndLegalize(mod, target)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/engine/phase.py", line 206, in LowerAndLegalize
+    mod = tilelang.transform.LayoutInference()(mod)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/3rdparty/tvm/python/tvm/ir/transform.py", line 171, in __call__
+    return _ffi_transform_api.RunPass(self, mod)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/tvm_ffi/cython/function.pxi", line 968, in tvm_ffi.core.Function.__call__
+  File "<unknown>", line 0, in tvm::transform::Pass::operator()(tvm::IRModule) const
+  File "<unknown>", line 0, in tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  File "<unknown>", line 0, in tvm::tirx::transform::PrimFuncPassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  File "<unknown>", line 0, in std::_Function_handler<tvm::tirx::PrimFunc (tvm::tirx::PrimFunc, tvm::IRModule, tvm::transform::PassContext), tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}>::_M_invoke(std::_Any_data const&, tvm::tirx::PrimFunc&&, tvm::IRModule&&, tvm::transform::PassContext&&)
+  File "<unknown>", line 0, in std::enable_if<is_invocable_r_v<tvm::tirx::PrimFunc, tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}&, tvm::tirx::PrimFunc, tvm::IRModule, tvm::transform::PassContext>, tvm::tirx::PrimFunc>::type std::__invoke_r<tvm::tirx::PrimFunc, tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}&, tvm::tirx::PrimFunc, tvm::IRModule, tvm::transform::PassContext>(tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}&, tvm::tirx::PrimFunc&&, tvm::IRModule&&, tvm::transform::PassContext&&)
+  File "<unknown>", line 0, in tvm::tirx::PrimFunc std::__invoke_impl<tvm::tirx::PrimFunc, tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}&, tvm::tirx::PrimFunc, tvm::IRModule, tvm::transform::PassContext>(std::__invoke_other, tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}&, tvm::tirx::PrimFunc&&, tvm::IRModule&&, tvm::transform::PassContext&&)
+  File "<unknown>", line 0, in tvm::tl::LayoutInference()::{lambda(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&)#1}::operator()(tvm::tirx::PrimFunc, tvm::IRModule const&, tvm::transform::PassContext const&) const
+  File "<unknown>", line 0, in tvm::tl::LayoutInferencer::Substitute(tvm::tirx::PrimFunc, bool)
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::Run()
+  File "<unknown>", line 0, in tvm::tl::BufferUseDefCollector::RunInferStep(int, tvm::tl::InferLevel, bool, tvm::ffi::Map<tvm::tirx::Buffer, tvm::tl::Layout, void>&, tvm::ffi::Map<tvm::tirx::Buffer, tvm::tl::Layout, void> const&, std::deque<int, std::allocator<int> >&, std::vector<bool, std::allocator<bool> >&)
+  File "<unknown>", line 0, in tvm::tl::GemmNode::InferLayout(tvm::tl::LayoutInferArgs const&, tvm::tl::InferLevel) const
+  File "<unknown>", line 0, in TVMFFIPyCallback(void*, TVMFFIAny const*, int, TVMFFIAny*)
+  File "<unknown>", line 0, in TVMFFICyErrorSetRaisedFromPyError(_object*)
+  File "/opt/tilelang-metax-v0.1.10/tilelang/tileop/gemm/__init__.py", line 15, in gemm_infer_layout
+    return gemm.infer_layout(target, thread_nums)
+
+  File "/opt/tilelang-metax-v0.1.10/tilelang/tileop/gemm/__init__.py", line 129, in infer_layout
+    return impl_class(self).infer_layout(target, thread_nums)
+
+  File "/opt/tilelang-metax-v0.1.10/tilelang/maca/op/gemm/gemm_mma.py", line 58, in infer_layout
+    self.C: mma_emitter.make_mma_store_layout(self.C),
+
+  File "/opt/tilelang-metax-v0.1.10/tilelang/maca/intrinsics/macro/mma_macro_generator.py", line 669, in make_mma_store_layout
+    return T.Fragment(
+
+  File "/opt/tilelang-metax-v0.1.10/tilelang/layout/fragment.py", line 77, in __init__
+    forward_index = forward_index_fn(*vars) if forward_index_fn else None
+
+  File "/opt/tilelang-metax-v0.1.10/tilelang/maca/intrinsics/macro/mma_macro_generator.py", line 663, in forward_index
+    warp_i, warp_j = (i // micro_size_x) % warp_rows, (j // micro_size_y) % warp_cols
+
+  File "/opt/tilelang-metax-v0.1.10/3rdparty/tvm/python/tvm/tirx/expr.py", line 118, in __mod__
+    return _ffi_api._OpFloorMod(self, other, None)  # type: ignore
+
+  File "python/tvm_ffi/cython/function.pxi", line 968, in tvm_ffi.core.Function.__call__
+  File "<unknown>", line 0, in tvm::floormod(tvm::PrimExpr, tvm::PrimExpr, tvm::Span)
+  File "/opt/tilelang-metax-v0.1.10/3rdparty/tvm/src/arith/const_fold.h", line 322, in tvm::ffi::Optional<tvm::PrimExpr> tvm::arith::TryConstFold(tvm::PrimExpr, tvm::PrimExpr) [with Op = tvm::tirx::FloorMod]
+    TVM_FFI_ICHECK_NE(pb->value, 0) << "Divide by zero";
+
+tvm.error.InternalError: Check failed: pb->value != 0 (0 vs. 0) : Divide by zero
