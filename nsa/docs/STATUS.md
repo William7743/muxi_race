@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA086 online vec16 K/V swizzle: paired0869/9 PASS but changed
+S8 cases3.9%/5.5% slower. Rejected; keep078. See ONLINE086.md.
+
 NSA085 early online V load: paired0859/9 PASS, changed paths slight
 regression/parity; no established benefit. Keep078. See ONLINE085.md.
 
