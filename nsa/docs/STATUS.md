@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA094 full-block mask fast path: paired09429/29 PASS, geom0.9934,
+sum ratio0.9974. No gain, keep078. See SIMPLE094.md.
+
 NSA093 K-only vec16: paired09329/29 PASS, geom0.9852/sum ratio0.9913,
 no overall gain. Keep078. See SIMPLE093.md.
 
