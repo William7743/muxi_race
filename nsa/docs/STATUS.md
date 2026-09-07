@@ -4,9 +4,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
-coverage095 launched54 contract-range sparse cases, comparing078 to115804.
+coverage095 completed54/54 contract-range sparse cases, comparing078 to115804.
 Public109 sparse subset covers only D64/G16/BS16; coverage gap verified,
-but causal link to OJ67.36 not established. See COVERAGE095.md. Pending.
+but causal link to OJ67.36 not established. Geom1.1397/sum1.1455 locally;
+no broad regression reproduced. See COVERAGE095.md. OJ mapping still pending.
 
 OJ141047 user screenshot: Accepted67.36,1727us,22.2G. Exact code
 mapping unconfirmed; do not definitively label it078. This requires
