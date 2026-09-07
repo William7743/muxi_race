@@ -6,7 +6,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 NSA032 ordinary safe-off CV1 direct NSA028 comparison passes both cases:
 BS16 50.522->48.230us, BS32 unchanged control61.440->61.478us.
-Full public109 seed359 running. See ORDINARY032.md; not yet promoted.
+Full public109 seed359 all PASS, geomean1.0506872x, but two ordinary BS32
+cases regress. NSA033 gates CV1 to BS16; public109 seed360 running.
+See ORDINARY032.md; not yet promoted.
 
 NSA030 shared safe-off chunk CV2 passes two-case checks, including direct
 NSA028 pairing: BS32 60.800->59.392us. Full109 public030 seed354 all PASS,
