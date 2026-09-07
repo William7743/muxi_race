@@ -4,6 +4,11 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA029 early synchronous V load: all six qk cases pass (seed351), but
+D32/BS32 21.901->25.843 us and D64/BS32 47.117->59.942 us regress.
+Not promoted. NSA028 remains the best tested combined candidate, not an
+OJ-verified score improvement. See EARLY029.md and retained raw results.
+
 NSA022 S1-only safe-memory legalizer disable passes all6 seed333: D128
 BS16 55.99->50.10us, BS32 80.10->68.83us. Full public109 seed334 completes:
 all109 pass, overall geomean1.017075x, D12831 cases1.094285x. See SAFE022.md.
