@@ -5,7 +5,8 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 ## Latest update: exact reference submission
 
 NSA077 sparse0779/9 PASS; changed large S8 cases essentially parity,
-not promoted. Source077 S8 export pending. See ONLINE077.md.
+not promoted. Source077 S8 representative export byte-identical to057;
+stage-count change had no code effect there. See ONLINE077.md.
 
 Targeted profile057d64 completed, workload PASS/source hash confirmed.
 Counters retained but coverage/units do not establish a bottleneck; see

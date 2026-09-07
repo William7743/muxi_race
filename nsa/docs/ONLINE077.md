@@ -14,3 +14,10 @@ B4/L1024:122.8416->123.3664us, essentially parity, not promoted.
 S8 B1/L256 is unchanged gather control, not a077 improvement.
 Export helper now accepts selected/dims (defaults unchanged) to inspect
 S8 output and check whether stage count changed lowering. source077 pending.
+
+Representative B4/L1024/H1/HQ16/D64/S8/BS16 source077 and source057s8
+are byte-identical,8666 characters, SHA256
+e6da00688afbc74d77bc4e220f79edaffa6d5242b66c9653514705acf65a3c7a.
+Stage count did not change emitted code here. Do not interpret parity as
+a successful resource tradeoff. Avoid additional stage-count sweeps without
+first demonstrating a code change. Generated sources retained.
