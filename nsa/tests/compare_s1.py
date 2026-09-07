@@ -23,7 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', type=Path, default=ROOT / 'baselines/oj_115804.py')
     parser.add_argument('--candidate', type=Path, default=ROOT / 'probes/probe_nsa003_bs32_ck4.py')
-    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','g32','qwide32','public','d128','d64bs16','sparse','small_s8','qk','chunk','latency'], default='bs32')
+    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','g32','qwide32','public','d128','d64bs16','sparse','sparse_coverage','small_s8','qk','chunk','latency'], default='bs32')
     parser.add_argument('--seed', type=int, default=314)
     parser.add_argument('--output-dir', type=Path,
                         default=ROOT / 'results' / datetime.now().strftime('local-%Y%m%d-%H%M%S-%f'))
@@ -51,6 +51,12 @@ def main():
         cases = [c for c in public_cases if c['S'] == 1 and c['D'] == 128]
     if options.suite == 'sparse':
         cases = [c for c in public_cases if c['S'] > 1]
+    if options.suite == 'sparse_coverage':
+        # Contract-range coverage, not a claim about hidden OJ cases.
+        # G8 is excluded here because frozen baseline has a known layout issue.
+        cases = [dict(B=2,SEQ_LEN=512,H=h,HQ=hq,D=d,S=s,block_size=bs,is_causal=True)
+                 for h,hq in ((1,16),(1,32),(2,32))
+                 for d in (32,64,128) for s in (2,4,8) for bs in (16,32)]
     if options.suite == 'd64bs16':
         cases = [c for c in public_cases if c['S']==1 and c['D']==64 and c['block_size']==16]
     if options.suite == 'g32':
