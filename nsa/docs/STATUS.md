@@ -4,6 +4,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA041 S8 extension sparse9 PASS but changed cases regress41.306->54.118us
+and123.226->209.498us. Rejected; preserve NSA040 S2/S4-only gather.
+See GATHER041.md.
+
 NSA040 sparse9 PASS, S4 B2 28.838->19.955us and B4 78.234->62.490us.
 Full109 seed377 all PASS, geomean1.06215505x. S4 edges completed;
 full repeat seed378 all109 PASS, geomean1.06162384x. NSA041 S8 experiment
