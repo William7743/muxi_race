@@ -4,8 +4,8 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
-NSA077 online stages2->1 syntax PASS; sparse077 seed428 running.
-Gather controls unchanged. See ONLINE077.md, no improvement established.
+NSA077 sparse0779/9 PASS; changed large S8 cases essentially parity,
+not promoted. Source077 S8 export pending. See ONLINE077.md.
 
 Targeted profile057d64 completed, workload PASS/source hash confirmed.
 Counters retained but coverage/units do not establish a bottleneck; see
