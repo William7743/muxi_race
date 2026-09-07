@@ -13,3 +13,10 @@ ordinary legalizer path; no new general correctness guarantee is implied.
 
 Python syntax check passes. GPU validation is pending, queued conceptually
 after public022 finishes (no concurrent benchmark launched). No OJ submission.
+
+Prepared tests/validate_edges.py for post-benchmark correctness validation:
+four shapes including G8/G32 and sentinel-padded S4, each with current block,
+first block, Q/K scaled by4, and zero-query modes. Every row has at least
+one valid token; all-masked semantics remain outside this check. NaN-filled
+output detects missing stores. Full FP32 reference comparison, no timings.
+Syntax passed; GPU execution pending. Test preparation is not a PASS result.
