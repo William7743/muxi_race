@@ -50,3 +50,7 @@ public057 seed407 completed109/109 PASS, exact coverage. Geomean1.06897306x,
 summed latency ratio1.08806807x versus reference. This is close to053;
 specific G32 benefit established separately by paired tests. Added G32
 edge shapes B2/L512 and B2/L1024 D64 S1 BS32. edges057 launched.
+
+edges057 completed78/78 PASS, max_abs0.00390625. Raw log retained.
+public057repeat seed408 launched. NSA053 remains prior repeated candidate
+until independent full repeat is checked. No OJ score inferred.

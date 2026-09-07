@@ -4,6 +4,11 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA057 G32-only PV FullCol: direct G32 suite7/7 PASS with gains on all5
+changed configurations; public057109/109 PASS, geomean1.06897306x.
+edges05778/78 PASS, max_abs0.00390625. public057repeat seed408 running.
+See FUSED054.md. NSA053 remains current confirmed local candidate.
+
 NSA053 combines small S8 gather with grid-dependent KD64/KD32 and online
 fallback at grid>=512. Full public053 seed398:109/109 PASS, exact coverage,
 geomean1.06924303x versus #115804. edges053:70 checks completed, max_abs
