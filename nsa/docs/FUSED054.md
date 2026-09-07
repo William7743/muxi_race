@@ -8,3 +8,8 @@ already fuse the original, so speedup is unproven.
 
 qwide054 seed400 launched after confirming no active jobs. Candidate
 is experimental, not promoted. Full correctness/performance pending.
+
+qwide054 seed400 all8 PASS versus frozen reference. Candidate us in suite
+order:10.381,10.726,14.054,13.850,21.376,37.747,65.344,19.341.
+Reference comparison includes inherited gains, not proof of fusion benefit.
+Direct parent NSA053 paired054 seed401 launched on qwide to isolate change.
