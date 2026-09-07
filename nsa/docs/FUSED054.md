@@ -38,3 +38,10 @@ qwide057 seed405 launched. Broader G32 coverage needed before promotion.
 qwide057 seed405 all8 PASS. G32 candidate18.726us. New g32 suite covers
 B/L=(1/128,1/512,1/1024,2/512,2/1024,4/1024,8/1024), D64 BS32 S1.
 g32057 seed406 direct053 comparison launched; no broader gain claim yet.
+
+g32057 all7 PASS. Direct053->057us by B/L:
+1/12811.456->11.533;1/51214.029->14.106 (unchanged dispatch controls);
+1/102419.277->18.675;2/51219.302->18.496;2/102433.510->31.693;
+4/102456.218->53.824;8/1024105.997->100.262.
+Changed paths consistently improve this run. public057 seed407 started;
+full-suite and edge validation needed before promotion.
