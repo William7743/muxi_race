@@ -21,3 +21,8 @@ public078 seed431 full109 launched, pending. Added --include-online to
 edge validator: five online shapes spanning D32/64/128, G16/G32, BS16/32,
 S2/4/8, sentinel/duplicate/two-valid modes. Edge run follows full timing;
 not yet claimed passed. NSA057 preserved until broader validation.
+
+public078 seed431 completed exact109/109 PASS; vs frozen#115804 geomean
+1.074751073x, cumulative ratio1.102670109x. These include inherited gains,
+not solely078 improvement; not an OJ score. edges078 with all three flags
+started after full test terminal, pending. No promotion until edge evidence.
