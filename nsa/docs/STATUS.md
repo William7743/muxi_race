@@ -7,7 +7,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 NSA030 shared safe-off chunk CV2 passes two-case checks, including direct
 NSA028 pairing: BS32 60.800->59.392us. Full109 public030 seed354 all PASS,
 geomean1.0490468x vs #115804. Extended36 edge checks all PASS, max abs
-0.00390625. Independent repeat seed355 running; see SHARED030.md.
+0.00390625. Independent repeat seed355 all109 PASS, geomean1.0453517x.
+This overlaps NSA028, so global improvement is not established. NSA031
+shared CV1 passes two cases but BS32 slows to67.226us; not promoted.
+See SHARED030.md and SHARED031.md.
 
 NSA029 early synchronous V load: all six qk cases pass (seed351), but
 D32/BS32 21.901->25.843 us and D64/BS32 47.117->59.942 us regress.

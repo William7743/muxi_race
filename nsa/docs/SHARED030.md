@@ -15,5 +15,8 @@ Extended edge validation all36 PASS, maximum absolute error0.00390625.
 Includes D32 large-grid vec16, S2 gather sentinel/duplicate/two-valid blocks,
 G8 fallback, G32, scaled QK and zero-query checks. These tests still require
 at least one valid causal token, so do not establish all-masked behavior.
-Independent public109 repeat seed355 launched as public030repeat.
-Keep NSA028 as established candidate until repeatability is checked.
+Independent public109 repeat seed355 completed all109 PASS, exact coverage.
+Overall geomean1.0453517x, summed latency ratio1.0631101x;
+changed41 geomean1.1327720x, unchanged68 controls0.9959368x.
+Overall results overlap NSA028; do not claim a stable global improvement.
+Keep NSA028 as established candidate pending stronger direct comparison.
