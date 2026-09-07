@@ -20,3 +20,8 @@ Terminal result: first candidate compilation fails LayoutInference conflict
 between acc_s GEMM layout and annotated acc_norm at direct T.copy. No
 correctness/timing result established. Next feasible test is explicit shared
 staging between layouts; conversion cost must be included. Raw log retained.
+
+NSA072 implements that test: FP32 shared score_stage between acc_s and
+acc_norm, FP16 shared prob_stage between acc_norm and acc_cast. Same
+D64/BS16/G16 gate. Syntax PASS; d64072 seed423 started, results pending.
+All conversion remains inside the measured kernel; no barrier removal.

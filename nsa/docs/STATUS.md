@@ -11,7 +11,8 @@ no gain. NSA070 transposed shared V29/29 PASS but geomean0.810117694x,
 rejected. source057simple inspection completed: shared workspace aliasing
 and five barriers. NSA071 adjacent-lane softmax layout syntax PASS,
 d64071 seed422 terminal: compilation layout conflict, no timing. See
-SOFTMAX071.md; shared staging is next option, no gain established.
+SOFTMAX071.md. NSA072 shared staging implemented, syntax PASS;
+d64072 seed423 running, no gain established.
 NSA057 retained. See MASK068.md. Only D64/BS16 simple path changed.
 
 NSA057 G32-only PV FullCol: direct G32 suite7/7 PASS with gains on all5
