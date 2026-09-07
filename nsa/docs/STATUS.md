@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA083 subtract-before-scale: paired0839/9 PASS; changed paths1-3%
+slower than078. Not promoted. See ONLINE083.md.
+
 NSA082 online shared probability64 threads: paired0829/9 PASS, but
 changed S8 cases14%/20% slower than078. Rejected; see ONLINE082.md.
 
