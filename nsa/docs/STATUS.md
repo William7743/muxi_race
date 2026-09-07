@@ -17,7 +17,9 @@ changed31 geomean1.123402x. No OJ score established. NSA024 adds gated S2
 gather from NSA002 to NSA023: all9 sparse cases pass seed339. Changed S2
 cases19.70->13.48us and50.71->41.41us. Full public109 seed340 all PASS:
 overall geomean1.035516x, changed33 geomean1.129247x. NSA025 tests CV2
-in ordinary safe-off chunk only (shared path unchanged), seed341 running.
+in ordinary safe-off chunk only (shared path unchanged), seed341 both PASS.
+BS16 baseline56.61->49.84us; this is not proof of a gain over NSA024.
+Direct NSA024-vs-NSA025 paired comparison seed342 now running.
 Not promoted; see SAFE022.md for aligned/nonnegative-block input assumptions.
 
 NSA021 reuses K storage for V in simplified S1. All6 checks pass, but no
