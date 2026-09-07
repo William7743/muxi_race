@@ -33,19 +33,24 @@ def summarize(rows):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('jsonl',type=Path)
+    p.add_argument('--profile', choices=['007','017','022'], default='007',
+                   help='Candidate-specific changed-path grouping, not a score formula')
     a=p.parse_args()
     rows=[json.loads(line) for line in a.jsonl.read_text().splitlines() if line.strip()]
     public=json.loads((ROOT/'vendor/public_20260907/test_cases_nsa_fwd.json').read_text())
     expected=Counter(map(key,public))
     observed=Counter(key(r['case']) for r in rows if r.get('status')=='PASS')
+    changed = (lambda c: c['S']==1) if a.profile=='022' else changed_007
     result=dict(public_expected=len(public),pass_rows=sum(observed.values()),
                 missing_public_occurrences=sum((expected-observed).values()),
                 extra_occurrences=sum((observed-expected).values()),
                 complete_public_coverage=(expected==observed),
                 all_rows_pass=all(r.get('status')=='PASS' for r in rows),
                 all=summarize(rows),
-                changed_007=summarize([r for r in rows if changed_007(r['case'])]),
-                unchanged_007=summarize([r for r in rows if not changed_007(r['case'])]),
+                profile=a.profile,
+                changed=summarize([r for r in rows if changed(r['case'])]),
+                unchanged=summarize([r for r in rows if not changed(r['case'])]),
+                s1_d128=summarize([r for r in rows if r['case']['S']==1 and r['case']['D']==128]),
                 caveat='Local event timing; no OJ score inferred. Incomplete coverage is not a suite pass.')
     print(json.dumps(result,indent=2))
 
