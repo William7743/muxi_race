@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA048 row reciprocal sparse9 PASS, timings near parent; not promoted.
+See GATHER048.md.
+
 NSA047 bounds-only K/V loads sparse9 PASS, timings near parent with no
 clear gain; not promoted. See GATHER047.md.
 
