@@ -25,3 +25,7 @@ G32 20.992us. No compelling improvement versus recent parent measurements;
 not promoted (not a direct paired regression claim). NSA056 tests the
 opposite isolated change: PV FullCol only, QK original FullRow.
 qwide056 seed403 launched, results pending.
+
+qwide056 all8 PASS. Changed G16 candidate21.082/37.504/65.178us;
+G32 18.944us. Possible G32 improvement needs direct-parent evidence.
+paired056 seed404 launched versus053, all other work stopped for timing.
