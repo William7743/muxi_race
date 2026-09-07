@@ -1,5 +1,10 @@
 # NSA023 combination validation
 
+Large-grid extension completes all20 PASS, max absolute error0.00390625
+in the scaled-input large case. Raw edges023large.log. This includes the
+shared-probability/safe-off combination. Public109 repeat seed338 launched
+as a separate sequential process; do not count its results until complete.
+
 ## Full public109, seed337
 
 All109 pass for exact #115804 and NSA023; zero missing/extra occurrences.
