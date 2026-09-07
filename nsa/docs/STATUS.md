@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA044 KD32 sparse9 PASS, S4 candidate19.149/57.869us. Direct parent
+NSA040 comparison seed383 running; see GATHER044.md. Not promoted.
+
 NSA043 FullCol gather sparse9 PASS, near prior FullRow timings without
 clear benefit. Not promoted; see GATHER043.md.
 
