@@ -5,5 +5,8 @@ probability matrix instead of fragment, enabling layout transfer between
 QK and PV. Current S2 dispatch unchanged; S4/S8 are controls.
 Sparse seed372 all9 completed PASS. S2 B2:19.328->12.659us and
 B4:50.752->35.878us vs #115804. Small B1 unchanged10.586->10.522us.
-Direct NSA034 comparison seed373 running as paired039. Not yet promoted.
+Direct NSA034 comparison seed373 completed all9 PASS: S2 B2
+13.568->12.646us, B4 41.523->35.827us (about13.7% lower latency).
+Unchanged B1 control10.598->10.637us. Full public109 seed374 running
+as public039. Not yet promoted; boundary validation still required.
 GPU math remains TileLang; no OJ score inferred.
