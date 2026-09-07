@@ -18,3 +18,11 @@ Only larger S2 cases change; S4/S8 keep the original online path.
 Raw sparse024.jsonl/log. ABBA four rounds, ten calls. Matches earlier gather
 direction without its S8 regression. This is not complete NSA024 coverage:
 full public109 seed340 now running. No OJ score inferred or submission made.
+
+Full public109 seed340 completes all109 PASS, zero missing/extra. Overall
+geomean1.035516x, sum ratio1.048445x. Changed33 geomean1.129247x;
+unchanged76 controls0.997279x. Raw public024.jsonl/log. Still modest overall
+gain and no OJ score established. NSA025 tests CV2 instead ofCV4 solely in
+the ordinary D128 safe-off chunk: prior safe-on split tests do not establish
+the optimal split after legalization is disabled. Python syntax passes,
+two-case chunk comparison seed341 running; no promotion yet.
