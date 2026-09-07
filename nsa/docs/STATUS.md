@@ -4,6 +4,11 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA021 reuses K storage for V in simplified S1. All6 checks pass, but no
+broad improvement: D64 BS16 29.71->30.00us. Compiler-source export confirms
+baseline already aliases Qs/Vs; NSA021 does not shrink the data buffers.
+See REUSE021.md and source021/ snapshots. Do not merge.
+
 NSA015/016 direct multiply-reduction experiments rejected: NSA015 passes three
 cases but is dramatically slower and fails launching D64/BS32; NSA016 shared
 probability bridge passes all four cases but remains 13–49x slower. See VECTOR015.md.
