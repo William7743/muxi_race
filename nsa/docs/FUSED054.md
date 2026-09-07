@@ -29,3 +29,8 @@ qwide056 seed403 launched, results pending.
 qwide056 all8 PASS. Changed G16 candidate21.082/37.504/65.178us;
 G32 18.944us. Possible G32 improvement needs direct-parent evidence.
 paired056 seed404 launched versus053, all other work stopped for timing.
+
+paired056 all8 PASS. G16 changed20.877->21.043,36.838->37.530,
+65.229->65.126us; no consistent benefit. G32 19.763->18.893us.
+NSA057 enables PV FullCol only groups32, retaining FullRow otherwise.
+qwide057 seed405 launched. Broader G32 coverage needed before promotion.
