@@ -16,3 +16,9 @@ not a confirmed OJ gain. public050 terminated at argument parsing: invalid
 suite name public109. No GPU test occurred in that job. Correct suite public
 seed393 relaunched with unique label public050fixed. Added small S8 edge
 shapes to validate_edges for subsequent execution.
+
+public050fixed seed393 completed:109/109 PASS, exact public coverage.
+Geomean1.06669631x, summed latency ratio1.08615055x versus #115804.
+Profile050 correctly partitions46 changed and63 unchanged cases; unchanged
+geomean0.99833498x. This does not establish an overall win over NSA049's
+two runs. Extended edges launched as edges050; retain NSA049 pending checks.
