@@ -16,3 +16,11 @@ All six qk checks pass seed345, B4 L1024 H1 HQ16 S1.
 D128 is unchanged control. Reject vec4. Raw layout026.jsonl/log; four ABBA
 rounds ten calls. No bank-conflict counters measured, so cause remains a
 hypothesis. NSA027 tests vecSize16 instead; seed346 qk running. No OJ claim.
+
+NSA027 seed346 completes all6 PASS. Baseline/probe microseconds:
+D32 BS16 15.334/14.733, BS32 22.131/21.478;
+D64 BS16 29.683/31.130, BS32 46.746/45.581;
+D128 controls BS16 55.398/55.475, BS32 80.115/80.346.
+Raw layout027.jsonl/log. No global promotion. D32 improvements need broader
+validation: added qwide32 suite with five B/L configurations and both block
+sizes (ten cases), seed347 launched. No broader gain established yet.
