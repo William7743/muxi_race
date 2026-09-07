@@ -31,3 +31,10 @@ B8L1024 BS16 24.896/23.488, BS32 36.890/35.699.
 NSA028 gates the new layout to S1 D32 B*L*H>=4096 on parent NSA025.
 Other paths retain parent dispatch, G8 fallback has priority. Full public109
 seed348 launched, no full-suite or OJ gain claimed yet.
+
+NSA028 full public109 seed348 completes all109 PASS, zero missing/extra.
+Overall geomean1.045651x, sum ratio1.061858x. Changed41 geomean1.129468x;
+unchanged68 controls0.998150x. Raw public028.jsonl/log. Use --profile028
+with a separating space (--profile 028). Small aggregate increment over
+NSA025 sessions is not a direct causal comparison; repeat/parent pairing
+remains necessary. No OJ score inferred.
