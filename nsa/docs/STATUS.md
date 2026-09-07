@@ -5,7 +5,8 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 ## Latest update: exact reference submission
 
 NSA075 V fragment source export succeeds, barriers3 vs5 on D64 G16.
-d64075 seed426 running; correctness/performance pending. See VFRAGMENT075.md.
+d64075 seed426 exact29/29 PASS, geomean0.808795302x, cumulative0.740561899x;
+rejected. V scalar source loads replace uint4. See VFRAGMENT075.md.
 
 NSA074 isolated D64/BS16 storage-rewrite-off JIT: syntax PASS,
 d64074 seed425 exact29/29 PASS, geomean0.990849370x, cumulative0.996748124x;
