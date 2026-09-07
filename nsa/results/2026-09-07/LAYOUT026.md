@@ -24,3 +24,10 @@ D128 controls BS16 55.398/55.475, BS32 80.115/80.346.
 Raw layout027.jsonl/log. No global promotion. D32 improvements need broader
 validation: added qwide32 suite with five B/L configurations and both block
 sizes (ten cases), seed347 launched. No broader gain established yet.
+
+Widening completes all10 PASS, raw wide027.jsonl/log. Small cases mixed;
+B4L1024 BS16 14.976/14.810us, BS32 21.760/20.915;
+B8L1024 BS16 24.896/23.488, BS32 36.890/35.699.
+NSA028 gates the new layout to S1 D32 B*L*H>=4096 on parent NSA025.
+Other paths retain parent dispatch, G8 fallback has priority. Full public109
+seed348 launched, no full-suite or OJ gain claimed yet.

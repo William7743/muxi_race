@@ -27,7 +27,9 @@ all109 PASS, overall geomean1.042227x vs first1.043981x; changed33
 geomean1.153085x. No OJ score established. NSA026 vec4 shared-layout
 ablation all6 PASS seed345, but D32/D64 regress7–20%; reject.
 NSA027 vecSize16 all6 PASS: D32 gains~3–4%, D64/BS16 regresses. No global
-promotion; ten-shape D32 widening test seed347 launched.
+promotion; all10 D32 widening checks pass seed347. Small-grid mixed;
+large grids modest wins. NSA028 gates D32 vec16 at B*L*H>=4096 atop NSA025,
+full public109 seed348 running.
 Not promoted; see SAFE022.md for aligned/nonnegative-block input assumptions.
 
 NSA021 reuses K storage for V in simplified S1. All6 checks pass, but no
