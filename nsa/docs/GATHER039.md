@@ -12,5 +12,9 @@ as public039 completed all109 PASS, exact coverage: geomean1.05559446x,
 summed latency ratio1.07263679x vs #115804. Changed41 geomean1.16202447x,
 unchanged68 controls0.99619304x. Overall overlaps parent measurements.
 Extended edge run completed with PASS outputs, raw edges039.log retained.
-Independent full109 seed375 running as public039repeat. Not yet promoted.
+Independent full109 seed375 all109 PASS, exact coverage:
+geomean1.05699444x, summed latency ratio1.07262588x. This overlaps
+NSA034 globally; direct S2 gain is stronger evidence of local benefit.
+NSA040 extends existing gather gate to S4, no other change. Sparse
+seed376 running as sparse040. No claim of S4 improvement yet.
 GPU math remains TileLang; no OJ score inferred.
