@@ -1,5 +1,15 @@
 # NSA023 combination validation
 
+Independent repeat seed338 completes all109 PASS, exact coverage. Overall
+geomean1.033343x, summed ratio1.044741x. Changed31 geomean1.123402x;
+unchanged78 controls0.999589x. Raw public023repeat.jsonl/log. Both sessions
+support a modest~3% overall gain, not an88-point prediction.
+
+Next NSA024 adds the original NSA002 gather only for S2 D64 BS16 G16 and
+B*L*H>=1024, covering the previously promising larger S2 configurations.
+Other paths remain NSA023. Python syntax passes; nine public sparse cases
+run seed339, results pending. No OJ submission.
+
 Large-grid extension completes all20 PASS, max absolute error0.00390625
 in the scaled-input large case. Raw edges023large.log. This includes the
 shared-probability/safe-off combination. Public109 repeat seed338 launched

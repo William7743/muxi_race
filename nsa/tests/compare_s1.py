@@ -23,7 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', type=Path, default=ROOT / 'baselines/oj_115804.py')
     parser.add_argument('--candidate', type=Path, default=ROOT / 'probes/probe_nsa003_bs32_ck4.py')
-    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','public','qk','chunk','latency'], default='bs32')
+    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','public','sparse','qk','chunk','latency'], default='bs32')
     parser.add_argument('--seed', type=int, default=314)
     parser.add_argument('--output-dir', type=Path,
                         default=ROOT / 'results' / datetime.now().strftime('local-%Y%m%d-%H%M%S-%f'))
@@ -44,6 +44,8 @@ def main():
         cases += [dict(B=2,SEQ_LEN=512,H=1,HQ=32,D=64,S=1,block_size=32,is_causal=True)]
     if options.suite == 'public':
         cases = public_cases
+    if options.suite == 'sparse':
+        cases = [c for c in public_cases if c['S'] > 1]
     if options.suite == 'chunk':
         cases = [dict(B=4,SEQ_LEN=1024,H=1,HQ=16,D=128,S=1,block_size=bs,is_causal=True) for bs in (16,32)]
     if options.suite == 'latency':
