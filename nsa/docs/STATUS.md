@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA049 small-grid gather sparse9 PASS: small S4 15.974->12.070us.
+Full109 seed390 running; see GATHER049.md. Not promoted yet.
+
 NSA048 row reciprocal sparse9 PASS, timings near parent; not promoted.
 See GATHER048.md.
 
