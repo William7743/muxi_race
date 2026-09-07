@@ -5,7 +5,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 ## Latest update: exact reference submission
 
 NSA022 S1-only safe-memory legalizer disable passes all6 seed333: D128
-BS16 55.99->50.10us, BS32 80.10->68.83us. Full public109 seed334 running.
+BS16 55.99->50.10us, BS32 80.10->68.83us. Full public109 seed334 completes:
+all109 pass, overall geomean1.017075x, D12831 cases1.094285x. See SAFE022.md.
+NSA023 combined six-case test launched seed336; boundary tests still pending.
 Not promoted; see SAFE022.md for aligned/nonnegative-block input assumptions.
 
 NSA021 reuses K storage for V in simplified S1. All6 checks pass, but no

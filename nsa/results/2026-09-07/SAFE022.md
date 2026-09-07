@@ -29,3 +29,13 @@ paired comparison seed334 launched. Use summarizer --profile022 (with a space
 between option name and value: --profile 022) to avoid NSA007-specific grouping.
 Any future promotion requires broader correctness coverage and explicit fallback
 for unsupported shapes. Compiler option acceptance is not a performance claim.
+
+## Full public109 result, seed334
+
+Complete exact coverage:109 PASS, zero missing/extra cases, both implementations
+checked. Raw public022.jsonl/log. Overall geomean1.017075x, summed latency
+ratio1.030277x. S1 changed100 cases:1.017910x; unchanged S>1 nine controls:
+1.007847x. D128 S1 subset31 cases:geomean1.094285x, sum ratio1.105748x.
+Single-session evidence, not an OJ score. Small-shape noise and regressions
+remain; no global promotion. NSA023 preserves non-D128 paths and tests the
+combination with NSA017's shared-probability path next (seed336).
