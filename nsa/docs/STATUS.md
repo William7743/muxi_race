@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA046 S4 KD16 fails GEMM layout inference (Divide by zero); not a
+correctness/performance result for changed path. See GATHER046.md.
+
 NSA044 KD32 sparse9 PASS, S4 candidate19.149/57.869us. Direct parent
 NSA040 comparison seed383 all9 PASS: S2 regresses, S4 improves
 62.426->57.792us. NSA045 S4-only KD32 full109 seed384 all PASS,
