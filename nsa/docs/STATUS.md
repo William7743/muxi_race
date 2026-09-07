@@ -23,7 +23,9 @@ Direct NSA024-vs-NSA025 seed342 both PASS: BS16 51.20->50.02us (~2.3%
 lower), unchanged BS32 61.52->61.70us. Full public025 seed343 all109 PASS:
 geomean1.043981x, changed33 geomean1.147975x. Single-session wider result;
 all20 edge checks PASS (max abs0.00390625). Independent repeat seed344
-running before promotion; no OJ score established.
+all109 PASS, overall geomean1.042227x vs first1.043981x; changed33
+geomean1.153085x. No OJ score established. NSA026 vec4 shared-layout
+ablation on original simplified S1 path launched seed345.
 Not promoted; see SAFE022.md for aligned/nonnegative-block input assumptions.
 
 NSA021 reuses K storage for V in simplified S1. All6 checks pass, but no

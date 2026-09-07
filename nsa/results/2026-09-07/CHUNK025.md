@@ -26,3 +26,10 @@ Boundary validation with --include-large completes20 PASS, maximum absolute
 error0.00390625. Raw edges025.log. Covers G8/G32, current/first block,
 scaled Q/K and zero query plus the large shared path. Independent public109
 repeat seed344 started as public025repeat; results pending.
+
+Repeat seed344 completes all109 PASS, exact coverage. Overall geomean1.042227x,
+sum ratio1.055494x. Changed33 geomean1.153085x; unchanged76 controls0.997472x.
+Raw public025repeat.jsonl/log. Reproduces the first run's modest~4% gain;
+not an88-point score. Next NSA026 isolates public vecSize4 shared-layout
+annotations on the original simplified S1 implementation, leaving original
+chunk/online paths unchanged; GPU comparison pending.
