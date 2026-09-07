@@ -23,7 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', type=Path, default=ROOT / 'baselines/oj_115804.py')
     parser.add_argument('--candidate', type=Path, default=ROOT / 'probes/probe_nsa003_bs32_ck4.py')
-    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','qwide32','public','d128','sparse','small_s8','qk','chunk','latency'], default='bs32')
+    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','g32','qwide32','public','d128','sparse','small_s8','qk','chunk','latency'], default='bs32')
     parser.add_argument('--seed', type=int, default=314)
     parser.add_argument('--output-dir', type=Path,
                         default=ROOT / 'results' / datetime.now().strftime('local-%Y%m%d-%H%M%S-%f'))
@@ -51,6 +51,9 @@ def main():
         cases = [c for c in public_cases if c['S'] == 1 and c['D'] == 128]
     if options.suite == 'sparse':
         cases = [c for c in public_cases if c['S'] > 1]
+    if options.suite == 'g32':
+        cases = [dict(B=b,SEQ_LEN=l,H=1,HQ=32,D=64,S=1,block_size=32,is_causal=True)
+                 for b,l in ((1,128),(1,512),(1,1024),(2,512),(2,1024),(4,1024),(8,1024))]
     if options.suite == 'small_s8':
         cases = [dict(B=b,SEQ_LEN=l,H=1,HQ=16,D=64,S=8,block_size=16,is_causal=True)
                  for b,l in ((1,64),(1,128),(1,256),(1,512),(2,256),(2,512))]
