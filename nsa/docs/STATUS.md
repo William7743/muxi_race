@@ -4,9 +4,14 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+Current local working candidate: NSA078. Public109 PASS, direct057
+sparse repeat confirms changed-path gain, expanded edges108/108 PASS,
+max_abs0.00390625. NSA057 preserved. public078repeat seed432 running.
+This is local evidence, not OJ88; see ONLINE078.md.
+
 NSA078 public078 exact109/109 PASS, geomean1.074751073x vs frozen;
 direct057 sparse repeat confirms1.246x/1.274x changed S8 gains.
-edges078 expanded validation running; NSA057 preserved pending edges.
+edges078108/108 PASS; NSA057 preserved as previous candidate.
 See ONLINE078.md; promising local result, no OJ score claim.
 
 NSA077 sparse0779/9 PASS; changed large S8 cases essentially parity,
