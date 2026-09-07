@@ -9,7 +9,9 @@ BS16 55.99->50.10us, BS32 80.10->68.83us. Full public109 seed334 completes:
 all109 pass, overall geomean1.017075x, D12831 cases1.094285x. See SAFE022.md.
 NSA023 combined six-case test passes seed336. D128 BS16 55.12->50.39us,
 BS32 81.63->62.00us. All16 boundary checks pass, max abs0.001953125.
-Full public109 seed337 running. Large-grid boundary extension prepared, pending.
+Full public109 seed337 completes all109 PASS: geomean1.030425x, summed
+latency ratio1.043529x, changed31 geomean1.118109x. Large-grid boundary
+extension now running. No OJ score established; repeatability pending.
 Not promoted; see SAFE022.md for aligned/nonnegative-block input assumptions.
 
 NSA021 reuses K storage for V in simplified S1. All6 checks pass, but no

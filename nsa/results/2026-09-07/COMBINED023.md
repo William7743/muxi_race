@@ -1,5 +1,13 @@
 # NSA023 combination validation
 
+## Full public109, seed337
+
+All109 pass for exact #115804 and NSA023; zero missing/extra occurrences.
+Raw public023.jsonl/log. Geomean1.030425x; summed latency ratio1.043529x.
+Changed31 cases geomean1.118109x (range0.99152–1.31232); unchanged78 controls
+geomean0.997517x. Full suite gain is modest, not evidence of an88 OJ score.
+Large-grid edge extension now launched. Independent repeat remains pending.
+
 Boundary run completes: all16 checks PASS, maximum absolute error0.001953125
 against FP16-cast full reference. Raw edges023.log. These small shapes do not
 exercise the large-grid shared-probability dispatch. Added --include-large
