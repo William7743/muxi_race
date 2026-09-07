@@ -16,7 +16,8 @@ NSA018 D64 CK2/CV4 passes four checks but regresses changed D64 cases:
 BS16 29.76->220.20us, BS32 46.43->109.16us. Reject. NSA019 changes only
 D64 CV to2 (output tile32 rather than16): all4 pass, D64 BS16 regresses
 29.79->35.00us while BS32 improves46.45->38.25us. Not merged (NSA013 already
-has comparable BS32 gains). NSA020 deferred S1 normalization tests running.
+has comparable BS32 gains). NSA020 deferred S1 normalization passes all6
+but shows no broad gain (BS16 regresses, BS32 D32/64 only~2.5%). Not merged.
 
 NSA014 padding to32 passes but regresses BS16 (56.56->60.70us); reject there.
 BS32 gain repeats (~80.20->65.74us). Full-PV CV1 sweep completes all checks;

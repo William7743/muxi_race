@@ -15,4 +15,17 @@ FP16, compute PV, then divide FP32 output by the sum. This is mathematically
 equivalent but not bitwise equivalent because FP16 rounding moves. Hypothesis:
 remove normalization from the pre-PV dependency chain. It does not assume
 input values or reuse results. QK, causal mask and S>1 path unchanged.
-Python syntax check passed; six-case comparison seed331 running.
+Python syntax check passed; all six checks pass, seed331. Timing us:
+
+|D|BS|baseline|NSA020|
+|---|---|---|---|
+|32|16|14.925|15.014|
+|32|32|21.965|21.402|
+|64|16|29.440|30.118|
+|64|32|46.515|45.414|
+|128|16|55.437|56.192|
+|128|32|79.923|80.051|
+
+Raw norm020.jsonl/log. No broad improvement, BS16 regresses. The small BS32
+D32/64 differences require independent replication and do not justify merging
+the changed numerical path. Keep NSA017 as the full-public-tested candidate.
