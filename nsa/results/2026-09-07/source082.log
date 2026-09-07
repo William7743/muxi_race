@@ -1,0 +1,4 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-07 13:40:12  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 13:40:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"dim": 64, "source_chars": 8579, "output": "d64_bs16.txt"}
