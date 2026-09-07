@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA081 online128 padded KV32 compiles; paired081 seed434 running against078.
+Extra columns zero/masked; see ONLINE081.md. No improvement established.
+
 NSA080 online128/shared probability syntax PASS but representative compile
 fails GEMM layout Divide by zero; no timing. See ONLINE080.md. Keep078.
 
