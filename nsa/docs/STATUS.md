@@ -7,7 +7,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 NSA015/016 direct multiply-reduction experiments rejected: NSA015 passes three
 cases but is dramatically slower and fails launching D64/BS32; NSA016 shared
 probability bridge passes all four cases but remains 13–49x slower. See VECTOR015.md.
-NSA013 broader D64/BS32 paired shape sweep is now running (seed327).
+NSA013 broader D64/BS32 sweep passes all8 (seed327). Large grids improve
+45.13->36.97us and81.75->65.56us; small grids do not consistently improve.
+NSA017 combines NSA007 with gated NSA013 D64/D128 BS32 paths; full public109
+paired comparison is running (seed328), not yet a submission recommendation.
 
 NSA014 padding to32 passes but regresses BS16 (56.56->60.70us); reject there.
 BS32 gain repeats (~80.20->65.74us). Full-PV CV1 sweep completes all checks;
