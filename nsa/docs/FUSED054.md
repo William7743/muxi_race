@@ -54,3 +54,8 @@ edge shapes B2/L512 and B2/L1024 D64 S1 BS32. edges057 launched.
 edges057 completed78/78 PASS, max_abs0.00390625. Raw log retained.
 public057repeat seed408 launched. NSA053 remains prior repeated candidate
 until independent full repeat is checked. No OJ score inferred.
+
+public057repeat seed408109/109 PASS, exact coverage. Geomean1.06903601x,
+summed latency ratio1.08869284x. Aggregate versus053 is not a proven gain;
+G32 direct comparisons justify retaining057 as working candidate while
+preserving053. All claims local, no verified88 OJ score.
