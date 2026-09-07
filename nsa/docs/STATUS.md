@@ -30,7 +30,8 @@ NSA027 vecSize16 all6 PASS: D32 gains~3–4%, D64/BS16 regresses. No global
 promotion; all10 D32 widening checks pass seed347. Small-grid mixed;
 large grids modest wins. NSA028 gates D32 vec16 at B*L*H>=4096 atop NSA025,
 full public109 seed348 all109 PASS: geomean1.045651x, summed ratio1.061858x.
-Increment over NSA025 is small; direct comparison/repeat pending, no OJ claim.
+Direct NSA025-vs-NSA028 seed349 all10 PASS: four changed large D32 cases
+improve~3–4.5%. See PAIRED028.md. Full independent repeat pending, no OJ claim.
 Not promoted; see SAFE022.md for aligned/nonnegative-block input assumptions.
 
 NSA021 reuses K storage for V in simplified S1. All6 checks pass, but no
