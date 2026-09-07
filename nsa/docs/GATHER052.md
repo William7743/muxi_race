@@ -22,3 +22,8 @@ paired052 all6 PASS. Direct051->052us:1/64 12.032->12.902;
 NSA053 combines KD64 belowgrid256, KD32 at256..511; online at512+.
 Only S8 D64 BS16 G16 affected; inherited S2/S4 unchanged.
 Full public053 seed398 launched. No OJ score or full-pass claim yet.
+
+public053 completed109/109 PASS with exact public coverage. Geomean
+1.06924303x; summed latency ratio1.08892023x versus frozen reference.
+Profile053 uses the corrected512 threshold. Unchanged-control geomean
+0.99651780x. Combined edges053 started; OJ improvement remains unverified.
