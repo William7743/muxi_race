@@ -10,6 +10,8 @@ from smoke_nsa import reference
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--candidate', type=Path, required=True)
+    p.add_argument('--include-large', action='store_true',
+                   help='Also exercise the large-grid shared-probability specialization')
     a = p.parse_args()
     spec = importlib.util.spec_from_file_location('edge_candidate', a.candidate)
     mod = importlib.util.module_from_spec(spec)
@@ -17,6 +19,8 @@ def main():
     # G8 fallback, G32, both block sizes, S>1 sentinel padding.
     cases = [(1,128,1,16,128,1,16), (1,128,1,32,128,1,32),
              (1,128,2,16,128,1,16), (1,128,2,32,64,4,32)]
+    if a.include_large:
+        cases.append((2,1024,1,16,128,1,32))
     for b,l,h,hq,d,s,bs in cases:
         for mode in ('current','first','scaled','zero_query'):
             torch.manual_seed(335)

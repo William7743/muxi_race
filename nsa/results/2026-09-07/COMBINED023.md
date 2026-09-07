@@ -1,4 +1,10 @@
-# NSA023 prepared combination (not yet GPU tested)
+# NSA023 combination validation
+
+Boundary run completes: all16 checks PASS, maximum absolute error0.001953125
+against FP16-cast full reference. Raw edges023.log. These small shapes do not
+exercise the large-grid shared-probability dispatch. Added --include-large
+to include B2 L1024 H1 HQ16 D128 S1 BS32, not yet run. Full public109 paired
+comparison seed337 has now launched, results pending.
 
 UPDATE: Six-case qk comparison seed336 completes, all six PASS. B4 L1024
 H1 HQ16 S1. D128 BS16 baseline55.1168us/candidate50.3936us;
