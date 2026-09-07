@@ -4,6 +4,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+Newest established local baseline NSA034: two109 PASS runs, geomeans
+1.05624632x/1.05717658x, direct parent gains and40 edge checks PASS.
+NSA035 QK loop unroll experiment running seed366. No OJ score established.
+
 Current local performance baseline: NSA033, two complete109 PASS runs
 (geomean1.05438805x and1.05261737x vs #115804) and direct31-case D128
 comparison1.02860972x vs NSA028. No OJ score inferred. NSA034 combines
