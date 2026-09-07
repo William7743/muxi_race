@@ -6,7 +6,8 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 NSA039 gather128/shared probability sparse9 PASS, larger S2 candidate
 12.659us/35.878us. Direct parent NSA034 pairing seed373 all9 PASS:
-13.568->12.646us and41.523->35.827us. Full109 seed374 running;
+13.568->12.646us and41.523->35.827us. Full109 seed374 all PASS,
+geomean1.05559446x. Edges completed; full repeat seed375 running;
 see GATHER039.md. Not yet promoted.
 
 NSA038 ordinary CK1 both chunk checks PASS but BS16 54.669us vs current
