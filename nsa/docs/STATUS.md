@@ -4,6 +4,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA068 post-QK mask experiment: syntax PASS; C500 d64bs16 job d64068
+(29 cases, seed419) running. No speedup established; NSA057 retained.
+See MASK068.md. Only D64/BS16 simple path changed.
+
 NSA057 G32-only PV FullCol: direct G32 suite7/7 PASS with gains on all5
 changed configurations; public057109/109 PASS, geomean1.06897306x.
 edges05778/78 PASS, max_abs0.00390625. public057repeat seed408 completed
