@@ -21,6 +21,8 @@
 
 ## 当前状态
 
+- 已归档用户提供的 **OJ #115804（用户报告 82.86 分）**：[原始提交](baselines/oj_115804.py)，[来源与最小差异](baselines/PROVENANCE.md)。其 GPU 计算与原基线一致，仅多一项 int32 输入类型检查。
+
 - [OJ 题面约定](docs/OJ_CONTRACT.md)：`1/sqrt(D)`、causal=1、连续 FP16 输入/输出、连续 int32 indices，`rtol=atol=1e-2`。
 - [进度及决策](docs/STATUS.md)：当前未推荐新的最终提交版本，也未提交 OJ。
 - 旧基线和 NSA002 都通过了 3 个 smoke 配置 × 2 个 seed，以及 9 个公开 S>1 用例的全输出精度检查。

@@ -2,6 +2,22 @@
 
 MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
+## Latest update: exact reference submission
+
+User supplied source and identified OJ #115804 (reported score 82.86).
+Frozen as `baselines/oj_115804.py`; see `baselines/PROVENANCE.md`.
+GPU kernels and shape dispatch match the already tested historical baseline;
+only an int32 dtype guard differs. The exact source's historical comments are
+not new verification evidence. No claim of reproducing the OJ score locally.
+
+mcProfiler 3.8.1.4 is available and a correctness-checked capture harness has
+been added under tools/. Initial global counters are not isolated kernel
+evidence. Per-kernel baseline and gather collection both completed and both
+passed full correctness checks with seed2718. Counter scope remains uncertain:
+achieved-wave counts differ from expected launch geometry and task JSON lacks
+UMD metadata. No occupancy/bottleneck conclusion is justified yet. See raw logs
+and caveats in results/2026-09-07/profiler/README.md.
+
 ## Verified instance
 
 - SSH authenticated with host-key verification; credentials are not stored here.

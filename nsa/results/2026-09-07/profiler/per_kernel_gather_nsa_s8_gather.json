@@ -1,0 +1,1521 @@
+{
+    "perf_counters": {
+        "0": [
+            {
+                "CE": {
+                    "generic": {
+                        "CE_PERF_BUSY_CYCLES": 9779810261
+                    }
+                },
+                "ISU": {
+                    "dpcId0,blockId0": {
+                        "AP_PERF_WAVES": 8366
+                    },
+                    "dpcId0,blockId1": {
+                        "AP_PERF_WAVES": 8394
+                    },
+                    "dpcId0,blockId2": {
+                        "AP_PERF_WAVES": 8395
+                    },
+                    "dpcId0,blockId3": {
+                        "AP_PERF_WAVES": 8346
+                    },
+                    "dpcId0,blockId4": {
+                        "AP_PERF_WAVES": 8395
+                    },
+                    "dpcId0,blockId5": {
+                        "AP_PERF_WAVES": 8311
+                    },
+                    "dpcId0,blockId6": {
+                        "AP_PERF_WAVES": 8307
+                    },
+                    "dpcId0,blockId7": {
+                        "AP_PERF_WAVES": 8189
+                    },
+                    "dpcId0,blockId8": {
+                        "AP_PERF_WAVES": 8237
+                    },
+                    "dpcId0,blockId9": {
+                        "AP_PERF_WAVES": 8299
+                    },
+                    "dpcId0,blockId10": {
+                        "AP_PERF_WAVES": 8337
+                    },
+                    "dpcId0,blockId11": {
+                        "AP_PERF_WAVES": 8249
+                    },
+                    "dpcId0,blockId12": {
+                        "AP_PERF_WAVES": 8239
+                    },
+                    "dpcId1,blockId0": {
+                        "AP_PERF_WAVES": 8385
+                    },
+                    "dpcId1,blockId1": {
+                        "AP_PERF_WAVES": 8339
+                    },
+                    "dpcId1,blockId2": {
+                        "AP_PERF_WAVES": 8361
+                    },
+                    "dpcId1,blockId3": {
+                        "AP_PERF_WAVES": 8428
+                    },
+                    "dpcId1,blockId4": {
+                        "AP_PERF_WAVES": 8329
+                    },
+                    "dpcId1,blockId5": {
+                        "AP_PERF_WAVES": 8349
+                    },
+                    "dpcId1,blockId6": {
+                        "AP_PERF_WAVES": 8308
+                    },
+                    "dpcId1,blockId7": {
+                        "AP_PERF_WAVES": 8357
+                    },
+                    "dpcId1,blockId8": {
+                        "AP_PERF_WAVES": 8240
+                    },
+                    "dpcId1,blockId9": {
+                        "AP_PERF_WAVES": 8265
+                    },
+                    "dpcId1,blockId10": {
+                        "AP_PERF_WAVES": 8285
+                    },
+                    "dpcId1,blockId11": {
+                        "AP_PERF_WAVES": 8214
+                    },
+                    "dpcId1,blockId12": {
+                        "AP_PERF_WAVES": 8204
+                    },
+                    "dpcId2,blockId0": {
+                        "AP_PERF_WAVES": 8433
+                    },
+                    "dpcId2,blockId1": {
+                        "AP_PERF_WAVES": 8407
+                    },
+                    "dpcId2,blockId2": {
+                        "AP_PERF_WAVES": 8422
+                    },
+                    "dpcId2,blockId3": {
+                        "AP_PERF_WAVES": 8299
+                    },
+                    "dpcId2,blockId4": {
+                        "AP_PERF_WAVES": 8324
+                    },
+                    "dpcId2,blockId5": {
+                        "AP_PERF_WAVES": 8281
+                    },
+                    "dpcId2,blockId6": {
+                        "AP_PERF_WAVES": 8379
+                    },
+                    "dpcId2,blockId7": {
+                        "AP_PERF_WAVES": 8288
+                    },
+                    "dpcId2,blockId8": {
+                        "AP_PERF_WAVES": 8288
+                    },
+                    "dpcId2,blockId9": {
+                        "AP_PERF_WAVES": 8361
+                    },
+                    "dpcId2,blockId10": {
+                        "AP_PERF_WAVES": 8229
+                    },
+                    "dpcId2,blockId11": {
+                        "AP_PERF_WAVES": 8241
+                    },
+                    "dpcId2,blockId12": {
+                        "AP_PERF_WAVES": 8114
+                    },
+                    "dpcId3,blockId0": {
+                        "AP_PERF_WAVES": 8397
+                    },
+                    "dpcId3,blockId1": {
+                        "AP_PERF_WAVES": 8473
+                    },
+                    "dpcId3,blockId2": {
+                        "AP_PERF_WAVES": 8317
+                    },
+                    "dpcId3,blockId3": {
+                        "AP_PERF_WAVES": 8276
+                    },
+                    "dpcId3,blockId4": {
+                        "AP_PERF_WAVES": 8206
+                    },
+                    "dpcId3,blockId5": {
+                        "AP_PERF_WAVES": 8303
+                    },
+                    "dpcId3,blockId6": {
+                        "AP_PERF_WAVES": 8409
+                    },
+                    "dpcId3,blockId7": {
+                        "AP_PERF_WAVES": 8294
+                    },
+                    "dpcId3,blockId8": {
+                        "AP_PERF_WAVES": 8380
+                    },
+                    "dpcId3,blockId9": {
+                        "AP_PERF_WAVES": 8319
+                    },
+                    "dpcId3,blockId10": {
+                        "AP_PERF_WAVES": 8213
+                    },
+                    "dpcId3,blockId11": {
+                        "AP_PERF_WAVES": 8257
+                    },
+                    "dpcId3,blockId12": {
+                        "AP_PERF_WAVES": 8222
+                    },
+                    "dpcId4,blockId0": {
+                        "AP_PERF_WAVES": 8368
+                    },
+                    "dpcId4,blockId1": {
+                        "AP_PERF_WAVES": 8315
+                    },
+                    "dpcId4,blockId2": {
+                        "AP_PERF_WAVES": 8378
+                    },
+                    "dpcId4,blockId3": {
+                        "AP_PERF_WAVES": 8397
+                    },
+                    "dpcId4,blockId4": {
+                        "AP_PERF_WAVES": 8369
+                    },
+                    "dpcId4,blockId5": {
+                        "AP_PERF_WAVES": 8297
+                    },
+                    "dpcId4,blockId6": {
+                        "AP_PERF_WAVES": 8401
+                    },
+                    "dpcId4,blockId7": {
+                        "AP_PERF_WAVES": 8329
+                    },
+                    "dpcId4,blockId8": {
+                        "AP_PERF_WAVES": 8278
+                    },
+                    "dpcId4,blockId9": {
+                        "AP_PERF_WAVES": 8289
+                    },
+                    "dpcId4,blockId10": {
+                        "AP_PERF_WAVES": 8296
+                    },
+                    "dpcId4,blockId11": {
+                        "AP_PERF_WAVES": 8257
+                    },
+                    "dpcId4,blockId12": {
+                        "AP_PERF_WAVES": 8092
+                    },
+                    "dpcId5,blockId0": {
+                        "AP_PERF_WAVES": 8358
+                    },
+                    "dpcId5,blockId1": {
+                        "AP_PERF_WAVES": 8384
+                    },
+                    "dpcId5,blockId2": {
+                        "AP_PERF_WAVES": 8472
+                    },
+                    "dpcId5,blockId3": {
+                        "AP_PERF_WAVES": 8393
+                    },
+                    "dpcId5,blockId4": {
+                        "AP_PERF_WAVES": 8370
+                    },
+                    "dpcId5,blockId5": {
+                        "AP_PERF_WAVES": 8350
+                    },
+                    "dpcId5,blockId6": {
+                        "AP_PERF_WAVES": 8287
+                    },
+                    "dpcId5,blockId7": {
+                        "AP_PERF_WAVES": 8291
+                    },
+                    "dpcId5,blockId8": {
+                        "AP_PERF_WAVES": 8279
+                    },
+                    "dpcId5,blockId9": {
+                        "AP_PERF_WAVES": 8248
+                    },
+                    "dpcId5,blockId10": {
+                        "AP_PERF_WAVES": 8280
+                    },
+                    "dpcId5,blockId11": {
+                        "AP_PERF_WAVES": 8222
+                    },
+                    "dpcId5,blockId12": {
+                        "AP_PERF_WAVES": 8132
+                    },
+                    "dpcId6,blockId0": {
+                        "AP_PERF_WAVES": 8447
+                    },
+                    "dpcId6,blockId1": {
+                        "AP_PERF_WAVES": 8430
+                    },
+                    "dpcId6,blockId2": {
+                        "AP_PERF_WAVES": 8302
+                    },
+                    "dpcId6,blockId3": {
+                        "AP_PERF_WAVES": 8403
+                    },
+                    "dpcId6,blockId4": {
+                        "AP_PERF_WAVES": 8429
+                    },
+                    "dpcId6,blockId5": {
+                        "AP_PERF_WAVES": 8373
+                    },
+                    "dpcId6,blockId6": {
+                        "AP_PERF_WAVES": 0
+                    },
+                    "dpcId6,blockId7": {
+                        "AP_PERF_WAVES": 8333
+                    },
+                    "dpcId6,blockId8": {
+                        "AP_PERF_WAVES": 8268
+                    },
+                    "dpcId6,blockId9": {
+                        "AP_PERF_WAVES": 8259
+                    },
+                    "dpcId6,blockId10": {
+                        "AP_PERF_WAVES": 8267
+                    },
+                    "dpcId6,blockId11": {
+                        "AP_PERF_WAVES": 8225
+                    },
+                    "dpcId6,blockId12": {
+                        "AP_PERF_WAVES": 8204
+                    },
+                    "dpcId7,blockId0": {
+                        "AP_PERF_WAVES": 8376
+                    },
+                    "dpcId7,blockId1": {
+                        "AP_PERF_WAVES": 8405
+                    },
+                    "dpcId7,blockId2": {
+                        "AP_PERF_WAVES": 8370
+                    },
+                    "dpcId7,blockId3": {
+                        "AP_PERF_WAVES": 8313
+                    },
+                    "dpcId7,blockId4": {
+                        "AP_PERF_WAVES": 8369
+                    },
+                    "dpcId7,blockId5": {
+                        "AP_PERF_WAVES": 0
+                    },
+                    "dpcId7,blockId6": {
+                        "AP_PERF_WAVES": 8281
+                    },
+                    "dpcId7,blockId7": {
+                        "AP_PERF_WAVES": 8408
+                    },
+                    "dpcId7,blockId8": {
+                        "AP_PERF_WAVES": 8289
+                    },
+                    "dpcId7,blockId9": {
+                        "AP_PERF_WAVES": 8331
+                    },
+                    "dpcId7,blockId10": {
+                        "AP_PERF_WAVES": 8326
+                    },
+                    "dpcId7,blockId11": {
+                        "AP_PERF_WAVES": 8299
+                    },
+                    "dpcId7,blockId12": {
+                        "AP_PERF_WAVES": 8177
+                    }
+                },
+                "L2C": {
+                    "dpcId0,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202658,
+                        "perf_dnoc_rdreq_64B": 721
+                    },
+                    "dpcId0,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202659,
+                        "perf_dnoc_rdreq_64B": 715
+                    },
+                    "dpcId0,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202659,
+                        "perf_dnoc_rdreq_64B": 728
+                    },
+                    "dpcId0,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202658,
+                        "perf_dnoc_rdreq_64B": 763
+                    },
+                    "dpcId1,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202658,
+                        "perf_dnoc_rdreq_64B": 742
+                    },
+                    "dpcId1,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202659,
+                        "perf_dnoc_rdreq_64B": 854
+                    },
+                    "dpcId1,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202658,
+                        "perf_dnoc_rdreq_64B": 757
+                    },
+                    "dpcId1,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202658,
+                        "perf_dnoc_rdreq_64B": 754
+                    },
+                    "dpcId2,blockId0": {
+                        "perf_dnoc_rdreq_32B": 13,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 854
+                    },
+                    "dpcId2,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202694,
+                        "perf_dnoc_rdreq_64B": 946
+                    },
+                    "dpcId2,blockId2": {
+                        "perf_dnoc_rdreq_32B": 14,
+                        "perf_dnoc_rdreq_128B": 202692,
+                        "perf_dnoc_rdreq_64B": 726
+                    },
+                    "dpcId2,blockId3": {
+                        "perf_dnoc_rdreq_32B": 6,
+                        "perf_dnoc_rdreq_128B": 202692,
+                        "perf_dnoc_rdreq_64B": 784
+                    },
+                    "dpcId3,blockId0": {
+                        "perf_dnoc_rdreq_32B": 15,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 710
+                    },
+                    "dpcId3,blockId1": {
+                        "perf_dnoc_rdreq_32B": 29,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 621
+                    },
+                    "dpcId3,blockId2": {
+                        "perf_dnoc_rdreq_32B": 22,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 603
+                    },
+                    "dpcId3,blockId3": {
+                        "perf_dnoc_rdreq_32B": 15,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 659
+                    },
+                    "dpcId4,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 727
+                    },
+                    "dpcId4,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202691,
+                        "perf_dnoc_rdreq_64B": 717
+                    },
+                    "dpcId4,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202691,
+                        "perf_dnoc_rdreq_64B": 764
+                    },
+                    "dpcId4,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 599
+                    },
+                    "dpcId5,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 593
+                    },
+                    "dpcId5,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 654
+                    },
+                    "dpcId5,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 705
+                    },
+                    "dpcId5,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 731
+                    },
+                    "dpcId6,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 590
+                    },
+                    "dpcId6,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202691,
+                        "perf_dnoc_rdreq_64B": 598
+                    },
+                    "dpcId6,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202691,
+                        "perf_dnoc_rdreq_64B": 760
+                    },
+                    "dpcId6,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 748
+                    },
+                    "dpcId7,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 833
+                    },
+                    "dpcId7,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 836
+                    },
+                    "dpcId7,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 822
+                    },
+                    "dpcId7,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 202690,
+                        "perf_dnoc_rdreq_64B": 700
+                    }
+                }
+            },
+            {
+                "CE": {
+                    "generic": {
+                        "CE_PERF_BUSY_CYCLES": 2001774
+                    }
+                },
+                "ISU": {
+                    "dpcId0,blockId0": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId0,blockId1": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId0,blockId2": {
+                        "AP_PERF_WAVES": 41
+                    },
+                    "dpcId0,blockId3": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId0,blockId4": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId0,blockId5": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId0,blockId6": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId0,blockId7": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId0,blockId8": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId0,blockId9": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId0,blockId10": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId0,blockId11": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId0,blockId12": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId1,blockId0": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId1,blockId1": {
+                        "AP_PERF_WAVES": 41
+                    },
+                    "dpcId1,blockId2": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId1,blockId3": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId1,blockId4": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId1,blockId5": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId1,blockId6": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId1,blockId7": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId1,blockId8": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId1,blockId9": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId1,blockId10": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId1,blockId11": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId1,blockId12": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId2,blockId0": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId2,blockId1": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId2,blockId2": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId2,blockId3": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId2,blockId4": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId2,blockId5": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId2,blockId6": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId2,blockId7": {
+                        "AP_PERF_WAVES": 41
+                    },
+                    "dpcId2,blockId8": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId2,blockId9": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId2,blockId10": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId2,blockId11": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId2,blockId12": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId3,blockId0": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId3,blockId1": {
+                        "AP_PERF_WAVES": 42
+                    },
+                    "dpcId3,blockId2": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId3,blockId3": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId3,blockId4": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId3,blockId5": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId3,blockId6": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId3,blockId7": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId3,blockId8": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId3,blockId9": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId3,blockId10": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId3,blockId11": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId3,blockId12": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId4,blockId0": {
+                        "AP_PERF_WAVES": 41
+                    },
+                    "dpcId4,blockId1": {
+                        "AP_PERF_WAVES": 41
+                    },
+                    "dpcId4,blockId2": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId4,blockId3": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId4,blockId4": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId4,blockId5": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId4,blockId6": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId4,blockId7": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId4,blockId8": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId4,blockId9": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId4,blockId10": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId4,blockId11": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId4,blockId12": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId5,blockId0": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId5,blockId1": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId5,blockId2": {
+                        "AP_PERF_WAVES": 41
+                    },
+                    "dpcId5,blockId3": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId5,blockId4": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId5,blockId5": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId5,blockId6": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId5,blockId7": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId5,blockId8": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId5,blockId9": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId5,blockId10": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId5,blockId11": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId5,blockId12": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId6,blockId0": {
+                        "AP_PERF_WAVES": 41
+                    },
+                    "dpcId6,blockId1": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId6,blockId2": {
+                        "AP_PERF_WAVES": 41
+                    },
+                    "dpcId6,blockId3": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId6,blockId4": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId6,blockId5": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId6,blockId6": {
+                        "AP_PERF_WAVES": 0
+                    },
+                    "dpcId6,blockId7": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId6,blockId8": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId6,blockId9": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId6,blockId10": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId6,blockId11": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId6,blockId12": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId7,blockId0": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId7,blockId1": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId7,blockId2": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId7,blockId3": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId7,blockId4": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId7,blockId5": {
+                        "AP_PERF_WAVES": 0
+                    },
+                    "dpcId7,blockId6": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId7,blockId7": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId7,blockId8": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId7,blockId9": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId7,blockId10": {
+                        "AP_PERF_WAVES": 39
+                    },
+                    "dpcId7,blockId11": {
+                        "AP_PERF_WAVES": 40
+                    },
+                    "dpcId7,blockId12": {
+                        "AP_PERF_WAVES": 39
+                    }
+                },
+                "L2C": {
+                    "dpcId0,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2296,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId0,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2296,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId0,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2296,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId0,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2296,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId1,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2296,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId1,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2296,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId1,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2296,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId1,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2296,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId2,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId2,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 73
+                    },
+                    "dpcId2,blockId2": {
+                        "perf_dnoc_rdreq_32B": 1,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId2,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId3,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId3,blockId1": {
+                        "perf_dnoc_rdreq_32B": 1,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId3,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId3,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 73
+                    },
+                    "dpcId4,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 78
+                    },
+                    "dpcId4,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 75
+                    },
+                    "dpcId4,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId4,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId5,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId5,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId5,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId5,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 72
+                    },
+                    "dpcId6,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId6,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId6,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId6,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId7,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId7,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId7,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 76
+                    },
+                    "dpcId7,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 2300,
+                        "perf_dnoc_rdreq_64B": 76
+                    }
+                },
+                "args": {
+                    "kernelName": [
+                        "gather_kernel_kernel"
+                    ],
+                    "tag": [
+                        0
+                    ]
+                }
+            },
+            {
+                "CE": {
+                    "generic": {
+                        "CE_PERF_BUSY_CYCLES": 6201093
+                    }
+                },
+                "ISU": {
+                    "dpcId0,blockId0": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId0,blockId1": {
+                        "AP_PERF_WAVES": 120
+                    },
+                    "dpcId0,blockId2": {
+                        "AP_PERF_WAVES": 122
+                    },
+                    "dpcId0,blockId3": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId0,blockId4": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId0,blockId5": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId0,blockId6": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId0,blockId7": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId0,blockId8": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId0,blockId9": {
+                        "AP_PERF_WAVES": 120
+                    },
+                    "dpcId0,blockId10": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId0,blockId11": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId0,blockId12": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId1,blockId0": {
+                        "AP_PERF_WAVES": 120
+                    },
+                    "dpcId1,blockId1": {
+                        "AP_PERF_WAVES": 120
+                    },
+                    "dpcId1,blockId2": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId1,blockId3": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId1,blockId4": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId1,blockId5": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId1,blockId6": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId1,blockId7": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId1,blockId8": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId1,blockId9": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId1,blockId10": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId1,blockId11": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId1,blockId12": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId2,blockId0": {
+                        "AP_PERF_WAVES": 122
+                    },
+                    "dpcId2,blockId1": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId2,blockId2": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId2,blockId3": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId2,blockId4": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId2,blockId5": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId2,blockId6": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId2,blockId7": {
+                        "AP_PERF_WAVES": 120
+                    },
+                    "dpcId2,blockId8": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId2,blockId9": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId2,blockId10": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId2,blockId11": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId2,blockId12": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId3,blockId0": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId3,blockId1": {
+                        "AP_PERF_WAVES": 122
+                    },
+                    "dpcId3,blockId2": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId3,blockId3": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId3,blockId4": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId3,blockId5": {
+                        "AP_PERF_WAVES": 120
+                    },
+                    "dpcId3,blockId6": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId3,blockId7": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId3,blockId8": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId3,blockId9": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId3,blockId10": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId3,blockId11": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId3,blockId12": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId4,blockId0": {
+                        "AP_PERF_WAVES": 120
+                    },
+                    "dpcId4,blockId1": {
+                        "AP_PERF_WAVES": 121
+                    },
+                    "dpcId4,blockId2": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId4,blockId3": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId4,blockId4": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId4,blockId5": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId4,blockId6": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId4,blockId7": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId4,blockId8": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId4,blockId9": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId4,blockId10": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId4,blockId11": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId4,blockId12": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId5,blockId0": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId5,blockId1": {
+                        "AP_PERF_WAVES": 122
+                    },
+                    "dpcId5,blockId2": {
+                        "AP_PERF_WAVES": 121
+                    },
+                    "dpcId5,blockId3": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId5,blockId4": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId5,blockId5": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId5,blockId6": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId5,blockId7": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId5,blockId8": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId5,blockId9": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId5,blockId10": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId5,blockId11": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId5,blockId12": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId6,blockId0": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId6,blockId1": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId6,blockId2": {
+                        "AP_PERF_WAVES": 121
+                    },
+                    "dpcId6,blockId3": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId6,blockId4": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId6,blockId5": {
+                        "AP_PERF_WAVES": 120
+                    },
+                    "dpcId6,blockId6": {
+                        "AP_PERF_WAVES": 0
+                    },
+                    "dpcId6,blockId7": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId6,blockId8": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId6,blockId9": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId6,blockId10": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId6,blockId11": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId6,blockId12": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId7,blockId0": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId7,blockId1": {
+                        "AP_PERF_WAVES": 120
+                    },
+                    "dpcId7,blockId2": {
+                        "AP_PERF_WAVES": 119
+                    },
+                    "dpcId7,blockId3": {
+                        "AP_PERF_WAVES": 121
+                    },
+                    "dpcId7,blockId4": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId7,blockId5": {
+                        "AP_PERF_WAVES": 0
+                    },
+                    "dpcId7,blockId6": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId7,blockId7": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId7,blockId8": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId7,blockId9": {
+                        "AP_PERF_WAVES": 117
+                    },
+                    "dpcId7,blockId10": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId7,blockId11": {
+                        "AP_PERF_WAVES": 118
+                    },
+                    "dpcId7,blockId12": {
+                        "AP_PERF_WAVES": 118
+                    }
+                },
+                "L2C": {
+                    "dpcId0,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6888,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId0,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6888,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId0,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6888,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId0,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6888,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId1,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6888,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId1,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6888,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId1,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6888,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId1,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6888,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId2,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId2,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 217
+                    },
+                    "dpcId2,blockId2": {
+                        "perf_dnoc_rdreq_32B": 1,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId2,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId3,blockId0": {
+                        "perf_dnoc_rdreq_32B": 1,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId3,blockId1": {
+                        "perf_dnoc_rdreq_32B": 2,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 217
+                    },
+                    "dpcId3,blockId2": {
+                        "perf_dnoc_rdreq_32B": 1,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId3,blockId3": {
+                        "perf_dnoc_rdreq_32B": 1,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 220
+                    },
+                    "dpcId4,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 230
+                    },
+                    "dpcId4,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 227
+                    },
+                    "dpcId4,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId4,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId5,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId5,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId5,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 216
+                    },
+                    "dpcId5,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 220
+                    },
+                    "dpcId6,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId6,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId6,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId6,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId7,blockId0": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId7,blockId1": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId7,blockId2": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 228
+                    },
+                    "dpcId7,blockId3": {
+                        "perf_dnoc_rdreq_32B": 0,
+                        "perf_dnoc_rdreq_128B": 6900,
+                        "perf_dnoc_rdreq_64B": 228
+                    }
+                },
+                "args": {
+                    "processIndex": [
+                        0
+                    ]
+                }
+            }
+        ]
+    },
+    "umd_data": {},
+    "device_info": {
+        "5": {
+            "gpu_id": "37197",
+            "cpu_cores_count": 0,
+            "mem_banks_count": 1,
+            "direct_link_count": 4,
+            "indirect_link_count": 8,
+            "vendor_id": 39321,
+            "device_id": 16385,
+            "drm_render_minor": 131,
+            "isa_major": 10,
+            "isa_minor": 0,
+            "is_vf": 0,
+            "max_vf_nums": 8,
+            "domain": 0,
+            "location_id": 4608,
+            "num_sdma_engines": 5,
+            "num_sdma_queues_per_engine": 9,
+            "num_vpue_cores": 1,
+            "num_vpud_cores": 8,
+            "caches_count": 157,
+            "peu_id_base": 0,
+            "peu_count": 416,
+            "max_waves_per_peu": 8,
+            "wsm_size_in_kb": 64,
+            "wave_front_size": 64,
+            "dpc_count": 8,
+            "dpc0_ap_mask": 8191,
+            "dpc1_ap_mask": 73727,
+            "dpc2_ap_mask": 139263,
+            "dpc3_ap_mask": 204799,
+            "dpc4_ap_mask": 270335,
+            "dpc5_ap_mask": 335871,
+            "dpc6_ap_mask": 409535,
+            "dpc7_ap_mask": 475103,
+            "dpc_arrays": 1,
+            "ap_per_dpc": 13,
+            "peu_per_ap": 4,
+            "pri_mem_per_thread": 4,
+            "max_slots_private_ap": 32,
+            "num_ce_queues": 16,
+            "max_engine_clk_gpu": 1600,
+            "max_engine_clk_cpu": 3600,
+            "mgpu_id": 0,
+            "topology_id": 2,
+            "socket_id": 0,
+            "hbmecc": 1,
+            "local_mem_size": 68719476736,
+            "capability": 4432512,
+            "maxprocess": 10
+        }
+    }
+}

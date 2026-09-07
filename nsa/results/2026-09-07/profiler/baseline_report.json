@@ -1,0 +1,26 @@
+{
+    "Summary": [
+        {
+            "data": 9700791.334,
+            "isError": false,
+            "message": "",
+            "name": "Total Cycles"
+        }
+    ],
+    "Memory Statistics": [
+        {
+            "data": 2303349568.0,
+            "isError": false,
+            "message": "",
+            "name": "Global Memory Read bytes"
+        }
+    ],
+    "Occupancy": [
+        {
+            "data": 2114236.0,
+            "isError": false,
+            "message": "",
+            "name": "Achieved waves"
+        }
+    ]
+}
