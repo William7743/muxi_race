@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA076 early V fragment source verified (V load precedes QK), syntax PASS;
+d64076 seed427 running. See EARLY076.md; no speedup established.
+
 NSA075 V fragment source export succeeds, barriers3 vs5 on D64 G16.
 d64075 seed426 exact29/29 PASS, geomean0.808795302x, cumulative0.740561899x;
 rejected. V scalar source loads replace uint4. See VFRAGMENT075.md.
