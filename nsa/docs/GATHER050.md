@@ -22,3 +22,9 @@ Geomean1.06669631x, summed latency ratio1.08615055x versus #115804.
 Profile050 correctly partitions46 changed and63 unchanged cases; unchanged
 geomean0.99833498x. This does not establish an overall win over NSA049's
 two runs. Extended edges launched as edges050; retain NSA049 pending checks.
+
+edges050 completed:70 PASS, max_abs0.00390625 across declared cases/modes.
+No all-masked semantics claim. Direct NSA049/050 paired test seed394 started
+as paired050 with small_s8 suite: B/L=(1/64,1/128,1/256,1/512,2/256,2/512).
+Last shape is an unchanged threshold control. This checks the dispatch gate
+beyond the single public small S8 case; results pending.
