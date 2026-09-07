@@ -15,3 +15,8 @@ server. No injected code or result caching. Other paths unchanged.
 
 Python syntax PASS. d64071 seed422 d64bs16 suite started; pending compiler,
 correctness and timing outcomes. NSA057 remains preferred candidate.
+
+Terminal result: first candidate compilation fails LayoutInference conflict
+between acc_s GEMM layout and annotated acc_norm at direct T.copy. No
+correctness/timing result established. Next feasible test is explicit shared
+staging between layouts; conversion cost must be included. Raw log retained.

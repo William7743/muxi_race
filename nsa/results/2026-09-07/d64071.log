@@ -1,0 +1,53 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case": {"B": 1, "SEQ_LEN": 64, "H": 1, "HQ": 16, "D": 64, "S": 1, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+{"case": {"B": 1, "SEQ_LEN": 64, "H": 1, "HQ": 16, "D": 64, "S": 1, "block_size": 16, "is_causal": true}, "candidate": "candidate", "phase": "compile_correctness"}
+2026-09-07 12:42:18  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+Traceback (most recent call last):
+  File "/root/nsa_20260907_codex/nsa/tests/compare_s1.py", line 110, in <module>
+    main()
+  File "/root/nsa_20260907_codex/nsa/tests/compare_s1.py", line 87, in main
+    mod.run_kernel(q,k,v,idx,outs[name],*args)
+  File "/root/nsa_20260907_codex/nsa/probes/probe_nsa071_d64_softmax_layout.py", line 859, in run_kernel
+    kernel = _get_kernel(
+             ^^^^^^^^^^^^
+  File "/root/nsa_20260907_codex/nsa/probes/probe_nsa071_d64_softmax_layout.py", line 828, in _get_kernel
+    kernel = fn(
+             ^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/__init__.py", line 461, in __call__
+    kernel = self.compile(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/__init__.py", line 391, in compile
+    kernel_result = compile(
+                    ^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/__init__.py", line 111, in compile
+    return cached(
+           ^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/cache/__init__.py", line 74, in cached
+    return _dispatch_map[execution_backend].cached(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/cache/kernel_cache.py", line 365, in cached
+    kernel = JITKernel(
+             ^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/kernel.py", line 132, in __init__
+    adapter = self._compile_and_create_adapter(func, out_idx)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/jit/kernel.py", line 247, in _compile_and_create_adapter
+    artifact = tilelang.lower(
+               ^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/engine/lower.py", line 384, in lower
+    host_mod, device_mod, params, target, target_host = lower_to_host_device_ir(
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/engine/lower.py", line 358, in lower_to_host_device_ir
+    mod = LowerAndLegalize(mod, target)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/tilelang/engine/phase.py", line 206, in LowerAndLegalize
+    mod = tilelang.transform.LayoutInference()(mod)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/tilelang-metax-v0.1.10/3rdparty/tvm/python/tvm/ir/transform.py", line 171, in __call__
+    return _ffi_transform_api.RunPass(self, mod)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/tvm_ffi/cython/function.pxi", line 968, in tvm_ffi.core.Function.__call__
+tvm.error.InternalError: Layout infer conflict between acc_s and acc_norm in T.Parallel loop:
+    loop Fragment((16, 16) -> (4,), replicate: 1, thread: 64, forward_thread: _i * 4 + _j // 4, forward_index: (_j % 4,))
+    fragment Fragment((16, 16) -> (4,), replicate: 1, thread: 64, forward_thread: _j // 4 * 16 + _i, forward_index: (_j % 4,), thread_range: I.Range(0, 64))
+
