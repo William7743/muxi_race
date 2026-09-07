@@ -6,7 +6,8 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 NSA068 post-QK mask: d64068 exact29/29 PASS, geomean0.979076744x vs
 reference; no benefit, not promoted. NSA069 direct FP16 normalized
-probability write (parent057) syntax PASS, d64069 seed420 running.
+probability write (parent057): d64069 exact29/29 PASS, geomean0.996570865x,
+no gain. NSA070 transposed shared V syntax PASS, d64070 seed421 running.
 NSA057 retained. See MASK068.md. Only D64/BS16 simple path changed.
 
 NSA057 G32-only PV FullCol: direct G32 suite7/7 PASS with gains on all5

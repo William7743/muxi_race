@@ -18,3 +18,12 @@ Next independent NSA069 uses NSA057, not NSA068: D64/BS16 normalized
 probabilities written directly into FP16 acc_cast instead of first updating
 acc_s then copying. All other paths unchanged. Syntax PASS; d64069 seed420
 launched after d64068 terminal. Results pending, no speedup claim.
+
+NSA069 completed exact29/29 PASS, reference/candidate geomean0.996570865x,
+cumulative0.999220126x (0.918412799 / 0.919129604 ms). No gain; not promoted.
+
+NSA070 independently branches from057: transpose shared V to [D,BS] only
+for D64/BS16 simple kernel, write with T.Parallel and use transpose_B=True
+for PV T.gemm. No external computation or cached result. Hypothesis is
+different PV operand layout; possible load/store overhead must be measured.
+Syntax PASS; d64070 seed421 launched after069 terminal. Results pending.
