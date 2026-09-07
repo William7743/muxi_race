@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA073 D64/BS16 CK1 CV2 experiment launched d64073 seed424; syntax PASS.
+PV output split with unsplit QK; no performance conclusion. See PVSPLIT073.md.
+
 NSA068 post-QK mask: d64068 exact29/29 PASS, geomean0.979076744x vs
 reference; no benefit, not promoted. NSA069 direct FP16 normalized
 probability write (parent057): d64069 exact29/29 PASS, geomean0.996570865x,
