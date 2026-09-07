@@ -9,3 +9,8 @@ This splits the PV output dimension, not its reduction dimension.
 
 Syntax PASS. No active GPU job before launching d64073, seed424,
 d64bs16 suite. Outcomes pending; no speedup or score claim.
+
+Completed exact29/29 PASS. Reference/candidate geomean0.969407459x,
+cumulative ratio0.975027299x. No net benefit; not promoted. Raw JSONL
+and compilation log archived. NSA057 retained. Neither this experiment
+nor other local timings establish an OJ88 score.
