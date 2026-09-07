@@ -4,6 +4,14 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA012 BS32 compilation fails due to probability-fragment layout conflict.
+NSA013 shared probability resolves it and passes six cases. D64/BS32
+46.31->37.30us; D128/BS32 79.31->65.51us. D32 regresses; no global promotion.
+See WARPS012.md; broader tests needed before combining.
+
+NSA011 cython backend completes four checks but is substantially slower;
+ reject. NSA012 tests two-warps for S1 BS32 only, comparison running.
+
 NSA008 QK-fragment larger tests pass but regress most configurations. NSA009
 chunk-Q-only passes, regresses BS16 and gives only~5% BS32 benefit. Neither
 promoted. Raw numbers in QK008_Q009.md. NSA010 passes with only1-2% timing
