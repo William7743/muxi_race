@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA091 transposed shared K D64/BS16: paired09129/29 PASS but geom0.7741,
+sum-time ratio0.6905 versus078. Reject; keep078. See SIMPLE091.md.
+
 profile090 completed retained078 B8/L4096 D64/S1: correctness PASS;
 MMA duty5.57%, shared non-conflict78.95%, WSM/VLS stalls. VLS duty0%
 is suspect; counters guide shared-exchange investigation, not a confirmed
