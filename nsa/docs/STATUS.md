@@ -4,6 +4,11 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+Current local performance baseline: NSA033, two complete109 PASS runs
+(geomean1.05438805x and1.05261737x vs #115804) and direct31-case D128
+comparison1.02860972x vs NSA028. No OJ score inferred. NSA034 combines
+shared CV2 and is running public109 seed363. Preserve older candidates.
+
 NSA032 ordinary safe-off CV1 direct NSA028 comparison passes both cases:
 BS16 50.522->48.230us, BS32 unchanged control61.440->61.478us.
 Full public109 seed359 all PASS, geomean1.0506872x, but two ordinary BS32
