@@ -5,7 +5,8 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 ## Latest update: exact reference submission
 
 NSA074 isolated D64/BS16 storage-rewrite-off JIT: syntax PASS,
-d64074 seed425 running. Synchronization enabled. See STORAGE074.md.
+d64074 seed425 exact29/29 PASS, geomean0.990849370x, cumulative0.996748124x;
+no gain, not promoted. Synchronization enabled. See STORAGE074.md.
 
 NSA073 D64/BS16 CK1 CV2 d64073 seed424 exact29/29 PASS;
 geomean0.969407459x, cumulative0.975027299x, not promoted. See PVSPLIT073.md.
