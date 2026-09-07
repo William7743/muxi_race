@@ -4,6 +4,11 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+OJ141047 user screenshot: Accepted67.36,1727us,22.2G. Exact code
+mapping unconfirmed; do not definitively label it078. This requires
+reconciling local evaluation with OJ before promoting further candidates.
+See OJ141047.md.078 remains LOCAL-only candidate, not OJ-best.
+
 NSA094 full-block mask fast path: paired09429/29 PASS, geom0.9934,
 sum ratio0.9974. No gain, keep078. See SIMPLE094.md.
 
