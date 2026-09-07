@@ -4,6 +4,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA030 shared safe-off chunk CV2 passes two-case checks, including direct
+NSA028 pairing: BS32 60.800->59.392us. Full109 public030 seed354 running.
+Not yet promoted; see SHARED030.md.
+
 NSA029 early synchronous V load: all six qk cases pass (seed351), but
 D32/BS32 21.901->25.843 us and D64/BS32 47.117->59.942 us regress.
 Not promoted. NSA028 remains the best tested combined candidate, not an
