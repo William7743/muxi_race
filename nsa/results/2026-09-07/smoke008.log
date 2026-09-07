@@ -1,0 +1,29 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 0, "phase": "before_run"}
+2026-09-07 08:14:36  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 08:14:39  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+run_returned
+synchronized
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 0, "status": "PASS", "max_error": 0.0012853145599365234, "first_call_s": 3.2836395697668195, "exploratory_ms": 0.03968000039458275}
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 17, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 17, "status": "PASS", "max_error": 0.001232147216796875, "first_call_s": 0.00010836683213710785, "exploratory_ms": 0.03200000151991844}
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 0, "phase": "before_run"}
+2026-09-07 08:14:40  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 08:14:43  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+run_returned
+synchronized
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 0, "status": "PASS", "max_error": 0.0015857219696044922, "first_call_s": 3.537123452872038, "exploratory_ms": 0.03379200026392937}
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 17, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 17, "status": "PASS", "max_error": 0.0014605522155761719, "first_call_s": 7.830467075109482e-05, "exploratory_ms": 0.03328000009059906}
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 0, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 0, "status": "PASS", "max_error": 0.0010454654693603516, "first_call_s": 0.11485083401203156, "exploratory_ms": 0.03404799848794937}
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 17, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 17, "status": "PASS", "max_error": 0.001111745834350586, "first_call_s": 7.637916132807732e-05, "exploratory_ms": 0.033535998314619064}

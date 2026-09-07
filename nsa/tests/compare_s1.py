@@ -23,7 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', type=Path, default=ROOT / 'baselines/oj_115804.py')
     parser.add_argument('--candidate', type=Path, default=ROOT / 'probes/probe_nsa003_bs32_ck4.py')
-    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','public'], default='bs32')
+    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','public','qk'], default='bs32')
     parser.add_argument('--seed', type=int, default=314)
     parser.add_argument('--output-dir', type=Path,
                         default=ROOT / 'results' / datetime.now().strftime('local-%Y%m%d-%H%M%S-%f'))
@@ -35,9 +35,9 @@ def main():
         public_cases = json.load(f)
         cases = [x for x in public_cases if x['S'] == 1 and x['D'] == 128 and x['block_size'] == 32]
     cases += [dict(B=2,SEQ_LEN=512,H=h,HQ=hq,D=128,S=1,block_size=32,is_causal=True) for h,hq in ((2,16),(1,32))]
-    if options.suite == 'qfragment':
+    if options.suite in ('qfragment','qk'):
         cases = [dict(B=4,SEQ_LEN=1024,H=1,HQ=16,D=d,S=1,block_size=bs,is_causal=True)
-                 for d in (32,64) for bs in (16,32)]
+                 for d in ((32,64,128) if options.suite == 'qk' else (32,64)) for bs in (16,32)]
     if options.suite == 'qwide':
         cases = [dict(B=b,SEQ_LEN=l,H=1,HQ=16,D=64,S=1,block_size=32,is_causal=True)
                  for b,l in ((1,128),(1,512),(1,1024),(2,512),(2,1024),(4,1024),(8,1024))]

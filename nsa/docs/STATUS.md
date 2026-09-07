@@ -4,6 +4,12 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA007 PUBLIC109 COMPLETE: both #115804 and candidate pass all109 with seed316.
+Overall geomean1.0070x, changed5 cases1.1227x, unchanged104 controls1.0017x.
+Benefit is too narrow to support88-point expectation. Full raw logs and scope
+in PUBLIC007.md. NSA008 QK-fragment ablation passes3 smoke shapes/two seeds;
+paired larger D32/D64/D128 x BS16/32 testing started (seed317), pending.
+
 NSA004 expanded seed315 test: eight D64/BS32 configurations pass; large work
 benefits, small work regresses. NSA006 padded G8 fallback passes12 checks
 (D32/64/128 x S1/4 x two seeds). NSA007 combines work-gated optimizations and
