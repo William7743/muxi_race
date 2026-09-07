@@ -15,3 +15,10 @@ small052 seed396 all6 PASS. Candidate us by B/L:
 2/256:27.021;2/512:41.165. Compared with prior051 measurements,
 KD32 appears slower at64/128 but faster at256. Different-run comparison
 is preliminary. Direct parent051 paired052 seed397 launched to confirm.
+
+paired052 all6 PASS. Direct051->052us:1/64 12.032->12.902;
+1/12813.619->14.707;1/25621.504->16.883. Unchanged larger shapes
+27.098->27.149,26.931->26.995,40.934->41.050.
+NSA053 combines KD64 belowgrid256, KD32 at256..511; online at512+.
+Only S8 D64 BS16 G16 affected; inherited S2/S4 unchanged.
+Full public053 seed398 launched. No OJ score or full-pass claim yet.
