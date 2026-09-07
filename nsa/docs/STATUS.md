@@ -4,8 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
-Targeted profile057d64 running after076; source-selectable profiling helper
-records SHA256. See PROFILE057D64.md. No counter conclusion yet.
+Targeted profile057d64 completed, workload PASS/source hash confirmed.
+Counters retained but coverage/units do not establish a bottleneck; see
+PROFILE057D64.md. Achieved waves4020 is not an occupancy percentage.
 
 NSA076 early V fragment source verified (V load precedes QK), syntax PASS;
 d64076 seed427 exact29/29 PASS, geomean0.786400613x, cumulative0.689504406x;
