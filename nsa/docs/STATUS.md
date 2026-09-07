@@ -14,7 +14,8 @@ latency ratio1.043529x, changed31 geomean1.118109x. Large-grid boundary
 extension passes all20 checks (max abs0.00390625). Independent public109
 repeat seed338 completes all109 PASS: overall geomean1.033343x (first1.030425x),
 changed31 geomean1.123402x. No OJ score established. NSA024 adds gated S2
-gather from NSA002 to NSA023, nine sparse-case comparison seed339 running.
+gather from NSA002 to NSA023: all9 sparse cases pass seed339. Changed S2
+cases19.70->13.48us and50.71->41.41us. Full public109 seed340 running.
 Not promoted; see SAFE022.md for aligned/nonnegative-block input assumptions.
 
 NSA021 reuses K storage for V in simplified S1. All6 checks pass, but no

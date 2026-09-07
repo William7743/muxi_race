@@ -33,7 +33,7 @@ def summarize(rows):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('jsonl',type=Path)
-    p.add_argument('--profile', choices=['007','017','022','023'], default='007',
+    p.add_argument('--profile', choices=['007','017','022','023','024'], default='007',
                    help='Candidate-specific changed-path grouping, not a score formula')
     a=p.parse_args()
     rows=[json.loads(line) for line in a.jsonl.read_text().splitlines() if line.strip()]
@@ -41,10 +41,15 @@ def main():
     expected=Counter(map(key,public))
     observed=Counter(key(r['case']) for r in rows if r.get('status')=='PASS')
     changed = (lambda c: c['S']==1) if a.profile=='022' else changed_007
-    if a.profile=='023':
+    if a.profile in ('023','024'):
         changed = lambda c: changed_007(c) or (c['S']==1 and c['D']==128
             and c['SEQ_LEN'] % c['block_size']==0 and c['HQ']//c['H']>=16
             and c['B']*c['SEQ_LEN']*(c['HQ']//c['H'])>=1024)
+    if a.profile=='024':
+        parent_changed = changed
+        changed = lambda c: parent_changed(c) or (c['S']==2 and c['D']==64
+            and c['block_size']==16 and c['HQ']//c['H']==16
+            and c['B']*c['SEQ_LEN']*c['H']>=1024)
     result=dict(public_expected=len(public),pass_rows=sum(observed.values()),
                 missing_public_occurrences=sum((expected-observed).values()),
                 extra_occurrences=sum((observed-expected).values()),
