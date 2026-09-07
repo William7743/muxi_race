@@ -6,7 +6,8 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 NSA040 sparse9 PASS, S4 B2 28.838->19.955us and B4 78.234->62.490us.
 Full109 seed377 all PASS, geomean1.06215505x. S4 edges completed;
-full repeat seed378 running. See GATHER040.md. Not yet promoted.
+full repeat seed378 all109 PASS, geomean1.06162384x. NSA041 S8 experiment
+seed379 running. See GATHER040.md; no OJ score established.
 
 NSA039 gather128/shared probability sparse9 PASS, larger S2 candidate
 12.659us/35.878us. Direct parent NSA034 pairing seed373 all9 PASS:
