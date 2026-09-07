@@ -28,3 +28,10 @@ No all-masked semantics claim. Direct NSA049/050 paired test seed394 started
 as paired050 with small_s8 suite: B/L=(1/64,1/128,1/256,1/512,2/256,2/512).
 Last shape is an unchanged threshold control. This checks the dispatch gate
 beyond the single public small S8 case; results pending.
+
+paired050 completed6/6 PASS versus NSA049. B/L baseline->candidate us:
+1/64:15.936->11.763;1/128:25.280->13.427;1/256:24.627->21.478;
+1/512:27.238->32.307;2/256:27.226->31.795;2/512:41.011->40.960.
+The grid<1024 gate is too broad. NSA051 restricts S8 gather to grid<512,
+preserving the measured small-grid wins and original online at512+.
+small051 seed395 launched to check revised gate. NSA050 not promoted.
