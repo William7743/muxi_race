@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA092 Q-only vec16: paired09229/29 PASS, geom0.9960/sum ratio0.9965,
+no established gain. Keep078. See SIMPLE092.md.
+
 NSA091 transposed shared K D64/BS16: paired09129/29 PASS but geom0.7741,
 sum-time ratio0.6905 versus078. Reject; keep078. See SIMPLE091.md.
 
