@@ -4,6 +4,14 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA053 combines small S8 gather with grid-dependent KD64/KD32 and online
+fallback at grid>=512. Full public053 seed398:109/109 PASS, exact coverage,
+geomean1.06924303x versus #115804. edges053:70 checks completed, max_abs
+0.00390625. Independent public053repeat seed399 running. NSA049 remains
+the prior repeated-full-suite candidate until this repeat is checked.
+See GATHER050.md and GATHER052.md for direct-parent comparisons and rejected
+wide gate. No OJ score beyond the user-reported reference is established.
+
 NSA049 small-grid gather sparse9 PASS: small S4 15.974->12.070us.
 Full109 seed390 all PASS, geomean1.06500097x. Small-grid edges completed;
 repeat seed391 all109 PASS with exact coverage, geomean1.07012829x.

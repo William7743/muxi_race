@@ -27,3 +27,7 @@ public053 completed109/109 PASS with exact public coverage. Geomean
 1.06924303x; summed latency ratio1.08892023x versus frozen reference.
 Profile053 uses the corrected512 threshold. Unchanged-control geomean
 0.99651780x. Combined edges053 started; OJ improvement remains unverified.
+
+edges053 terminal,70 completed checks, max_abs0.00390625. Raw log retained.
+Independent full public053repeat seed399 launched. Do not infer a repeat
+pass from first-run or edge results.
