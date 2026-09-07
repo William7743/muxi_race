@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+Targeted profile057d64 running after076; source-selectable profiling helper
+records SHA256. See PROFILE057D64.md. No counter conclusion yet.
+
 NSA076 early V fragment source verified (V load precedes QK), syntax PASS;
 d64076 seed427 exact29/29 PASS, geomean0.786400613x, cumulative0.689504406x;
 rejected. See EARLY076.md. NSA057 retained.

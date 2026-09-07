@@ -3,6 +3,7 @@
 All profiler APIs and torch reference work stay outside submitted kernels.
 """
 import argparse
+import hashlib
 import importlib.util
 import json
 import sys
@@ -17,14 +18,16 @@ from smoke_nsa import reference
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--candidate', choices=['baseline','gather'], default='baseline')
+    parser.add_argument('--source', type=Path, help='Explicit standalone candidate, overrides --candidate')
     parser.add_argument('--batch', type=int, default=4)
     parser.add_argument('--length', type=int, default=1024)
     parser.add_argument('--dim', type=int, default=64)
     parser.add_argument('--selected', type=int, default=8)
     parser.add_argument('--capture', action='store_true')
     args = parser.parse_args()
-    source = ROOT / ('baselines/nsa_20260817.py' if args.candidate == 'baseline'
-                     else 'probes/probe_nsa002_gather.py')
+    source = args.source or (ROOT / ('baselines/nsa_20260817.py' if args.candidate == 'baseline'
+                     else 'probes/probe_nsa002_gather.py'))
+    source = source.resolve()
     spec = importlib.util.spec_from_file_location('profile_candidate', source)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
@@ -49,7 +52,8 @@ def main():
     for _ in range(3):
         mod.run_kernel(q,k,v,bi,out,*params)
     torch.cuda.synchronize()
-    print(json.dumps(dict(candidate=args.candidate,params=params,correctness='PASS',seed=2718)),flush=True)
+    print(json.dumps(dict(candidate=str(source),sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+                         params=params,correctness='PASS',seed=2718)),flush=True)
     if args.capture:
         torch.cuda.profiler.start()
     try:
