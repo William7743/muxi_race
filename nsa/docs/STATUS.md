@@ -4,6 +4,12 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA008 QK-fragment larger tests pass but regress most configurations. NSA009
+chunk-Q-only passes, regresses BS16 and gives only~5% BS32 benefit. Neither
+promoted. Raw numbers in QK008_Q009.md. NSA010 passes with only1-2% timing
+differences (not established gains). NSA011 built-in cython backend small-case
+comparison running; device math and pass settings identical to #115804.
+
 NSA007 PUBLIC109 COMPLETE: both #115804 and candidate pass all109 with seed316.
 Overall geomean1.0070x, changed5 cases1.1227x, unchanged104 controls1.0017x.
 Benefit is too narrow to support88-point expectation. Full raw logs and scope

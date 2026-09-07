@@ -1,0 +1,11 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 128, "S": 1, "block_size": 16, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 128, "S": 1, "block_size": 16, "is_causal": true}, "candidate": "candidate", "phase": "compile_correctness"}
+2026-09-07 08:18:48  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 08:18:51  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 128, "S": 1, "block_size": 16, "is_causal": true}, "seed": 319, "status": "PASS", "call_event_ms": {"baseline": [0.059008002281188965, 0.056524801254272464, 0.056576001644134524, 0.05678079724311828], "candidate": [0.05555199980735779, 0.05555199980735779, 0.05580800175666809, 0.05506560206413269]}, "median_ms": {"baseline": 0.056678399443626404, "candidate": 0.05555199980735779}, "baseline_over_candidate": 1.020276491218583}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 128, "S": 1, "block_size": 32, "is_causal": true}, "candidate": "baseline", "phase": "compile_correctness"}
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 128, "S": 1, "block_size": 32, "is_causal": true}, "candidate": "candidate", "phase": "compile_correctness"}
+2026-09-07 08:18:52  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 08:18:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case": {"B": 4, "SEQ_LEN": 1024, "H": 1, "HQ": 16, "D": 128, "S": 1, "block_size": 32, "is_causal": true}, "seed": 319, "status": "PASS", "call_event_ms": {"baseline": [0.08138239979743958, 0.08043519854545593, 0.08076800107955932, 0.07936000227928161], "candidate": [0.08171520233154297, 0.0796671986579895, 0.07964159846305847, 0.07989760041236878]}, "median_ms": {"baseline": 0.08060159981250763, "candidate": 0.07978239953517914}, "baseline_over_candidate": 1.0102679323021273}
