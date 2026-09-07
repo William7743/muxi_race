@@ -23,7 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', type=Path, default=ROOT / 'baselines/oj_115804.py')
     parser.add_argument('--candidate', type=Path, default=ROOT / 'probes/probe_nsa003_bs32_ck4.py')
-    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','qwide32','public','sparse','qk','chunk','latency'], default='bs32')
+    parser.add_argument('--suite', choices=['bs32','qfragment','qwide','qwide32','public','d128','sparse','qk','chunk','latency'], default='bs32')
     parser.add_argument('--seed', type=int, default=314)
     parser.add_argument('--output-dir', type=Path,
                         default=ROOT / 'results' / datetime.now().strftime('local-%Y%m%d-%H%M%S-%f'))
@@ -47,6 +47,8 @@ def main():
                  for b,l in ((1,128),(1,512),(2,1024),(4,1024),(8,1024)) for bs in (16,32)]
     if options.suite == 'public':
         cases = public_cases
+    if options.suite == 'd128':
+        cases = [c for c in public_cases if c['S'] == 1 and c['D'] == 128]
     if options.suite == 'sparse':
         cases = [c for c in public_cases if c['S'] > 1]
     if options.suite == 'chunk':
