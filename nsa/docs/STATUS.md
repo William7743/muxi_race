@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA043 FullCol gather sparse9 PASS, near prior FullRow timings without
+clear benefit. Not promoted; see GATHER043.md.
+
 NSA042 gather256 fails GEMM layout inference (Divide by zero), not a
 GPU correctness/performance result. Rejected; see GATHER042.md.
 
