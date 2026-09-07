@@ -12,6 +12,15 @@ rounds under results/2026-09-07. No promotion or OJ-score claim yet.
 New-process seed2027 repeat also passes: BS32 baseline80.96 vs CK4/CV4 68.67us.
 Experimental NSA003 records the BS32-only rule and passes syntax checking;
 full run_kernel testing and wider shape coverage remain next gates.
+Update: all eight public D128/S1/BS32 cases pass through both full entry points.
+Large grids improve1.08-1.17x; smaller grids are neutral/slower. NSA005 adds a
+grid>=2048 gate (derived candidate, not yet independently checked).
+Additional G8 input fails in original baseline compilation (M must be divisible
+by16); subsequent G32 case was not reached. See COVERAGE003.md for exact scope.
+NSA004 independently tests fragment rather than shared Q in simplified S1;
+smoke validation passes all three cases/two seeds. Four larger D32/D64 tests
+also pass; D64/BS32 improves46.23->41.57us, D64/BS16 slightly regresses.
+See QFRAGMENT004.md. Wider coverage/repeat remains needed. No OJ submission made.
 
 User supplied source and identified OJ #115804 (reported score 82.86).
 Frozen as `baselines/oj_115804.py`; see `baselines/PROVENANCE.md`.

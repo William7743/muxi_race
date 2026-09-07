@@ -1,0 +1,27 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 0, "phase": "before_run"}
+2026-09-07 08:00:08  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-07 08:00:10  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+run_returned
+synchronized
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 0, "status": "PASS", "max_error": 0.0012853145599365234, "first_call_s": 3.3692344720475376, "exploratory_ms": 0.04044799879193306}
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 17, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 64, 1, 16, 32, 1, 16, true], "seed": 17, "status": "PASS", "max_error": 0.001232147216796875, "first_call_s": 9.532412514090538e-05, "exploratory_ms": 0.031488001346588135}
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 0, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 0, "status": "PASS", "max_error": 0.0015857219696044922, "first_call_s": 0.10761716775596142, "exploratory_ms": 0.034304000437259674}
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 17, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 1, 16, 128, 1, 32, true], "seed": 17, "status": "PASS", "max_error": 0.0014605522155761719, "first_call_s": 6.800191476941109e-05, "exploratory_ms": 0.03558399900794029}
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 0, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 0, "status": "PASS", "max_error": 0.0010454654693603516, "first_call_s": 0.10771559877321124, "exploratory_ms": 0.033535998314619064}
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 17, "phase": "before_run"}
+run_returned
+synchronized
+{"case": [1, 128, 2, 32, 64, 4, 16, true], "seed": 17, "status": "PASS", "max_error": 0.001111745834350586, "first_call_s": 7.163267582654953e-05, "exploratory_ms": 0.03276799991726875}
