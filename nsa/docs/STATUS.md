@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA036 shared Q/K/V vec16 both chunk checks PASS, BS32 65.587us vs
+NSA034 approximately59us. Not promoted; see LAYOUT036.md.
+
 Newest established local baseline NSA034: two109 PASS runs, geomeans
 1.05624632x/1.05717658x, direct parent gains and40 edge checks PASS.
 NSA035 QK loop unroll two-case checks PASS; direct parent BS16
