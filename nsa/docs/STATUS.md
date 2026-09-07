@@ -4,6 +4,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA037 shared vec4 both chunk checks PASS, BS32 63.475us. Neither vec4
+nor vec16 improves on current default-layout NSA034. Not promoted;
+see LAYOUT037.md. Keep NSA034.
+
 NSA036 shared Q/K/V vec16 both chunk checks PASS, BS32 65.587us vs
 NSA034 approximately59us. Not promoted; see LAYOUT036.md.
 
