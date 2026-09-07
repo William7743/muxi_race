@@ -45,3 +45,8 @@ g32057 all7 PASS. Direct053->057us by B/L:
 4/102456.218->53.824;8/1024105.997->100.262.
 Changed paths consistently improve this run. public057 seed407 started;
 full-suite and edge validation needed before promotion.
+
+public057 seed407 completed109/109 PASS, exact coverage. Geomean1.06897306x,
+summed latency ratio1.08806807x versus reference. This is close to053;
+specific G32 benefit established separately by paired tests. Added G32
+edge shapes B2/L512 and B2/L1024 D64 S1 BS32. edges057 launched.
