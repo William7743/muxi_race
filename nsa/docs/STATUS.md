@@ -8,7 +8,9 @@ NSA068 post-QK mask: d64068 exact29/29 PASS, geomean0.979076744x vs
 reference; no benefit, not promoted. NSA069 direct FP16 normalized
 probability write (parent057): d64069 exact29/29 PASS, geomean0.996570865x,
 no gain. NSA070 transposed shared V29/29 PASS but geomean0.810117694x,
-rejected. source057simple compiler-source inspection running next.
+rejected. source057simple inspection completed: shared workspace aliasing
+and five barriers. NSA071 adjacent-lane softmax layout syntax PASS,
+d64071 seed422 running. See SOFTMAX071.md; no gain yet established.
 NSA057 retained. See MASK068.md. Only D64/BS16 simple path changed.
 
 NSA057 G32-only PV FullCol: direct G32 suite7/7 PASS with gains on all5
