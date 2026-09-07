@@ -4,6 +4,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA088 D64/BS16 two serial queries per CTA: paired08829/29 PASS,
+geom0.8210 and sum-time ratio0.7738 versus078. Large grids regress too;
+reject. See SIMPLE088.md. Keep078.
+
 NSA087 online vec4 layout: paired0879/9 PASS but changed S8 cases
 22%/23% slower. Reject; keep078. Online vec4/vec16 sweep concluded.
 
