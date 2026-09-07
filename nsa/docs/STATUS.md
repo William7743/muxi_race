@@ -4,6 +4,10 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA084 online reciprocal epilogue: paired0849/9 PASS, under0.5%
+timing difference, no established gain. Generated source differs only
+at epilogue. Keep078; see ONLINE084.md.
+
 NSA083 subtract-before-scale: paired0839/9 PASS; changed paths1-3%
 slower than078. Not promoted. See ONLINE083.md.
 
