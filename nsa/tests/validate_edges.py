@@ -26,7 +26,7 @@ def main():
         cases.append((4,1024,1,16,128,1,16))
     if a.include_combined:
         cases.extend([(4,1024,1,16,32,1,16), (4,1024,1,16,32,1,32),
-                      (2,512,1,16,64,2,16)])
+                      (2,512,1,16,64,2,16), (2,512,1,16,64,4,16)])
     for b,l,h,hq,d,s,bs in cases:
         modes = ['current','first','scaled','zero_query']
         if a.include_combined and s > 1:
