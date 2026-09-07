@@ -19,3 +19,9 @@ paired054 all8 PASS. Changed G16 large shapes21.248->21.107,
 G32 shape19.776->19.162us is a single signal, not enough to promote.
 Keep053. Next independent NSA055 changes shared simple QK policy from
 FullRow to FullCol only (PV unchanged); qwide055 seed402 launched.
+
+qwide055 all8 PASS. Large changed candidate20.672/37.555/64.998us;
+G32 20.992us. No compelling improvement versus recent parent measurements;
+not promoted (not a direct paired regression claim). NSA056 tests the
+opposite isolated change: PV FullCol only, QK original FullRow.
+qwide056 seed403 launched, results pending.
