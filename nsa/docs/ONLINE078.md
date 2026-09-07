@@ -32,3 +32,8 @@ Coverage is prior78 checks plus30 online checks (five shapes x six modes).
 NSA078 becomes local working candidate on direct-parent repeat, full109 and
 expanded edge evidence; preserve057. public078repeat seed432 launched as
 independent full repeat. No OJ submission or88 score established.
+
+public078repeat seed432 completed exact109/109 PASS, geomean1.075434492x,
+cumulative1.103141546x vs frozen#115804, consistent with first full run.
+Two full runs plus108 edge checks support retaining078 as working candidate;
+hidden OJ tests/scoring remain unverified.
