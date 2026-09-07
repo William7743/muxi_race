@@ -4,8 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
-NSA078 online Q fragment syntax/source export PASS; sparse078 seed429
-running. See ONLINE078.md; no measured benefit yet.
+NSA078 sparse0789/9 PASS; changed S8 cases1.281x/1.271x versus frozen
+reference. Direct057 paired078 seed430 running; full validation pending.
+See ONLINE078.md; promising local result, no OJ score claim.
 
 NSA077 sparse0779/9 PASS; changed large S8 cases essentially parity,
 not promoted. Source077 S8 representative export byte-identical to057;

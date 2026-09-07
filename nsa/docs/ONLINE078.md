@@ -8,3 +8,9 @@ versus8666 parent. No injected implementation or input/result caching.
 
 sparse078 seed429 launched after export terminal. Correctness/timing pending.
 Unchanged gather results must not be attributed to078. NSA057 retained.
+
+Initial sparse078 completed9/9 PASS. Changed S8 B2/L51242.0864->32.8448us
+(1.28137x), B4/L1024122.8800->96.7168us(1.27051x). B1/L256 gather
+gain is inherited, not new. Promising but needs direct-parent repeat,
+broader correctness and full public validation before replacing057.
+paired078 seed430 sparse suite launched directly against057, pending.
