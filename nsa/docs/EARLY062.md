@@ -9,3 +9,8 @@ No guaranteed latency overlap from source order alone.
 g32062 seed413 launched, correctness/performance pending. Change currently
 also affects shared-simple G16, requiring validation/gating before promotion.
 NSA057 retained.
+
+Job confirmed terminal. SSH disconnected during initial collection;
+reconnected and retrieved original results without rerunning GPU work.
+Large final case121.600us versus recent057100.262us shows no promising
+signal. Do not promote early-V path; preserve057.
