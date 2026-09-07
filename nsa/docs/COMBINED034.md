@@ -8,4 +8,9 @@ D12831 geomean1.17958003x. No OJ score inferred.
 
 The full-suite difference from NSA033 is small and not sufficient alone
 to establish incremental benefit. Direct31 D128 comparison vs NSA033
-seed364 launched as paired034. Retain NSA033 pending results.
+seed364 completed as paired034: all31 PASS. Five changed shared-path
+cases geomean1.02802231x vs NSA033, all five improved. Example us:
+B4L1024 60.762->58.995; B2L1024 34.662->33.843.
+Extended40 edge checks all PASS, maximum absolute error0.00390625.
+Independent full109 repeat seed365 launched as public034repeat.
+Retain NSA033 pending complete repeat results. No OJ score inferred.
