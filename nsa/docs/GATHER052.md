@@ -31,3 +31,8 @@ Profile053 uses the corrected512 threshold. Unchanged-control geomean
 edges053 terminal,70 completed checks, max_abs0.00390625. Raw log retained.
 Independent full public053repeat seed399 launched. Do not infer a repeat
 pass from first-run or edge results.
+
+public053repeat seed399 completed109/109 PASS, exact coverage. Geomean
+1.07209337x, summed latency ratio1.09050183x. Unchanged-control geomean
+1.00031975x. With direct-parent evidence and edges, promote NSA053 as
+local candidate; preserve NSA049. No OJ88 claim.
