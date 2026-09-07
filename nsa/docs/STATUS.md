@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA042 gather256 fails GEMM layout inference (Divide by zero), not a
+GPU correctness/performance result. Rejected; see GATHER042.md.
+
 NSA041 S8 extension sparse9 PASS but changed cases regress41.306->54.118us
 and123.226->209.498us. Rejected; preserve NSA040 S2/S4-only gather.
 See GATHER041.md.
