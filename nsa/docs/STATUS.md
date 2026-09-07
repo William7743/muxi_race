@@ -4,6 +4,9 @@ MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 
 ## Latest update: exact reference submission
 
+NSA040 sparse9 PASS, S4 B2 28.838->19.955us and B4 78.234->62.490us.
+Full109 seed377 running; see GATHER040.md. Not yet promoted.
+
 NSA039 gather128/shared probability sparse9 PASS, larger S2 candidate
 12.659us/35.878us. Direct parent NSA034 pairing seed373 all9 PASS:
 13.568->12.646us and41.523->35.827us. Full109 seed374 all PASS,
