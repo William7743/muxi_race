@@ -13,3 +13,9 @@ qwide054 seed400 all8 PASS versus frozen reference. Candidate us in suite
 order:10.381,10.726,14.054,13.850,21.376,37.747,65.344,19.341.
 Reference comparison includes inherited gains, not proof of fusion benefit.
 Direct parent NSA053 paired054 seed401 launched on qwide to isolate change.
+
+paired054 all8 PASS. Changed G16 large shapes21.248->21.107,
+37.146->37.478,65.293->65.216us: no consistent meaningful gain.
+G32 shape19.776->19.162us is a single signal, not enough to promote.
+Keep053. Next independent NSA055 changes shared simple QK policy from
+FullRow to FullCol only (PV unchanged); qwide055 seed402 launched.
