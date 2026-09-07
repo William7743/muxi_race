@@ -9,4 +9,8 @@ coverage; geomean1.06500097x, summed latency ratio1.08516943x.
 Profile040 changed/control grouping does not cover new small-grid paths;
 do not interpret its control statistics for this candidate.
 Extended small-grid edges completed, raw edges049 retained. Independent
-full repeat seed391 running as public049repeat. No OJ score inferred.
+full repeat seed391 completed as public049repeat: all109 PASS, exact
+coverage; geomean1.07012829x, summed latency ratio1.08788251x.
+Profile049 now accounts for all45 changed and64 unchanged cases. Repeat
+unchanged-control geomean1.00081802x. NSA049 is the current local candidate,
+not an OJ-validated improvement. No OJ score inferred.
