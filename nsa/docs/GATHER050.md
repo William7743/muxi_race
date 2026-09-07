@@ -7,4 +7,9 @@ small grids despite the larger gather footprint. No cached results.
 
 Python syntax check PASS. Remote paired sparse suite seed392 started as
 sparse050 and its live channel was confirmed nonterminal. Performance
-and correctness results remain pending; NSA049 remains the local candidate.
+and correctness results were pending at launch; NSA049 remains the local candidate.
+
+Completed sparse050: all9 PASS. Newly changed B1 L256 S8:24.858->21.709us
+versus frozen reference (also the parent's unchanged online path). Large S8
+controls40.986->41.037us and123.085->123.046us. This is one local run,
+not a confirmed OJ gain. Full public109 seed393 launched as public050.
