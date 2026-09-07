@@ -1,5 +1,11 @@
 # NSA023 prepared combination (not yet GPU tested)
 
+UPDATE: Six-case qk comparison seed336 completes, all six PASS. B4 L1024
+H1 HQ16 S1. D128 BS16 baseline55.1168us/candidate50.3936us;
+BS32 baseline81.6256us/candidate62.0032us. Raw combined023.jsonl/log retained.
+Four ABBA rounds, ten calls per batch. Boundary validation now running;
+full public suite and repeatability still pending. Original planning notes follow.
+
 Parent NSA017 passed public109. NSA022 showed D128 local gains in six-case
 screening; its full public109 run is still in progress. These gains cannot
 be added arithmetically to NSA017's gains.
