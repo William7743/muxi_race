@@ -1,5 +1,28 @@
 # NSA optimization status
 
+## 2026-09-09 NSA129: byte-exact peer343, isolated on actual OJ109 baseline
+
+v343 is a rebase of v342's S8 delta onto our OJ109 baseline, not an S8 bug
+fix. Archived byte-exact as probe_nsa129_oj109_s8_packed_prefetch.py; source
+SHA d91a4b0a7709c7a6a795d79a7b0c1b87d94861ee979a91ed875626cd788cdbd4.
+AST audit proves only the packed S8 factory changes versus109. No peer
+D128 compiler flags or unvalidated127 combination was imported.
+
+Preserved peer GPU records bind to this exact source: full14 cases,42
+reference assertions across3 modules,210/210 guarded samples; S8 confirmation
+8 reference assertions,56/56 guarded samples. Only case12 generated-source
+hash changes. Its confirmation ratio to109 is0.966575 (about3.34% faster);
+full-suite case12 ratio is0.968395. Inspected source-bound generated CUDA
+retains128-bit V loads/shared writes and four warp fences. This task ran CPU
+audits only, not independent GPU tests. Six negative/int64/noncausal diagnostic
+rows are explicitly excluded from OJ-contract correctness evidence.
+
+See S8_129_PEER_REBASE.md. Optional manual OJ experiment, not a claimed score
+upgrade: fixed OJ projection still86.00; actual best10986.00, goal88 incomplete.
+127/128 combination validation remains pending. Read-only process inspection
+found no compute workers and peer343 resume/profile exit0, but no reliable
+no-new-batches handoff; no GPU workload was launched in this turn.
+
 ## 2026-09-09 NSA128 prepared offline; GPU handoff not confirmed
 
 Peer v342's S8 packed-register prefetch has been isolated into NSA128, on

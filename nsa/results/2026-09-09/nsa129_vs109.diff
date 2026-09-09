@@ -1,0 +1,17 @@
+--- probe_nsa109_s2_scalar_probability.py
++++ probe_nsa129_oj109_s8_packed_prefetch.py
+@@ -1 +1 @@
+-# NSA109: NSA103 plus independently confirmed S2 scalar probability conversion.
++# v343: OJ Accepted #141658 foundation plus validated register-bit S8 V prefetch.
+@@ -1401,0 +1402,2 @@
++            lane = T.get_thread_binding(0)
++            Vbits = T.alloc_local([8], T.uint32)
+@@ -1424,0 +1427,2 @@
++                                for r in T.unroll(2):
++                                    Vbits[T.Ramp(r * 4, 1, 4)] = T.reinterpret(V[i_b, safe_s + lane // 8 + r * 8, i_h, T.Ramp((lane % 8) * 8, 1, 8)], "uint32x4")
+@@ -1437,2 +1441,3 @@
+-                                for i, j in T.Parallel(BS, D):
+-                                    Ks[i, j] = V[i_b, safe_s + i, i_h, j]
++                                for r in T.unroll(2):
++                                    for c in T.vectorized(8):
++                                        Ks[lane // 8 + r * 8, (lane % 8) * 8 + c] = T.reinterpret(T.Cast(T.uint16, Vbits[r * 4 + c // 2] >> ((c % 2) * 16)), T.float16)
