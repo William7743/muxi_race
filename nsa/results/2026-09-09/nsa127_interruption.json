@@ -1,0 +1,33 @@
+{
+  "status": "initial validation terminated before result creation",
+  "observations": {
+    "workflow_pid": 164625,
+    "log_file": "nsa127_validation_killed.log",
+    "log_contains": [
+      "Loading tilelang libs",
+      "Killed"
+    ],
+    "stress_result_existed": false,
+    "cgroup_memory_limit_bytes": 34359738368,
+    "cgroup_oom_kill_count_observed_later": 5,
+    "concurrent_python_pid_observed": 165456,
+    "concurrent_workload": "Other NSA workspace, v318/v321/v336-v338 case12 calibration",
+    "concurrent_python_rss_kib": 23151816
+  },
+  "interpretation": "Concurrent initialization memory pressure is plausible. No before/after OOM counter or readable kernel log attributes this exact termination; not a proved kernel correctness failure.",
+  "recovery": "Original workflow and the observed foreign test became terminal. A fresh process check found no active Python compute task before retry. Preserve killed log and use a distinct retry log.",
+  "retry": {
+    "workflow_pid": 165890,
+    "child_pid": 165891,
+    "new_overlapping_peer_pid": 165983,
+    "log_file": "nsa127_validation_retry_killed.log",
+    "retained_stress_assertions": 60,
+    "retained_stress_shapes": 10,
+    "cgroup_oom_kill_counter_before": 5,
+    "cgroup_oom_kill_counter_after": 7,
+    "stop_request": "TERM sent only to own known parent/child PIDs, but both were already absent; no peer PID was signalled.",
+    "outcome": "Killed before all 12 stress shapes; full-suite and source export did not execute"
+  },
+  "user_direction": "Wait for the other AI to finish before starting again; do not infer handoff from a short idle gap.",
+  "limitations": "No complete stress/full-suite correctness or timing pass is inferred. Exact OOM victim attribution is unavailable."
+}

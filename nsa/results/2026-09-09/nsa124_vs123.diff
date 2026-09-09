@@ -1,0 +1,7 @@
+--- probe_nsa123_d64_plain_block_bounds.py
++++ probe_nsa124_plain_bounds_all_grids.py
+@@ -0,0 +1 @@
++"""NSA124: extend NSA123 plain bounded D64 dispatch to all aligned grid sizes."""
+@@ -1772 +1773 @@
+-        if fn is nsa_simplified and S == 1 and D == 64 and block_size == 16 and groups == 16 and seq_len % block_size == 0 and B * seq_len * H >= 4096:
++        if fn is nsa_simplified and S == 1 and D == 64 and block_size == 16 and groups == 16 and seq_len % block_size == 0:

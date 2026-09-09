@@ -1,0 +1,160 @@
+--- probe_nsa123_d64_plain_block_bounds.py
++++ probe_nsa127_combined_d64_bounds.py
+@@ -0,0 +1,7 @@
++"""NSA127: combine bounded plain loads (grid>=1024) and ordered bounded prefetch.
++Parent NSA125; no changes to attention mathematics or synchronization.
++Local combination candidate; requires independent validation.
++"""
++"""NSA125: K-before-Q in two aligned D64 prefetch paths; with bounded addresses.
++Parent NSA123; preserves its plain-factory gain. Diagnostic, not OJ verified.
++"""
+@@ -1719,0 +1727,140 @@
++@tilelang.jit(
++    pass_configs={
++        tilelang.PassConfigKey.TL_ENABLE_FAST_MATH: True,
++        tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True,
++        tilelang.PassConfigKey.TL_DISABLE_THREAD_STORAGE_SYNC: True,
++    },
++)
++def nsa_simplified_v_prefetch_ordered125(batch, heads, seq_len, dim, is_causal, block_size, groups, selected_blocks):
++    scale = (1.0 / dim) ** 0.5 * 1.44269504
++    head_kv = heads // groups
++    q_shape = [batch, seq_len, heads, dim]
++    kv_shape = [batch, seq_len, head_kv, dim]
++    bi_shape = [batch, seq_len, head_kv, selected_blocks]
++    dtype = T.float16
++    accum = T.float32
++    G, BS, D = groups, block_size, dim
++
++    @T.prim_func
++    def kernel(
++        Q: T.Tensor(q_shape, dtype),
++        K: T.Tensor(kv_shape, dtype),
++        V: T.Tensor(kv_shape, dtype),
++        BI: T.Tensor(bi_shape, T.int32),
++        Output: T.Tensor(q_shape, dtype),
++    ):
++        with T.Kernel(seq_len, batch * head_kv, threads=64) as (i_t, ibh):
++            i_b = ibh // head_kv
++            i_h = ibh % head_kv
++            Qs = T.alloc_shared([G, D], dtype)
++            Ks = T.alloc_shared([BS, D], dtype)
++            Vs = T.alloc_shared([BS, D], dtype)
++            Vpref = T.alloc_fragment([BS, D], dtype)
++            Os = T.alloc_shared([G, D], dtype)
++            acc_s = T.alloc_fragment([G, BS], accum)
++            acc_cast = T.alloc_fragment([G, BS], dtype)
++            acc_o = T.alloc_fragment([G, D], accum)
++            mx = T.alloc_fragment([G], accum)
++            sm = T.alloc_fragment([G], accum)
++            block_id = BI[i_b, i_t, i_h, 0]
++            if block_id >= 0 and block_id <= i_t // BS:
++                i_s = (block_id % (seq_len // BS)) * BS
++                for i, j in T.Parallel(BS, D):
++                    Ks[i, j] = K[i_b, i_s + i, i_h, j]
++                T.copy(Q[i_b, i_t, i_h * G : (i_h + 1) * G, :], Qs)
++                for i, j in T.Parallel(G, BS):
++                    acc_s[i, j] = T.if_then_else(i_t >= i_s + j, 0, -T.infinity(accum))
++                T.sync_warp(T.uint64(0xffffffffffffffff))
++                T.gemm(Qs, Ks, acc_s, transpose_B=True, policy=T.GemmWarpPolicy.FullRow)
++                T.sync_warp(T.uint64(0xffffffffffffffff))
++                for i, j in T.Parallel(BS, D):
++                    Vpref[i, j] = V[i_b, i_s + i, i_h, j]
++                T.reduce_max(acc_s, mx, dim=1, clear=True)
++                for i, j in T.Parallel(G, BS):
++                    acc_s[i, j] = T.exp2((acc_s[i, j] - mx[i]) * scale)
++                T.reduce_sum(acc_s, sm, dim=1)
++                T.copy(acc_s, acc_cast)
++                T.copy(Vpref, Vs)
++                T.fill(acc_o, 0)
++                T.sync_warp(T.uint64(0xffffffffffffffff))
++                T.gemm(acc_cast, Vs, acc_o, policy=T.GemmWarpPolicy.FullRow)
++                for i, j in T.Parallel(G, D):
++                    acc_o[i, j] = acc_o[i, j] / sm[i]
++                T.sync_warp(T.uint64(0xffffffffffffffff))
++                T.copy(acc_o, Os)
++                T.sync_warp(T.uint64(0xffffffffffffffff))
++                T.copy(Os, Output[i_b, i_t, i_h * G : (i_h + 1) * G, :])
++
++    return kernel
++
++
++@tilelang.jit(
++    pass_configs={
++        tilelang.PassConfigKey.TL_ENABLE_FAST_MATH: True,
++        tilelang.PassConfigKey.TL_DISABLE_WARP_SPECIALIZED: True,
++        tilelang.PassConfigKey.TL_DISABLE_THREAD_STORAGE_SYNC: True,
++    },
++)
++def nsa_simplified_k_fragment_v_prefetch_ordered125(batch, heads, seq_len, dim, is_causal, block_size, groups, selected_blocks):
++    scale = (1.0 / dim) ** 0.5 * 1.44269504
++    head_kv = heads // groups
++    q_shape = [batch, seq_len, heads, dim]
++    kv_shape = [batch, seq_len, head_kv, dim]
++    bi_shape = [batch, seq_len, head_kv, selected_blocks]
++    dtype = T.float16
++    accum = T.float32
++    G, BS, D = groups, block_size, dim
++
++    @T.prim_func
++    def kernel(
++        Q: T.Tensor(q_shape, dtype),
++        K: T.Tensor(kv_shape, dtype),
++        V: T.Tensor(kv_shape, dtype),
++        BI: T.Tensor(bi_shape, T.int32),
++        Output: T.Tensor(q_shape, dtype),
++    ):
++        with T.Kernel(seq_len, batch * head_kv, threads=64) as (i_t, ibh):
++            i_b = ibh // head_kv
++            i_h = ibh % head_kv
++            Qs = T.alloc_shared([G, D], dtype)
++            Ks = T.alloc_fragment([BS, D], dtype)
++            Vs = T.alloc_shared([BS, D], dtype)
++            Vpref = T.alloc_fragment([BS, D], dtype)
++            Os = T.alloc_shared([G, D], dtype)
++            acc_s = T.alloc_fragment([G, BS], accum)
++            acc_cast = T.alloc_fragment([G, BS], dtype)
++            acc_o = T.alloc_fragment([G, D], accum)
++            mx = T.alloc_fragment([G], accum)
++            sm = T.alloc_fragment([G], accum)
++            block_id = BI[i_b, i_t, i_h, 0]
++            if block_id >= 0 and block_id <= i_t // BS:
++                i_s = (block_id % (seq_len // BS)) * BS
++                for i, j in T.Parallel(BS, D):
++                    Ks[i, j] = K[i_b, i_s + i, i_h, j]
++                T.copy(Q[i_b, i_t, i_h * G : (i_h + 1) * G, :], Qs)
++                for i, j in T.Parallel(G, BS):
++                    acc_s[i, j] = T.if_then_else(i_t >= i_s + j, 0, -T.infinity(accum))
++                T.sync_warp(T.uint64(0xffffffffffffffff))
++                T.gemm(Qs, Ks, acc_s, transpose_B=True, policy=T.GemmWarpPolicy.FullRow)
++                T.sync_warp(T.uint64(0xffffffffffffffff))
++                for i, j in T.Parallel(BS, D):
++                    Vpref[i, j] = V[i_b, i_s + i, i_h, j]
++                T.reduce_max(acc_s, mx, dim=1, clear=True)
++                for i, j in T.Parallel(G, BS):
++                    acc_s[i, j] = T.exp2((acc_s[i, j] - mx[i]) * scale)
++                T.reduce_sum(acc_s, sm, dim=1)
++                T.copy(acc_s, acc_cast)
++                T.copy(Vpref, Vs)
++                T.fill(acc_o, 0)
++                T.sync_warp(T.uint64(0xffffffffffffffff))
++                T.gemm(acc_cast, Vs, acc_o, policy=T.GemmWarpPolicy.FullRow)
++                for i, j in T.Parallel(G, D):
++                    acc_o[i, j] = acc_o[i, j] / sm[i]
++                T.sync_warp(T.uint64(0xffffffffffffffff))
++                T.copy(acc_o, Os)
++                T.sync_warp(T.uint64(0xffffffffffffffff))
++                T.copy(Os, Output[i_b, i_t, i_h * G : (i_h + 1) * G, :])
++
++    return kernel
++
++
+@@ -1772 +1919 @@
+-        if fn is nsa_simplified and S == 1 and D == 64 and block_size == 16 and groups == 16 and seq_len % block_size == 0 and B * seq_len * H >= 4096:
++        if fn is nsa_simplified and S == 1 and D == 64 and block_size == 16 and groups == 16 and seq_len % block_size == 0 and B * seq_len * H >= 1024:
+@@ -1773,0 +1921,5 @@
++        if S == 1 and D == 64 and block_size == 16 and groups == 16 and seq_len % block_size == 0 and B * seq_len * H >= 4096:
++            if fn is nsa_simplified_v_prefetch:
++                fn = nsa_simplified_v_prefetch_ordered125
++            elif fn is nsa_simplified_k_fragment_v_prefetch:
++                fn = nsa_simplified_k_fragment_v_prefetch_ordered125

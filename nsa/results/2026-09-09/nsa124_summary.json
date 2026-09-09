@@ -1,0 +1,150 @@
+{
+  "input": "nsa124.jsonl",
+  "parent": "submissions/nsa123.py",
+  "candidate": "submissions/nsa124.py",
+  "reference_checks": 12,
+  "qualified_samples": 36,
+  "total_samples": 36,
+  "pairs": [
+    {
+      "case_id": 2,
+      "seed": 467,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 5.770240000000013,
+        "qualified_median_us": 5.770240000000013,
+        "guard_relative_median": 1.0022232103156874
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 5.770239999999976,
+        "qualified_median_us": 5.770239999999976,
+        "guard_relative_median": 1.0085011185682318
+      },
+      "usable": true,
+      "candidate_relative_time": 1.0062639821029158
+    },
+    {
+      "case_id": 2,
+      "seed": 467,
+      "mode": "current",
+      "parent": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 5.754879999999975,
+        "qualified_median_us": 5.754879999999975,
+        "guard_relative_median": 1.0049129075480423
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 5.749759999999916,
+        "qualified_median_us": 5.749759999999916,
+        "guard_relative_median": 1.0026809651474533
+      },
+      "usable": true,
+      "candidate_relative_time": 0.997778969317814
+    },
+    {
+      "case_id": 4,
+      "seed": 467,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 10.572800000000207,
+        "qualified_median_us": 10.572800000000207,
+        "guard_relative_median": 1.001212121212127
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 10.378239999999824,
+        "qualified_median_us": 10.378239999999824,
+        "guard_relative_median": 0.9789905819850098
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9778053633627463
+    },
+    {
+      "case_id": 4,
+      "seed": 467,
+      "mode": "current",
+      "parent": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 10.583039999999928,
+        "qualified_median_us": 10.583039999999928,
+        "guard_relative_median": 0.998060135790506
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 10.357760000000052,
+        "qualified_median_us": 10.357760000000052,
+        "guard_relative_median": 0.9813242784380277
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9832316142561662
+    },
+    {
+      "case_id": 14,
+      "seed": 467,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 16.302079999999986,
+        "qualified_median_us": 16.302079999999986,
+        "guard_relative_median": 0.9984379881287089
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 16.09727999999992,
+        "qualified_median_us": 16.09727999999992,
+        "guard_relative_median": 0.9844997651479528
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9860399712886733
+    },
+    {
+      "case_id": 14,
+      "seed": 467,
+      "mode": "current",
+      "parent": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 16.389119999999966,
+        "qualified_median_us": 16.389119999999966,
+        "guard_relative_median": 1.002035384374506
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 16.051200000000136,
+        "qualified_median_us": 16.051200000000136,
+        "guard_relative_median": 0.9807602064758222
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9787680373064228
+    }
+  ],
+  "geometric_relative_time": 0.9882605751721926,
+  "limitation": "Subset local timings, not a score or a complete performance/correctness certification."
+}

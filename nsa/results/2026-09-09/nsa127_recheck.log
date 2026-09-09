@@ -1,0 +1,26 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-09 11:09:17  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 4, "module": "submissions/nsa127.py", "seed": 487, "mode": "public", "median_us": {"cupti": 10.419200000000037}}
+{"case_id": 4, "module": "submissions/nsa123.py", "seed": 487, "mode": "public", "median_us": {"cupti": 10.590719999999983}}
+{"case_id": 4, "module": "submissions/nsa127.py", "seed": 487, "mode": "current", "median_us": {"cupti": 10.332160000000076}}
+{"case_id": 4, "module": "submissions/nsa123.py", "seed": 487, "mode": "current", "median_us": {"cupti": 10.531839999999884}}
+2026-09-09 11:09:20  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 5, "module": "submissions/nsa127.py", "seed": 487, "mode": "public", "median_us": {"cupti": 24.156159999999943}}
+{"case_id": 5, "module": "submissions/nsa123.py", "seed": 487, "mode": "public", "median_us": {"cupti": 24.10751999999993}}
+{"case_id": 5, "module": "submissions/nsa127.py", "seed": 487, "mode": "current", "median_us": {"cupti": 24.012799999999988}}
+{"case_id": 5, "module": "submissions/nsa123.py", "seed": 487, "mode": "current", "median_us": {"cupti": 24.020480000000006}}
+2026-09-09 11:09:22  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 7, "module": "submissions/nsa127.py", "seed": 487, "mode": "public", "median_us": {"cupti": 24.15103999999983}}
+{"case_id": 7, "module": "submissions/nsa123.py", "seed": 487, "mode": "public", "median_us": {"cupti": 24.639999999999965}}
+{"case_id": 7, "module": "submissions/nsa127.py", "seed": 487, "mode": "current", "median_us": {"cupti": 24.153599999999987}}
+{"case_id": 7, "module": "submissions/nsa123.py", "seed": 487, "mode": "current", "median_us": {"cupti": 24.688640000000014}}
+2026-09-09 11:09:25  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 9, "module": "submissions/nsa127.py", "seed": 487, "mode": "public", "median_us": {"cupti": 39.836159999999964}}
+{"case_id": 9, "module": "submissions/nsa123.py", "seed": 487, "mode": "public", "median_us": {"cupti": 40.47360000000006}}
+{"case_id": 9, "module": "submissions/nsa127.py", "seed": 487, "mode": "current", "median_us": {"cupti": 39.77216000000004}}
+{"case_id": 9, "module": "submissions/nsa123.py", "seed": 487, "mode": "current", "median_us": {"cupti": 40.38399999999998}}
+2026-09-09 11:09:27  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 14, "module": "submissions/nsa127.py", "seed": 487, "mode": "public", "median_us": {"cupti": 15.959039999999897}}
+{"case_id": 14, "module": "submissions/nsa123.py", "seed": 487, "mode": "public", "median_us": {"cupti": 16.325120000000005}}
+{"case_id": 14, "module": "submissions/nsa127.py", "seed": 487, "mode": "current", "median_us": {"cupti": 15.930879999999998}}
+{"case_id": 14, "module": "submissions/nsa123.py", "seed": 487, "mode": "current", "median_us": {"cupti": 16.2816}}

@@ -1,0 +1,242 @@
+{
+  "input": "nsa127_recheck.jsonl",
+  "parent": "submissions/nsa123.py",
+  "candidate": "submissions/nsa127.py",
+  "reference_checks": 20,
+  "qualified_samples": 80,
+  "total_samples": 80,
+  "pairs": [
+    {
+      "case_id": 4,
+      "seed": 487,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 10.590719999999983,
+        "qualified_median_us": 10.590719999999983,
+        "guard_relative_median": 0.998077847188851
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 10.419200000000037,
+        "qualified_median_us": 10.419200000000037,
+        "guard_relative_median": 0.9854685947085846
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9873664639328674
+    },
+    {
+      "case_id": 4,
+      "seed": 487,
+      "mode": "current",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 10.531839999999884,
+        "qualified_median_us": 10.531839999999884,
+        "guard_relative_median": 0.9990302463480767
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 10.332160000000076,
+        "qualified_median_us": 10.332160000000076,
+        "guard_relative_median": 0.9781917893193592
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9791413151855094
+    },
+    {
+      "case_id": 5,
+      "seed": 487,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 24.10751999999993,
+        "qualified_median_us": 24.10751999999993,
+        "guard_relative_median": 0.9500123023517464
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 24.156159999999943,
+        "qualified_median_us": 24.156159999999943,
+        "guard_relative_median": 0.9504439113481814
+      },
+      "usable": true,
+      "candidate_relative_time": 1.0004543193760402
+    },
+    {
+      "case_id": 5,
+      "seed": 487,
+      "mode": "current",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 24.020480000000006,
+        "qualified_median_us": 24.020480000000006,
+        "guard_relative_median": 0.9462809780938002
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 24.012799999999988,
+        "qualified_median_us": 24.012799999999988,
+        "guard_relative_median": 0.9465691303978025
+      },
+      "usable": true,
+      "candidate_relative_time": 1.0003045102994492
+    },
+    {
+      "case_id": 7,
+      "seed": 487,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 24.639999999999965,
+        "qualified_median_us": 24.639999999999965,
+        "guard_relative_median": 0.9989615552460098
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 24.15103999999983,
+        "qualified_median_us": 24.15103999999983,
+        "guard_relative_median": 0.9794991814449021
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9805173945895097
+    },
+    {
+      "case_id": 7,
+      "seed": 487,
+      "mode": "current",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 24.688640000000014,
+        "qualified_median_us": 24.688640000000014,
+        "guard_relative_median": 1.0002091033590343
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 24.153599999999987,
+        "qualified_median_us": 24.153599999999987,
+        "guard_relative_median": 0.9810026002103915
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9807975121560671
+    },
+    {
+      "case_id": 9,
+      "seed": 487,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 40.47360000000006,
+        "qualified_median_us": 40.47360000000006,
+        "guard_relative_median": 1.0025367232575522
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 39.836159999999964,
+        "qualified_median_us": 39.836159999999964,
+        "guard_relative_median": 0.9862460366012784
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9837505337427039
+    },
+    {
+      "case_id": 9,
+      "seed": 487,
+      "mode": "current",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 40.38399999999998,
+        "qualified_median_us": 40.38399999999998,
+        "guard_relative_median": 0.9979447853630092
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 39.77216000000004,
+        "qualified_median_us": 39.77216000000004,
+        "guard_relative_median": 0.9820796205464719
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9841021617135198
+    },
+    {
+      "case_id": 14,
+      "seed": 487,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 16.325120000000005,
+        "qualified_median_us": 16.325120000000005,
+        "guard_relative_median": 1.0009491636933137
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 15.959039999999897,
+        "qualified_median_us": 15.959039999999897,
+        "guard_relative_median": 0.9746023347987323
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9736781548451806
+    },
+    {
+      "case_id": 14,
+      "seed": 487,
+      "mode": "current",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 16.2816,
+        "qualified_median_us": 16.2816,
+        "guard_relative_median": 0.9986669849623067
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 15.930879999999998,
+        "qualified_median_us": 15.930879999999998,
+        "guard_relative_median": 0.9764034365417384
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9777067343210425
+    }
+  ],
+  "geometric_relative_time": 0.9847448306502178,
+  "limitation": "Subset local timings, not a score or a complete performance/correctness certification."
+}

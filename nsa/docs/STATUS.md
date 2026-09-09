@@ -1,5 +1,28 @@
 # NSA optimization status
 
+## 2026-09-09 D64 combination NSA127: target gains, full validation pending
+
+124 extends plain bounded loads to small grids;126 is an old-ordering-only
+control;125 combines bounds with K-before-Q in the two V-prefetch routes.
+First screens:24 reference assertions,72 qualified timing samples across two
+batches.127 combines125 with plain bounds for workloads>=1024. Independent
+seed487:20/20 reference assertions,80/80 timing samples qualify;relative times
+to123 on4/7/9/14 are about0.983/0.981/0.984/0.976. Case5 retains123's code.
+These are target-only local measurements, not full-suite or new OJ scores.
+
+Full validation was interrupted twice amid concurrent peer tests in the32GiB
+host-memory cgroup. Original attempt had no result;retry retained60 passing
+stress assertions across10 of12 planned shapes. Neither full14-case run nor
+source export completed. Own stop request found the retry PIDs already gone;
+no other AI process was signalled. Preserve both killed logs and partial data.
+See D64_124_127.md and nsa127_interruption.json. Final verifier is syntax-only,
+not passed. Do not mark127 ready or report projected totals from incomplete data.
+
+User says wait for the other AI to finish before starting GPU work again.
+Do not race its short between-process idle gaps;await a reliable handoff.
+No own job remains. Goal88 stays active/incomplete;actual best10986.00,
+previous locally verified candidate123 remains available for manual OJ testing.
+
 ## 2026-09-09 D64 bounded-load lead isolated as NSA123
 
 NSA122 exposes aligned single-block addresses to the compiler on four D64

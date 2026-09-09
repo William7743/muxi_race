@@ -1,0 +1,11 @@
+{
+  "measurement_integrity": "PASS",
+  "candidate_validation": "INCOMPLETE",
+  "paired_reference_assertions": 44,
+  "qualified_timing_samples": 152,
+  "retained_stress_assertions": 60,
+  "retained_stress_shapes": 10,
+  "missing": "Two stress shapes; complete 14-case regression; generated-source scope audit",
+  "actual_best_oj": 86.0,
+  "goal88_achieved": false
+}
