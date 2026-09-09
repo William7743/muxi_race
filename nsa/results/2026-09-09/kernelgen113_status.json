@@ -1,0 +1,30 @@
+{
+  "request_dispatched_utc": "2026-09-09T09:44:17.754Z",
+  "tool": "optimize_kernel",
+  "kernel_name": "nsa_c500_tilelang_d128_scheduler",
+  "device": "muxi",
+  "source_language_required": "TileLang",
+  "parent_version": "NSA109",
+  "parent_source_lf_sha256": "7abe284475520edf64999c583148cde45cc1c8f0a017503cc98068e7f33986fa",
+  "source_scope": "Complete nsa_d128_scheduler JIT factory and TileLang imports, extracted unchanged from the parent",
+  "transport": "MCP SDK client through existing local encrypted-credential launcher",
+  "mcp_transport_isError": false,
+  "application_success": false,
+  "application_mode": "optimize",
+  "server_reported_upstream_status": 401,
+  "server_reported_upstream_host": "zyapi.xmsxb.com",
+  "server_reported_upstream_path": "/v1/messages",
+  "triton_code": null,
+  "torch_code": null,
+  "usage": null,
+  "attempts": 1,
+  "candidate_created": false,
+  "gpu_candidate_tested": false,
+  "oj_submitted": false,
+  "limitations": [
+    "Upstream status is reported by the MCP service, not independently authenticated against that host.",
+    "Successful tool discovery does not prove the optimization backend works.",
+    "No supported TileLang output was obtained; language compatibility remains unverified.",
+    "The user's KernelGen token was not separately transmitted by this client to the reported upstream host."
+  ]
+}

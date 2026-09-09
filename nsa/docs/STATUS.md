@@ -1,5 +1,16 @@
 # NSA optimization status
 
+## 2026-09-09 KernelGen authenticated, upstream optimizer failure
+
+Configuration/authentication blocker superseded: existing global connector and
+encrypted credential successfully list4tools. Current model tool list lacks direct
+exposure; an MCP SDK client called optimize_kernel through the same connector.
+Attempt113 targets unchanged109 nsa_d128_scheduler source, explicitly TileLang only.
+MCP isError=false but application success=false, no code; service reports upstream
+401Unauthorized. No candidate/GPU test/OJ submit created. Language support unverified.
+Stop this skill workflow pending backend repair or explicit user direction; no88
+claim and no need to ask again for the already valid localToken. See KERNELGEN113.md.
+
 ## 2026-09-09 NSA112 full14 reference and fingerprint check
 
 Existing112 source was tested without any new operator generation:28/28 paired
