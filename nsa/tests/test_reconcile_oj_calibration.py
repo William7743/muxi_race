@@ -10,6 +10,8 @@ class CalibrationTests(unittest.TestCase):
         self.assertEqual(score(400, 100.0001), 79)
         self.assertEqual(score(305, 140), 68)
         self.assertEqual(score(305, 65), 82)
+        self.assertEqual(score(305, 63.722446862011864), 82)
+        self.assertEqual(score(305, 62.46), 83)
 
     def test_reject_stable_but_busy_guard(self):
         row = {'samples_us': {'cupti': [10, 10, 10]}, 'guard_samples': {'cupti': [

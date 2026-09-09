@@ -1,0 +1,333 @@
+{
+  "status": "PASS",
+  "source_hashes": {
+    "submissions/nsa109.py": "7abe284475520edf64999c583148cde45cc1c8f0a017503cc98068e7f33986fa",
+    "submissions/nsa112.py": "6558f5fcd6df83b8ad4d1e8612692f42d13fd104bba74a7bdf883fa476989115"
+  },
+  "reference_checks": 28,
+  "qualified_samples": 41,
+  "total_samples": 84,
+  "all_points_qualified": false,
+  "changed_cuda_cases": [
+    12
+  ],
+  "fixed_parent_projection": 86.0,
+  "actual_parent_score": 86,
+  "points": [
+    {
+      "case_id": 1,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "candidate": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "qualified": false,
+      "guard_relative_time": null,
+      "parent_oj_us": 5.0,
+      "parent_score": 87,
+      "projected_us": 5.0,
+      "projected_score": 87
+    },
+    {
+      "case_id": 2,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "candidate": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "qualified": false,
+      "guard_relative_time": null,
+      "parent_oj_us": 6.0,
+      "parent_score": 88,
+      "projected_us": 6.0,
+      "projected_score": 88
+    },
+    {
+      "case_id": 3,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "candidate": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "qualified": false,
+      "guard_relative_time": null,
+      "parent_oj_us": 9.0,
+      "parent_score": 88,
+      "projected_us": 9.0,
+      "projected_score": 88
+    },
+    {
+      "case_id": 4,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 2,
+        "total": 3,
+        "local_us": 11.425279999999965,
+        "guard_ratio": 1.0038373278939219
+      },
+      "candidate": {
+        "accepted": 1,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "qualified": false,
+      "guard_relative_time": null,
+      "parent_oj_us": 12.0,
+      "parent_score": 87,
+      "projected_us": 12.0,
+      "projected_score": 87
+    },
+    {
+      "case_id": 5,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 3,
+        "total": 3,
+        "local_us": 26.731520000000017,
+        "guard_ratio": 1.0072289156626426
+      },
+      "candidate": {
+        "accepted": 3,
+        "total": 3,
+        "local_us": 26.96704000000005,
+        "guard_ratio": 1.0097328244274848
+      },
+      "qualified": true,
+      "guard_relative_time": 1.002485938127774,
+      "parent_oj_us": 29.0,
+      "parent_score": 82,
+      "projected_us": 29.0,
+      "projected_score": 82
+    },
+    {
+      "case_id": 6,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 3,
+        "total": 3,
+        "local_us": 83.06175999999996,
+        "guard_ratio": 0.9023304966905827
+      },
+      "candidate": {
+        "accepted": 3,
+        "total": 3,
+        "local_us": 82.99519999999978,
+        "guard_ratio": 0.9034774855104789
+      },
+      "qualified": true,
+      "guard_relative_time": 1.0012711404791292,
+      "parent_oj_us": 85.0,
+      "parent_score": 84,
+      "projected_us": 85.0,
+      "projected_score": 84
+    },
+    {
+      "case_id": 7,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 3,
+        "total": 3,
+        "local_us": 25.81503999999986,
+        "guard_ratio": 1.0056463595839513
+      },
+      "candidate": {
+        "accepted": 3,
+        "total": 3,
+        "local_us": 25.564160000000047,
+        "guard_ratio": 0.995613160518445
+      },
+      "qualified": true,
+      "guard_relative_time": 0.9900231339079701,
+      "parent_oj_us": 28.0,
+      "parent_score": 88,
+      "projected_us": 28.0,
+      "projected_score": 88
+    },
+    {
+      "case_id": 8,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 3,
+        "total": 3,
+        "local_us": 42.21440000000013,
+        "guard_ratio": 0.9961940433758255
+      },
+      "candidate": {
+        "accepted": 2,
+        "total": 3,
+        "local_us": 41.73823999999988,
+        "guard_ratio": 0.9862068894862777
+      },
+      "qualified": true,
+      "guard_relative_time": 0.9899746902162714,
+      "parent_oj_us": 44.0,
+      "parent_score": 84,
+      "projected_us": 44.0,
+      "projected_score": 84
+    },
+    {
+      "case_id": 9,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 3,
+        "total": 3,
+        "local_us": 41.56416000000001,
+        "guard_ratio": 1.0003115070712107
+      },
+      "candidate": {
+        "accepted": 2,
+        "total": 3,
+        "local_us": 41.30559999999993,
+        "guard_ratio": 0.9920924474043662
+      },
+      "qualified": true,
+      "guard_relative_time": 0.9917834998310586,
+      "parent_oj_us": 44.0,
+      "parent_score": 83,
+      "projected_us": 44.0,
+      "projected_score": 83
+    },
+    {
+      "case_id": 10,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "candidate": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "qualified": false,
+      "guard_relative_time": null,
+      "parent_oj_us": 8.0,
+      "parent_score": 88,
+      "projected_us": 8.0,
+      "projected_score": 88
+    },
+    {
+      "case_id": 11,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "candidate": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "qualified": false,
+      "guard_relative_time": null,
+      "parent_oj_us": 21.0,
+      "parent_score": 86,
+      "projected_us": 21.0,
+      "projected_score": 86
+    },
+    {
+      "case_id": 12,
+      "same_local_cuda": false,
+      "parent": {
+        "accepted": 3,
+        "total": 3,
+        "local_us": 66.0428799999999,
+        "guard_ratio": 0.9013936917112053
+      },
+      "candidate": {
+        "accepted": 3,
+        "total": 3,
+        "local_us": 64.81920000000031,
+        "guard_ratio": 0.8836771018741536
+      },
+      "qualified": true,
+      "guard_relative_time": 0.9803453363386441,
+      "parent_oj_us": 65.0,
+      "parent_score": 82,
+      "projected_us": 63.722446862011864,
+      "projected_score": 82
+    },
+    {
+      "case_id": 13,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 1,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "candidate": {
+        "accepted": 0,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "qualified": false,
+      "guard_relative_time": null,
+      "parent_oj_us": 9.0,
+      "parent_score": 89,
+      "projected_us": 9.0,
+      "projected_score": 89
+    },
+    {
+      "case_id": 14,
+      "same_local_cuda": true,
+      "parent": {
+        "accepted": 2,
+        "total": 3,
+        "local_us": 17.52575999999999,
+        "guard_ratio": 0.996870059375067
+      },
+      "candidate": {
+        "accepted": 1,
+        "total": 3,
+        "local_us": null,
+        "guard_ratio": null
+      },
+      "qualified": false,
+      "guard_relative_time": null,
+      "parent_oj_us": 17.0,
+      "parent_score": 88,
+      "projected_us": 17.0,
+      "projected_score": 88
+    }
+  ],
+  "single_case12_ideal_score_upper_bound": 87.28571428571429,
+  "limitations": [
+    "Static identity and reference PASS do not certify OJ acceptance.",
+    "Projection assumes local relative speed transfers to OJ; calibrated errors can be large.",
+    "Ideal upper bound uses zero time/100 points on case12, not an achievable score.",
+    "Full14 shapes with one seed do not exhaust valid-input correctness."
+  ]
+}

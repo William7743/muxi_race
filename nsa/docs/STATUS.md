@@ -1,5 +1,18 @@
 # NSA optimization status
 
+## 2026-09-09 NSA112 full14 reference and fingerprint check
+
+Existing112 source was tested without any new operator generation:28/28 paired
+reference assertions PASS at seed317/public; onlycase12 generated CUDA differs.
+41/84 timing samples qualified, so full-suite performance certification is absent.
+Case12 both3/3 qualified:10966.04288us vs11264.81920us; guard ratio0.980345.
+Fixed109 OJ65us projects63.72245us, still82point/86.00total under checker scoring.
+At least3.89% reduction would be needed to reach the next case12 integer point;
+the ideal100-point case12 alone caps total at87.2857. Other paths must improve.
+No OJ submission, no promotion, no88 claim. PAIR112_RESULTS.md has evidence.
+New operator generation still awaits the KernelGen MCP setup required by the
+newly available skill; existing-code verification is complete for this batch.
+
 ## 2026-09-09 NSA112 collected: small repeatable case12 improvement
 
 Completed prior jobs and fetched results; no live benchmark remains at collection.
