@@ -1,0 +1,7 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-09 10:25:08  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 10:25:15  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case_id": 6, "path": "/data/nsa_codex_20260909_r1/results/sources119_120/nsa119_case6.cu", "sha256": "9f9615e43e13feebd0ea8363ab631166edbbf9e324e823ff5d47db91195c7ea5"}
+2026-09-09 10:25:16  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 10:25:23  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case_id": 6, "path": "/data/nsa_codex_20260909_r1/results/sources119_120/nsa120_case6.cu", "sha256": "f5d3c196a6045629f709415894fe4da0d0882a64a1a223a208ad95633e1de9b7"}

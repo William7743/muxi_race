@@ -1,5 +1,20 @@
 # NSA optimization status
 
+## 2026-09-09 Disjoint D128 softmax exchange explored
+
+Previous goal turn made progress by rejecting layout paths with qualified data.
+119 separates max/sum workspace regions to remove a pre-sum CTA barrier;120
+retains it as control. Generated source verifies disjoint ranges, full64 masks,
+and exactly one barrier difference.121 reduces inside warps first and compacts
+the exchange. Two seeds/reverse module ordering:12/12 reference assertions and
+36/36 timing samples qualify.119 essentially unchanged;121 about4.06% slower.
+120 about0.59% faster in both batches, below promotion threshold. At actual
+109 case6 baseline460us/kernel85us, the next integer point needs about4.50%
+less time;120 fixed-parent projection remains84. No OJ submit, full-suite
+promotion or88 claim. Keep10986.00, archive120 as a minor combination lead.
+See D128_119_120.md. Empty measurement files now fail the summary tool instead
+of producing a zero-row success; regression test passes. No batch GPU job remains.
+
 ## 2026-09-09 Quiet D128 retest and V-layout rejection
 
 Prior turn made progress:114/115 source and correctness evidence delivered.

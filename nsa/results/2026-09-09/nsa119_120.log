@@ -1,0 +1,7 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+{"case_id": 6, "module": "submissions/nsa109.py", "seed": 439, "mode": "public", "median_us": {"cupti": 81.61792000000015}}
+{"case_id": 6, "module": "submissions/nsa120.py", "seed": 439, "mode": "public", "median_us": {"cupti": 81.13663999999997}}
+{"case_id": 6, "module": "submissions/nsa119.py", "seed": 439, "mode": "public", "median_us": {"cupti": 81.5616}}
+{"case_id": 6, "module": "submissions/nsa109.py", "seed": 439, "mode": "current", "median_us": {"cupti": 81.54623999999995}}
+{"case_id": 6, "module": "submissions/nsa120.py", "seed": 439, "mode": "current", "median_us": {"cupti": 81.02912}}
+{"case_id": 6, "module": "submissions/nsa119.py", "seed": 439, "mode": "current", "median_us": {"cupti": 81.51551999999992}}

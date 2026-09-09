@@ -16,6 +16,7 @@ p.add_argument('--candidate', required=True)
 p.add_argument('--output', required=True)
 a = p.parse_args()
 rows = [json.loads(line) for line in Path(a.input).read_text().splitlines() if line.strip()]
+assert rows, 'No completed measurement rows; wait for collection before summarizing'
 grouped = {}
 for row in rows:
     assert row['correct'], row
