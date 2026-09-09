@@ -1,5 +1,22 @@
 # NSA optimization status
 
+## 2026-09-09 Direct TileLang optimization resumed with user approval
+
+User explicitly approved skipping KernelGen. No further failed service retry;
+the prior skill pause is superseded. NSA109/#141658/86.00 remains the OJ baseline.
+NSA114 changes only the D128 scalar-output epilogue to direct global stores,
+keeping a full block barrier before the next Vs refill. NSA115 independently
+changes D128 probability division to one reciprocal per row and multiplication.
+Both exact scoped AST audits pass; 114 also has a bijective output-address check.
+Each passed two target-case reference checks (public/current), with two parent
+checks, eight total. No full-suite promotion. Timing gates accept 0/12 for114
+and2/12 for115, with no usable pair; shared-device interference prevents ranking.
+115 fresh-input/boundary stress completed:24/24 paired assertions PASS,12 for115.
+Combined with screening,32/32 assertions PASS, including16 candidate assertions.
+Raw results and CPU source-bound verification are archived; no GPU job remains
+from this batch. Performance confirmation remains open, not a numerical blocker.
+No OJ submission and no88 claim. See D128_114_115.md for current evidence.
+
 ## 2026-09-09 KernelGen authenticated, upstream optimizer failure
 
 Configuration/authentication blocker superseded: existing global connector and
