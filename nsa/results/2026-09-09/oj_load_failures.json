@@ -1,0 +1,16 @@
+[
+  {
+    "submission_id": 141595,
+    "stage": "sample",
+    "status": "WrongAnswer",
+    "checkerMessage": "SPJ FAIL: payload pass=false.",
+    "error_first_line": "Execution error: Language validation failed: Global variable assignment must have literal values on the right side. Got: nsa_shared_chunk128_manual_sync"
+  },
+  {
+    "submission_id": 141600,
+    "stage": "sample",
+    "status": "WrongAnswer",
+    "checkerMessage": "SPJ FAIL: payload pass=false.",
+    "error_first_line": "Execution error: Language validation failed: Global variable assignment must have literal values on the right side. Got: nsa_shared_chunk128_manual_sync"
+  }
+]

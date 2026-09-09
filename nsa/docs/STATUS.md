@@ -1,5 +1,19 @@
 # NSA optimization status
 
+## 2026-09-09 live OJ correction (supersedes the reproduction conclusion)
+
+Fresh authenticated read discovered v236/#141594 Accepted85.93 and
+v275/279/314/316/318/323 WrongAnswer. Executable AST matches establish
+versions; exact submitted text hashes are preserved separately.
+v318/#141600 and v275/#141595 sample diagnostics explicitly reject a
+nonliteral module assignment before kernel execution, not a numerical mismatch.
+Do not submit raw v318 or NSA096. The verified accepted anchor is now v236.
+NSA097 rewrites v318's dynamic JIT bindings as standard decorators and removes
+custom compile_flags; candidate14/14 plus2/2 extra current-block checks PASS.
+Paired with v236, case6 ~4.6% and case12 ~7.8% faster locally; OJ pending.
+Manual submission candidate is probe_nsa097_v318_standard_jit.py, not raw v318.
+See OJ_20260909_LOADER.md. Target88 is not achieved.
+
 ## 2026-09-09: external NSA repository and 16 GB recheck
 
 The 64 GB instance is unavailable. The replacement is C500 sGPU with
@@ -14,7 +28,8 @@ v318 is the current local starting point, not a verified 88-point submission.
 NSA096 applies scalar probability conversion to D64/S1 factories;
 initial 16/16 and confirmation12/12 paired reference checks passed.
 Confirmation did not reproduce overall benefit (case5 ~1% slower);
-NSA096 is not promoted. Keep v318 as the local starting point.
+NSA096 is not promoted. The initial v318 starting-point conclusion below
+was subsequently superseded by the live OJ loader failure above.
 See REPO_RECHECK_20260909.md. Frozen MOE artifacts remain untouched.
 
 ## Historical 2026-09-07 status (superseded where stated above)

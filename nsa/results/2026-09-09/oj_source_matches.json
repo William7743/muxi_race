@@ -1,0 +1,62 @@
+[
+  {
+    "submission_id": 141594,
+    "lf_sha256": "592658286073f00948dc9e1135b6f3d4498224a88d5d45188dd533f992c31102",
+    "exact_matches": [],
+    "executable_ast_matches": [
+      "submissions\\nsa_v236.py"
+    ]
+  },
+  {
+    "submission_id": 141595,
+    "lf_sha256": "434d3c9fb4ed19166fa0f60b1450a40e9ae67ec5b5bee46c61cef89a990df18a",
+    "exact_matches": [],
+    "executable_ast_matches": [
+      "submissions\\nsa_v275.py"
+    ]
+  },
+  {
+    "submission_id": 141597,
+    "lf_sha256": "4261e61a57f76b01a74a766cafc562fe1bda2102475398ff1e5921a51487ee59",
+    "exact_matches": [],
+    "executable_ast_matches": [
+      "submissions\\nsa_v279.py"
+    ]
+  },
+  {
+    "submission_id": 141598,
+    "lf_sha256": "aeeda56ea9ceee65f9d5b579f3f696d9d36e984224e6fa88e4c9d8202d82bd2e",
+    "exact_matches": [],
+    "executable_ast_matches": [
+      "submissions\\nsa_v314.py",
+      "experiments\\v314_d128_shared_half_cast.py"
+    ]
+  },
+  {
+    "submission_id": 141599,
+    "lf_sha256": "14624b54dbd1efa074f43169a8e66bfb8abe0346f56fa0ca12fc616e4adb492d",
+    "exact_matches": [],
+    "executable_ast_matches": [
+      "submissions\\nsa_v316.py",
+      "experiments\\v316_d128_probability_cast.py"
+    ]
+  },
+  {
+    "submission_id": 141600,
+    "lf_sha256": "f80628f148b4d3980f5636d5f384dba5dbe7d097de8a22dd2ced4b86c4f93b4a",
+    "exact_matches": [],
+    "executable_ast_matches": [
+      "submissions\\nsa_v318.py",
+      "experiments\\v318_online_scalar_cast.py"
+    ]
+  },
+  {
+    "submission_id": 141601,
+    "lf_sha256": "cad331e8a7df62e8326e8642729fcbf718b156a56bf8230208cd4b6c836931e6",
+    "exact_matches": [],
+    "executable_ast_matches": [
+      "submissions\\nsa_v323.py",
+      "experiments\\v323_online_scalar_schedule.py"
+    ]
+  }
+]
