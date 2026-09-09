@@ -1,5 +1,24 @@
 # NSA optimization status
 
+## 2026-09-09 NSA128 prepared offline; GPU handoff not confirmed
+
+Peer v342's S8 packed-register prefetch has been isolated into NSA128, on
+top of NSA127, without copying peer compiler flags or other dispatch changes.
+CPU syntax, exact-delta, lane coverage and paired-half recovery checks pass.
+NSA128 has NOT been compiled or run on the GPU. Peer case12 measurements
+show about3.73% improvement versus peer318; these are not NSA128 measurements
+and not an OJ score. See S8_128_PENDING.md and preserved peer raw data.
+
+After peer342's complete script exited0, a new NSA127 attempt passed the
+memory preflight but stopped during initialization without new result rows.
+Peer343 then appeared: script completion did not constitute a whole-worker
+handoff. No peer process was terminated. No own GPU job remains active.
+The driver now refuses a real run without explicit handoff confirmation;
+its CPU refusal/dry-run tests pass. This flag and memory preflight are NOT
+a lock against a peer starting later. User cannot currently confirm peer
+completion. Continue offline work only; do not infer a handoff from idle gaps.
+Actual best remains NSA109/#141658/86.00;127 and128 are not ready submissions.
+
 ## 2026-09-09 D64 combination NSA127: target gains, full validation pending
 
 124 extends plain bounded loads to small grids;126 is an old-ordering-only
