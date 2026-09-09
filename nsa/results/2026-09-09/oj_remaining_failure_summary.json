@@ -1,0 +1,9 @@
+{
+  "method": "Authenticated read-only getSubmissionDetail; no submission or rejudge",
+  "date": "2026-09-09",
+  "submissions": [141597, 141598, 141599, 141601],
+  "status_each": "WrongAnswer",
+  "sample_error_first_line_each": "Execution error: Language validation failed: Global variable assignment must have literal values on the right side. Got: nsa_shared_chunk128_manual_sync",
+  "formal_results_missing_each": 14,
+  "limitation": "Missing formal results do not constitute fourteen numerical failures. Raw allowlisted detail summaries are retained locally."
+}

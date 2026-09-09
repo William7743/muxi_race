@@ -1,0 +1,35 @@
+{
+  "input": "nsa101.jsonl",
+  "parent": "submissions/nsa097.py",
+  "candidate": "submissions/nsa101.py",
+  "reference_checks": 2,
+  "qualified_samples": 6,
+  "total_samples": 6,
+  "pairs": [
+    {
+      "case_id": 8,
+      "seed": 0,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 40.8012799999999,
+        "qualified_median_us": 40.8012799999999,
+        "guard_relative_median": 0.9848260547742508
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 3,
+        "total": 3,
+        "raw_median_us": 52.97664000000026,
+        "qualified_median_us": 52.97664000000026,
+        "guard_relative_median": 1.2749676544883315
+      },
+      "usable": true,
+      "candidate_relative_time": 1.2946120264665308
+    }
+  ],
+  "geometric_relative_time": 1.2946120264665308,
+  "limitation": "Subset local timings, not a score or a complete performance/correctness certification."
+}

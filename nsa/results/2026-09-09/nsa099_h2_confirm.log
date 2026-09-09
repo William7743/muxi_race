@@ -1,0 +1,19 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+submissions/nsa097.py 8 EXPORTED
+submissions/nsa101.py 8 EXPORTED
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-09 07:06:42  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 4, "module": "submissions/nsa099.py", "seed": 137, "mode": "public", "median_us": {"cupti": 10.552319999999963}}
+{"case_id": 4, "module": "submissions/nsa097.py", "seed": 137, "mode": "public", "median_us": {"cupti": 10.567680000000001}}
+{"case_id": 4, "module": "submissions/nsa099.py", "seed": 137, "mode": "current", "median_us": {"cupti": 10.542080000000096}}
+{"case_id": 4, "module": "submissions/nsa097.py", "seed": 137, "mode": "current", "median_us": {"cupti": 10.588159999999991}}
+2026-09-09 07:06:45  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 13, "module": "submissions/nsa099.py", "seed": 137, "mode": "public", "median_us": {"cupti": 7.710719999999929}}
+{"case_id": 13, "module": "submissions/nsa097.py", "seed": 137, "mode": "public", "median_us": {"cupti": 8.007679999999818}}
+{"case_id": 13, "module": "submissions/nsa099.py", "seed": 137, "mode": "current", "median_us": {"cupti": 7.741439999999967}}
+{"case_id": 13, "module": "submissions/nsa097.py", "seed": 137, "mode": "current", "median_us": {"cupti": 7.987200000000085}}
+2026-09-09 07:06:48  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 14, "module": "submissions/nsa099.py", "seed": 137, "mode": "public", "median_us": {"cupti": 16.22528000000006}}
+{"case_id": 14, "module": "submissions/nsa097.py", "seed": 137, "mode": "public", "median_us": {"cupti": 16.2918399999999}}
+{"case_id": 14, "module": "submissions/nsa099.py", "seed": 137, "mode": "current", "median_us": {"cupti": 16.261120000000048}}
+{"case_id": 14, "module": "submissions/nsa097.py", "seed": 137, "mode": "current", "median_us": {"cupti": 16.332799999999953}}

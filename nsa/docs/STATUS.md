@@ -1,5 +1,25 @@
 # NSA optimization status
 
+## 2026-09-09 NSA103: narrow reproducible H2 improvement
+
+NSA103 is the latest LOCAL candidate for user OJ validation, replacing NSA097
+as the next suggested test, not replacing the accepted v23685.93 anchor.
+It adds NSA099's scalar output only to small H2/D64/S1 workloads. Independent
+seed42 final-file case13:7.99744 ->7.82336us (2.18% raw,2.64% guard-relative).
+The other13 generated CUDA sources are byte-identical as normalized in the
+benchmark fingerprints; timing variation there is not an optimization claim.
+Full28/28 paired plus32/32 branch-boundary/in-place-update reference checks
+PASS (candidate30 checks, parent30). Full84/84 timing samples qualified.
+AST audit confirms unchanged original factories plus one narrow shape gate.
+See H2_SCALAR103.md and results/2026-09-09/nsa103_verification.json.
+
+NSA100 layout conversion failed compilation; NSA101/102 explicit register
+shuffle compiled/passed target checks but was about30% slower. Do not submit
+these experiments. See WIDE_V100_102.md. All jobs for this batch completed.
+Follow-up OJ reads now independently confirm the same loader rejection for
+all six failed submissions, not just v275/v318. No new OJ submission was made
+by this task; no verified88-point result exists.
+
 ## 2026-09-09 output-conversion follow-up
 
 NSA098 D64 scalar output with inferred shared stores failed the first target's

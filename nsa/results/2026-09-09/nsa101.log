@@ -1,0 +1,5 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-09 07:04:15  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 07:04:21  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case_id": 8, "module": "submissions/nsa097.py", "seed": 0, "mode": "public", "median_us": {"cupti": 40.8012799999999}}
+{"case_id": 8, "module": "submissions/nsa101.py", "seed": 0, "mode": "public", "median_us": {"cupti": 52.97664000000026}}

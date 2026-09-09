@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "full_reference_checks": 28,
+  "extra_reference_checks": 32,
+  "candidate_reference_checks": 30,
+  "unchanged_cuda_source_cases": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    14
+  ],
+  "source_hashes": {
+    "submissions/nsa097.py": "40bfb68958667786f85e703d8bf6e71df18a808e693703218d970a96f7d8a80f",
+    "submissions/nsa103.py": "6115cd1595aaa26f518e362810ab50771ade4812b0b35fb8d81444d471f5795a"
+  },
+  "limitation": "Generated source equality, not binary-object equality. Local checks do not prove OJ acceptance or 88 points."
+}
