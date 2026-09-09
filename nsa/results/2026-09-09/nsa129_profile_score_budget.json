@@ -1,0 +1,492 @@
+{
+  "status": "PASS",
+  "profile_origin": "Peer343 single-window counters, not this task's new run",
+  "metrics": {
+    "Total Instructions": 6497344,
+    "Compute Instructions": 5446720,
+    "Memory Instructions": 1050624,
+    "Global Read Instructions": 138496,
+    "Global Write Instructions": 16384,
+    "Private Read Instructions": 0,
+    "Private Write Instructions": 0
+  },
+  "counters_equal_prior109": true,
+  "counter_interpretation": "Same recorded instruction counts and zero private accesses; does not identify latency bottleneck",
+  "actual_best_oj": 86.0,
+  "target_oj": 88.0,
+  "required_integer_point_gain": 28,
+  "any_single_case_sufficient": false,
+  "equal_fraction_time_reduction_model": 0.17124735729386908,
+  "modeled_score_after_uniform_reduction": 88.0,
+  "cases": [
+    {
+      "case_id": 1,
+      "shape": {
+        "B": 1,
+        "seq_len": 64,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 32,
+        "selected_blocks": 1,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 5.0,
+      "score": 87,
+      "thresholds": {
+        "1": {
+          "target_point_score": 88,
+          "max_kernel_us": 4.909090909090913,
+          "minimum_time_reduction_fraction": 0.01818181818181741
+        },
+        "2": {
+          "target_point_score": 89,
+          "max_kernel_us": 4.449438202247194,
+          "minimum_time_reduction_fraction": 0.1101123595505612
+        },
+        "3": {
+          "target_point_score": 90,
+          "max_kernel_us": 4.000000000000002,
+          "minimum_time_reduction_fraction": 0.19999999999999962
+        }
+      },
+      "ideal_zero_time_total": 86.92857142857143
+    },
+    {
+      "case_id": 2,
+      "shape": {
+        "B": 1,
+        "seq_len": 128,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 64,
+        "selected_blocks": 1,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 6.0,
+      "score": 88,
+      "thresholds": {
+        "1": {
+          "target_point_score": 89,
+          "max_kernel_us": 5.561797752808992,
+          "minimum_time_reduction_fraction": 0.07303370786516794
+        },
+        "2": {
+          "target_point_score": 90,
+          "max_kernel_us": 5.000000000000002,
+          "minimum_time_reduction_fraction": 0.1666666666666664
+        },
+        "3": {
+          "target_point_score": 91,
+          "max_kernel_us": 4.450549450549454,
+          "minimum_time_reduction_fraction": 0.25824175824175766
+        }
+      },
+      "ideal_zero_time_total": 86.85714285714286
+    },
+    {
+      "case_id": 3,
+      "shape": {
+        "B": 1,
+        "seq_len": 256,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 128,
+        "selected_blocks": 1,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 9.0,
+      "score": 88,
+      "thresholds": {
+        "1": {
+          "target_point_score": 89,
+          "max_kernel_us": 8.2808988764045,
+          "minimum_time_reduction_fraction": 0.07990012484394449
+        },
+        "2": {
+          "target_point_score": 90,
+          "max_kernel_us": 7.444444444444448,
+          "minimum_time_reduction_fraction": 0.17283950617283905
+        },
+        "3": {
+          "target_point_score": 91,
+          "max_kernel_us": 6.626373626373633,
+          "minimum_time_reduction_fraction": 0.263736263736263
+        }
+      },
+      "ideal_zero_time_total": 86.85714285714286
+    },
+    {
+      "case_id": 4,
+      "shape": {
+        "B": 2,
+        "seq_len": 512,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 64,
+        "selected_blocks": 1,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 12.0,
+      "score": 87,
+      "thresholds": {
+        "1": {
+          "target_point_score": 88,
+          "max_kernel_us": 11.590909090909099,
+          "minimum_time_reduction_fraction": 0.034090909090908394
+        },
+        "2": {
+          "target_point_score": 89,
+          "max_kernel_us": 10.505617977528097,
+          "minimum_time_reduction_fraction": 0.12453183520599198
+        },
+        "3": {
+          "target_point_score": 90,
+          "max_kernel_us": 9.444444444444448,
+          "minimum_time_reduction_fraction": 0.2129629629629627
+        }
+      },
+      "ideal_zero_time_total": 86.92857142857143
+    },
+    {
+      "case_id": 5,
+      "shape": {
+        "B": 4,
+        "seq_len": 1024,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 64,
+        "selected_blocks": 1,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 29.0,
+      "score": 82,
+      "thresholds": {
+        "1": {
+          "target_point_score": 83,
+          "max_kernel_us": 27.65060240963857,
+          "minimum_time_reduction_fraction": 0.046530951391773434
+        },
+        "2": {
+          "target_point_score": 84,
+          "max_kernel_us": 25.71428571428571,
+          "minimum_time_reduction_fraction": 0.11330049261083752
+        },
+        "3": {
+          "target_point_score": 85,
+          "max_kernel_us": 23.82352941176471,
+          "minimum_time_reduction_fraction": 0.17849898580121693
+        }
+      },
+      "ideal_zero_time_total": 87.28571428571429
+    },
+    {
+      "case_id": 6,
+      "shape": {
+        "B": 8,
+        "seq_len": 1024,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 128,
+        "selected_blocks": 1,
+        "block_size": 32,
+        "causal": 1
+      },
+      "oj_us": 85.0,
+      "score": 84,
+      "thresholds": {
+        "1": {
+          "target_point_score": 85,
+          "max_kernel_us": 81.17647058823532,
+          "minimum_time_reduction_fraction": 0.044982698961937406
+        },
+        "2": {
+          "target_point_score": 86,
+          "max_kernel_us": 74.88372093023258,
+          "minimum_time_reduction_fraction": 0.1190150478796167
+        },
+        "3": {
+          "target_point_score": 87,
+          "max_kernel_us": 68.73563218390801,
+          "minimum_time_reduction_fraction": 0.19134550371872927
+        }
+      },
+      "ideal_zero_time_total": 87.14285714285714
+    },
+    {
+      "case_id": 7,
+      "shape": {
+        "B": 1,
+        "seq_len": 4096,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 64,
+        "selected_blocks": 1,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 28.0,
+      "score": 88,
+      "thresholds": {
+        "1": {
+          "target_point_score": 89,
+          "max_kernel_us": 26.202247191011253,
+          "minimum_time_reduction_fraction": 0.06420545746388384
+        },
+        "2": {
+          "target_point_score": 90,
+          "max_kernel_us": 23.555555555555564,
+          "minimum_time_reduction_fraction": 0.1587301587301584
+        },
+        "3": {
+          "target_point_score": 91,
+          "max_kernel_us": 20.967032967032985,
+          "minimum_time_reduction_fraction": 0.2511773940345362
+        }
+      },
+      "ideal_zero_time_total": 86.85714285714286
+    },
+    {
+      "case_id": 8,
+      "shape": {
+        "B": 2,
+        "seq_len": 4096,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 64,
+        "selected_blocks": 1,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 44.0,
+      "score": 84,
+      "thresholds": {
+        "1": {
+          "target_point_score": 85,
+          "max_kernel_us": 43.941176470588246,
+          "minimum_time_reduction_fraction": 0.0013368983957217084
+        },
+        "2": {
+          "target_point_score": 86,
+          "max_kernel_us": 40.534883720930246,
+          "minimum_time_reduction_fraction": 0.0787526427061308
+        },
+        "3": {
+          "target_point_score": 87,
+          "max_kernel_us": 37.20689655172412,
+          "minimum_time_reduction_fraction": 0.15438871473354265
+        }
+      },
+      "ideal_zero_time_total": 87.14285714285714
+    },
+    {
+      "case_id": 9,
+      "shape": {
+        "B": 1,
+        "seq_len": 8192,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 64,
+        "selected_blocks": 1,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 44.0,
+      "score": 83,
+      "thresholds": {
+        "1": {
+          "target_point_score": 84,
+          "max_kernel_us": 42.666666666666664,
+          "minimum_time_reduction_fraction": 0.030303030303030387
+        },
+        "2": {
+          "target_point_score": 85,
+          "max_kernel_us": 39.52941176470589,
+          "minimum_time_reduction_fraction": 0.10160427807486616
+        },
+        "3": {
+          "target_point_score": 86,
+          "max_kernel_us": 36.46511627906978,
+          "minimum_time_reduction_fraction": 0.17124735729386853
+        }
+      },
+      "ideal_zero_time_total": 87.21428571428571
+    },
+    {
+      "case_id": 10,
+      "shape": {
+        "B": 1,
+        "seq_len": 256,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 64,
+        "selected_blocks": 2,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 8.0,
+      "score": 88,
+      "thresholds": {
+        "1": {
+          "target_point_score": 89,
+          "max_kernel_us": 7.910112359550567,
+          "minimum_time_reduction_fraction": 0.011235955056179137
+        },
+        "2": {
+          "target_point_score": 90,
+          "max_kernel_us": 7.111111111111114,
+          "minimum_time_reduction_fraction": 0.11111111111111072
+        },
+        "3": {
+          "target_point_score": 91,
+          "max_kernel_us": 6.329670329670336,
+          "minimum_time_reduction_fraction": 0.20879120879120805
+        }
+      },
+      "ideal_zero_time_total": 86.85714285714286
+    },
+    {
+      "case_id": 11,
+      "shape": {
+        "B": 2,
+        "seq_len": 512,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 64,
+        "selected_blocks": 4,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 21.0,
+      "score": 86,
+      "thresholds": {
+        "1": {
+          "target_point_score": 87,
+          "max_kernel_us": 19.873563218390796,
+          "minimum_time_reduction_fraction": 0.05363984674329547
+        },
+        "2": {
+          "target_point_score": 88,
+          "max_kernel_us": 18.13636363636365,
+          "minimum_time_reduction_fraction": 0.1363636363636357
+        },
+        "3": {
+          "target_point_score": 89,
+          "max_kernel_us": 16.438202247191022,
+          "minimum_time_reduction_fraction": 0.2172284644194752
+        }
+      },
+      "ideal_zero_time_total": 87.0
+    },
+    {
+      "case_id": 12,
+      "shape": {
+        "B": 4,
+        "seq_len": 1024,
+        "kv_heads": 1,
+        "q_heads": 16,
+        "dim": 64,
+        "selected_blocks": 8,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 65.0,
+      "score": 82,
+      "thresholds": {
+        "1": {
+          "target_point_score": 83,
+          "max_kernel_us": 62.46987951807232,
+          "minimum_time_reduction_fraction": 0.03892493049119505
+        },
+        "2": {
+          "target_point_score": 84,
+          "max_kernel_us": 58.095238095238095,
+          "minimum_time_reduction_fraction": 0.10622710622710618
+        },
+        "3": {
+          "target_point_score": 85,
+          "max_kernel_us": 53.82352941176472,
+          "minimum_time_reduction_fraction": 0.1719457013574659
+        }
+      },
+      "ideal_zero_time_total": 87.28571428571429
+    },
+    {
+      "case_id": 13,
+      "shape": {
+        "B": 1,
+        "seq_len": 256,
+        "kv_heads": 2,
+        "q_heads": 32,
+        "dim": 64,
+        "selected_blocks": 1,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 9.0,
+      "score": 89,
+      "thresholds": {
+        "1": {
+          "target_point_score": 90,
+          "max_kernel_us": 8.444444444444448,
+          "minimum_time_reduction_fraction": 0.061728395061728
+        },
+        "2": {
+          "target_point_score": 91,
+          "max_kernel_us": 7.5164835164835235,
+          "minimum_time_reduction_fraction": 0.16483516483516403
+        },
+        "3": {
+          "target_point_score": 92,
+          "max_kernel_us": 6.608695652173909,
+          "minimum_time_reduction_fraction": 0.26570048309178795
+        }
+      },
+      "ideal_zero_time_total": 86.78571428571429
+    },
+    {
+      "case_id": 14,
+      "shape": {
+        "B": 2,
+        "seq_len": 512,
+        "kv_heads": 2,
+        "q_heads": 32,
+        "dim": 64,
+        "selected_blocks": 1,
+        "block_size": 16,
+        "causal": 1
+      },
+      "oj_us": 17.0,
+      "score": 88,
+      "thresholds": {
+        "1": {
+          "target_point_score": 89,
+          "max_kernel_us": 15.449438202247201,
+          "minimum_time_reduction_fraction": 0.0912095175148705
+        },
+        "2": {
+          "target_point_score": 90,
+          "max_kernel_us": 13.888888888888895,
+          "minimum_time_reduction_fraction": 0.1830065359477121
+        },
+        "3": {
+          "target_point_score": 91,
+          "max_kernel_us": 12.362637362637374,
+          "minimum_time_reduction_fraction": 0.2727860374919192
+        }
+      },
+      "ideal_zero_time_total": 86.85714285714286
+    }
+  ],
+  "limitations": [
+    "Counter captures are not simultaneous; metadata binding does not guarantee counter isolation",
+    "Instruction counts are not bytes, stalls, latency or time shares",
+    "The uniform-reduction model is a score requirement, not an achievable speedup prediction",
+    "OJ anchor times have rounded precision and device differs from16GB slice",
+    "Real88 must be verified on OJ; no new OJ result here"
+  ]
+}

@@ -1,5 +1,21 @@
 # NSA optimization status
 
+## 2026-09-09 Existing profiler audit and88-point requirements
+
+Peer343/NSA129's source-bound single-window counters match the prior109
+capture in all seven recorded categories:6,497,344 total instructions,
+138,496 global reads,16,384 global writes,zero private reads/writes.
+This is not a spill-removal or instruction-count reduction result. Counters
+do not identify the latency bottleneck; captures were not simultaneous.
+
+Fixed OJ109 checker math requires28 additional integer point scores to
+reach88 overall. No individual case can supply all28, even under an ideal
+zero-time bound. Uniform time reduction would need about17.12%; this is a
+requirement model, not predicted attainable performance. Preserve per-case
+thresholds in nsa129_profile_score_budget.json and explanation in
+PROFILE_AND_88_BUDGET.md. CPU audit passes; no GPU jobs launched.
+
+
 ## 2026-09-09 NSA129: byte-exact peer343, isolated on actual OJ109 baseline
 
 v343 is a rebase of v342's S8 delta onto our OJ109 baseline, not an S8 bug
