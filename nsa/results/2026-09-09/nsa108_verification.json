@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "full_paired_reference_checks": 28,
+  "stress_paired_reference_checks": 48,
+  "candidate_reference_checks": 38,
+  "source_hashes": {
+    "submissions/nsa103.py": "6115cd1595aaa26f518e362810ab50771ade4812b0b35fb8d81444d471f5795a",
+    "submissions/nsa108.py": "de7852f192086fd776d138684bd52715023218e0b943b2fe1cc00878c07b3374"
+  },
+  "unchanged_cuda_source_cases": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    12,
+    13,
+    14
+  ],
+  "limitation": "Counts are assertions, not distinct shapes. Not proof of all possible inputs, OJ SafeExecutor acceptance, device-object equality or 88 points."
+}

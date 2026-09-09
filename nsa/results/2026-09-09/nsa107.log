@@ -1,0 +1,11 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-09 07:31:41  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-09 07:31:48  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+2026-09-09 07:31:48  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'gather_kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 10, "module": "submissions/nsa103.py", "seed": 0, "mode": "public", "median_us": {"cupti": 7.331840000000011}}
+{"case_id": 10, "module": "submissions/nsa107.py", "seed": 0, "mode": "public", "median_us": {"cupti": 7.270399999999936}}
+2026-09-09 07:31:50  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-09 07:31:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+2026-09-09 07:31:56  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'gather_kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 11, "module": "submissions/nsa103.py", "seed": 0, "mode": "public", "median_us": {"cupti": 19.41504000000001}}
+{"case_id": 11, "module": "submissions/nsa107.py", "seed": 0, "mode": "public", "median_us": {"cupti": 20.208640000000013}}

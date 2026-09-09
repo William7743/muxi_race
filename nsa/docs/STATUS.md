@@ -1,8 +1,27 @@
 # NSA optimization status
 
+## 2026-09-09 NSA109: confirmed S2 conversion improvement
+
+NSA109 is the latest LOCAL candidate for user OJ validation, superseding
+NSA103 as the next suggested test, not the accepted v236/#141594/85.93 anchor.
+It inherits NSA103 and changes only the S2/D64/G16/block-size16 gather path.
+Final seed211/public case10: 7.10656 -> 6.95808us (2.09% raw reduction,
+1.84% guard-relative). Independent seed0/137 and NSA108 runs also favored
+this S2 change. Other13 normalized generated CUDA fingerprints match NSA103;
+their timing fluctuations are not counted as gains.
+
+Full28/28 paired checks plus48/48 stress checks PASS: candidate38, parent38.
+All84/84 final timing samples passed both guard gates. Source-bound result
+verification and AST audits PASS. NSA108's S4 change was withdrawn for lack
+of reliable gain; NSA106/107 shared-layout experiments are not recommended.
+See GATHER104_109.md and results/2026-09-09/nsa109_verification.json.
+No new OJ submission was made. The latest read at07:26:25UTC still listed
+#141601 as newest; the six known failures are loader-language rejections.
+Local16GB sGPU evidence is not an88-point result or OJ acceptance certification.
+
 ## 2026-09-09 NSA103: narrow reproducible H2 improvement
 
-NSA103 is the latest LOCAL candidate for user OJ validation, replacing NSA097
+At this historical checkpoint NSA103 was the LOCAL candidate, replacing NSA097
 as the next suggested test, not replacing the accepted v23685.93 anchor.
 It adds NSA099's scalar output only to small H2/D64/S1 workloads. Independent
 seed42 final-file case13:7.99744 ->7.82336us (2.18% raw,2.64% guard-relative).
