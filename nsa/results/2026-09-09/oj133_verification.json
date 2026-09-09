@@ -1,0 +1,214 @@
+{
+  "status": "PASS",
+  "submission_id": 141741,
+  "version": 133,
+  "score": 86.64,
+  "source_equal_except_outer_whitespace": true,
+  "full_ast_equal": true,
+  "submitted_sha256": "4eb61ece5a3783050439989aa23ed6d058c92f7d64523ea9db404ad2a2c65f2b",
+  "probe_sha256": "6f87a1d3a99038c5e5d6fc99f220abd0d9bd7f8373c71bc37bb416d3d27b0a15",
+  "full_reference_assertions": 56,
+  "qualified_samples": 111,
+  "total_samples": 112,
+  "unqualified_rows": [
+    {
+      "version": 133,
+      "case_id": 13,
+      "mode": "current"
+    }
+  ],
+  "changed_cases": [
+    6
+  ],
+  "case_deltas": [
+    {
+      "case_id": 1,
+      "changed_kernel": false,
+      "old_time_us": 5.0,
+      "new_time_us": 5.0,
+      "old_score": 87,
+      "new_score": 87,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 1.0023624331116683,
+        "current": 0.9973502216631461
+      }
+    },
+    {
+      "case_id": 2,
+      "changed_kernel": false,
+      "old_time_us": 6.0,
+      "new_time_us": 6.0,
+      "old_score": 88,
+      "new_score": 88,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 1.0035409711820438,
+        "current": 0.9978762434144193
+      }
+    },
+    {
+      "case_id": 3,
+      "changed_kernel": false,
+      "old_time_us": 9.0,
+      "new_time_us": 9.0,
+      "old_score": 88,
+      "new_score": 88,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 1.020245342428288,
+        "current": 0.9896280409828556
+      }
+    },
+    {
+      "case_id": 4,
+      "changed_kernel": false,
+      "old_time_us": 11.0,
+      "new_time_us": 11.0,
+      "old_score": 88,
+      "new_score": 88,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 0.9983984967531403,
+        "current": 0.9988688818143431
+      }
+    },
+    {
+      "case_id": 5,
+      "changed_kernel": false,
+      "old_time_us": 26.0,
+      "new_time_us": 26.0,
+      "old_score": 83,
+      "new_score": 83,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 0.9952384358299735,
+        "current": 1.0026028431550025
+      }
+    },
+    {
+      "case_id": 6,
+      "changed_kernel": true,
+      "old_time_us": 85.0,
+      "new_time_us": 85.0,
+      "old_score": 84,
+      "new_score": 84,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 1.0116968183975859,
+        "current": 1.0116773092671147
+      }
+    },
+    {
+      "case_id": 7,
+      "changed_kernel": false,
+      "old_time_us": 25.0,
+      "new_time_us": 25.0,
+      "old_score": 89,
+      "new_score": 89,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 0.9955604341276715,
+        "current": 1.001455478148194
+      }
+    },
+    {
+      "case_id": 8,
+      "changed_kernel": false,
+      "old_time_us": 43.0,
+      "new_time_us": 43.0,
+      "old_score": 85,
+      "new_score": 85,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 0.9988784684967559,
+        "current": 0.9958336808182473
+      }
+    },
+    {
+      "case_id": 9,
+      "changed_kernel": false,
+      "old_time_us": 42.0,
+      "new_time_us": 42.0,
+      "old_score": 84,
+      "new_score": 84,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 0.9962553531138131,
+        "current": 0.9981120515003474
+      }
+    },
+    {
+      "case_id": 10,
+      "changed_kernel": false,
+      "old_time_us": 7.0,
+      "new_time_us": 7.0,
+      "old_score": 90,
+      "new_score": 90,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 0.9917914398881489,
+        "current": 0.9998741192149729
+      }
+    },
+    {
+      "case_id": 11,
+      "changed_kernel": false,
+      "old_time_us": 21.0,
+      "new_time_us": 21.0,
+      "old_score": 86,
+      "new_score": 86,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 0.9970635630174149,
+        "current": 0.997267352926905
+      }
+    },
+    {
+      "case_id": 12,
+      "changed_kernel": false,
+      "old_time_us": 61.0,
+      "new_time_us": 62.0,
+      "old_score": 83,
+      "new_score": 83,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 0.9978998987650738,
+        "current": 0.9997364162692023
+      }
+    },
+    {
+      "case_id": 13,
+      "changed_kernel": false,
+      "old_time_us": 9.0,
+      "new_time_us": 8.0,
+      "old_score": 89,
+      "new_score": 90,
+      "point_delta": 1,
+      "local_time_ratios": {
+        "public": 1.0062997113600705,
+        "current": null
+      }
+    },
+    {
+      "case_id": 14,
+      "changed_kernel": false,
+      "old_time_us": 17.0,
+      "new_time_us": 17.0,
+      "old_score": 88,
+      "new_score": 88,
+      "point_delta": 0,
+      "local_time_ratios": {
+        "public": 1.0029845523851686,
+        "current": 0.9986446460253314
+      }
+    }
+  ],
+  "total_integer_points": 1213,
+  "remaining_to88_integer_points": 19,
+  "changed_path_point_delta": 0,
+  "unchanged_path_point_delta": 1,
+  "goal88_achieved": false,
+  "conclusion": "Verified best score, but all score gain occurs on unchanged case13; no demonstrated OJ benefit from packed-V change.",
+  "limitation": "Rounded checker times and single OJ runs cannot establish causality. Local hardware is16GB/25% slice."
+}

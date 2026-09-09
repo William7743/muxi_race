@@ -1,5 +1,23 @@
 # NSA optimization status
 
+## 2026-09-09 OJ133 source binding and full calibration completed
+
+Supersedes tentative141741 report below. Direct read confirms NSA133/#141741
+Accepted86.64; source strip and complete AST match the frozen probe.
+Only case6 generated CUDA differs from128 across all14 formal cases.
+OJ case6 remains85us/84; the sole point gain is unchanged case13 (9->8us,89->90).
+Case12 changes61->62us with score83 unchanged. Actual highest score is now133,
+but its packed-V change has no demonstrated OJ gain;128 remains engineering control.
+
+Fresh seed563 full run exited0 in64.48s,56/56 reference assertions pass;
+111/112 timings qualify. NSA133/case13/current has insufficient qualified samples
+and is excluded from local timing ratios, not silently retried or accepted.
+Case6 public/current ratios1.01170/1.01168 confirm earlier mild local regression.
+All28 source captures match recorded hashes. No new OOM (counter9), no own
+GPU jobs remain. Verify_oj133.py PASS audits source/correctness/score attribution,
+not a blanket claim that every timing sample qualified. Goal88 remains unmet.
+See OJ133_VERIFIED.md and oj133_verification.json.
+
 ## Latest user feedback: OJ141741 / 86.64
 
 User reports submission141741 scored86.64, +0.07 above141726.
