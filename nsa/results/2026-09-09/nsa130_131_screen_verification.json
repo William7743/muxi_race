@@ -1,0 +1,39 @@
+{
+  "evidence_audit": "PASS",
+  "reference_assertions": 12,
+  "qualified_samples": 36,
+  "total_samples": 36,
+  "results": [
+    {
+      "version": 130,
+      "case_id": 6,
+      "ratios": {
+        "public": 1.3441309237399626,
+        "current": 1.342670625040926
+      },
+      "generated_counts": {
+        "parent_int64_tokens": 42,
+        "candidate_int64_tokens": 2,
+        "parent_if_tokens": 9,
+        "candidate_if_tokens": 5
+      }
+    },
+    {
+      "version": 131,
+      "case_id": 3,
+      "ratios": {
+        "public": 0.9677073804244978,
+        "current": 0.971880681324066
+      },
+      "generated_counts": {
+        "parent_int64_tokens": 43,
+        "candidate_int64_tokens": 3,
+        "parent_if_tokens": 4,
+        "candidate_if_tokens": 2
+      }
+    }
+  ],
+  "actual_best_oj": 86.0,
+  "goal88_achieved": false,
+  "limitation": "Target screen only; no extended/full-suite validation or new OJ score"
+}

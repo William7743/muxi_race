@@ -1,0 +1,20 @@
+{
+  "module": "submissions/nsa131.py",
+  "case": {
+    "case_id": 6,
+    "B": 8,
+    "seq_len": 1024,
+    "kv_heads": 1,
+    "q_heads": 16,
+    "dim": 128,
+    "selected_blocks": 1,
+    "block_size": 32,
+    "causal": 1
+  },
+  "source_sha256": "f80bd05cc474f6466b4be43d13e021b5e0c2d893a908824f951d2bd2f6bb4fd2",
+  "cuda_sha256": "37e9597746b48fbc651e96ff0a322a79320827fb2c3db3ce9fb0176f8dfe6ac6",
+  "compile_flags": null,
+  "library_path": "/root/.tilelang/cache/0.1.10_cuda_gitf549117c-x86_64/kernels/1ef71a34e98fe2dfaf942b9b06d3b2adac4435c1f7f8e88f40c47b510d4e22f8/kernel_lib.so",
+  "library_sha256": "af9baadbde474cfe3c93c1f366821786855c1c8ff6d09272774dd5fbd34800b8",
+  "limitation": "Library hashes may include host metadata; use extracted device payloads for binary equivalence."
+}

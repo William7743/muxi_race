@@ -1,0 +1,21 @@
+{"source": "results/artifacts132_133/nsa128_case6.cu", "kernel_source_sha256": "37e9597746b48fbc651e96ff0a322a79320827fb2c3db3ce9fb0176f8dfe6ac6", "private_ir_lines": []}
+Traceback (most recent call last):
+  File "/data/nsa_codex_20260909_r1/tests/inspect_cached_ir.py", line 40, in <module>
+    if normalized_hash(matches[0] / 'device_kernel.cu') != source_hash:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/nsa_codex_20260909_r1/tests/inspect_cached_ir.py", line 29, in normalized_hash
+    text = '\n'.join(line.rstrip() for line in path.read_text().splitlines()).rstrip() + '\n'
+                                               ^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/device_kernel.cu'
+Traceback (most recent call last):
+  File "/data/nsa_codex_20260909_r1/tests/inspect_nsa132_artifacts.py", line 21, in <module>
+    subprocess.run([sys.executable,str(helper),
+  File "/opt/conda/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/opt/conda/bin/python', '/data/nsa_codex_20260909_r1/tests/inspect_cached_ir.py', '--source', 'results/artifacts132_133/nsa132_case6.cu', '--cache-directory', '/tmp', '--output-prefix', '/data/nsa_codex_20260909_r1/results/ir132_133/nsa132_case6', '--device-sections']' returned non-zero exit status 1.

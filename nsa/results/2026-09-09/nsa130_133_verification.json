@@ -1,0 +1,140 @@
+{
+  "status": "PASS",
+  "datasets": [
+    {
+      "dataset": "nsa130_131_screen",
+      "reference_assertions": 12,
+      "qualified_samples": 36,
+      "total_samples": 36,
+      "ratios": {
+        "130": {
+          "public": 1.3441309237399626,
+          "current": 1.342670625040926
+        },
+        "131": {
+          "public": 0.9677073804244978,
+          "current": 0.971880681324066
+        }
+      }
+    },
+    {
+      "dataset": "nsa131_recheck",
+      "reference_assertions": 4,
+      "qualified_samples": 20,
+      "total_samples": 20,
+      "ratios": {
+        "131": {
+          "public": 1.0037694066392746,
+          "current": 1.0103525174372214
+        }
+      }
+    },
+    {
+      "dataset": "nsa132_133_screen",
+      "reference_assertions": 6,
+      "qualified_samples": 18,
+      "total_samples": 18,
+      "ratios": {
+        "132": {
+          "public": 1.0244798685471934,
+          "current": 1.028989002856033
+        },
+        "133": {
+          "public": 1.0147180317874178,
+          "current": 1.0130478590240053
+        }
+      }
+    }
+  ],
+  "total_reference_assertions": 22,
+  "total_qualified_samples": 74,
+  "artifacts": [
+    {
+      "version": 128,
+      "case_id": 6,
+      "library_sha256": "af9baadbde474cfe3c93c1f366821786855c1c8ff6d09272774dd5fbd34800b8",
+      "private_ir_matches": 0,
+      "private_alloca_lines": [],
+      "device_text": {
+        "bytes": 5632,
+        "sha256": "c8c664e22eda6d4de731ba5ac45141409fabedc8266405ef7b2f7eafa6e58d5c"
+      }
+    },
+    {
+      "version": 130,
+      "case_id": 6,
+      "library_sha256": "89159ed5748d31d348beb32aa595fcb222c9cec317dcbd0d62547bf233acb264",
+      "private_ir_matches": 12,
+      "private_alloca_lines": [
+        "%6 = alloca [16 x %struct.__half], align 2, addrspace(5)"
+      ],
+      "device_text": {
+        "bytes": 4352,
+        "sha256": "015dee45a45e44a4125ac0e5c170c47c71ace126f08c794d466a83b0b96c902c"
+      }
+    },
+    {
+      "version": 128,
+      "case_id": 3,
+      "library_sha256": "2e359b9c0658d94b12362d2c9e32051bfa1197622bf5734c1f40c53be5004626",
+      "private_ir_matches": 0,
+      "private_alloca_lines": [],
+      "device_text": {
+        "bytes": 6656,
+        "sha256": "a7b31a330067a2470bde1b708b93e7e73832ed62af4ea83148058d049b2dddb7"
+      }
+    },
+    {
+      "version": 131,
+      "case_id": 3,
+      "library_sha256": "c8b3f8e3192b62eb0594eb5ecf2b94c02c478572f244c4046a5b56a7fc4bf0bc",
+      "private_ir_matches": 0,
+      "private_alloca_lines": [],
+      "device_text": {
+        "bytes": 5888,
+        "sha256": "74acc95b9ee8de09d6842eb48138cb1bd76bbf0bc5f2e22df4f011104838c3ea"
+      }
+    },
+    {
+      "version": 128,
+      "case_id": 6,
+      "library_sha256": "af9baadbde474cfe3c93c1f366821786855c1c8ff6d09272774dd5fbd34800b8",
+      "private_ir_matches": 0,
+      "private_alloca_lines": [],
+      "device_text": {
+        "bytes": 5632,
+        "sha256": "c8c664e22eda6d4de731ba5ac45141409fabedc8266405ef7b2f7eafa6e58d5c"
+      }
+    },
+    {
+      "version": 132,
+      "case_id": 6,
+      "library_sha256": "b84255a7c944a81fb7f2a709a0d64073d6483b2d008b31d9d8b94b67eafbd4ea",
+      "private_ir_matches": 0,
+      "private_alloca_lines": [],
+      "device_text": {
+        "bytes": 4352,
+        "sha256": "ed0f4b83d5eb200130e7c6e01a0b366b5b8771d2257a4c8bebafef26bcfe4c80"
+      }
+    },
+    {
+      "version": 133,
+      "case_id": 6,
+      "library_sha256": "65bbd5cb96684022939984afc3fe3b60bcf5b4b48301cd8c02c85753c6f4d207",
+      "private_ir_matches": 0,
+      "private_alloca_lines": [],
+      "device_text": {
+        "bytes": 4864,
+        "sha256": "7439f1d6ef95929807580cdd265b5115794dc1d49eb2df3373f2141dd8221a54"
+      }
+    }
+  ],
+  "recommendation": "Retain NSA128. NSA130/132/133 regress; NSA131 small gain did not reproduce.",
+  "user_reported_best": {
+    "version": 128,
+    "submission_id": 141726,
+    "score": 86.57
+  },
+  "goal88_achieved": false,
+  "limitation": "Target-only validation, not full suite. Embedded private IR is not measured runtime spill traffic; OJ128 score is user-reported."
+}

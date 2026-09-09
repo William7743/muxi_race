@@ -1,0 +1,15 @@
+{
+  "evidence_type": "user_report",
+  "date": "2026-09-09",
+  "submission_id": 141726,
+  "version": "NSA128",
+  "score": 86.57,
+  "source_path": "nsa/probes/probe_nsa128_d64_bounds_s8_packed_prefetch.py",
+  "source_sha256": "309e71c21ea3190d38b2ba9ef82cc295bb61b66bebf4aa332c6f757ba83db57a",
+  "source_binding": "User explicitly identified version128; OJ uploaded source not independently fetched",
+  "verdict": null,
+  "per_case_results": null,
+  "goal_score": 88,
+  "goal_achieved": false,
+  "limitation": "Total score and version/ID confirmed by user; no direct API or per-case screenshot verification yet."
+}

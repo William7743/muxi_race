@@ -1,0 +1,20 @@
+{
+  "module": "submissions/nsa132.py",
+  "case": {
+    "case_id": 6,
+    "B": 8,
+    "seq_len": 1024,
+    "kv_heads": 1,
+    "q_heads": 16,
+    "dim": 128,
+    "selected_blocks": 1,
+    "block_size": 32,
+    "causal": 1
+  },
+  "source_sha256": "75b1e4f0a837a0b1007566f4ed591adf099f04f6fdd7fc8a0b42099379c846cc",
+  "cuda_sha256": "a989a927e8c5342e6a30074b19a5940a2e2e47ae39bb686860ddf3fd4d17e1a9",
+  "compile_flags": null,
+  "library_path": "/tmp/tmpnyaf69_v.so",
+  "library_sha256": "b84255a7c944a81fb7f2a709a0d64073d6483b2d008b31d9d8b94b67eafbd4ea",
+  "limitation": "Library hashes may include host metadata; use extracted device payloads for binary equivalence."
+}

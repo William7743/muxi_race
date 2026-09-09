@@ -1,0 +1,130 @@
+{
+  "source": "results/artifacts130_131/nsa130_case6.cu",
+  "kernel_source_sha256": "fd800490d7303073d726808576de1dc367bbc09b7b18392c81bd5f7653a9136a",
+  "cache_directory": "/root/.tilelang/cache/0.1.10_cuda_gitf549117c-x86_64/kernels/ba629ada393ed89cf482e1e8405e1d832f697bb1a8a39743ecd01eecdf6f759e",
+  "library_sha256": "89159ed5748d31d348beb32aa595fcb222c9cec317dcbd0d62547bf233acb264",
+  "fatbin_sha256": "1978cc37b34d534dc31855ede71a48d238a882715f773dd7e9bde8c818044106",
+  "bitcode_sha256": "fee9494e2a53cff25bd7a6f6a55368a4f099e4015ef1f8a02ef1e3d9083ddeea",
+  "ir_sha256": "00fc1962627b39ece986d557d0d85385d383f46c998f9d709292319de2b7e6f4",
+  "bundle_ids": [
+    "maca-mxc-metax-macahca--xcore1000",
+    "maca-mxc-metax-macahca--xcore1000-bc",
+    "host-x86_64-unknown-linux-gnu"
+  ],
+  "commands": [
+    [
+      "/opt/maca/mxgpu_llvm/bin/llvm-objcopy",
+      "--dump-section",
+      ".mc_fatbin=/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.fatbin",
+      "/root/.tilelang/cache/0.1.10_cuda_gitf549117c-x86_64/kernels/ba629ada393ed89cf482e1e8405e1d832f697bb1a8a39743ecd01eecdf6f759e/kernel_lib.so",
+      "/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.copy.so"
+    ],
+    [
+      "/opt/maca/mxgpu_llvm/bin/clang-offload-bundler",
+      "--type=o",
+      "--input=/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.fatbin",
+      "--list"
+    ],
+    [
+      "/opt/maca/mxgpu_llvm/bin/clang-offload-bundler",
+      "--type=o",
+      "--input=/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.fatbin",
+      "--targets=maca-mxc-metax-macahca--xcore1000-bc",
+      "--output=/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.bc",
+      "--unbundle"
+    ],
+    [
+      "/opt/maca/mxgpu_llvm/bin/llvm-dis",
+      "/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.bc",
+      "-o",
+      "/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.ll"
+    ],
+    [
+      "/opt/maca/mxgpu_llvm/bin/clang-offload-bundler",
+      "--type=o",
+      "--input=/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.fatbin",
+      "--targets=maca-mxc-metax-macahca--xcore1000",
+      "--output=/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.device",
+      "--unbundle"
+    ],
+    [
+      "/opt/maca/mxgpu_llvm/bin/llvm-objcopy",
+      "--dump-section",
+      ".text=/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.device.text",
+      "--dump-section",
+      ".rodata=/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.device.rodata",
+      "--dump-section",
+      ".note=/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.device.note",
+      "/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.device",
+      "/data/nsa_codex_20260909_r1/results/ir130_131/nsa130_case6.device.copy"
+    ]
+  ],
+  "private_ir_lines": [
+    {
+      "line": 201,
+      "text": "%6 = alloca [16 x %struct.__half], align 2, addrspace(5)"
+    },
+    {
+      "line": 202,
+      "text": "call void @llvm.lifetime.start.p5(i64 32, ptr addrspace(5) %6)"
+    },
+    {
+      "line": 247,
+      "text": "call void @llvm.memcpy.p5.p4.i64(ptr addrspace(5) noundef align 16 dereferenceable(16) %6, ptr addrspace(4) noundef align 16 dereferenceable(16) %48, i64 16, i1 false), !tbaa.struct !27, !call_argsrelate !28"
+    },
+    {
+      "line": 249,
+      "text": "%50 = getelementptr inbounds i8, ptr addrspace(5) %6, i32 16"
+    },
+    {
+      "line": 250,
+      "text": "call void @llvm.memcpy.p5.p4.i64(ptr addrspace(5) noundef align 16 dereferenceable(16) %50, ptr addrspace(4) noundef align 16 dereferenceable(16) %49, i64 16, i1 false), !tbaa.struct !27, !call_argsrelate !28"
+    },
+    {
+      "line": 523,
+      "text": "call void @llvm.memcpy.p3.p5.i64(ptr addrspace(3) noundef align 16 dereferenceable(16) %286, ptr addrspace(5) noundef align 16 dereferenceable(16) %6, i64 16, i1 false), !tbaa.struct !27"
+    },
+    {
+      "line": 525,
+      "text": "call void @llvm.memcpy.p3.p5.i64(ptr addrspace(3) noundef align 16 dereferenceable(16) %287, ptr addrspace(5) noundef align 16 dereferenceable(16) %50, i64 16, i1 false), !tbaa.struct !27"
+    },
+    {
+      "line": 751,
+      "text": "call void @llvm.lifetime.end.p5(i64 32, ptr addrspace(5) %6)"
+    },
+    {
+      "line": 756,
+      "text": "declare void @llvm.lifetime.start.p5(i64 immarg, ptr addrspace(5) nocapture) #6"
+    },
+    {
+      "line": 762,
+      "text": "declare void @llvm.memcpy.p5.p4.i64(ptr addrspace(5) noalias nocapture writeonly, ptr addrspace(4) noalias nocapture readonly, i64, i1 immarg) #7"
+    },
+    {
+      "line": 789,
+      "text": "declare void @llvm.memcpy.p3.p5.i64(ptr addrspace(3) noalias nocapture writeonly, ptr addrspace(5) noalias nocapture readonly, i64, i1 immarg) #7"
+    },
+    {
+      "line": 798,
+      "text": "declare void @llvm.lifetime.end.p5(i64 immarg, ptr addrspace(5) nocapture) #6"
+    }
+  ],
+  "device_metadata": {
+    "object_sha256": "4e9bc1dd892896cb9dbd9fb1fd4cdb1ceb8bbe2d456005c40b9ad2f4e810c013",
+    "sections": {
+      ".text": {
+        "bytes": 4352,
+        "sha256": "015dee45a45e44a4125ac0e5c170c47c71ace126f08c794d466a83b0b96c902c"
+      },
+      ".rodata": {
+        "bytes": 64,
+        "sha256": "c6451a9269f91f3d96286d816e67dad5040a4441dd8fa4e87a2f4d1ccbe1b219"
+      },
+      ".note": {
+        "bytes": 1900,
+        "sha256": "4816b819335f7482b07d199b186a25af2fe283a76e8e5f0f1de8dab03b5bbc00"
+      }
+    }
+  },
+  "limitation": "Embedded IR is not final ISA; counts are static source matches, not runtime accesses."
+}

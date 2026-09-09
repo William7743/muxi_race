@@ -1,0 +1,81 @@
+{
+  "source": "results/artifacts132_133/nsa133_case6.cu",
+  "kernel_source_sha256": "de4ef4a9c8cd46bad42f100acc9eb90e5a581af56715a9362c0bb04d5fd3f830",
+  "library_path": "/tmp/tmpzzrfvhiw.so",
+  "library_sha256": "65bbd5cb96684022939984afc3fe3b60bcf5b4b48301cd8c02c85753c6f4d207",
+  "fatbin_sha256": "df7694ebea22308e38d480ea760afe933529532d7fb4c9ecf6798d39f71a144f",
+  "bitcode_sha256": "3e9a7952fda162a011e8dc0e758510d7dae84dd3070561cc24b1fc429ac3de1a",
+  "ir_sha256": "77718925ea34d49211a22a5c39706aa0a4dcad94a0104afce8b015b44e594250",
+  "bundle_ids": [
+    "maca-mxc-metax-macahca--xcore1000",
+    "maca-mxc-metax-macahca--xcore1000-bc",
+    "host-x86_64-unknown-linux-gnu"
+  ],
+  "commands": [
+    [
+      "/opt/maca/mxgpu_llvm/bin/llvm-objcopy",
+      "--dump-section",
+      ".mc_fatbin=/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.fatbin",
+      "/tmp/tmpzzrfvhiw.so",
+      "/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.copy.so"
+    ],
+    [
+      "/opt/maca/mxgpu_llvm/bin/clang-offload-bundler",
+      "--type=o",
+      "--input=/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.fatbin",
+      "--list"
+    ],
+    [
+      "/opt/maca/mxgpu_llvm/bin/clang-offload-bundler",
+      "--type=o",
+      "--input=/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.fatbin",
+      "--targets=maca-mxc-metax-macahca--xcore1000-bc",
+      "--output=/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.bc",
+      "--unbundle"
+    ],
+    [
+      "/opt/maca/mxgpu_llvm/bin/llvm-dis",
+      "/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.bc",
+      "-o",
+      "/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.ll"
+    ],
+    [
+      "/opt/maca/mxgpu_llvm/bin/clang-offload-bundler",
+      "--type=o",
+      "--input=/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.fatbin",
+      "--targets=maca-mxc-metax-macahca--xcore1000",
+      "--output=/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.device",
+      "--unbundle"
+    ],
+    [
+      "/opt/maca/mxgpu_llvm/bin/llvm-objcopy",
+      "--dump-section",
+      ".text=/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.device.text",
+      "--dump-section",
+      ".rodata=/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.device.rodata",
+      "--dump-section",
+      ".note=/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.device.note",
+      "/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.device",
+      "/data/nsa_codex_20260909_r1/results/ir132_133/nsa133_case6.device.copy"
+    ]
+  ],
+  "private_ir_lines": [],
+  "device_metadata": {
+    "object_sha256": "a73fb4dac8cf21c43ed2b7ef20cc59c8a1da78305e3e53e8fcbc91d7728df344",
+    "sections": {
+      ".text": {
+        "bytes": 4864,
+        "sha256": "7439f1d6ef95929807580cdd265b5115794dc1d49eb2df3373f2141dd8221a54"
+      },
+      ".rodata": {
+        "bytes": 64,
+        "sha256": "33175663e0146b36023212fa65786e50f6084b691a27e539e692febdf0505db2"
+      },
+      ".note": {
+        "bytes": 1900,
+        "sha256": "87d6e70f0af81fdc83c5c64dbc8a5965626ec8f40cf91f81d78d7cdfa4b8f71c"
+      }
+    }
+  },
+  "limitation": "Embedded IR is not final ISA; counts are static source matches, not runtime accesses."
+}

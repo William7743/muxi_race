@@ -1,5 +1,29 @@
 # NSA optimization status
 
+## 2026-09-09 NSA128 / OJ141726: user confirms86.57
+
+User explicitly reports NSA128, submission141726, score86.57. This is the new
+user-confirmed best, +0.57 versus directly verified NSA109/#141658/86.00.
+Per-case scores/times, verdict and uploaded OJ source have not been independently
+retrieved. Keep this evidence level distinct from direct checker records.
+The published NSA128 source SHA is309e71c21ea3190d38b2ba9ef82cc295bb61b66bebf4aa332c6f757ba83db57a.
+Goal88 remains1.43 points away. Earlier fixed-parent estimate86.0714 was not
+an actual score and undershot this reported result; do not infer all0.57 points
+are attributable to changed kernels without per-case feedback.
+Raw user report: results/2026-09-09/oj128_user_report.json.
+
+NSA130's D128 BS32 bound-only screen regressed ~34%; captured library IR adds
+a32-byte addrspace(5) temporary absent in128. Runtime causality remains unproven.
+NSA131's BS16 first-screen ~3% gain did NOT repeat: independent seed523/reversed
+order has roughly0.4%/1.0% slower normalized medians. Neither is recommended.
+NSA132/133 isolate packed first-V storage with/without130's bound changes.
+Their target checks pass but they regress2.67%/1.39% versus128; neither is
+recommended. Their captured library IR has no addrspace(5) matches, unlike130.
+All three completed guarded workflows:22 reference assertions,74 qualified
+timing samples; no full-suite certification for130-133. All source/library/IR
+bindings pass verify_nsa130_133_results.py. OOM counter remains9 and all own
+GPU workflows exited0. See D128_130_133.md. No automatic OJ submission.
+
 ## 2026-09-09 NSA128 combination validation completed
 
 Supersedes pending128 entries below and its frozen creation-time header.

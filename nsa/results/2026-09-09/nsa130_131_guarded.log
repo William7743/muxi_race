@@ -1,0 +1,37 @@
+{"stage": "begin", "script": "calibrate_oj_protocol.py"}
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-09 12:51:09  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+2026-09-09 12:51:09  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 12:51:15  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+2026-09-09 12:51:15  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 3, "module": "submissions/nsa128.py", "seed": 521, "mode": "public", "median_us": {"cupti": 8.750080000000052}}
+{"case_id": 3, "module": "submissions/nsa130.py", "seed": 521, "mode": "public", "median_us": {"cupti": 8.739839999999932}}
+{"case_id": 3, "module": "submissions/nsa131.py", "seed": 521, "mode": "public", "median_us": {"cupti": 8.38143999999993}}
+{"case_id": 3, "module": "submissions/nsa128.py", "seed": 521, "mode": "current", "median_us": {"cupti": 8.72447999999993}}
+{"case_id": 3, "module": "submissions/nsa130.py", "seed": 521, "mode": "current", "median_us": {"cupti": 8.709119999999967}}
+{"case_id": 3, "module": "submissions/nsa131.py", "seed": 521, "mode": "current", "median_us": {"cupti": 8.417280000000064}}
+2026-09-09 12:51:19  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 12:51:25  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+2026-09-09 12:51:25  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 6, "module": "submissions/nsa128.py", "seed": 521, "mode": "public", "median_us": {"cupti": 81.75103999999982}}
+{"case_id": 6, "module": "submissions/nsa130.py", "seed": 521, "mode": "public", "median_us": {"cupti": 109.83424000000002}}
+{"case_id": 6, "module": "submissions/nsa131.py", "seed": 521, "mode": "public", "median_us": {"cupti": 81.6793599999999}}
+{"case_id": 6, "module": "submissions/nsa128.py", "seed": 521, "mode": "current", "median_us": {"cupti": 81.65376000000022}}
+{"case_id": 6, "module": "submissions/nsa130.py", "seed": 521, "mode": "current", "median_us": {"cupti": 109.73696}}
+{"case_id": 6, "module": "submissions/nsa131.py", "seed": 521, "mode": "current", "median_us": {"cupti": 81.64864000000006}}
+{"stage": "complete", "script": "calibrate_oj_protocol.py"}
+{"stage": "begin", "script": "dump_sources.py"}
+2026-09-09 12:51:30  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 3, "path": "/data/nsa_codex_20260909_r1/results/sources130_131/nsa128_case3.cu", "sha256": "d47a724e64eaa9f48f20510271150e2c425ab9454166d8b1c588d9ab4ccea59a"}
+2026-09-09 12:51:30  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 6, "path": "/data/nsa_codex_20260909_r1/results/sources130_131/nsa128_case6.cu", "sha256": "37e9597746b48fbc651e96ff0a322a79320827fb2c3db3ce9fb0176f8dfe6ac6"}
+2026-09-09 12:51:31  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 3, "path": "/data/nsa_codex_20260909_r1/results/sources130_131/nsa130_case3.cu", "sha256": "d47a724e64eaa9f48f20510271150e2c425ab9454166d8b1c588d9ab4ccea59a"}
+2026-09-09 12:51:31  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 6, "path": "/data/nsa_codex_20260909_r1/results/sources130_131/nsa130_case6.cu", "sha256": "fd800490d7303073d726808576de1dc367bbc09b7b18392c81bd5f7653a9136a"}
+2026-09-09 12:51:33  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 3, "path": "/data/nsa_codex_20260909_r1/results/sources130_131/nsa131_case3.cu", "sha256": "1c3abc181030a487af69b884e1eb4d267810ad080758e005bd43a90b34b3c0d3"}
+2026-09-09 12:51:33  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 6, "path": "/data/nsa_codex_20260909_r1/results/sources130_131/nsa131_case6.cu", "sha256": "37e9597746b48fbc651e96ff0a322a79320827fb2c3db3ce9fb0176f8dfe6ac6"}
+{"stage": "complete", "script": "dump_sources.py"}
+{"workflow": "complete", "limitation": "Target screen only, not full validation"}
