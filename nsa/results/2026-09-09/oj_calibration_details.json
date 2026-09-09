@@ -1,0 +1,776 @@
+[
+  {
+    "meta": {
+      "id": 141647,
+      "status": "Accepted",
+      "displayScore": 84,
+      "submitTime": "2026-09-09T07:34:38.000Z",
+      "timeUsed": 469
+    },
+    "source": {
+      "language": "tilelang.maca-c500",
+      "sha256": "40bfb68958667786f85e703d8bf6e71df18a808e693703218d970a96f7d8a80f"
+    },
+    "progress": {
+      "status": "Accepted",
+      "displayScore": 84
+    },
+    "sample_count": 1,
+    "formal_case_reference_count": 14,
+    "missing_case_result_count": 0,
+    "subtasks": [
+      {
+        "subtask_index": 1,
+        "score": 100,
+        "fullScore": 100,
+        "displayScore": 83.99999999999999,
+        "case_reference_count": 14
+      }
+    ],
+    "cases": [
+      {
+        "subtask_index": 1,
+        "case_index": 1,
+        "testcaseHash": "7c6c3de1cd79ae78398c975d2b124a0bf117a003",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 87,
+        "status": "Accepted",
+        "time_us": 5,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.005,
+          "tk_time_ms": 0.005,
+          "tb_time_ms": 0.035,
+          "speedup": 7.0,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #1\n    Config:  B=1, seq_len=64, kv_heads=1, q_heads=16, dim=32, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.036000     ms\n  User kernel:        0.005000     ms\n  Speedup vs base:    7.200       x\n\n  Score ratio:        0.878049      (87.80%)\n  Display score:      87            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 2,
+        "testcaseHash": "8881f5ea95ed477c5ba6021518eaf821333fde00",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 88,
+        "status": "Accepted",
+        "time_us": 6,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.006,
+          "tk_time_ms": 0.006,
+          "tb_time_ms": 0.038,
+          "speedup": 6.333333,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #2\n    Config:  B=1, seq_len=128, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.045000     ms\n  User kernel:        0.006000     ms\n  Speedup vs base:    7.500       x\n\n  Score ratio:        0.882353      (88.24%)\n  Display score:      88            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 3,
+        "testcaseHash": "5854622cd00f2c2e19bd083ca794e7c686f7a942",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 79,
+        "status": "Accepted",
+        "time_us": 17,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.017,
+          "tk_time_ms": 0.017,
+          "tb_time_ms": 0.069,
+          "speedup": 4.058824,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #3\n    Config:  B=1, seq_len=256, kv_heads=1, q_heads=16, dim=128, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.067000     ms\n  User kernel:        0.017000     ms\n  Speedup vs base:    3.941       x\n\n  Score ratio:        0.797619      (79.76%)\n  Display score:      79            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 4,
+        "testcaseHash": "7eac6d5276e99a88c8daf29bd7e1c3e98c30540a",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 86,
+        "status": "Accepted",
+        "time_us": 13,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.013,
+          "tk_time_ms": 0.013,
+          "tb_time_ms": 0.08,
+          "speedup": 6.153846,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #4\n    Config:  B=2, seq_len=512, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.085000     ms\n  User kernel:        0.013000     ms\n  Speedup vs base:    6.538       x\n\n  Score ratio:        0.867347      (86.73%)\n  Display score:      86            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 5,
+        "testcaseHash": "1fdf6714b25d45b447562780fd7ae727590c9aa4",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 82,
+        "status": "Accepted",
+        "time_us": 28,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.028,
+          "tk_time_ms": 0.028,
+          "tb_time_ms": 0.124,
+          "speedup": 4.428571,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #5\n    Config:  B=4, seq_len=1024, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.135000     ms\n  User kernel:        0.028000     ms\n  Speedup vs base:    4.821       x\n\n  Score ratio:        0.828221      (82.82%)\n  Display score:      82            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 6,
+        "testcaseHash": "25645d0da94cd02b508b9248968a4d48f05156cd",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 84,
+        "status": "Accepted",
+        "time_us": 86,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.086,
+          "tk_time_ms": 0.086,
+          "tb_time_ms": 0.433,
+          "speedup": 5.034884,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #6\n    Config:  B=8, seq_len=1024, kv_heads=1, q_heads=16, dim=128, selected_blocks=1, block_size=32, causal=1\n\n  Baseline:           0.460000     ms\n  User kernel:        0.086000     ms\n  Speedup vs base:    5.349       x\n\n  Score ratio:        0.842491      (84.25%)\n  Display score:      84            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 7,
+        "testcaseHash": "72a3e9c26ab568b3a6391f081b10dbda5f54c8d1",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 88,
+        "status": "Accepted",
+        "time_us": 27,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.027,
+          "tk_time_ms": 0.027,
+          "tb_time_ms": 0.185,
+          "speedup": 6.851852,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #7\n    Config:  B=1, seq_len=4096, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.212000     ms\n  User kernel:        0.027000     ms\n  Speedup vs base:    7.852       x\n\n  Score ratio:        0.887029      (88.70%)\n  Display score:      88            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 8,
+        "testcaseHash": "248cc0aba2a87497255c5d374a74d19ba50d8aeb",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 84,
+        "status": "Accepted",
+        "time_us": 44,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.044,
+          "tk_time_ms": 0.044,
+          "tb_time_ms": 0.244,
+          "speedup": 5.545455,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #8\n    Config:  B=2, seq_len=4096, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.249000     ms\n  User kernel:        0.044000     ms\n  Speedup vs base:    5.659       x\n\n  Score ratio:        0.849829      (84.98%)\n  Display score:      84            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 9,
+        "testcaseHash": "ec12cc24ede6c3f1fc6a54a484eb66a8ba7c9f01",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 83,
+        "status": "Accepted",
+        "time_us": 44,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.044,
+          "tk_time_ms": 0.044,
+          "tb_time_ms": 0.277,
+          "speedup": 6.295455,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #9\n    Config:  B=1, seq_len=8192, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.224000     ms\n  User kernel:        0.044000     ms\n  Speedup vs base:    5.091       x\n\n  Score ratio:        0.835821      (83.58%)\n  Display score:      83            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 10,
+        "testcaseHash": "fa085f4ab0d857a906110f9d2d2a0cab242458ac",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 88,
+        "status": "Accepted",
+        "time_us": 8,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.008,
+          "tk_time_ms": 0.008,
+          "tb_time_ms": 0.06,
+          "speedup": 7.5,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #10\n    Config:  B=1, seq_len=256, kv_heads=1, q_heads=16, dim=64, selected_blocks=2, block_size=16, causal=1\n\n  Baseline:           0.064000     ms\n  User kernel:        0.008000     ms\n  Speedup vs base:    8.000       x\n\n  Score ratio:        0.888889      (88.89%)\n  Display score:      88            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 11,
+        "testcaseHash": "8a1abccf90e38a5ff122f41a8396640bbcea5ffa",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 86,
+        "status": "Accepted",
+        "time_us": 21,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.021,
+          "tk_time_ms": 0.021,
+          "tb_time_ms": 0.133,
+          "speedup": 6.333333,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #11\n    Config:  B=2, seq_len=512, kv_heads=1, q_heads=16, dim=64, selected_blocks=4, block_size=16, causal=1\n\n  Baseline:           0.133000     ms\n  User kernel:        0.021000     ms\n  Speedup vs base:    6.333       x\n\n  Score ratio:        0.863636      (86.36%)\n  Display score:      86            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 12,
+        "testcaseHash": "c76c16f08f06f1e830a20f05e2eeab7c2adec891",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 68,
+        "status": "Accepted",
+        "time_us": 140,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.14,
+          "tk_time_ms": 0.14,
+          "tb_time_ms": 0.315,
+          "speedup": 2.25,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #12\n    Config:  B=4, seq_len=1024, kv_heads=1, q_heads=16, dim=64, selected_blocks=8, block_size=16, causal=1\n\n  Baseline:           0.305000     ms\n  User kernel:        0.140000     ms\n  Speedup vs base:    2.179       x\n\n  Score ratio:        0.685393      (68.54%)\n  Display score:      68            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 13,
+        "testcaseHash": "6c7f5f6e7c01cca35d4ea3574767e809943ea7a5",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 87,
+        "status": "Accepted",
+        "time_us": 11,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.011,
+          "tk_time_ms": 0.011,
+          "tb_time_ms": 0.064,
+          "speedup": 5.818182,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #13\n    Config:  B=1, seq_len=256, kv_heads=2, q_heads=32, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.076000     ms\n  User kernel:        0.011000     ms\n  Speedup vs base:    6.909       x\n\n  Score ratio:        0.873563      (87.36%)\n  Display score:      87            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 14,
+        "testcaseHash": "56a4f70e74fe7d574db30eb3a3cf7730f1f12907",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 86,
+        "status": "Accepted",
+        "time_us": 19,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.019,
+          "tk_time_ms": 0.019,
+          "tb_time_ms": 0.134,
+          "speedup": 7.052632,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #14\n    Config:  B=2, seq_len=512, kv_heads=2, q_heads=32, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.125000     ms\n  User kernel:        0.019000     ms\n  Speedup vs base:    6.579       x\n\n  Score ratio:        0.868056      (86.81%)\n  Display score:      86            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      }
+    ],
+    "sample_diagnostics": [
+      {
+        "status": "Accepted",
+        "time": 5,
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #1\n    Config:  B=1, seq_len=64, kv_heads=1, q_heads=16, dim=32, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.036000     ms\n  User kernel:        0.005000     ms\n  Speedup vs base:    7.200       x\n\n  Score ratio:        0.878049      (87.80%)\n  Display score:      87            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      }
+    ],
+    "requested_id": 141647
+  },
+  {
+    "meta": {
+      "id": 141648,
+      "status": "Accepted",
+      "displayScore": 85.79,
+      "submitTime": "2026-09-09T07:34:56.000Z",
+      "timeUsed": 386
+    },
+    "source": {
+      "language": "tilelang.maca-c500",
+      "sha256": "6115cd1595aaa26f518e362810ab50771ade4812b0b35fb8d81444d471f5795a"
+    },
+    "progress": {
+      "status": "Accepted",
+      "displayScore": 85.79
+    },
+    "sample_count": 1,
+    "formal_case_reference_count": 14,
+    "missing_case_result_count": 0,
+    "subtasks": [
+      {
+        "subtask_index": 1,
+        "score": 100,
+        "fullScore": 100,
+        "displayScore": 85.78571428571429,
+        "case_reference_count": 14
+      }
+    ],
+    "cases": [
+      {
+        "subtask_index": 1,
+        "case_index": 1,
+        "testcaseHash": "1b53e562801134432c16439021575a3bf92c1b78",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 87,
+        "status": "Accepted",
+        "time_us": 5,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.005,
+          "tk_time_ms": 0.005,
+          "tb_time_ms": 0.037,
+          "speedup": 7.4,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #1\n    Config:  B=1, seq_len=64, kv_heads=1, q_heads=16, dim=32, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.036000     ms\n  User kernel:        0.005000     ms\n  Speedup vs base:    7.200       x\n\n  Score ratio:        0.878049      (87.80%)\n  Display score:      87            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 2,
+        "testcaseHash": "adb09566ead1ee4073c10249b05a1738342033c9",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 88,
+        "status": "Accepted",
+        "time_us": 6,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.006,
+          "tk_time_ms": 0.006,
+          "tb_time_ms": 0.04,
+          "speedup": 6.666667,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #2\n    Config:  B=1, seq_len=128, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.045000     ms\n  User kernel:        0.006000     ms\n  Speedup vs base:    7.500       x\n\n  Score ratio:        0.882353      (88.24%)\n  Display score:      88            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 3,
+        "testcaseHash": "089cc38fd26c4e979f0817cd67ebb640bdc03cc7",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 87,
+        "status": "Accepted",
+        "time_us": 10,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.01,
+          "tk_time_ms": 0.01,
+          "tb_time_ms": 0.064,
+          "speedup": 6.4,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #3\n    Config:  B=1, seq_len=256, kv_heads=1, q_heads=16, dim=128, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.067000     ms\n  User kernel:        0.010000     ms\n  Speedup vs base:    6.700       x\n\n  Score ratio:        0.870130      (87.01%)\n  Display score:      87            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 4,
+        "testcaseHash": "e19876ca3b239ae780c9b39f1d14ed8f360a1118",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 87,
+        "status": "Accepted",
+        "time_us": 12,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.012,
+          "tk_time_ms": 0.012,
+          "tb_time_ms": 0.081,
+          "speedup": 6.75,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #4\n    Config:  B=2, seq_len=512, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.085000     ms\n  User kernel:        0.012000     ms\n  Speedup vs base:    7.083       x\n\n  Score ratio:        0.876289      (87.63%)\n  Display score:      87            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 5,
+        "testcaseHash": "b9f7c47fa09edd56102318aa62f82d5cda024bd6",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 82,
+        "status": "Accepted",
+        "time_us": 29,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.029,
+          "tk_time_ms": 0.029,
+          "tb_time_ms": 0.149,
+          "speedup": 5.137931,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #5\n    Config:  B=4, seq_len=1024, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.135000     ms\n  User kernel:        0.029000     ms\n  Speedup vs base:    4.655       x\n\n  Score ratio:        0.823171      (82.32%)\n  Display score:      82            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 6,
+        "testcaseHash": "0f1a52ef25ed7d5714bd79bd0fa1add2260a01e9",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 84,
+        "status": "Accepted",
+        "time_us": 86,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.086,
+          "tk_time_ms": 0.086,
+          "tb_time_ms": 0.482,
+          "speedup": 5.604651,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #6\n    Config:  B=8, seq_len=1024, kv_heads=1, q_heads=16, dim=128, selected_blocks=1, block_size=32, causal=1\n\n  Baseline:           0.460000     ms\n  User kernel:        0.086000     ms\n  Speedup vs base:    5.349       x\n\n  Score ratio:        0.842491      (84.25%)\n  Display score:      84            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 7,
+        "testcaseHash": "5271539f12825f1ac9ec68f715430c16b0577b07",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 87,
+        "status": "Accepted",
+        "time_us": 29,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.029,
+          "tk_time_ms": 0.029,
+          "tb_time_ms": 0.203,
+          "speedup": 7.0,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #7\n    Config:  B=1, seq_len=4096, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.212000     ms\n  User kernel:        0.029000     ms\n  Speedup vs base:    7.310       x\n\n  Score ratio:        0.879668      (87.97%)\n  Display score:      87            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 8,
+        "testcaseHash": "07012f36e7e46cad05735b4243375fadf07109bd",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 84,
+        "status": "Accepted",
+        "time_us": 44,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.044,
+          "tk_time_ms": 0.044,
+          "tb_time_ms": 0.231,
+          "speedup": 5.25,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #8\n    Config:  B=2, seq_len=4096, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.249000     ms\n  User kernel:        0.044000     ms\n  Speedup vs base:    5.659       x\n\n  Score ratio:        0.849829      (84.98%)\n  Display score:      84            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 9,
+        "testcaseHash": "e702c040a673fa9e1b5c2243ce4dee9e66b916af",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 83,
+        "status": "Accepted",
+        "time_us": 44,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.044,
+          "tk_time_ms": 0.044,
+          "tb_time_ms": 0.229,
+          "speedup": 5.204545,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #9\n    Config:  B=1, seq_len=8192, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.224000     ms\n  User kernel:        0.044000     ms\n  Speedup vs base:    5.091       x\n\n  Score ratio:        0.835821      (83.58%)\n  Display score:      83            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 10,
+        "testcaseHash": "2b4dfbc58b00024cc806547fc1112127a6040fc6",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 88,
+        "status": "Accepted",
+        "time_us": 8,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.008,
+          "tk_time_ms": 0.008,
+          "tb_time_ms": 0.058,
+          "speedup": 7.25,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #10\n    Config:  B=1, seq_len=256, kv_heads=1, q_heads=16, dim=64, selected_blocks=2, block_size=16, causal=1\n\n  Baseline:           0.064000     ms\n  User kernel:        0.008000     ms\n  Speedup vs base:    8.000       x\n\n  Score ratio:        0.888889      (88.89%)\n  Display score:      88            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 11,
+        "testcaseHash": "53660386ced4ca49dd128bf0a77ff2072383b350",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 86,
+        "status": "Accepted",
+        "time_us": 21,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.021,
+          "tk_time_ms": 0.021,
+          "tb_time_ms": 0.133,
+          "speedup": 6.333333,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #11\n    Config:  B=2, seq_len=512, kv_heads=1, q_heads=16, dim=64, selected_blocks=4, block_size=16, causal=1\n\n  Baseline:           0.133000     ms\n  User kernel:        0.021000     ms\n  Speedup vs base:    6.333       x\n\n  Score ratio:        0.863636      (86.36%)\n  Display score:      86            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 12,
+        "testcaseHash": "21da5ff18a9e7f837f7d2714be2c544c1e919849",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 82,
+        "status": "Accepted",
+        "time_us": 65,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.065,
+          "tk_time_ms": 0.065,
+          "tb_time_ms": 0.309,
+          "speedup": 4.753846,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #12\n    Config:  B=4, seq_len=1024, kv_heads=1, q_heads=16, dim=64, selected_blocks=8, block_size=16, causal=1\n\n  Baseline:           0.305000     ms\n  User kernel:        0.065000     ms\n  Speedup vs base:    4.692       x\n\n  Score ratio:        0.824324      (82.43%)\n  Display score:      82            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 13,
+        "testcaseHash": "f8e6a731485f402f51748543d2905b4e172d67fd",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 90,
+        "status": "Accepted",
+        "time_us": 8,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.008,
+          "tk_time_ms": 0.008,
+          "tb_time_ms": 0.066,
+          "speedup": 8.25,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #13\n    Config:  B=1, seq_len=256, kv_heads=2, q_heads=32, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.076000     ms\n  User kernel:        0.008000     ms\n  Speedup vs base:    9.500       x\n\n  Score ratio:        0.904762      (90.48%)\n  Display score:      90            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 14,
+        "testcaseHash": "5c260c88fa789802efc28a4e614f9eb8c563b646",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 86,
+        "status": "Accepted",
+        "time_us": 19,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.019,
+          "tk_time_ms": 0.019,
+          "tb_time_ms": 0.128,
+          "speedup": 6.736842,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #14\n    Config:  B=2, seq_len=512, kv_heads=2, q_heads=32, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.125000     ms\n  User kernel:        0.019000     ms\n  Speedup vs base:    6.579       x\n\n  Score ratio:        0.868056      (86.81%)\n  Display score:      86            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      }
+    ],
+    "sample_diagnostics": [
+      {
+        "status": "Accepted",
+        "time": 5,
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #1\n    Config:  B=1, seq_len=64, kv_heads=1, q_heads=16, dim=32, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.036000     ms\n  User kernel:        0.005000     ms\n  Speedup vs base:    7.200       x\n\n  Score ratio:        0.878049      (87.80%)\n  Display score:      87            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      }
+    ],
+    "requested_id": 141648
+  },
+  {
+    "meta": {
+      "id": 141658,
+      "status": "Pending",
+      "displayScore": null,
+      "submitTime": "2026-09-09T07:51:07.000Z",
+      "timeUsed": null
+    },
+    "source": {
+      "language": "tilelang.maca-c500",
+      "sha256": "7abe284475520edf64999c583148cde45cc1c8f0a017503cc98068e7f33986fa"
+    },
+    "progress": {},
+    "sample_count": 1,
+    "formal_case_reference_count": 14,
+    "missing_case_result_count": 12,
+    "subtasks": [
+      {
+        "subtask_index": 1,
+        "score": 14.285714285714286,
+        "fullScore": 100,
+        "displayScore": 12.5,
+        "case_reference_count": 14
+      }
+    ],
+    "cases": [
+      {
+        "subtask_index": 1,
+        "case_index": 1,
+        "testcaseHash": "ea86a792adb1abba748afc93d44eb6afbe47accb",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 87,
+        "status": "Accepted",
+        "time_us": 5,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.005,
+          "tk_time_ms": 0.005,
+          "tb_time_ms": 0.038,
+          "speedup": 7.6,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #1\n    Config:  B=1, seq_len=64, kv_heads=1, q_heads=16, dim=32, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.036000     ms\n  User kernel:        0.005000     ms\n  Speedup vs base:    7.200       x\n\n  Score ratio:        0.878049      (87.80%)\n  Display score:      87            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 2,
+        "testcaseHash": "db13d58e1f54e2b68a29a58d39c9af601e7e3954",
+        "result_available": true,
+        "score": 100,
+        "displayScore": 88,
+        "status": "Accepted",
+        "time_us": 6,
+        "telemetry_parse_status": "parsed",
+        "telemetry": {
+          "schema_version": 2,
+          "time_ms": 0.006,
+          "tk_time_ms": 0.006,
+          "tb_time_ms": 0.036,
+          "speedup": 6.0,
+          "pass": true
+        },
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #2\n    Config:  B=1, seq_len=128, kv_heads=1, q_heads=16, dim=64, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.045000     ms\n  User kernel:        0.006000     ms\n  Speedup vs base:    7.500       x\n\n  Score ratio:        0.882353      (88.24%)\n  Display score:      88            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 3,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 4,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 5,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 6,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 7,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 8,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 9,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 10,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 11,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 12,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 13,
+        "result_available": false
+      },
+      {
+        "subtask_index": 1,
+        "case_index": 14,
+        "result_available": false
+      }
+    ],
+    "sample_diagnostics": [
+      {
+        "status": "Accepted",
+        "time": 5,
+        "checkerMessage": "=== SPJ Report - Native Sparse Attention ===\n----------------------------------------------------------------\n  Testcase  #1\n    Config:  B=1, seq_len=64, kv_heads=1, q_heads=16, dim=32, selected_blocks=1, block_size=16, causal=1\n\n  Baseline:           0.036000     ms\n  User kernel:        0.005000     ms\n  Speedup vs base:    7.200       x\n\n  Score ratio:        0.878049      (87.80%)\n  Display score:      87            / 100\n  Pass:               OK\n----------------------------------------------------------------\n"
+      }
+    ],
+    "requested_id": 141658
+  }
+]

@@ -20,7 +20,7 @@ def fingerprints(path):
     return sha, hashlib.sha256(ast.dump(tree).encode()).hexdigest()
 
 index = []
-for folder in ('submissions', 'baselines', 'experiments'):
+for folder in ('submissions', 'baselines', 'experiments', 'probes'):
     for path in (a.repository / folder).glob('*.py'):
         try:
             sha, ast_sha = fingerprints(path)

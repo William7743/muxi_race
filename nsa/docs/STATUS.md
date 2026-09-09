@@ -1,5 +1,27 @@
 # NSA optimization status
 
+## 2026-09-09 live NSA097/103 feedback and calibration correction
+
+Exact submitted LF source hashes confirm NSA097/#141647 Accepted84.00 and
+NSA103/#141648 Accepted85.79. NSA109/#141658 source also matches exactly;
+last successful detail read was Pending (two formal points populated).
+A later read failed with SSLError; that observation failure is not a job result.
+v236/#141594/85.93 remains the highest directly verified accepted anchor.
+
+Fresh simultaneous NSA103/097/v236 calibration:42/42 references PASS,
+125/126 samples satisfy both unchanged guard gates. NSA097/103 local case3
+both about8.7us and case12 both about63us, versus OJ17/10us and140/65us.
+The13 unchanged local CUDA fingerprints account for22/14=1.5714 of the
+25/14=1.7857 total score gap. Its cause is not established; no slow submission
+was dropped and no fitted offsets or seed selection were introduced.
+
+Fixed v236-anchor projections are86.00 for both: errors+2.00/+0.21 points.
+The new CPU reconciliation tool verifies shapes, exact checker scoring, source
+identity, strict sample qualification and changed/unchanged-path attribution.
+Do not present a precise local projected score as OJ performance. See
+CALIBRATION_097_103.md and oj_calibration_reconciliation.json. Optimization
+paused for this calibration request; NSA110 is syntax-only, not GPU tested.
+
 ## 2026-09-09 NSA109: confirmed S2 conversion improvement
 
 NSA109 is the latest LOCAL candidate for user OJ validation, superseding
