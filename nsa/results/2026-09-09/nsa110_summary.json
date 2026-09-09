@@ -1,0 +1,58 @@
+{
+  "input": "nsa110.jsonl",
+  "parent": "submissions/nsa109.py",
+  "candidate": "submissions/nsa110.py",
+  "reference_checks": 4,
+  "qualified_samples": 0,
+  "total_samples": 12,
+  "pairs": [
+    {
+      "case_id": 12,
+      "seed": 0,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 0,
+        "total": 3,
+        "raw_median_us": 93.41440000000024,
+        "qualified_median_us": null,
+        "guard_relative_median": null
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 0,
+        "total": 3,
+        "raw_median_us": 79.1654399999997,
+        "qualified_median_us": null,
+        "guard_relative_median": null
+      },
+      "usable": false,
+      "candidate_relative_time": null
+    },
+    {
+      "case_id": 12,
+      "seed": 0,
+      "mode": "current",
+      "parent": {
+        "correct": true,
+        "qualified": 0,
+        "total": 3,
+        "raw_median_us": 75.31008000000024,
+        "qualified_median_us": null,
+        "guard_relative_median": null
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 0,
+        "total": 3,
+        "raw_median_us": 76.52351999999999,
+        "qualified_median_us": null,
+        "guard_relative_median": null
+      },
+      "usable": false,
+      "candidate_relative_time": null
+    }
+  ],
+  "geometric_relative_time": null,
+  "limitation": "Subset local timings, not a score or a complete performance/correctness certification."
+}

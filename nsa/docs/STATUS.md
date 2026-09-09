@@ -1,5 +1,24 @@
 # NSA optimization status
 
+## 2026-09-09 NSA109 Accepted86.00; paired softmax probes
+
+Fresh authenticated read confirms NSA109/#141658 Accepted86.00, exact source
+hash and all14 formal checker results verified. It is now the highest directly
+verified accepted submission. The previous Pending snapshot is superseded.
+Relative to NSA103, changed case10 remains8us/88 points; the+3/14 total comes
+from locally unchanged generated paths. Fixed-parent local projection85.8571
+versus actual86.00 is another calibration observation, not proof of88 points.
+
+NSA110 keeps two FP32 score fragments while reusing the original16x64 shared
+K/V tile, reducing online state updates. NSA111 moves V0 load before softmax.
+Initial NSA110 paired correctness passes, but0/12 timing samples satisfy both
+guard rules. Independent111/110/109 checks also pass with0/30 timing samples
+qualified; no speedup is claimed. Total58 source-bound reference assertions
+pass, including48 boundary/in-place-update assertions across the three modules.
+Resource queries109/110:shared2560/3072 bytes,registers82/80,theoretical blocks20/21.
+All jobs completed. Evidence is archived in OJ109_AND_PAIR110.md; neither probe
+is recommended for OJ yet. Preserve the actual NSA10986.00 result.
+
 ## 2026-09-09 live NSA097/103 feedback and calibration correction
 
 Exact submitted LF source hashes confirm NSA097/#141647 Accepted84.00 and

@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "reference_assertions": 58,
+  "assertions_per_module": {
+    "submissions/nsa109.py": 20,
+    "submissions/nsa110.py": 20,
+    "submissions/nsa111.py": 18
+  },
+  "initial_qualified": 0,
+  "initial_samples": 12,
+  "confirm_qualified": 0,
+  "confirm_samples": 30,
+  "hashes": {
+    "submissions/nsa109.py": "7abe284475520edf64999c583148cde45cc1c8f0a017503cc98068e7f33986fa",
+    "submissions/nsa110.py": "a454dc931e604013bf44a05a955c2d5dc375ec9900f1ee37b9cad26e696b23eb",
+    "submissions/nsa111.py": "16f053a260890275c4c670e0efebe3e59822b1da6252241bfaa88d232178e1c2"
+  },
+  "limitations": [
+    "Counts are assertions, not distinct shapes. Performance qualification is separate.",
+    "Stress includes two target shapes and two fallback shapes, not all possible inputs.",
+    "Resource upper bounds are not achieved occupancy. Neither probe is OJ certified."
+  ]
+}

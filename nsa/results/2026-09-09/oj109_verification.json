@@ -1,0 +1,181 @@
+{
+  "submission_id": 141658,
+  "actual_score": 86,
+  "source_and_scoring_checks": "PASS",
+  "local_reference_checks": 28,
+  "unchanged_paths": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    11,
+    12,
+    13,
+    14
+  ],
+  "unchanged_path_score_delta": 0.21428571428571427,
+  "changed_path_score_delta": 0.0,
+  "fixed_parent_projection": 85.85714285714286,
+  "points": [
+    {
+      "case_id": 1,
+      "same_local_cuda": true,
+      "parent_oj_us": 5.0,
+      "candidate_oj_us": 5.0,
+      "delta_score": 0,
+      "local_guard_relative_time": 0.9767567514943634,
+      "projected_oj_us": 5.0,
+      "projected_score": 87,
+      "actual_score": 87
+    },
+    {
+      "case_id": 2,
+      "same_local_cuda": true,
+      "parent_oj_us": 6.0,
+      "candidate_oj_us": 6.0,
+      "delta_score": 0,
+      "local_guard_relative_time": 1.0056107034959207,
+      "projected_oj_us": 6.0,
+      "projected_score": 88,
+      "actual_score": 88
+    },
+    {
+      "case_id": 3,
+      "same_local_cuda": true,
+      "parent_oj_us": 10.0,
+      "candidate_oj_us": 9.0,
+      "delta_score": 1,
+      "local_guard_relative_time": 1.0094538035738254,
+      "projected_oj_us": 10.0,
+      "projected_score": 87,
+      "actual_score": 88
+    },
+    {
+      "case_id": 4,
+      "same_local_cuda": true,
+      "parent_oj_us": 12.0,
+      "candidate_oj_us": 12.0,
+      "delta_score": 0,
+      "local_guard_relative_time": 1.0041806768104555,
+      "projected_oj_us": 12.0,
+      "projected_score": 87,
+      "actual_score": 87
+    },
+    {
+      "case_id": 5,
+      "same_local_cuda": true,
+      "parent_oj_us": 29.0,
+      "candidate_oj_us": 29.0,
+      "delta_score": 0,
+      "local_guard_relative_time": 1.0007732936461418,
+      "projected_oj_us": 29.0,
+      "projected_score": 82,
+      "actual_score": 82
+    },
+    {
+      "case_id": 6,
+      "same_local_cuda": true,
+      "parent_oj_us": 86.0,
+      "candidate_oj_us": 85.0,
+      "delta_score": 0,
+      "local_guard_relative_time": 1.000555742827726,
+      "projected_oj_us": 86.0,
+      "projected_score": 84,
+      "actual_score": 84
+    },
+    {
+      "case_id": 7,
+      "same_local_cuda": true,
+      "parent_oj_us": 29.0,
+      "candidate_oj_us": 28.0,
+      "delta_score": 1,
+      "local_guard_relative_time": 0.9958705772296921,
+      "projected_oj_us": 29.0,
+      "projected_score": 87,
+      "actual_score": 88
+    },
+    {
+      "case_id": 8,
+      "same_local_cuda": true,
+      "parent_oj_us": 44.0,
+      "candidate_oj_us": 44.0,
+      "delta_score": 0,
+      "local_guard_relative_time": 0.999877615993257,
+      "projected_oj_us": 44.0,
+      "projected_score": 84,
+      "actual_score": 84
+    },
+    {
+      "case_id": 9,
+      "same_local_cuda": true,
+      "parent_oj_us": 44.0,
+      "candidate_oj_us": 44.0,
+      "delta_score": 0,
+      "local_guard_relative_time": 1.0004460627774874,
+      "projected_oj_us": 44.0,
+      "projected_score": 83,
+      "actual_score": 83
+    },
+    {
+      "case_id": 10,
+      "same_local_cuda": false,
+      "parent_oj_us": 8.0,
+      "candidate_oj_us": 8.0,
+      "delta_score": 0,
+      "local_guard_relative_time": 0.9815793835364324,
+      "projected_oj_us": 7.852635068291459,
+      "projected_score": 89,
+      "actual_score": 88
+    },
+    {
+      "case_id": 11,
+      "same_local_cuda": true,
+      "parent_oj_us": 21.0,
+      "candidate_oj_us": 21.0,
+      "delta_score": 0,
+      "local_guard_relative_time": 0.9992001152452766,
+      "projected_oj_us": 21.0,
+      "projected_score": 86,
+      "actual_score": 86
+    },
+    {
+      "case_id": 12,
+      "same_local_cuda": true,
+      "parent_oj_us": 65.0,
+      "candidate_oj_us": 65.0,
+      "delta_score": 0,
+      "local_guard_relative_time": 0.998445350785075,
+      "projected_oj_us": 65.0,
+      "projected_score": 82,
+      "actual_score": 82
+    },
+    {
+      "case_id": 13,
+      "same_local_cuda": true,
+      "parent_oj_us": 8.0,
+      "candidate_oj_us": 9.0,
+      "delta_score": -1,
+      "local_guard_relative_time": 1.000849847926462,
+      "projected_oj_us": 8.0,
+      "projected_score": 90,
+      "actual_score": 89
+    },
+    {
+      "case_id": 14,
+      "same_local_cuda": true,
+      "parent_oj_us": 19.0,
+      "candidate_oj_us": 17.0,
+      "delta_score": 2,
+      "local_guard_relative_time": 1.0007854470660307,
+      "projected_oj_us": 19.0,
+      "projected_score": 86,
+      "actual_score": 88
+    }
+  ],
+  "limitation": "Observed best86.00, not88. Local source equality does not prove OJ binary identity. Printed timing resolution can obscure small changes; its internal rounding rule is unknown."
+}
