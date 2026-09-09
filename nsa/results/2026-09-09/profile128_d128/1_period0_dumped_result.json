@@ -1,0 +1,57 @@
+{
+    "ISU Statistics": [
+        {
+            "data": {
+                "wsm_stall": 3797769.0,
+                "vls_pipeline_stall": 1599085.0,
+                "vls_wdata_stall": 524288.0,
+                "valu_stall": 0.0
+            },
+            "isError": false,
+            "message": "",
+            "name": "ISU stall cycles layout"
+        }
+    ],
+    "Memory Statistics": [
+        {
+            "data": 0,
+            "isError": false,
+            "message": "",
+            "name": "Private Read Instructions"
+        },
+        {
+            "data": 0,
+            "isError": false,
+            "message": "",
+            "name": "Private Write Instructions"
+        },
+        {
+            "data": 37591808.0,
+            "isError": false,
+            "message": "",
+            "name": "Global Memory Read bytes"
+        },
+        {
+            "data": 33554880.0,
+            "isError": false,
+            "message": "",
+            "name": "Global Memory Write bytes"
+        }
+    ],
+    "Workgroup Memory": [
+        {
+            "data": 73.40425531914893,
+            "isError": false,
+            "message": "",
+            "name": "shared memory access efficiency"
+        }
+    ],
+    "GPU Throughput Statistics": [
+        {
+            "data": 11.402468278751167,
+            "isError": false,
+            "message": "",
+            "name": "AP MMA Duty ratio"
+        }
+    ]
+}

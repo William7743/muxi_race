@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "metadata": {
+    "module": "submissions/nsa128.py",
+    "case": {
+      "case_id": 6,
+      "B": 8,
+      "seq_len": 1024,
+      "kv_heads": 1,
+      "q_heads": 16,
+      "dim": 128,
+      "selected_blocks": 1,
+      "block_size": 32,
+      "causal": 1
+    },
+    "seed": 0,
+    "mode": "public",
+    "cold": true,
+    "cache_flush_bytes": 256000000,
+    "warmup": 10,
+    "capture_calls": 1,
+    "correct": true,
+    "max_abs": 0.001953125,
+    "torch_version": "2.8.0+metax3.7.1.3",
+    "source_sha256": "309e71c21ea3190d38b2ba9ef82cc295bb61b66bebf4aa332c6f757ba83db57a",
+    "kernel_source_sha256": "37e9597746b48fbc651e96ff0a322a79320827fb2c3db3ce9fb0176f8dfe6ac6",
+    "expected_output_bytes": 33554432,
+    "timestamp_utc": "2026-09-09T14:34:24.152490+00:00"
+  },
+  "metrics": {
+    "ISU stall cycles layout": {
+      "wsm_stall": 3797769.0,
+      "vls_pipeline_stall": 1599085.0,
+      "vls_wdata_stall": 524288.0,
+      "valu_stall": 0.0
+    },
+    "Private Read Instructions": 0,
+    "Private Write Instructions": 0,
+    "Global Memory Read bytes": 37591808.0,
+    "Global Memory Write bytes": 33554880.0,
+    "shared memory access efficiency": 73.40425531914893,
+    "AP MMA Duty ratio": 11.402468278751167
+  },
+  "output_write_difference_bytes": 448.0,
+  "limitations": [
+    "PASS validates provenance and tool records, not exact counter accuracy or slice isolation.",
+    "Write count exceeds expected tensor size by448 bytes; cause unverified, retained explicitly.",
+    "AP MMA ratio is relative to AP active, not total kernel elapsed time.",
+    "Shared non-conflict access proportion is not time spent or recoverable speedup.",
+    "Stall categories are not proven disjoint or convertible to wall-clock fractions.",
+    "Zero private instruction counters concern this capture only; not proof for all inputs.",
+    "Profiler may replay its workload in multiple passes; metadata binds final replay.",
+    "Only1_period0 counters used; process-wide report excluded."
+  ],
+  "goal88_achieved": false
+}

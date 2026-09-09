@@ -1,0 +1,44 @@
+##############################
+Sub-module: ISU Statistics
+------------------------------
+Name: ISU stall cycles layout
+Description: ISU stall cycles layout
+Value: {
+    "data": {
+        "wsm_stall": 3797769.0,
+        "vls_pipeline_stall": 1599085.0,
+        "vls_wdata_stall": 524288.0,
+        "valu_stall": 0.0
+    },
+    "filename": "/data/nsa_codex_20260909_r1/results/profile128_d128/ISU_stall_cycles_layout20260909143435828.png"
+}
+##############################
+Sub-module: Memory Statistics
+------------------------------
+Name: Private Read Instructions
+Description: Number of private read instructions in all APs
+Value: 0
+------------------------------
+Name: Private Write Instructions
+Description: Number of private write instructions in all APs
+Value: 0
+------------------------------
+Name: Global Memory Read bytes
+Description: bytes read from global memory
+Value: 37,591,808.0byte
+------------------------------
+Name: Global Memory Write bytes
+Description: bytes write from global memory
+Value: 33,554,880.0byte
+##############################
+Sub-module: Workgroup Memory
+------------------------------
+Name: shared memory access efficiency
+Description: Proportion of NON-CONFLICT access
+Value: 73.40%
+##############################
+Sub-module: GPU Throughput Statistics
+------------------------------
+Name: AP MMA Duty ratio
+Description: MMA Duty ratio relative to AP active
+Value: 11.40%

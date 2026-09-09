@@ -1,5 +1,22 @@
 # NSA optimization status
 
+## 2026-09-09 D128 profile and rejected NSA141 combined output
+
+Direct source-bound128/case6 profile completes with all7 metrics isError=false.
+Single-window shared non-conflict access73.40%, MMA/AP-active11.40%, private
+read/write instruction counters0/0; global reads37,591,808 bytes and
+writes33,554,880 (448 above expected output, cause unverified). RPC/topology
+warnings retained. These counters do not imply recoverable speedup/time fractions.
+
+NSA141 retains both D128 PV output halves until a full-row writeback, parent138.
+Target reference4/4 and qualified samples12/12 pass, but time ratios1.36305/
+1.35832 regress~36%. Reject; no OJ submission or broad regression for141.
+Shared allocation stays6144 bytes. Captured-library embedded IR has no private
+address-space matches for either parent or141; actual regression mechanism
+unresolved. No claim of proved spills or measured occupancy. All own work terminal,
+OOM counter9 unchanged.138 remains optional candidate; actual best13386.64.
+See D128_PROFILE141.md; goal88 remains active.
+
 ## 2026-09-09 NSA138 H2 bounds-only candidate validated
 
 New138/139/140 isolate bounded block addresses, V prefetch and Q-after-K order.

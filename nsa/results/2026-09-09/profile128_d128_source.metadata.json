@@ -1,0 +1,27 @@
+{
+  "module": "submissions/nsa128.py",
+  "case": {
+    "case_id": 6,
+    "B": 8,
+    "seq_len": 1024,
+    "kv_heads": 1,
+    "q_heads": 16,
+    "dim": 128,
+    "selected_blocks": 1,
+    "block_size": 32,
+    "causal": 1
+  },
+  "seed": 0,
+  "mode": "public",
+  "cold": true,
+  "cache_flush_bytes": 256000000,
+  "warmup": 10,
+  "capture_calls": 1,
+  "correct": true,
+  "max_abs": 0.001953125,
+  "torch_version": "2.8.0+metax3.7.1.3",
+  "source_sha256": "309e71c21ea3190d38b2ba9ef82cc295bb61b66bebf4aa332c6f757ba83db57a",
+  "kernel_source_sha256": "37e9597746b48fbc651e96ff0a322a79320827fb2c3db3ce9fb0176f8dfe6ac6",
+  "expected_output_bytes": 33554432,
+  "timestamp_utc": "2026-09-09T14:34:24.152490+00:00"
+}

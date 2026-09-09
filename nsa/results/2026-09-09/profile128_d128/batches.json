@@ -1,0 +1,25 @@
+{
+    "ISU": [
+        "AP_PERF_BSM_ATOMIC_CYCLES",
+        "AP_PERF_BSM_RD_CYCLES",
+        "AP_PERF_BSM_WR_CYCLES",
+        "AP_PERF_INST_CYCLES_MMA",
+        "AP_PERF_ISU_ARB_VALU_STALL",
+        "AP_PERF_BSM_CONFLICT_CYCLES",
+        "AP_PERF_ISU_ARB_WSM_STALL",
+        "AP_PERF_ISU_AP_BUSY",
+        "AP_PERF_INST_PRIVATE_WR",
+        "AP_PERF_ISU_ARB_VLS_STALL",
+        "AP_PERF_ISU_ARB_DATA_STALL",
+        "AP_PERF_INST_PRIVATE_RD"
+    ],
+    "L2C": [
+        "perf_dnoc_rdreq_64B",
+        "perf_dnoc_wrreq_128B",
+        "perf_dnoc_wrreq_64B",
+        "perf_dnoc_wrreq_32B_low",
+        "perf_dnoc_rdreq_32B",
+        "perf_dnoc_rdreq_128B",
+        "perf_dnoc_wrreq_32B_high"
+    ]
+}
