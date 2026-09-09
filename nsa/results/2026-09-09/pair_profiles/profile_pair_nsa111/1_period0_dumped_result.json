@@ -1,0 +1,48 @@
+{
+    "Summary": [
+        {
+            "data": 8584773,
+            "isError": false,
+            "message": "",
+            "name": "Total Instructions"
+        },
+        {
+            "data": 7034798,
+            "isError": false,
+            "message": "",
+            "name": "Compute Instructions"
+        },
+        {
+            "data": 1549975,
+            "isError": false,
+            "message": "",
+            "name": "Memory Instructions"
+        }
+    ],
+    "Memory Statistics": [
+        {
+            "data": 194239,
+            "isError": false,
+            "message": "",
+            "name": "Global Read Instructions"
+        },
+        {
+            "data": 90607,
+            "isError": false,
+            "message": "",
+            "name": "Global Write Instructions"
+        },
+        {
+            "data": 0,
+            "isError": false,
+            "message": "",
+            "name": "Private Read Instructions"
+        },
+        {
+            "data": 0,
+            "isError": false,
+            "message": "",
+            "name": "Private Write Instructions"
+        }
+    ]
+}

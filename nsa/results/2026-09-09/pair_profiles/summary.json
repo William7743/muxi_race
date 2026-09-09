@@ -1,0 +1,80 @@
+{
+  "metadata_status": "PASS",
+  "rows": [
+    {
+      "version": "nsa109",
+      "source_sha256": "7abe284475520edf64999c583148cde45cc1c8f0a017503cc98068e7f33986fa",
+      "metrics": {
+        "Total Instructions": 6497344,
+        "Compute Instructions": 5446720,
+        "Memory Instructions": 1050624,
+        "Global Read Instructions": 138496,
+        "Global Write Instructions": 16384,
+        "Private Read Instructions": 0,
+        "Private Write Instructions": 0
+      },
+      "relative_to_nsa109": {
+        "Private Read Instructions": null,
+        "Private Write Instructions": null,
+        "Global Write Instructions": 0.0,
+        "Memory Instructions": 0.0,
+        "Total Instructions": 0.0,
+        "Global Read Instructions": 0.0,
+        "Compute Instructions": 0.0
+      }
+    },
+    {
+      "version": "nsa110",
+      "source_sha256": "a454dc931e604013bf44a05a955c2d5dc375ec9900f1ee37b9cad26e696b23eb",
+      "metrics": {
+        "Total Instructions": 6552153,
+        "Compute Instructions": 5387600,
+        "Memory Instructions": 1164553,
+        "Global Read Instructions": 138496,
+        "Global Write Instructions": 29059,
+        "Private Read Instructions": 0,
+        "Private Write Instructions": 0
+      },
+      "relative_to_nsa109": {
+        "Private Read Instructions": null,
+        "Private Write Instructions": null,
+        "Global Write Instructions": 0.77362060546875,
+        "Memory Instructions": 0.10843936555799227,
+        "Total Instructions": 0.008435600762403794,
+        "Global Read Instructions": 0.0,
+        "Compute Instructions": -0.010854238881381817
+      }
+    },
+    {
+      "version": "nsa111",
+      "source_sha256": "16f053a260890275c4c670e0efebe3e59822b1da6252241bfaa88d232178e1c2",
+      "metrics": {
+        "Total Instructions": 8584773,
+        "Compute Instructions": 7034798,
+        "Memory Instructions": 1549975,
+        "Global Read Instructions": 194239,
+        "Global Write Instructions": 90607,
+        "Private Read Instructions": 0,
+        "Private Write Instructions": 0
+      },
+      "relative_to_nsa109": {
+        "Private Read Instructions": null,
+        "Private Write Instructions": null,
+        "Global Write Instructions": 4.53021240234375,
+        "Memory Instructions": 0.4752899229410332,
+        "Total Instructions": 0.32127420065799184,
+        "Global Read Instructions": 0.40248815850277264,
+        "Compute Instructions": 0.29156593325891556
+      }
+    }
+  ],
+  "limitations": [
+    "These are instruction counts, not elapsed time, byte counts or memory transactions.",
+    "Counters use one captured call per metric pass; profiler may rerun its child for event batches.",
+    "One metadata file per version records the final correctness check, not every replay.",
+    "NSA110/111 global-write counts differ unexpectedly despite matching writeback structure; reliability unresolved.",
+    "Metadata PASS checks provenance and schema, not hardware-counter isolation or accuracy.",
+    "Use 1_period0 records only; report_dumped_result contains process-wide aggregates.",
+    "Shared-device load prevents interpreting profiling duration as a qualified benchmark."
+  ]
+}

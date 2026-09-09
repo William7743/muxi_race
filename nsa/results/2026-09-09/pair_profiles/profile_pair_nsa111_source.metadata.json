@@ -1,0 +1,27 @@
+{
+  "module": "submissions/nsa111.py",
+  "case": {
+    "case_id": 12,
+    "B": 4,
+    "seq_len": 1024,
+    "kv_heads": 1,
+    "q_heads": 16,
+    "dim": 64,
+    "selected_blocks": 8,
+    "block_size": 16,
+    "causal": 1
+  },
+  "seed": 0,
+  "mode": "public",
+  "cold": true,
+  "cache_flush_bytes": 256000000,
+  "warmup": 10,
+  "capture_calls": 1,
+  "correct": true,
+  "max_abs": 0.001953125,
+  "torch_version": "2.8.0+metax3.7.1.3",
+  "source_sha256": "16f053a260890275c4c670e0efebe3e59822b1da6252241bfaa88d232178e1c2",
+  "kernel_source_sha256": "2ed1b7e1d939256d373626679ebad54c48012a0d9b39e321ba95e7a8892d58f5",
+  "expected_output_bytes": 8388608,
+  "timestamp_utc": "2026-09-09T08:26:57.768373+00:00"
+}

@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "source_hashes": {
+    "submissions/nsa109.py": "7abe284475520edf64999c583148cde45cc1c8f0a017503cc98068e7f33986fa",
+    "submissions/nsa110.py": "a454dc931e604013bf44a05a955c2d5dc375ec9900f1ee37b9cad26e696b23eb",
+    "submissions/nsa111.py": "16f053a260890275c4c670e0efebe3e59822b1da6252241bfaa88d232178e1c2",
+    "submissions/nsa112.py": "6558f5fcd6df83b8ad4d1e8612692f42d13fd104bba74a7bdf883fa476989115"
+  },
+  "reference_assertions": 30,
+  "candidate_reference_assertions": 20,
+  "initial_qualified_samples": 17,
+  "initial_samples": 18,
+  "quiet_qualified_samples": 40,
+  "quiet_samples": 40,
+  "limitations": [
+    "Only target case12 timing; not full14-case certification.",
+    "Two case12 batches do not establish full-case performance or OJ improvement.",
+    "Resource query records lack source hashes; resource interpretation is corroborative only."
+  ]
+}

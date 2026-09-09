@@ -1,5 +1,19 @@
 # NSA optimization status
 
+## 2026-09-09 NSA112 collected: small repeatable case12 improvement
+
+Completed prior jobs and fetched results; no live benchmark remains at collection.
+NSA112 merges paired max/sum reductions: shared2560 bytes,77 registers reported.
+Seed137 four-way batch has40/40 qualified samples;112 vs109 guard-relative time
+0.98783 public /0.98271 current. Earlier seed211 has17/18 qualified samples,
+112 ratios0.98777/0.97837.110/111 are slower in the four-way batch.
+30 source-bound reference assertions PASS across both batches and112 stress,
+20 belonging to112. Full14 validation and OJ evidence remain missing for112.
+Keep NSA109 actual86.00; do not promote112 yet. See PAIR112_RESULTS.md.
+Profiler write counts for110/111 are unexplained; archived, not used for ranking.
+New kernelgen-flagos skill requires an unavailable/unconfigured KernelGen MCP;
+new operator generation/optimization paused pending setup, not goal completion.
+
 ## 2026-09-09 NSA109 Accepted86.00; paired softmax probes
 
 Fresh authenticated read confirms NSA109/#141658 Accepted86.00, exact source
