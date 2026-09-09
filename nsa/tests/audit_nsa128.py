@@ -55,8 +55,8 @@ assert "threads=64" in new
 assert old.count("T.sync_warp")==new.count("T.sync_warp")
 assert old.count("T.gemm")==new.count("T.gemm")
 assert "compile_flags" not in c
-report=dict(static_audit="PASS",gpu_validation="PENDING",
+report=dict(static_audit="PASS",gpu_validation="NOT_ASSESSED_BY_THIS_STATIC_AUDIT",
     source_sha256=hashlib.sha256(c.encode()).hexdigest(),
     changed_factory="nsa_online_direct_output",mapped_values=len(positions),
-    limitation="Bit convention and logical mapping only; generated load width/layout and GPU results still require verification")
+    limitation="Bit convention and logical mapping only; use verify_nsa128_results.py for the separate GPU evidence audit")
 print(json.dumps(report))

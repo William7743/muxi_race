@@ -1,5 +1,27 @@
 # NSA optimization status
 
+## 2026-09-09 NSA128 combination validation completed
+
+Supersedes pending128 entries below and its frozen creation-time header.
+Own guarded workflow exited0 in93.54s,no guard yield,no OOM counter increase.
+Target seed503:6/6 reference assertions across127/128/129 and both modes,
+18/18 guarded samples.128/127 S8 time ratios:public0.96642,current0.95921,
+geometric0.962808 (~3.72% less time).128 and129 S8 generated-source hashes match.
+
+Contract-compatible extension:48/48 assertions,8 shapes x3 fresh-value/index
+updates x2 versions,including aligned1040,tail1025,H2,BS32 andD128 fallbacks.
+Full14-case seed509/two modes:56/56 references,112/112 samples qualify.
+All28 exported CUDA sources bind to full/target records;only case12 changes
+versus127. Verify_nsa128_results.py PASS. Source stays byte-exact to the
+already-pushed128 probe;its old pending comment is historical,not latest status.
+
+128 is a possible next manual OJ candidate combining confirmed D64 andS8
+changes. If127 is already submitted,keep its feedback for attribution.
+Fixed-parent projection86.0714,actual OJ best10986.00,goal88 NOT achieved.
+No automatic OJ submission,no own GPU workflow left running.
+See COMBINATION_128_VALIDATION.md and nsa128_verification.json.
+
+
 ## 2026-09-09 NSA127 completed guarded validation: manual OJ trial available
 
 Supersedes the pending127 status below. After observing all peer workflows

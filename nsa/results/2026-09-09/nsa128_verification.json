@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "hashes": {
+    "submissions/nsa127.py": "ca7e74e935cf6e2a53e1880f1d8a3cd3a43055482c95d2b8ef030f6555acbf22",
+    "submissions/nsa128.py": "309e71c21ea3190d38b2ba9ef82cc295bb61b66bebf4aa332c6f757ba83db57a",
+    "submissions/nsa129.py": "d91a4b0a7709c7a6a795d79a7b0c1b87d94861ee979a91ed875626cd788cdbd4"
+  },
+  "full_reference_assertions": 56,
+  "full_qualified_samples": 112,
+  "full_total_samples": 112,
+  "target_reference_assertions": 6,
+  "target_qualified_samples": 18,
+  "target_total_samples": 18,
+  "stress_assertions": 48,
+  "stress_shapes": 8,
+  "changed_cases_relative_to127": [
+    12
+  ],
+  "s8_generated_source_matches129": true,
+  "s8_relative_time": 0.9628079963042865,
+  "fixed_parent_projected_score": 86.07142857142857,
+  "projected_points": {
+    "1": 87,
+    "2": 88,
+    "3": 88,
+    "4": 87,
+    "5": 83,
+    "6": 84,
+    "7": 88,
+    "8": 84,
+    "9": 83,
+    "10": 88,
+    "11": 86,
+    "12": 82,
+    "13": 89,
+    "14": 88
+  },
+  "actual_best_oj": 86.0,
+  "goal88_achieved": false,
+  "limitation": "16GB slice tests; projection is not a new OJ result. Full and target timing qualification may differ."
+}
