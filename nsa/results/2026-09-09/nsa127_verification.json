@@ -1,0 +1,75 @@
+{
+  "status": "PASS",
+  "hashes": {
+    "submissions/nsa123.py": "dda61abf1f8031a9544f69d18a6ec3d2457392440688ff899f80bba10d24f291",
+    "submissions/nsa124.py": "6dffde14a5c57c66057517d6a79ad9a6e93eeaf75d7680bbb7caffaabc6d25b8",
+    "submissions/nsa125.py": "8f8f314133765e784532bde943b387498f1247dc00dc4aed67195d6b7fc7b5f6",
+    "submissions/nsa126.py": "c2090d202151439595172aed9b3c84185431a51f9dc4ccb72e480489f09b5ecd",
+    "submissions/nsa127.py": "ca7e74e935cf6e2a53e1880f1d8a3cd3a43055482c95d2b8ef030f6555acbf22"
+  },
+  "batches": {
+    "nsa124": {
+      "reference_checks": 12,
+      "qualified_samples": 36,
+      "total_samples": 36
+    },
+    "nsa125_126": {
+      "reference_checks": 12,
+      "qualified_samples": 36,
+      "total_samples": 36
+    },
+    "nsa127_recheck": {
+      "reference_checks": 20,
+      "qualified_samples": 80,
+      "total_samples": 80
+    },
+    "nsa127_full": {
+      "reference_checks": 56,
+      "qualified_samples": 112,
+      "total_samples": 112
+    }
+  },
+  "stress_assertions": 72,
+  "stress_shapes": 12,
+  "changed_formal_cases_relative_to123": [
+    4,
+    7,
+    9,
+    14
+  ],
+  "fixed_parent_ratios": {
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.0,
+    "4": 0.9832452888599537,
+    "5": 0.9480055788416833,
+    "6": 1.0,
+    "7": 0.9806574433710988,
+    "8": 1.0,
+    "9": 0.983926332020352,
+    "10": 1.0,
+    "11": 1.0,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 0.9756903653585085
+  },
+  "projected_points": {
+    "1": 87,
+    "2": 88,
+    "3": 88,
+    "4": 87,
+    "5": 83,
+    "6": 84,
+    "7": 88,
+    "8": 84,
+    "9": 83,
+    "10": 88,
+    "11": 86,
+    "12": 82,
+    "13": 89,
+    "14": 88
+  },
+  "fixed_parent_projected_score": 86.07142857142857,
+  "actual_best_oj_score": 86.0,
+  "limitation": "Local16GB/25% sGPU evidence; projection is not a new OJ result. Goal88 not achieved."
+}

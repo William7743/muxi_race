@@ -1,11 +1,12 @@
-"""Run NSA127 validation stages in one process, only after an explicit handoff.
+"""Run NSA127 stages after a handoff or supervised, observed peer completion.
 
 --dry-run does not import Torch/TileLang or initialize the device.
-The memory preflight is advisory; it is not a lock and cannot replace coordination.
+The memory preflight is advisory; observed completion requires a live supervisor.
 """
 import argparse
 import gc
 import json
+import os
 import runpy
 import sys
 from pathlib import Path
@@ -25,12 +26,16 @@ p = argparse.ArgumentParser(description=__doc__)
 p.add_argument("--dry-run", action="store_true")
 p.add_argument("--handoff-confirmed", action="store_true",
                help="Use only after the peer/user confirms no further tests will start")
+p.add_argument("--peer-terminal-observed", action="store_true",
+               help="Prior workflows are terminal; requires the live exclusive supervisor")
 a = p.parse_args()
 if a.dry_run:
     print(json.dumps(dict(dry_run=True, stages=stages)))
     raise SystemExit(0)
-if not a.handoff_confirmed:
+if not a.handoff_confirmed and not a.peer_terminal_observed:
     p.error("--handoff-confirmed required: an individual batch exit or idle gap is insufficient")
+if a.peer_terminal_observed and os.environ.get("NSA_VALIDATION_GUARD_PID") != str(os.getppid()):
+    p.error("Observed completion requires the live exclusive supervisor")
 
 # Refuse to overwrite either completed or interrupted artifacts.
 for args in stages:

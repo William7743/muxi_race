@@ -1,5 +1,30 @@
 # NSA optimization status
 
+## 2026-09-09 NSA127 completed guarded validation: manual OJ trial available
+
+Supersedes the pending127 status below. After observing all peer workflows
+terminal, no peer SSH session, and no new batches for about half an hour,
+we resumed under a supervisor that stops only our new process group if
+external Python work or excessive host memory appears. No user permission
+was inferred to stop other jobs. Initial supervisor used PGID-only ownership
+and yielded early; the detected PID disappeared before inspection, so its
+ownership is unresolved. No new OOM was observed. Parent-tree-aware ownership
+was then CPU-tested and the complete workflow exited0 after81.71 seconds.
+
+NSA127 final verifier now PASSES:72/72 stress assertions (12 shapes x3 fresh
+updates x2 versions);56/56 full-suite reference assertions (14 cases x2 masks
+x2 versions);112/112 guarded timing samples. Source-bound generated CUDA
+differs from123 only on4/7/9/14;case5 retains123's earlier improvement.
+Full-run127/123 time ratios on4/7/9 remain about0.977-0.986/0.972-0.974/
+0.984-0.987. Case14's earlier gain weakens to0.996-0.999;do not present it as
+a robust2.4% improvement. All exported source hashes match prior target runs.
+
+Recommend127 ahead of129 as the next small-gain manual OJ trial, not a claim
+of88. Fixed-parent projection86.07,actual best remains10986.00. Source was
+already pushed atb5f29aa;new raw full/stress/source evidence now accompanies
+it. NSA128 combination still unvalidated. No GPU job from this workflow remains.
+
+
 ## 2026-09-09 Existing profiler audit and88-point requirements
 
 Peer343/NSA129's source-bound single-window counters match the prior109

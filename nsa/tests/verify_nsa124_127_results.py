@@ -53,12 +53,23 @@ for version in (123,127):
                        if r["module"]==f"submissions/nsa{ancestor}.py" and r["case_id"]==cid)
 stress = rows("nsa127_stress.jsonl")
 assert len(stress)==72 and len({tuple(sorted(r["case"].items())) for r in stress})==12
+expected_shapes = {(4,1024,1),(4,1008,1),(4,1040,1),(4,1025,1),
+    (1,2048,2),(1,4096,1),(2,4096,1),(1,8192,1),
+    (2,512,1),(2,512,2),(4,256,1),(1,128,1)}
+assert {(r["case"]["B"],r["case"]["seq_len"],r["case"]["kv_heads"],r["module"],r["update"]) for r in stress} == {
+    (b,l,h,f"submissions/nsa{v}.py",u) for b,l,h in expected_shapes for v in (123,127) for u in range(3)}
 for r in stress:
     assert r["source_sha256"]==hashes[r["module"]]
     assert r["status"]=="PASS" and r["mismatch_count"]==0 and r["nonfinite"]==0
+    assert r["seed"]==683+r["update"]
+    c=r["case"]
+    assert c["q_heads"]==c["kv_heads"]*16 and (c["dim"],c["selected_blocks"],c["block_size"],c["causal"])==(64,1,16,1)
 oj = next(r for r in read("oj109_final.json") if r["meta"]["id"]==141658)
 assert oj["meta"]["status"]=="Accepted"
 points = checker_points(oj)
+for r in allrows:
+    assert {k:r["case"][k] for k in points[r["case_id"]]["config"]}==points[r["case_id"]]["config"]
+    assert r["index_dtype"]=="torch.int32"
 ratios = {cid:1.0 for cid in points}
 ratios[5] = read("nsa123_recheck_summary.json")["geometric_relative_time"]
 recheck = read("nsa127_recheck_summary.json")

@@ -1,0 +1,21 @@
+{
+  "exit_code": -15,
+  "reason": "competing_python_detected",
+  "events": [
+    {
+      "event": "launch",
+      "child_pid": 174421,
+      "used_bytes": 50331648
+    },
+    {
+      "event": "yield",
+      "reason": "competing_python_detected",
+      "foreign_pids": [
+        174526
+      ],
+      "used_bytes": 18263031808
+    }
+  ],
+  "elapsed_seconds": 22.948501928942278,
+  "limitation": "Polling protection, not a peer lock or an OOM guarantee"
+}
