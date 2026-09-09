@@ -1,5 +1,24 @@
 # NSA optimization status
 
+## 2026-09-09 D64 bounded-load lead isolated as NSA123
+
+NSA122 exposes aligned single-block addresses to the compiler on four D64
+paths.16 reference assertions and48/48 guarded samples pass;case5 improves
+5-6%,but7/9 regress. NSA123 keeps only the plain-factory change. Independent
+seed457/reverse ordering:4 reference assertions,16/16 guarded samples,
+case5 relative time0.94801. Full14-case seed461:56/56 reference assertions,
+111/112 samples qualify;case1/current is excluded from timing comparison.
+Only case5 generated source changes;13 other cases match109. Case5 again
+improves about6%. Eight extra boundary shapes/three fresh updates give48/48
+parent+candidate stress assertions. Source audit confirms removed redundant
+K/V fallback branches, retained wide loads and unchanged synchronization.
+See D64_122_123.md and results/2026-09-09/nsa123_verification.json.
+
+Recommend123 only as an optional small-gain manual OJ trial. Fixed-parent
+projection is about86.07,not an OJ score or88. Actual best remains109/#141658
+86.00. Sources,raw logs,minimal diffs and tests preserved;no automatic OJ
+submission. Validation GPU workflow completed;no job from this batch remains.
+
 ## 2026-09-09 Disjoint D128 softmax exchange explored
 
 Previous goal turn made progress by rejecting layout paths with qualified data.

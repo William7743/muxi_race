@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "source_sha256": {
+    "submissions/nsa109.py": "7abe284475520edf64999c583148cde45cc1c8f0a017503cc98068e7f33986fa",
+    "submissions/nsa122.py": "9f38bc7d80636ddd826012dd780559f6ff93129abb243c2557b61ecf7f2e2a5a",
+    "submissions/nsa123.py": "dda61abf1f8031a9544f69d18a6ec3d2457392440688ff899f80bba10d24f291"
+  },
+  "batches": {
+    "wide122": {
+      "reference_checks": 16,
+      "qualified_samples": 48,
+      "total_samples": 48
+    },
+    "recheck123": {
+      "reference_checks": 4,
+      "qualified_samples": 16,
+      "total_samples": 16
+    },
+    "full123": {
+      "reference_checks": 56,
+      "qualified_samples": 111,
+      "total_samples": 112
+    }
+  },
+  "stress_assertions": 48,
+  "stress_shapes": 8,
+  "changed_formal_cases": [
+    5
+  ],
+  "nsa122_and_nsa123_case5_generated_source_identical": true,
+  "recheck_case5_relative_time": 0.9480055788416833,
+  "fixed_parent_projection": {
+    "case5_score": 83,
+    "total_score": 86.07142857142857
+  },
+  "limitation": "Local C500 16GB/25%-compute slice; projection is not an OJ measurement or 88-point claim."
+}
