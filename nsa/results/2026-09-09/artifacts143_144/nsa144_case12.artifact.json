@@ -1,0 +1,20 @@
+{
+  "module": "submissions/nsa144.py",
+  "case": {
+    "case_id": 12,
+    "B": 4,
+    "seq_len": 1024,
+    "kv_heads": 1,
+    "q_heads": 16,
+    "dim": 64,
+    "selected_blocks": 8,
+    "block_size": 16,
+    "causal": 1
+  },
+  "source_sha256": "df995ed2d8554688455823655f4143501570fd3cb4f28eebe9e9b0a164f036d6",
+  "cuda_sha256": "62d7ec7d41f1f5a82ea9fe1c57abe8ecff3b4fbeebab33f46219ae77c2cab0ef",
+  "compile_flags": null,
+  "library_path": "/tmp/tmpc_v7eaux.so",
+  "library_sha256": "e5c812ff51f767b93a8168e10cd3d29ee806c958fd8663605d720570a176e488",
+  "limitation": "Library hashes may include host metadata; use extracted device payloads for binary equivalence."
+}

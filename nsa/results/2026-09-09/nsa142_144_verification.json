@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "hashes": {
+    "submissions/nsa128.py": "309e71c21ea3190d38b2ba9ef82cc295bb61b66bebf4aa332c6f757ba83db57a",
+    "submissions/nsa142.py": "b877d4b3a93e3c330bc0c47b7dd41ba7536453a8b9ed012f452b908d95a4708a",
+    "submissions/nsa143.py": "d6a8f0233d04fdcd7a84e5df64e9d848d3a5f4d974db3615dcaee36561f950b2",
+    "submissions/nsa144.py": "df995ed2d8554688455823655f4143501570fd3cb4f28eebe9e9b0a164f036d6"
+  },
+  "datasets": [
+    {
+      "dataset": "nsa143_144_screen.jsonl",
+      "references": 6,
+      "qualified": 18,
+      "total_samples": 18,
+      "ratios": {
+        "143": {
+          "12": {
+            "public": 1.000509230252844,
+            "current": 1.0014410445381348
+          }
+        },
+        "144": {
+          "12": {
+            "public": 1.0377730828472527,
+            "current": 1.0411665364231633
+          }
+        }
+      },
+      "unqualified_rows": []
+    },
+    {
+      "dataset": "nsa142_full.jsonl",
+      "references": 56,
+      "qualified": 112,
+      "total_samples": 112,
+      "ratios": {
+        "142": {
+          "11": {
+            "public": 0.9849741453639776,
+            "current": 0.9841419207473129
+          },
+          "13": {
+            "public": 0.9768590771170947,
+            "current": 0.9969932483881284
+          }
+        }
+      },
+      "unqualified_rows": []
+    }
+  ],
+  "stress_assertions": {
+    "nsa142_h2_stress.jsonl": 32,
+    "nsa142_s4_stress.jsonl": 48
+  },
+  "changed_cases": [
+    11,
+    13
+  ],
+  "donor_generated_sources_match": true,
+  "actual_best_oj": {
+    "version": 133,
+    "submission": 141741,
+    "score": 86.64
+  },
+  "goal88_achieved": false,
+  "limitation": "142 full validation;143/144 target screens only. Local16GB slice, no new OJ result or guaranteed score."
+}

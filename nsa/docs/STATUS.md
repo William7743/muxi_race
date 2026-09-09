@@ -1,5 +1,22 @@
 # NSA optimization status
 
+## 2026-09-09 Combined NSA142 validated; S8 controls rejected
+
+142 combines H2 bounds138 and S4 sync134, without the rejected133/141 D128 edits.
+Initial duplicate dispatcher from text extraction was caught by AST audit and
+fixed before GPU execution. Final exact donor/dispatch/uniqueness audit passes.
+56 full references+80 extended assertions pass,112/112 full timings qualify.
+Only11/13 generated CUDA changes versus128 and each equals its tested donor.
+Point11 ratios0.98497/0.98414; point13 ratios0.97686/0.99699. Keep the weaker
+current-mode H2 result visible; no uniform/additive gain or OJ score is claimed.
+142 is an optional combined manual candidate; no new OJ submission.
+
+143 S8 modulo addressing is flat (1.00051/1.00144);144 predicate-only direct
+offsets regress~4% (1.03777/1.04117), with64-bit K/V expressions in generated
+code.6 references and18/18 samples pass, neither promoted or fully validated.
+Workflow exited0 in101.80s, OOM counter9, no own jobs left. Actual best13386.64;
+goal88 active and unmet. See COMBINATION142_S8_143_144.md.
+
 ## 2026-09-09 D128 profile and rejected NSA141 combined output
 
 Direct source-bound128/case6 profile completes with all7 metrics isError=false.
