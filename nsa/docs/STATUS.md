@@ -1,4 +1,23 @@
-# NSA C500 64 GB baseline setup — 2026-09-07
+# NSA optimization status
+
+## 2026-09-09: external NSA repository and 16 GB recheck
+
+The 64 GB instance is unavailable. The replacement is C500 sGPU with
+25% compute / 16000 MiB, MACA 3.7.1.5. External William7743/NSA snapshot
+bea81966fe81e0a2e9fcdd5991b6efac78cdcf7c records OJ best v159 / #141137
+85.79, not old local probe078. These are repository-exported OJ records,
+not a fresh OJ query by this task.
+
+Independent v159/v318 14-point recheck: 28/28 FP32 reference checks passed;
+v318 case6 89.723->81.659 us and case12 71.086->62.904 us locally.
+v318 is the current local starting point, not a verified 88-point submission.
+NSA096 applies scalar probability conversion to D64/S1 factories;
+initial 16/16 and confirmation12/12 paired reference checks passed.
+Confirmation did not reproduce overall benefit (case5 ~1% slower);
+NSA096 is not promoted. Keep v318 as the local starting point.
+See REPO_RECHECK_20260909.md. Frozen MOE artifacts remain untouched.
+
+## Historical 2026-09-07 status (superseded where stated above)
 
 MOE v748 and its final delivery ZIP remain unchanged. No NSA OJ submission made.
 

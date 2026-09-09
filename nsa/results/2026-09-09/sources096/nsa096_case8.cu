@@ -1,0 +1,158 @@
+#include <tl_templates/maca/gemm.h>
+#include <tl_templates/maca/copy.h>
+#include <tl_templates/maca/reduce.h>
+#include <tl_templates/maca/intrin.h>
+#include <tl_templates/maca/atomic.h>
+#include <tl_templates/maca/threadblock_swizzle.h>
+#include <tl_templates/maca/debug.h>
+
+extern "C" __global__ void kernel_kernel(const int* __restrict__ BI, const half_t* __restrict__ K, half_t* __restrict__ Output, const half_t* __restrict__ Q, const half_t* __restrict__ V);
+extern "C" __global__ void __launch_bounds__(64, 1) kernel_kernel(const int* __restrict__ BI, const half_t* __restrict__ K, half_t* __restrict__ Output, const half_t* __restrict__ Q, const half_t* __restrict__ V) {
+  extern __shared__ __align__(1024) uchar buf_dyn_shmem[];
+  void* Os = ((void*)((char*)buf_dyn_shmem + 0));
+  void* Qs = ((void*)((char*)buf_dyn_shmem + 0));
+  void* Vs = ((void*)((char*)buf_dyn_shmem + 0));
+  void* workspace = ((void*)((char*)buf_dyn_shmem + 0));
+  void* workspace_1 = ((void*)((char*)buf_dyn_shmem + 0));
+  half_t Ks[16];
+  float acc_s[4];
+  float mx[1];
+  float sm[1];
+  float local_p[4];
+  half_t half_p[4];
+  half_t acc_cast[4];
+  float acc_o[16];
+  half_t Os_local_cast[4];
+  int i_s = (BI[((((int)blockIdx.y) * 4096) + ((int)blockIdx.x))] * 16);
+  if (i_s <= ((int)blockIdx.x)) {
+    if ((0 <= i_s) && (i_s <= 4080)) {
+      #pragma unroll
+      for (int i = 0; i < 4; ++i) {
+        *(uint2*)(Ks + (i * 4)) = *(uint2*)(K + (((((((int)blockIdx.y) * 262144) + (i_s * 64)) + ((((int)threadIdx.x) & 15) * 64)) + (i * 16)) + ((((int)threadIdx.x) >> 4) * 4)));
+      }
+    } else {
+      #pragma unroll
+      for (int i_1 = 0; i_1 < 4; ++i_1) {
+        half_t broadcast_var = half_t(0x0p+0f/*0.000000e+00*/);
+        uint2 condval;
+        if ((((i_s + (((int)threadIdx.x) & 15)) < 4096) && (0 <= (i_s + (((int)threadIdx.x) & 15))))) {
+          condval = *(uint2*)(K + (((((((int64_t)((int)blockIdx.y)) * (int64_t)262144) + (((int64_t)i_s) * (int64_t)64)) + ((((int64_t)((int)threadIdx.x)) & (int64_t)15) * (int64_t)64)) + (((int64_t)i_1) * (int64_t)16)) + ((((int64_t)((int)threadIdx.x)) >> (int64_t)4) * (int64_t)4)));
+        } else {
+          condval = make_uint2(__pack_half2(broadcast_var, broadcast_var), __pack_half2(broadcast_var, broadcast_var));
+        }
+        *(uint2*)(Ks + (i_1 * 4)) = condval;
+      }
+    }
+    #pragma unroll
+    for (int i_2 = 0; i_2 < 4; ++i_2) {
+      float condval_1;
+      if ((((((((int)threadIdx.x) >> 4) * 4) + i_s) + i_2) <= ((int)blockIdx.x))) {
+        condval_1 = 0x0p+0f/*0.000000e+00*/;
+      } else {
+        condval_1 = -MACART_INF_F;
+      }
+      acc_s[i_2] = condval_1;
+    }
+    #pragma unroll
+    for (int i_3 = 0; i_3 < 2; ++i_3) {
+      *(uint4*)(((half_t*)Qs) + (((((i_3 * 512) + ((((int)threadIdx.x) >> 3) * 64)) + ((((((int)threadIdx.x) >> 5) + ((((int)threadIdx.x) & 7) >> 2)) & 1) * 32)) + (((((((int)threadIdx.x) & 31) >> 4) + ((((int)threadIdx.x) & 3) >> 1)) & 1) * 16)) + (((((((int)threadIdx.x) & 15) >> 3) + (((int)threadIdx.x) & 1)) & 1) * 8))) = *(uint4*)(Q + ((((((int)blockIdx.y) * 4194304) + (((int)blockIdx.x) * 1024)) + (i_3 * 512)) + (((int)threadIdx.x) * 8)));
+    }
+    __syncwarp((uint64_t)18446744073709551615);
+    half_t A_local[4];
+    for (int ki = 0; ki < 4; ++ki) {
+      *(uint2*)(A_local + 0) = *(uint2*)(((half_t*)Qs) + ((((((((int)threadIdx.x) & 15) * 64) + (((((((int)threadIdx.x) & 7) >> 2) + (ki >> 1)) & 1) * 32)) + (((((((int)threadIdx.x) & 3) >> 1) + (ki & 1)) & 1) * 16)) + ((((((int)threadIdx.x) >> 5) + (((int)threadIdx.x) & 1)) & 1) * 8)) + (((((int)threadIdx.x) & 31) >> 4) * 4)));
+      {
+      *(((float32x4*)acc_s) + 0) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)Ks) + ki),
+                    *(((float16x4*)A_local) + 0),
+                    *(((float32x4*)acc_s) + 0));
+    };
+    }
+    __syncwarp((uint64_t)18446744073709551615);
+    mx[0] = -MACART_INF_F;
+    #pragma unroll
+    for (int rv = 0; rv < 4; ++rv) {
+      mx[0] = max(mx[0], acc_s[rv]);
+    }
+    mx[0] = tl::AllReduce<tl::MaxOp, 64, 16, 0>::run(mx[0], (&(((float*)workspace_1)[0])));
+    #pragma unroll
+    for (int i_4 = 0; i_4 < 4; ++i_4) {
+      acc_s[i_4] = exp2f(((acc_s[i_4] - mx[0]) * 0x1.7154764ee6c2fp-3f/*1.803369e-01*/));
+    }
+    sm[0] = 0x0p+0f/*0.000000e+00*/;
+    #pragma unroll
+    for (int rv_1 = 0; rv_1 < 4; ++rv_1) {
+      sm[0] = (sm[0] + acc_s[rv_1]);
+    }
+    sm[0] = tl::AllReduce<tl::SumOp, 64, 16, 0>::run(sm[0], (&(((float*)workspace)[0])));
+    for (int i_5 = 0; i_5 < 16; ++i_5) {
+      for (int j = 0; j < 16; ++j) {
+        local_p[(j & 3)] = acc_s[(j & 3)];
+      }
+    }
+    #pragma unroll
+    for (int j_1 = 0; j_1 < 4; ++j_1) {
+      half_p[j_1] = ((half_t)local_p[j_1]);
+    }
+    #pragma unroll
+    for (int i_6 = 0; i_6 < 4; ++i_6) {
+      acc_cast[i_6] = half_p[i_6];
+    }
+    if ((0 <= i_s) && (i_s <= 4080)) {
+      #pragma unroll
+      for (int i_7 = 0; i_7 < 2; ++i_7) {
+        *(uint4*)(((half_t*)Vs) + (((((i_7 * 512) + ((((int)threadIdx.x) >> 3) * 64)) + ((((((int)threadIdx.x) >> 5) + ((((int)threadIdx.x) & 7) >> 2)) & 1) * 32)) + (((((((int)threadIdx.x) & 31) >> 4) + ((((int)threadIdx.x) & 3) >> 1)) & 1) * 16)) + (((((((int)threadIdx.x) & 15) >> 3) + (((int)threadIdx.x) & 1)) & 1) * 8))) = *(uint4*)(V + ((((((int)blockIdx.y) * 262144) + (i_7 * 512)) + (i_s * 64)) + (((int)threadIdx.x) * 8)));
+      }
+    } else {
+      #pragma unroll
+      for (int i_8 = 0; i_8 < 2; ++i_8) {
+        half_t broadcast_var_1 = half_t(0x0p+0f/*0.000000e+00*/);
+        uint4 condval_2;
+        if (((((((((int)threadIdx.x) >> 3) + i_s) >> 3) + i_8) < 512) && (0 <= (((i_8 * 8) + (((int)threadIdx.x) >> 3)) + i_s)))) {
+          condval_2 = *(uint4*)(V + ((((((int64_t)((int)blockIdx.y)) * (int64_t)262144) + (((int64_t)i_8) * (int64_t)512)) + (((int64_t)i_s) * (int64_t)64)) + (((int64_t)((int)threadIdx.x)) * (int64_t)8)));
+        } else {
+          condval_2 = make_uint4(__pack_half2(broadcast_var_1, broadcast_var_1), __pack_half2(broadcast_var_1, broadcast_var_1), __pack_half2(broadcast_var_1, broadcast_var_1), __pack_half2(broadcast_var_1, broadcast_var_1));
+        }
+        *(uint4*)(((half_t*)Vs) + (((((i_8 * 512) + ((((int)threadIdx.x) >> 3) * 64)) + ((((((int)threadIdx.x) >> 5) + ((((int)threadIdx.x) & 7) >> 2)) & 1) * 32)) + (((((((int)threadIdx.x) & 31) >> 4) + ((((int)threadIdx.x) & 3) >> 1)) & 1) * 16)) + (((((((int)threadIdx.x) & 15) >> 3) + (((int)threadIdx.x) & 1)) & 1) * 8))) = condval_2;
+      }
+    }
+    #pragma unroll
+    for (int i_9 = 0; i_9 < 4; ++i_9) {
+      float broadcast_var_2 = 0x0p+0f/*0.000000e+00*/;
+      *(float4*)(acc_o + (i_9 * 4)) = make_float4(broadcast_var_2, broadcast_var_2, broadcast_var_2, broadcast_var_2);
+    }
+    __syncwarp((uint64_t)18446744073709551615);
+    half_t B_local[16];
+    for (int j_2 = 0; j_2 < 4; ++j_2) {
+      for (int local_id = 0; local_id < 4; ++local_id) {
+        B_local[((j_2 * 4) + local_id)] = ((half_t*)Vs)[(((((((((int)threadIdx.x) >> 4) * 256) + (local_id * 64)) + (((((((int)threadIdx.x) & 31) >> 4) + (j_2 >> 1)) & 1) * 32)) + ((((local_id >> 1) + (j_2 & 1)) & 1) * 16)) + (((((((int)threadIdx.x) & 15) >> 3) + (local_id & 1)) & 1) * 8)) + (((int)threadIdx.x) & 7))];
+      }
+    }
+    for (int j_3 = 0; j_3 < 4; ++j_3) {
+      {
+      *(((float32x4*)acc_o) + j_3) = __builtin_mxc_mma_16x16x16f16(*(((float16x4*)B_local) + j_3),
+                    *(((float16x4*)acc_cast) + 0),
+                    *(((float32x4*)acc_o) + j_3));
+    };
+    }
+    #pragma unroll
+    for (int i_10 = 0; i_10 < 16; ++i_10) {
+      acc_o[i_10] = (acc_o[i_10] / sm[0]);
+    }
+    __syncwarp((uint64_t)18446744073709551615);
+    #pragma unroll
+    for (int i_11 = 0; i_11 < 4; ++i_11) {
+      uint2 __1;
+      float4 v_ = *(float4*)(acc_o + (i_11 * 4));
+      ((half2*)(&__1))[0] = __float22half2_rn(((float2*)(&v_))[0]);
+      ((half2*)(&__1))[1] = __float22half2_rn(((float2*)(&v_))[1]);
+      *(uint2*)(Os_local_cast + 0) = __1;
+      *(uint2*)(((half_t*)Os) + ((((((int)threadIdx.x) & 15) * 64) + (i_11 * 16)) + ((((int)threadIdx.x) >> 4) * 4))) = *(uint2*)(Os_local_cast + 0);
+    }
+    __syncwarp((uint64_t)18446744073709551615);
+    #pragma unroll
+    for (int i_12 = 0; i_12 < 2; ++i_12) {
+      *(uint4*)(Output + ((((((int)blockIdx.y) * 4194304) + (((int)blockIdx.x) * 1024)) + (i_12 * 512)) + (((int)threadIdx.x) * 8))) = *(uint4*)(((half_t*)Os) + ((i_12 * 512) + (((int)threadIdx.x) * 8)));
+    }
+  }
+}
+

@@ -1,0 +1,39 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-09 06:23:56  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 06:24:03  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+2026-09-09 06:24:03  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 2, "module": "submissions/nsa_v318.py", "seed": 0, "mode": "public", "median_us": {"cupti": 5.749759999999879}}
+{"case_id": 2, "module": "submissions/nsa096.py", "seed": 0, "mode": "public", "median_us": {"cupti": 5.826559999999954}}
+2026-09-09 06:24:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 06:24:11  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+2026-09-09 06:24:11  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 4, "module": "submissions/nsa_v318.py", "seed": 0, "mode": "public", "median_us": {"cupti": 10.634240000000137}}
+{"case_id": 4, "module": "submissions/nsa096.py", "seed": 0, "mode": "public", "median_us": {"cupti": 10.531840000000084}}
+2026-09-09 06:24:12  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 06:24:18  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case_id": 5, "module": "submissions/nsa_v318.py", "seed": 0, "mode": "public", "median_us": {"cupti": 25.5334399999999}}
+{"case_id": 5, "module": "submissions/nsa096.py", "seed": 0, "mode": "public", "median_us": {"cupti": 25.216000000000093}}
+2026-09-09 06:24:19  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 06:24:26  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+2026-09-09 06:24:26  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 7, "module": "submissions/nsa_v318.py", "seed": 0, "mode": "public", "median_us": {"cupti": 24.934400000000096}}
+{"case_id": 7, "module": "submissions/nsa096.py", "seed": 0, "mode": "public", "median_us": {"cupti": 24.903680000000058}}
+2026-09-09 06:24:27  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 06:24:33  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case_id": 8, "module": "submissions/nsa_v318.py", "seed": 0, "mode": "public", "median_us": {"cupti": 40.622080000000096}}
+{"case_id": 8, "module": "submissions/nsa096.py", "seed": 0, "mode": "public", "median_us": {"cupti": 40.44288000000015}}
+2026-09-09 06:24:34  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 06:24:40  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+2026-09-09 06:24:41  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 9, "module": "submissions/nsa_v318.py", "seed": 0, "mode": "public", "median_us": {"cupti": 40.97536000000011}}
+{"case_id": 9, "module": "submissions/nsa096.py", "seed": 0, "mode": "public", "median_us": {"cupti": 41.01631999999998}}
+2026-09-09 06:24:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 06:24:48  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+2026-09-09 06:24:48  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 13, "module": "submissions/nsa_v318.py", "seed": 0, "mode": "public", "median_us": {"cupti": 7.971840000000084}}
+{"case_id": 13, "module": "submissions/nsa096.py", "seed": 0, "mode": "public", "median_us": {"cupti": 7.9360000000000595}}
+2026-09-09 06:24:49  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 06:24:55  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+2026-09-09 06:24:56  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 14, "module": "submissions/nsa_v318.py", "seed": 0, "mode": "public", "median_us": {"cupti": 16.363519999999994}}
+{"case_id": 14, "module": "submissions/nsa096.py", "seed": 0, "mode": "public", "median_us": {"cupti": 16.430080000000018}}
