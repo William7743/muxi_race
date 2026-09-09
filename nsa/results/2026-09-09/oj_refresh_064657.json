@@ -1,0 +1,76 @@
+{
+  "queried_utc": "2026-09-09T06:46:57Z",
+  "contest_id": 7,
+  "submissions": [
+    {
+      "id": 141601,
+      "status": "WrongAnswer",
+      "displayScore": 0,
+      "submitTime": "2026-09-09T06:06:46.000Z",
+      "answerSize": 69294
+    },
+    {
+      "id": 141600,
+      "status": "WrongAnswer",
+      "displayScore": 0,
+      "submitTime": "2026-09-09T06:06:24.000Z",
+      "answerSize": 69280
+    },
+    {
+      "id": 141599,
+      "status": "WrongAnswer",
+      "displayScore": 0,
+      "submitTime": "2026-09-09T06:06:03.000Z",
+      "answerSize": 68874
+    },
+    {
+      "id": 141598,
+      "status": "WrongAnswer",
+      "displayScore": 0,
+      "submitTime": "2026-09-09T06:05:40.000Z",
+      "answerSize": 68516
+    },
+    {
+      "id": 141597,
+      "status": "WrongAnswer",
+      "displayScore": 0,
+      "submitTime": "2026-09-09T06:05:22.000Z",
+      "answerSize": 63921
+    },
+    {
+      "id": 141595,
+      "status": "WrongAnswer",
+      "displayScore": 0,
+      "submitTime": "2026-09-09T06:04:48.000Z",
+      "answerSize": 64010
+    },
+    {
+      "id": 141594,
+      "status": "Accepted",
+      "displayScore": 85.93,
+      "submitTime": "2026-09-09T06:04:29.000Z",
+      "answerSize": 63524
+    },
+    {
+      "id": 141138,
+      "status": "Accepted",
+      "displayScore": 84.93,
+      "submitTime": "2026-09-08T00:00:16.000Z",
+      "answerSize": 63275
+    },
+    {
+      "id": 141137,
+      "status": "Accepted",
+      "displayScore": 85.79,
+      "submitTime": "2026-09-07T23:59:50.000Z",
+      "answerSize": 65708
+    },
+    {
+      "id": 141136,
+      "status": "Accepted",
+      "displayScore": 85.57,
+      "submitTime": "2026-09-07T23:59:42.000Z",
+      "answerSize": 64956
+    }
+  ]
+}

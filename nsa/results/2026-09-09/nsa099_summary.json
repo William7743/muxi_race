@@ -1,0 +1,60 @@
+{
+  "status": "not_promoted",
+  "reference_checks": 16,
+  "points": [
+    {
+      "case_id": 2,
+      "nsa097_us": 5.719040000000024,
+      "nsa099_us": 5.7753600000002185,
+      "time_ratio": 1.0098478066249221
+    },
+    {
+      "case_id": 4,
+      "nsa097_us": 10.603519999999953,
+      "nsa099_us": 10.55744000000006,
+      "time_ratio": 0.9956542732979338
+    },
+    {
+      "case_id": 5,
+      "nsa097_us": 25.63071999999993,
+      "nsa099_us": 25.33375999999989,
+      "time_ratio": 0.9884139033160193
+    },
+    {
+      "case_id": 7,
+      "nsa097_us": 25.011199999999917,
+      "nsa099_us": 25.512959999999875,
+      "time_ratio": 1.020061412487204
+    },
+    {
+      "case_id": 8,
+      "nsa097_us": 40.6988800000001,
+      "nsa099_us": 41.2057599999999,
+      "time_ratio": 1.0124543967794641
+    },
+    {
+      "case_id": 9,
+      "nsa097_us": 40.847360000000045,
+      "nsa099_us": 41.282560000000046,
+      "time_ratio": 1.0106542993231387
+    },
+    {
+      "case_id": 13,
+      "nsa097_us": 7.93088000000007,
+      "nsa099_us": 7.700480000000098,
+      "time_ratio": 0.970948999354426
+    },
+    {
+      "case_id": 14,
+      "nsa097_us": 16.35839999999993,
+      "nsa099_us": 16.245760000000047,
+      "time_ratio": 0.9931142410015722
+    }
+  ],
+  "geometric_speedup": 0.9999702452744422,
+  "sum_time_speedup": 0.9953109793860027,
+  "limitations": [
+    "One paired screen, not OJ score.",
+    "No release regression for NSA099 because overall timing did not improve."
+  ]
+}

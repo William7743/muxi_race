@@ -1,0 +1,13 @@
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-09 06:45:01  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 06:45:08  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+Traceback (most recent call last):
+  File "/data/nsa_codex_20260909_r1/tests/calibrate_oj_protocol.py", line 55, in <module>
+    torch.testing.assert_close(out, ref, atol=.01, rtol=.01)
+  File "/opt/conda/lib/python3.12/site-packages/torch/testing/_comparison.py", line 1587, in assert_close
+    raise error_metas[0].to_error(msg)
+AssertionError: Tensor-likes are not close!
+
+Mismatched elements: 120178 / 131072 (91.7%)
+Greatest absolute difference: 3.626953125 at index (0, 1, 5, 2) (up to 0.01 allowed)
+Greatest relative difference: 30192.0 at index (0, 93, 8, 53) (up to 0.01 allowed)

@@ -1,5 +1,16 @@
 # NSA optimization status
 
+## 2026-09-09 output-conversion follow-up
+
+NSA098 D64 scalar output with inferred shared stores failed the first target's
+correctness check. NSA099 fixes the explicit lane-to-shared mapping and passes
+8 target shapes, but paired geometric speedup0.99997 / sum-time speedup0.99531
+does not justify promotion. Neither is recommended for OJ. Keep NSA097.
+Current-block/sentinel/same-storage regression:24 assertions PASS for v236/097
+(12 each, including repeated equivalent S1 slot patterns). OJ read at06:46:57UTC
+still lists no new submission after141601. No verified88-point score.
+See OUTPUT098_099.md.
+
 ## 2026-09-09 live OJ correction (supersedes the reproduction conclusion)
 
 Fresh authenticated read discovered v236/#141594 Accepted85.93 and
