@@ -1,0 +1,20 @@
+{
+  "module": "submissions/nsa139.py",
+  "case": {
+    "case_id": 13,
+    "B": 1,
+    "seq_len": 256,
+    "kv_heads": 2,
+    "q_heads": 32,
+    "dim": 64,
+    "selected_blocks": 1,
+    "block_size": 16,
+    "causal": 1
+  },
+  "source_sha256": "2df778fedf519dfd8471b76da0dfa6f19472a19866cbc758d5f69ee4b035a941",
+  "cuda_sha256": "f6dc2e99f15a37da56493d049cc3706bc3bd85e991760c28d0716bd32f99c79a",
+  "compile_flags": null,
+  "library_path": "/tmp/tmpirh30vxr.so",
+  "library_sha256": "6769ee03ed0af1c7e520bcc99cb99a572d4f41ffae75da2a870c6dced6657a62",
+  "limitation": "Library hashes may include host metadata; use extracted device payloads for binary equivalence."
+}

@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "source_hashes": {
+    "submissions/nsa128.py": "309e71c21ea3190d38b2ba9ef82cc295bb61b66bebf4aa332c6f757ba83db57a",
+    "submissions/nsa138.py": "7764382c1c2afb47d47c893999ca3eb665b79953c6dc8b81d34da70cd929d347",
+    "submissions/nsa140.py": "ef105bf0c6a589c6d360e2596dcc9efe2aa581b4aa00eff7b3beffc5a89f0b5e"
+  },
+  "datasets": [
+    {
+      "dataset": "nsa138_140_recheck.jsonl",
+      "references": 6,
+      "qualified": 24,
+      "total_samples": 24,
+      "target_ratios": {
+        "140": {
+          "public": 0.9886107669826437,
+          "current": 0.9915233453833013
+        },
+        "138": {
+          "public": 0.9803695905573493,
+          "current": 0.9775588971301711
+        }
+      },
+      "unqualified_rows": []
+    },
+    {
+      "dataset": "nsa140_full.jsonl",
+      "references": 56,
+      "qualified": 112,
+      "total_samples": 112,
+      "target_ratios": {
+        "140": {
+          "public": 0.9969080043040305,
+          "current": 0.9776103929814635
+        }
+      },
+      "unqualified_rows": []
+    }
+  ],
+  "stress_assertions": 32,
+  "changed_cases": [
+    13
+  ],
+  "actual_best_oj": {
+    "version": 133,
+    "submission": 141741,
+    "score": 86.64
+  },
+  "goal88_achieved": false,
+  "limitation": "Local16GB/25% slice. No OJ result for140; aggregate PASS does not silently qualify rejected timing samples."
+}

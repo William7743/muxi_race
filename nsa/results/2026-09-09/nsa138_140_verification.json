@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "reference_assertions": 8,
+  "qualified_samples": 32,
+  "total_samples": 32,
+  "target_ratios": {
+    "138": {
+      "public": 0.9516637644381148,
+      "current": 0.9652797753349541
+    },
+    "139": {
+      "public": 0.952030460055219,
+      "current": 0.9666968716833411
+    },
+    "140": {
+      "public": 0.9444972007165336,
+      "current": 0.9575732381828024
+    }
+  },
+  "goal88_achieved": false,
+  "limitation": "Single target/seed on16GB slice; not full validation or OJ score."
+}

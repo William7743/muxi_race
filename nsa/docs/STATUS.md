@@ -1,5 +1,21 @@
 # NSA optimization status
 
+## 2026-09-09 NSA138 H2 bounds-only candidate validated
+
+New138/139/140 isolate bounded block addresses, V prefetch and Q-after-K order.
+Initial case13 screen:8 references,32/32 qualified timings; apparent3%–6% gains.
+Reverse-order seed577 shows138 retains~2%, while140 falls to~1%;139 adds no gain.
+Full140 seed581/extension pass but timing is inconsistent (0.99691/0.97761).
+Do not promote the apparent first-screen Q-order improvement.
+
+Full138 seed587:56 reference checks and32 extension checks pass;111/112 timings
+qualify (parent128/case2/public excluded). Target13 both modes qualify, ratios
+0.97873/0.97436, consistent with reverse recheck0.98037/0.97756.
+All28 exported sources are bound; only13 changes.138 is the preferred optional
+manual candidate. No new OJ submission, actual best remains133/#141741/86.64.
+Only local16GB/25% slice evidence, not full64GB equivalence or an88-point result.
+All own workflows terminal, OOM counter9 unchanged. See H2_138_140.md.
+
 ## 2026-09-09 OJ133 source binding and full calibration completed
 
 Supersedes tentative141741 report below. Direct read confirms NSA133/#141741

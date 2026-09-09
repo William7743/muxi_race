@@ -1,0 +1,27 @@
+{"stage": "begin", "script": "calibrate_oj_protocol.py"}
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-09 14:13:46  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 14:13:52  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+2026-09-09 14:13:52  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 14:13:58  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+2026-09-09 14:13:58  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `kernel` with `out_idx=None`
+2026-09-09 14:14:04  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `kernel`
+{"case_id": 13, "module": "submissions/nsa128.py", "seed": 571, "mode": "public", "median_us": {"cupti": 7.900160000000051}}
+{"case_id": 13, "module": "submissions/nsa138.py", "seed": 571, "mode": "public", "median_us": {"cupti": 7.523840000000091}}
+{"case_id": 13, "module": "submissions/nsa139.py", "seed": 571, "mode": "public", "median_us": {"cupti": 7.518719999999975}}
+{"case_id": 13, "module": "submissions/nsa140.py", "seed": 571, "mode": "public", "median_us": {"cupti": 7.441920000000064}}
+{"case_id": 13, "module": "submissions/nsa128.py", "seed": 571, "mode": "current", "median_us": {"cupti": 7.861760000000086}}
+{"case_id": 13, "module": "submissions/nsa138.py", "seed": 571, "mode": "current", "median_us": {"cupti": 7.485440000000053}}
+{"case_id": 13, "module": "submissions/nsa139.py", "seed": 571, "mode": "current", "median_us": {"cupti": 7.54943999999994}}
+{"case_id": 13, "module": "submissions/nsa140.py", "seed": 571, "mode": "current", "median_us": {"cupti": 7.436800000000058}}
+{"stage": "complete", "script": "calibrate_oj_protocol.py"}
+{"stage": "begin", "script": "dump_sources.py"}
+2026-09-09 14:14:11  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 13, "path": "/data/nsa_codex_20260909_r1/results/artifacts138_140/nsa128_case13.cu", "sha256": "fce0aa492fb667f9a796b2557061acebece556cd24d4b23ace2fd6afe5317876"}
+2026-09-09 14:14:12  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 13, "path": "/data/nsa_codex_20260909_r1/results/artifacts138_140/nsa138_case13.cu", "sha256": "acf63a074c763e617620fa84a1d76f61551b324a06334279c56ece5ae4a1a09b"}
+2026-09-09 14:14:14  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 13, "path": "/data/nsa_codex_20260909_r1/results/artifacts138_140/nsa139_case13.cu", "sha256": "f6dc2e99f15a37da56493d049cc3706bc3bd85e991760c28d0716bd32f99c79a"}
+2026-09-09 14:14:15  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 13, "path": "/data/nsa_codex_20260909_r1/results/artifacts138_140/nsa140_case13.cu", "sha256": "cd8667f1a64f71d952dee208330254d178a605b202204eab08663ff4ee7d7113"}
+{"stage": "complete", "script": "dump_sources.py"}
