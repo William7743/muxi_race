@@ -1,5 +1,23 @@
 # NSA optimization status
 
+## 2026-09-09 Quiet D128 retest and V-layout rejection
+
+Prior turn made progress:114/115 source and correctness evidence delivered.
+Fresh device check now showed about2% whole-board load, slice idle; no old GPU
+test process remained. Independent seed431,109/115/114 order,public/current,
+5rounds:6/6 reference checks and30/30 timing samples qualify.114 is about12%
+slower, rejected.115 about0.24% faster is too small for promotion. Device-library
+binding confirms different .text hashes but same5632-byte size; no instruction
+reduction or OJ gain inferred. Earlier noisy logs are retained.
+
+New116/117 V-only swizzle16/4 use conservative full-block lifetime barriers;
+118 isolates those barriers with the original layout. Seed433,4modules,2modes,
+3rounds:8/8 reference checks,24/24 timing samples qualify. Relative times to109
+are1.11836/1.06610/1.02224 respectively. Both layouts also lose to118 control.
+Reject these candidates; preserve source/audits/raw results. No broad regression
+for performance rejects, no OJ submission. NSA109/#14165886.00 remains best
+directly verified OJ;88 is incomplete. See D128_114_115.md and D128_116_118.md.
+
 ## 2026-09-09 Direct TileLang optimization resumed with user approval
 
 User explicitly approved skipping KernelGen. No further failed service retry;

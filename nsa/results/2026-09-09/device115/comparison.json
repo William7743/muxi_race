@@ -1,0 +1,55 @@
+{
+  "versions": {
+    "109": {
+      "source_sha256": "7abe284475520edf64999c583148cde45cc1c8f0a017503cc98068e7f33986fa",
+      "kernel_source_sha256": "37e9597746b48fbc651e96ff0a322a79320827fb2c3db3ce9fb0176f8dfe6ac6",
+      "library_sha256": "af9baadbde474cfe3c93c1f366821786855c1c8ff6d09272774dd5fbd34800b8",
+      "device_metadata": {
+        "object_sha256": "85f04d3954ff9a363db9f245d2f65161af78bacb3e8a5329bf4e52a770d6ce37",
+        "sections": {
+          ".text": {
+            "bytes": 5632,
+            "sha256": "c8c664e22eda6d4de731ba5ac45141409fabedc8266405ef7b2f7eafa6e58d5c"
+          },
+          ".rodata": {
+            "bytes": 64,
+            "sha256": "33175663e0146b36023212fa65786e50f6084b691a27e539e692febdf0505db2"
+          },
+          ".note": {
+            "bytes": 1900,
+            "sha256": "2995c1f4342267d72b817baf160be1ca0738504728362d3e7cfc644a3065ab49"
+          }
+        }
+      },
+      "bitcode_sha256": "575ec38197f59eb3cf9a2314b9c583bc37dbc230bf7a53d911f6e47e6ea174f0",
+      "ir_sha256": "e7b9fa9ac49899242517c300cbb96fad5620eb231e1d4633ccd023c289bee3ac"
+    },
+    "115": {
+      "source_sha256": "d61cf78bb563263b804971ab22ad826ff357994162ccdc3ceb6a78076f99b911",
+      "kernel_source_sha256": "382c14493fcaea36957ce6d09aa6a57f89b53bf4ac02e6eb85857a8b2e1c61bf",
+      "library_sha256": "9e412d4bd71fa0e5597716eb609ccfcca414db22f241f48b02b43fb68df3b940",
+      "device_metadata": {
+        "object_sha256": "f63eb5aaed417945852360978252306ae8d94a14ebac74fb1a5f5c7ee5aa6ba9",
+        "sections": {
+          ".text": {
+            "bytes": 5632,
+            "sha256": "def30a46844ea9e32be1466bdbe158df23072ffd1ae1bbb642161060f392535b"
+          },
+          ".rodata": {
+            "bytes": 64,
+            "sha256": "33175663e0146b36023212fa65786e50f6084b691a27e539e692febdf0505db2"
+          },
+          ".note": {
+            "bytes": 1900,
+            "sha256": "2995c1f4342267d72b817baf160be1ca0738504728362d3e7cfc644a3065ab49"
+          }
+        }
+      },
+      "bitcode_sha256": "48ec5dde96fcb7c28b262ce47320e75b0496456ed679b465bac6f3025e881590",
+      "ir_sha256": "9054f97479ec6c8a4ffb3f2c70e2c383ce838f5f0f3298a74d65dc082332fdaa"
+    }
+  },
+  "same_device_object": false,
+  "same_text": false,
+  "limitation": "Exact cached object identity check; not actual hardware counters or a performance claim"
+}
