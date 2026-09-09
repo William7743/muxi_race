@@ -1,5 +1,35 @@
 # NSA optimization status
 
+## Latest user feedback: OJ141741 / 86.64
+
+User reports submission141741 scored86.64, +0.07 above141726.
+Version/source and per-case feedback are not yet verified. This is the latest
+user-reported high score, not attributable to128 or134 until source binding.
+The directly verified/source-bound best below remains128/141726/86.57.
+
+## 2026-09-09 Direct OJ128 verification completed
+
+Read-only API detail confirms #141726 Accepted/86.57, all14 scoring cases.
+Submitted LF SHA6c111f0bcc8b6e8ba32c0fd23c16a3f92076ca7162a7241b85afd7e608bdaee0
+differs from frozen128 only in outer whitespace; full AST and stripped text match.
+Checker score arithmetic passes, total integer points1212; reaching88 needs1232
+(20 additional point-score units). New checker times us:
+5,6,9,11,26,85,25,43,42,7,21,61,9,17.
+Compared to109, changed-path cases4/5/7/9/12 each gain1; unchanged paths8/10
+gain1/2. Therefore5/8 of the total point-score delta occurs on changed paths,
+not proof that all0.57 points are code effects. New anchor is directly verified,
+superseding the user-report-only status below. Credentials/raw responses stay
+private. Safe details and source reconstruction binding are under results.
+NSA134 has now completed full validation as an optional manual OJ candidate.
+Only case11 generated source differs from128. Full suite:56 reference assertions,
+112/112 qualified timing samples; extension:48/48 reference assertions.
+Three-seed target ratio0.95508, full-suite target ratios0.97708/0.97334.
+A separate four-way comparison was flat/slightly slower; retain this counterevidence.
+Fixed-parent score projection remains86.57, not evidence of an OJ score increase.
+NSA135/137 have no demonstrated advantage;136 compiles to the same device object
+as134 despite its safe-pass toggle. Keep128 as the verified best.
+See S4_134_137.md. All own GPU workflows are terminal; no OJ submission performed.
+
 ## 2026-09-09 NSA128 / OJ141726: user confirms86.57
 
 User explicitly reports NSA128, submission141726, score86.57. This is the new

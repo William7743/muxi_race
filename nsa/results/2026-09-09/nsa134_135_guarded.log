@@ -1,0 +1,24 @@
+{"reduce_header": "/opt/tilelang-metax-v0.1.10/src/tl_templates/maca/reduce.h", "sha256": "ca5b49087fed84da9cd290ddf8d57578bce3f3bb20a89b61d0fd0739e3d5809f"}
+{"stage": "begin", "script": "calibrate_oj_protocol.py"}
+Loading tilelang libs from dev root: /opt/tilelang-metax-v0.1.10/build
+2026-09-09 13:33:42  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-09 13:33:48  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+2026-09-09 13:33:48  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:129): TileLang begins to compile kernel `gather_kernel` with `out_idx=None`
+2026-09-09 13:33:54  [TileLang:tilelang.jit.kernel:INFO] (kernel.py:137): TileLang completes to compile kernel `gather_kernel`
+2026-09-09 13:33:55  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'gather_kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 11, "module": "submissions/nsa128.py", "seed": 541, "mode": "public", "median_us": {"cupti": 19.80415999999994}}
+{"case_id": 11, "module": "submissions/nsa134.py", "seed": 541, "mode": "public", "median_us": {"cupti": 18.908159999999917}}
+{"case_id": 11, "module": "submissions/nsa135.py", "seed": 541, "mode": "public", "median_us": {"cupti": 19.11808000000012}}
+{"case_id": 11, "module": "submissions/nsa128.py", "seed": 541, "mode": "current", "median_us": {"cupti": 19.896319999999978}}
+{"case_id": 11, "module": "submissions/nsa134.py", "seed": 541, "mode": "current", "median_us": {"cupti": 19.097599999999947}}
+{"case_id": 11, "module": "submissions/nsa135.py", "seed": 541, "mode": "current", "median_us": {"cupti": 19.246080000000074}}
+{"stage": "complete", "script": "calibrate_oj_protocol.py"}
+{"stage": "begin", "script": "dump_sources.py"}
+2026-09-09 13:33:59  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'gather_kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 11, "path": "/data/nsa_codex_20260909_r1/results/artifacts134_135/nsa128_case11.cu", "sha256": "77087f5cd01a2b04c0de1cba131b116362ba697060abec2e90970ad5622e668d"}
+2026-09-09 13:34:01  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'gather_kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 11, "path": "/data/nsa_codex_20260909_r1/results/artifacts134_135/nsa134_case11.cu", "sha256": "327035ae6ee4acc07fd7b3989cefca8a82c8a5855da2ea0ba16c8fc3efb57707"}
+2026-09-09 13:34:02  [TileLang:tilelang.cache.kernel_cache:WARNING] (kernel_cache.py:342): Found kernel 'gather_kernel' in memory cache. For better performance, consider using `@tilelang.jit` instead of direct kernel caching.
+{"case_id": 11, "path": "/data/nsa_codex_20260909_r1/results/artifacts134_135/nsa135_case11.cu", "sha256": "89e614b604792b8323b8cf4aba38f767589b165ad0005c8748ad63ca77a70785"}
+{"stage": "complete", "script": "dump_sources.py"}
+{"workflow": "complete", "limitation": "Target screen only, not full validation"}

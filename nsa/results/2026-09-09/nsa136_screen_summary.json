@@ -1,0 +1,58 @@
+{
+  "input": "nsa134_137_screen.jsonl",
+  "parent": "submissions/nsa128.py",
+  "candidate": "submissions/nsa136.py",
+  "reference_checks": 8,
+  "qualified_samples": 32,
+  "total_samples": 32,
+  "pairs": [
+    {
+      "case_id": 11,
+      "seed": 547,
+      "mode": "public",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 19.21024000000012,
+        "qualified_median_us": 19.21024000000012,
+        "guard_relative_median": 1.0041455024174415
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 18.910719999999948,
+        "qualified_median_us": 18.910719999999948,
+        "guard_relative_median": 0.988817695430076
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9847354721497389
+    },
+    {
+      "case_id": 11,
+      "seed": 547,
+      "mode": "current",
+      "parent": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 19.386880000000055,
+        "qualified_median_us": 19.386880000000055,
+        "guard_relative_median": 1.000595455689712
+      },
+      "candidate": {
+        "correct": true,
+        "qualified": 4,
+        "total": 4,
+        "raw_median_us": 19.217919999999957,
+        "qualified_median_us": 19.217919999999957,
+        "guard_relative_median": 0.9898470114646811
+      },
+      "usable": true,
+      "candidate_relative_time": 0.9892579521884576
+    }
+  ],
+  "geometric_relative_time": 0.9869941218802595,
+  "limitation": "Subset local timings, not a score or a complete performance/correctness certification."
+}

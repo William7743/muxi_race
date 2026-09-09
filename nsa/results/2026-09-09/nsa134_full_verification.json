@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "hashes": {
+    "submissions/nsa128.py": "309e71c21ea3190d38b2ba9ef82cc295bb61b66bebf4aa332c6f757ba83db57a",
+    "submissions/nsa134.py": "e4f7025dfecd6edb626d6acd3f5d46937afe02b38f49f62cdbaa6730c157fce7"
+  },
+  "full_reference_assertions": 56,
+  "full_qualified_samples": 112,
+  "full_total_samples": 112,
+  "changed_cases": [
+    11
+  ],
+  "stress_assertions_from_target_audit": 48,
+  "multi_seed_target_time_ratio": 0.9550752204541414,
+  "full_target_ratios": {
+    "public": 0.977080298763574,
+    "current": 0.9733359644399021
+  },
+  "fixed_parent_projected_score": 86.57142857142857,
+  "actual_oj_score": 86.57,
+  "actual_oj_submission": 141726,
+  "goal88_achieved": false,
+  "limitation": "Projection is not OJ feedback; four-way recheck differed from two-way tests. Shape/timing evidence is from16GB slice."
+}

@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "reason": null,
+  "events": [
+    {
+      "event": "launch",
+      "child_pid": 181736,
+      "used_bytes": 64417792
+    }
+  ],
+  "elapsed_seconds": 113.78276687301695,
+  "limitation": "Polling protection, not a peer lock or an OOM guarantee"
+}

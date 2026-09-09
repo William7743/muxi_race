@@ -1,0 +1,5 @@
+{
+  "leading_whitespace": "",
+  "trailing_whitespace": "",
+  "limitation": "Reconstructs the fetched source using unchanged probe body and captured outer whitespace only"
+}

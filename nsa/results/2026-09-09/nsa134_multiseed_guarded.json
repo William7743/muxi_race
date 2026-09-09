@@ -1,0 +1,101 @@
+{
+  "exit_code": -15,
+  "reason": "competing_python_detected",
+  "events": [
+    {
+      "event": "launch",
+      "child_pid": 181520,
+      "used_bytes": 63459328
+    },
+    {
+      "event": "yield",
+      "reason": "competing_python_detected",
+      "foreign_pids": [
+        181595
+      ],
+      "used_bytes": 483655680,
+      "process_snapshot": [
+        {
+          "pid": 1,
+          "ppid": 0,
+          "pgid": 1,
+          "comm": "entrypoint.sh"
+        },
+        {
+          "pid": 8,
+          "ppid": 1,
+          "pgid": 1,
+          "comm": "bash"
+        },
+        {
+          "pid": 116,
+          "ppid": 8,
+          "pgid": 1,
+          "comm": "supervisord"
+        },
+        {
+          "pid": 124,
+          "ppid": 116,
+          "pgid": 124,
+          "comm": "bash"
+        },
+        {
+          "pid": 125,
+          "ppid": 116,
+          "pgid": 125,
+          "comm": "sshd"
+        },
+        {
+          "pid": 290,
+          "ppid": 124,
+          "pgid": 124,
+          "comm": "jupyter-lab"
+        },
+        {
+          "pid": 156232,
+          "ppid": 125,
+          "pgid": 156232,
+          "comm": "sshd"
+        },
+        {
+          "pid": 156236,
+          "ppid": 156232,
+          "pgid": 156236,
+          "comm": "sftp-server"
+        },
+        {
+          "pid": 181519,
+          "ppid": 1,
+          "pgid": 181518,
+          "comm": "python"
+        },
+        {
+          "pid": 181520,
+          "ppid": 181519,
+          "pgid": 181520,
+          "comm": "python"
+        },
+        {
+          "pid": 181593,
+          "ppid": 8,
+          "pgid": 1,
+          "comm": "sleep"
+        },
+        {
+          "pid": 181594,
+          "ppid": 156232,
+          "pgid": 181594,
+          "comm": "bash"
+        },
+        {
+          "pid": 181595,
+          "ppid": 181594,
+          "pgid": 181594,
+          "comm": "python"
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 2.1050603699404746,
+  "limitation": "Polling protection, not a peer lock or an OOM guarantee"
+}

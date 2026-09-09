@@ -1,0 +1,70 @@
+{
+  "status": "PASS",
+  "datasets": [
+    {
+      "dataset": "nsa134_135_screen",
+      "references": 6,
+      "qualified_samples": 18,
+      "total_samples": 18,
+      "ratios": {
+        "134": {
+          "541/public": 0.9595515439938769,
+          "541/current": 0.9606030870136736
+        },
+        "135": {
+          "541/public": 0.9670997442291607,
+          "541/current": 0.9715673275536753
+        }
+      }
+    },
+    {
+      "dataset": "nsa134_137_screen",
+      "references": 8,
+      "qualified_samples": 32,
+      "total_samples": 32,
+      "ratios": {
+        "134": {
+          "547/public": 0.9998012296108537,
+          "547/current": 1.0053418356543928
+        },
+        "136": {
+          "547/public": 0.9847354721497389,
+          "547/current": 0.9892579521884576
+        },
+        "137": {
+          "547/public": 0.9936130260804309,
+          "547/current": 1.0005915977176416
+        }
+      }
+    },
+    {
+      "dataset": "nsa134_multiseed",
+      "references": 12,
+      "qualified_samples": 48,
+      "total_samples": 48,
+      "ratios": {
+        "134": {
+          "541/public": 0.9508810967766582,
+          "541/current": 0.9528658722355537,
+          "547/public": 0.9568776334373853,
+          "547/current": 0.9606896200477654,
+          "559/public": 0.9521053628463574,
+          "559/current": 0.9570683730956765
+        }
+      }
+    }
+  ],
+  "stress_assertions": 48,
+  "total_reference_assertions": 74,
+  "total_qualified_samples": 98,
+  "multi_seed134_relative_time": 0.9550752204541414,
+  "binary134_equals136": true,
+  "actual_best_oj": {
+    "version": 128,
+    "submission_id": 141726,
+    "score": 86.57
+  },
+  "goal88_achieved": false,
+  "full_suite_assessed_by_this_verifier": false,
+  "limitation": "Timing qualification does not prove speedup; no new OJ result for134-137. Full formal suite is audited separately."
+}
